@@ -1,46 +1,305 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
   <base href="$FLUTTER_BASE_HREF">
-
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="Luna Bites & Delights — Fast food ordering app">
 
-  <!-- iOS meta tags & icons -->
+  <!-- iOS PWA -->
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="luna_express">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Luna Express">
+  <meta name="theme-color" content="#E8192C">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <!-- PWA manifest & icons -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="favicon.png"/>
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <title>Luna Express</title>
 
-  <title>luna_express</title>
-  <link rel="manifest" href="manifest.json">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: #E8192C;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    /* ── UPDATE BANNER ─────────────────────────── */
+    #update-banner {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 99999;
+      background: linear-gradient(135deg, #1a0a00, #3a1500);
+      color: white;
+      padding: 14px 20px;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.45);
+      animation: slideDown 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    #update-banner.show { display: flex; }
+    @keyframes slideDown {
+      from { transform: translateY(-110%); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+    #update-banner .icon  { font-size: 22px; flex-shrink: 0; }
+    #update-banner .text  { flex: 1; }
+    #update-banner .title { font-weight: 900; font-size: 14px; }
+    #update-banner .sub   { font-size: 11px; color: rgba(255,255,255,0.65); margin-top: 2px; }
+    #update-btn {
+      background: linear-gradient(135deg, #E8192C, #FF6B35);
+      color: white; border: none; border-radius: 20px;
+      padding: 9px 18px; font-size: 13px; font-weight: 900;
+      cursor: pointer; white-space: nowrap;
+      box-shadow: 0 3px 12px rgba(232,25,44,0.45);
+      transition: transform 0.1s;
+    }
+    #update-btn:active { transform: scale(0.96); }
+
+    /* ── LOADING SCREEN ────────────────────────── */
+    #loading-screen {
+      position: fixed; inset: 0;
+      background: linear-gradient(135deg, #E8192C 0%, #FF6B35 60%, #FFD700 100%);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 9998;
+      transition: opacity 0.5s ease;
+    }
+    #loading-screen.fade-out { opacity: 0; pointer-events: none; }
+    .loading-icon  { font-size: 64px; margin-bottom: 16px; animation: pulse 1.6s ease-in-out infinite; }
+    .loading-title { color: white; font-size: 28px; font-weight: 900; letter-spacing: 5px; text-shadow: 0 2px 12px rgba(0,0,0,0.2); }
+    .loading-sub   { color: rgba(255,255,255,0.75); font-size: 12px; letter-spacing: 3px; margin-top: 8px; }
+    .loading-dots  { display: flex; gap: 8px; margin-top: 36px; }
+    .dot { width: 8px; height: 8px; background: rgba(255,255,255,0.7); border-radius: 50%; animation: bounce 1.2s ease-in-out infinite; }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes pulse  { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+    @keyframes bounce { 0%,100%{transform:translateY(0);opacity:.5} 50%{transform:translateY(-9px);opacity:1} }
+  </style>
 </head>
 <body>
-  <!--
-    You can customize the "flutter_bootstrap.js" script.
-    This is useful to provide a custom configuration to the Flutter loader
-    or to give the user feedback during the initialization process.
 
-    For more details:
-    * https://docs.flutter.dev/platform-integration/web/initialization
-  -->
-  <script src="flutter_bootstrap.js" async></script>
+  <!-- Loading screen (fades out once Flutter is ready) -->
+  <div id="loading-screen">
+    <div class="loading-icon">🌙</div>
+    <div class="loading-title">LUNA EXPRESS</div>
+    <div class="loading-sub">FAST DELIVERY · FRESH DAILY</div>
+    <div class="loading-dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+
+  <!-- Update banner (shown when new version detected) -->
+  <div id="update-banner">
+    <div class="icon">🔄</div>
+    <div class="text">
+      <div class="title">New Update Available!</div>
+      <div class="sub">Luna Express has been updated</div>
+    </div>
+    <button id="update-btn" onclick="applyUpdate()">Update Now</button>
+  </div>
+
+  <script>
+    var _refreshing = false;
+    var VERSION_STORAGE_KEY = 'luna_app_version';
+    var _pendingServerVersion = null; 
+
+    // ─────────────────────────────────────────
+    //  LOADING SCREEN
+    // ─────────────────────────────────────────
+    function hideLoadingScreen() {
+      var screen = document.getElementById('loading-screen');
+      if (screen) {
+        screen.classList.add('fade-out');
+        setTimeout(function() { screen.style.display = 'none'; }, 500);
+      }
+    }
+    setTimeout(hideLoadingScreen, 8000);
+
+    // ─────────────────────────────────────────
+    //  UPDATE BANNER
+    // ─────────────────────────────────────────
+    function showUpdateBanner() {
+      var banner = document.getElementById('update-banner');
+      if (banner) banner.classList.add('show');
+    }
+
+    function applyUpdate() {
+      // 1. Hide banner immediately
+      var banner = document.getElementById('update-banner');
+      if (banner) {
+        banner.classList.remove('show');
+        banner.style.display = 'none';
+      }
+
+      // 2. Commit the new version to storage
+      if (_pendingServerVersion) {
+        localStorage.setItem(VERSION_STORAGE_KEY, _pendingServerVersion);
+      }
+
+      // 3. Tell the *WAITING* Service Worker to take over (This fixes the Android/Windows loop)
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.getRegistration().then(function(reg) {
+          if (reg && reg.waiting) {
+            reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+          }
+        });
+      }
+
+      // 4. Force hard reload as a safety net if controllerchange doesn't fire fast enough
+      setTimeout(function() {
+        if (!_refreshing) {
+          _refreshing = true;
+          var cleanUrl = window.location.href.split('?')[0];
+          window.location.replace(cleanUrl + '?v=' + new Date().getTime());
+        }
+      }, 400);
+    }
+
+    // ─────────────────────────────────────────
+    //  iOS VERSION POLLING
+    // ─────────────────────────────────────────
+    function checkVersionUpdate() {
+      fetch('/version.json?t=' + Date.now(), {
+        cache: 'no-store',
+        headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' }
+      })
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        var serverVersion = data.version;
+        var storedVersion = localStorage.getItem(VERSION_STORAGE_KEY);
+
+        console.log('[Version] Server:', serverVersion, '| Stored:', storedVersion);
+
+        if (!storedVersion) {
+          localStorage.setItem(VERSION_STORAGE_KEY, serverVersion);
+          return;
+        }
+
+        if (storedVersion !== serverVersion) {
+          console.log('[Version] Update detected! Waiting for user to tap...');
+          _pendingServerVersion = serverVersion; 
+          showUpdateBanner();
+        }
+      })
+      .catch(function(err) {
+        console.log('[Version] Network check failed:', err);
+      });
+    }
+
+    checkVersionUpdate();
+
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden) {
+        checkVersionUpdate();
+      }
+    });
+
+    // ─────────────────────────────────────────
+    //  PWA INSTALL BRIDGE
+    // ─────────────────────────────────────────
+    window._pwaPromptReady = false;
+    window._pwaPromptEvent = null;
+
+    window.addEventListener('beforeinstallprompt', function(e) {
+      e.preventDefault();
+      window._pwaPromptEvent = e;
+      window._pwaPromptReady = true;
+    });
+
+    window._pwaTriggerInstall = function() {
+      if (window._pwaPromptEvent) {
+        window._pwaPromptEvent.prompt();
+        window._pwaPromptEvent.userChoice.then(function() {
+          window._pwaPromptEvent = null;
+          window._pwaPromptReady = false;
+        });
+      }
+    };
+
+    window.addEventListener('appinstalled', function() {
+      window._pwaPromptReady = false;
+      window._pwaPromptEvent = null;
+    });
+
+    // ─────────────────────────────────────────
+    //  SERVICE WORKER (Android & iOS 11.3+)
+    // ─────────────────────────────────────────
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').then(function(registration) {
+        console.log('[SW] Registered');
+
+        document.addEventListener('visibilitychange', function() {
+          if (!document.hidden) registration.update().catch(function(){});
+        });
+
+        setInterval(function() {
+          registration.update().catch(function(){});
+        }, 60000);
+
+        function onWaiting() {
+          showUpdateBanner();
+        }
+
+        if (registration.waiting) onWaiting();
+
+        registration.addEventListener('updatefound', function() {
+          var nw = registration.installing;
+          if (!nw) return;
+          nw.addEventListener('statechange', function() {
+            if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+              onWaiting();
+            }
+          });
+        });
+
+      }).catch(function(e) {
+        console.warn('[SW] Registration failed:', e);
+      });
+
+      // When the new Service Worker successfully takes over, refresh the page automatically
+      navigator.serviceWorker.addEventListener('controllerchange', function() {
+        if (!_refreshing) {
+          _refreshing = true;
+          var cleanUrl = window.location.href.split('?')[0];
+          window.location.replace(cleanUrl + '?v=' + new Date().getTime());
+        }
+      });
+    }
+  </script>
+
+  <!-- Flutter bootstrap -->
+  <script src="flutter.js" defer></script>
+  <script>
+    window.addEventListener('load', function() {
+      if (window._flutter && window._flutter.loader) {
+        // Modern Flutter 3.10+ loader
+        window._flutter.loader.loadEntrypoint({
+          onEntrypointLoaded: function(engineInitializer) {
+            engineInitializer.initializeEngine().then(function(appRunner) {
+              appRunner.runApp();
+              hideLoadingScreen();
+            });
+          }
+        });
+      } else {
+        // Fallback: flutter_bootstrap.js style build
+        var s = document.createElement('script');
+        s.src = 'flutter_bootstrap.js';
+        s.onload = function() { setTimeout(hideLoadingScreen, 1500); };
+        document.body.appendChild(s);
+      }
+    });
+  </script>
+
 </body>
 </html>
