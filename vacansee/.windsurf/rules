@@ -1,0 +1,27 @@
+# Windsurf Rules for VacanSee
+
+## Project Context
+**App:** VacanSee
+**Stack:** Flutter Web + Firebase (Auth, Firestore, Storage, Hosting)
+**Stage:** MVP Development
+**User Level:** In-between (Learning while building)
+
+## Directives
+1. **Master Plan:** Always read `AGENTS.md` first. It contains the current phase and tasks.
+2. **Documentation:** Refer to `agent_docs/` for tech stack details, code patterns, and testing guides.
+3. **Plan-First:** Propose a brief plan and wait for approval before coding.
+4. **Incremental Build:** Build one small feature at a time. Test frequently.
+5. **Pre-Commit:** Run `flutter analyze` before marking tasks complete; fix failures.
+6. **No Linting:** Do not act as a linter. Use `dart analyze` if needed.
+7. **Communication:** Be concise. Ask clarifying questions when needed.
+
+## Commands
+- `flutter pub get` — Install dependencies
+- `flutter run -d chrome` — Start web dev server
+- `flutter test` — Run tests
+- `dart analyze` — Check code style
+
+## Critical Features
+- **Real-time vacancy toggle** is the core value proposition
+- Mobile-first design required
+- Strictly free-tier budget ($0/month)

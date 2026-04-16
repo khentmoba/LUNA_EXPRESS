@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - VacanSee</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Left Side - Decorative -->
+        <div class="left-side">
+            <div class="decorations">
+                <svg class="ellipse" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="ellipseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#5287B2;stop-opacity:0.4" />
+                            <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0" />
+                        </linearGradient>
+                    </defs>
+                    <ellipse cx="150" cy="150" rx="120" ry="100" fill="url(#ellipseGrad)"/>
+                </svg>
+                <svg class="polygon" viewBox="0 0 350 350" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="polygonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#5287B2;stop-opacity:0.35" />
+                            <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0.1" />
+                        </linearGradient>
+                    </defs>
+                    <polygon points="175,20 330,120 300,280 50,310 20,140" fill="url(#polygonGrad)"/>
+                </svg>
+            </div>
+            <div class="quote-section">
+                <div class="quote-bars">
+                    <span class="bar bar-1"></span>
+                    <span class="bar bar-2"></span>
+                    <span class="bar bar-3"></span>
+                </div>
+                <p class="quote">"Find your perfect place to call home"</p>
+            </div>
+        </div>
+
+        <!-- Right Side - Login Form -->
+        <div class="right-side">
+            <!-- Logo -->
+            <a href="landing.html" class="logo-link">
+                <div class="logo">
+                    <span>V</span>
+                </div>
+                <span class="logo-text">VacanSee</span>
+            </a>
+
+            <!-- Login Form -->
+            <div class="form-container">
+                <h1 class="form-title">Welcome Back</h1>
+                
+                <form id="loginForm" novalidate>
+                    <!-- Role Selector -->
+                    <div class="form-group">
+                        <label for="role">Role</label>
+                        <select id="role" name="role" class="form-input">
+                            <option value="" disabled selected>Select Role</option>
+                            <option value="tenant">Tenant</option>
+                            <option value="owner">Owner</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                        <span class="error-message" id="roleError">Please select a role</span>
+                    </div>
+
+                    <!-- Email Input -->
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="form-input" 
+                            placeholder="Enter your email"
+                            required
+                        >
+                        <span class="error-message" id="emailError">Please enter a valid email</span>
+                    </div>
+
+                    <!-- Password Input -->
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="password-wrapper">
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                class="form-input" 
+                                placeholder="Enter your password"
+                                required
+                            >
+                            <button type="button" class="toggle-password" id="togglePassword">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                        <span class="error-message" id="passwordError">Password must be at least 6 characters</span>
+                    </div>
+
+                    <!-- Remember Me & Forgot Password -->
+                    <div class="form-options">
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" id="rememberMe" name="rememberMe">
+                            <span class="checkmark"></span>
+                            <span class="checkbox-label">Remember Me</span>
+                        </label>
+                        <a href="#" class="forgot-password">Forgot Password?</a>
+                    </div>
+
+                    <!-- Login Button -->
+                    <button type="submit" class="btn-login">Login</button>
+
+                    <!-- Sign Up Link -->
+                    <p class="signup-link">
+                        Don't have an account? <a href="signup.html">Sign up</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="login.js"></script>
+</body>
+</html>
