@@ -1,0 +1,261 @@
+/* ─────────────────────────────────────
+   Memories Feature Styles
+   Extends .sanctuary-fab and .sanctuary-panel
+───────────────────────────────────────── */
+
+/* Floating Memories Button */
+.memories-fab {
+  bottom: 200px; /* stacked above diary-fab */
+}
+
+/* Gallery grid */
+#memories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  padding-bottom: 8px;
+}
+
+/* Individual memory cards */
+.memory-card {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255,200,140,0.12);
+  background: rgba(255,240,210,0.03);
+  cursor: pointer;
+  animation: cardAppear 0.3s ease both;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.memory-card:hover {
+  transform: scale(1.03) translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+
+.memory-card img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+.memory-card-info {
+  padding: 8px 10px;
+  background: rgba(4, 2, 14, 0.7);
+}
+
+.memory-card-caption {
+  font-family: var(--font-serif);
+  font-size: 0.75rem;
+  color: rgba(255,235,210,0.85);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.memory-card-meta {
+  font-family: var(--font-serif);
+  font-size: 0.6rem;
+  color: rgba(200,180,255,0.4);
+  letter-spacing: 0.3px;
+}
+
+/* Upload form */
+#memories-form {
+  background: rgba(255,240,200,0.03);
+  border: 1px solid rgba(255,200,140,0.15);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+}
+
+.memories-form-label {
+  font-family: var(--font-serif);
+  font-size: 0.72rem;
+  letter-spacing: 1.5px;
+  color: rgba(255,200,140,0.5);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: block;
+}
+
+#memories-file-input {
+  display: none;
+}
+
+#memories-file-label {
+  display: block;
+  width: 100%;
+  padding: 28px 12px;
+  border: 2px dashed rgba(255,200,140,0.2);
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  font-family: var(--font-serif);
+  font-size: 0.82rem;
+  color: rgba(200,180,255,0.45);
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+#memories-file-label:hover {
+  border-color: rgba(255,200,140,0.4);
+  color: rgba(255,220,160,0.7);
+  background: rgba(255,200,140,0.03);
+}
+
+/* Preview image inside the drop zone */
+#memories-preview {
+  max-width: 100%;
+  max-height: 160px;
+  border-radius: 6px;
+  display: block;
+  margin: 0 auto 10px;
+  object-fit: contain;
+}
+
+#memories-caption-input {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,200,140,0.18);
+  border-radius: 8px;
+  padding: 10px 13px;
+  color: var(--text-primary);
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  outline: none;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  transition: border-color 0.2s;
+}
+
+#memories-caption-input:focus {
+  border-color: rgba(255,200,140,0.45);
+}
+
+#memories-caption-input::placeholder {
+  color: rgba(200,180,255,0.25);
+  font-style: italic;
+}
+
+/* Progress bar */
+.memories-progress-wrap {
+  height: 4px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  display: none;
+}
+
+.memories-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, rgba(120,60,220,0.8), rgba(255,180,80,0.8));
+  border-radius: 2px;
+  transition: width 0.3s ease;
+  animation: progressPulse 1.2s ease-in-out infinite;
+}
+
+#memories-submit {
+  width: 100%;
+  padding: 10px;
+  background: rgba(120,60,220,0.4);
+  border: 1px solid rgba(160,100,255,0.3);
+  border-radius: 8px;
+  color: rgba(255,240,200,0.9);
+  font-family: var(--font-cursive);
+  font-size: 1rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+#memories-submit:hover:not(:disabled) {
+  background: rgba(140,80,240,0.6);
+  transform: translateY(-1px);
+}
+
+#memories-submit:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.memories-error {
+  font-family: var(--font-serif);
+  font-size: 0.78rem;
+  color: rgba(255,100,100,0.85);
+  font-style: italic;
+  margin-top: 8px;
+  min-height: 18px;
+  text-align: center;
+}
+
+.memories-divider {
+  border: none;
+  border-top: 1px solid rgba(255,200,140,0.1);
+  margin: 18px 0;
+}
+
+/* Lightbox overlay */
+#memories-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: rgba(2, 1, 8, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: lightboxIn 0.2s ease both;
+  cursor: zoom-out;
+}
+
+#memories-lightbox img {
+  max-width: 92vw;
+  max-height: 88vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 0 60px rgba(0,0,0,0.8);
+  cursor: default;
+}
+
+#lightbox-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  color: rgba(255,240,200,0.8);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+#lightbox-close:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+@keyframes cardAppear {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes progressPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+
+@keyframes lightboxIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}

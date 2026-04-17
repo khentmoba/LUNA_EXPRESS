@@ -5,8 +5,8 @@
 ### I. Exclusive Access (The Gatekeeper)
 Use birthday-based authentication restricted to Khent (2006-10-26) and Clair Jassen (2006-02-21). Permissions are session-based; no persistent auth tokens outside of the current browser tab to ensure maximum privacy.
 
-### II. Single-File, Tool-Independent Build
-The application MUST be a single self-contained `index.html`. All CSS, Javascript, and media assets (excluding Supabase SDK and Google Fonts) must be inlined. This ensures zero-config deployment and total portability.
+### II. Modular Architecture (Scalable Build)
+The application MUST follow a modular, feature-based architecture (Vertical Slicing) to ensure scalability and maintainability. A bundler (Vite) is used to manage dependencies, assets, and build processes, moving away from the single-file constraint to support future complexity.
 
 ### III. Hybrid Persistence Layer
 Global shared data (Memories, Secret Diary) must be synced via Supabase. Local UI state, session authentication, and the Guestbook must use LocalStorage or SessionStorage to maintain privacy and local responsiveness.
