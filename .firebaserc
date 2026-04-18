@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "lunaexpress"
+  },
+  "targets": {
+    "lunaexpress": {
+      "hosting": {
+        "app-site": [
+          "lunaexpress"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
