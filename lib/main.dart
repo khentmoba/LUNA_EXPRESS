@@ -592,6 +592,24 @@ final List<MenuSection> kMenuSections = [
       imageUrl: 'https://i.postimg.cc/g2nXSTH4/image-2026-03-25-021206135.png',
       variants: [MenuVariant(label: 'Solo', price: 49), MenuVariant(label: 'Overload', price: 65)]),
   ]),
+  MenuSection(id: 'burger_hotdog_combined', title: 'Burger & Hotdog Sandwich', emoji: '🍔🌭', items: [
+    MenuItem(
+      id: 'bh1', 
+      name: 'Burger & Hotdog Combos', 
+      emoji: '🍔', 
+      description: 'All items are Buy 1 Take 1! Choose your favorite combination.',
+      imageUrl: 'https://i.postimg.cc/43mDdQNL/image-2026-03-25-014041343.png',
+      variants: [
+        MenuVariant(label: 'Burger Patty', price: 55, isBuy1Take1: true),
+        MenuVariant(label: 'Ham & Cheese', price: 55, isBuy1Take1: true),
+        MenuVariant(label: 'Cheese Burger', price: 65, isBuy1Take1: true),
+        MenuVariant(label: 'Burger with Egg', price: 85, isBuy1Take1: true),
+        MenuVariant(label: 'Egg & Cheese', price: 95, isBuy1Take1: true),
+        MenuVariant(label: 'Hotdog Sandwich', price: 69, isBuy1Take1: true),
+      ],
+      isBuy1Take1: true,
+    ),
+  ]),
 ];
 
 // ─────────────────────────────────────────────
