@@ -5,6 +5,13 @@
 **Status**: Draft  
 **Input**: User description: "add a category of burger and hotdog sandwich combined, here is the info all are buy 1 take 1 starting with the Burger Patty and Ham & Cheese selections at 55. For those wanting extra toppings, the Cheese Burger is priced at 65, while the Burger with Egg is available for 85 and the Egg & Cheese for 95. Additionally, you can grab a Buy 1 Take 1 Hotdog Sandwich deal for 69."
 
+## Clarifications
+
+### Session 2026-04-19
+- Q: Does the deal allow mixing items or same item only? → A: **Same Item Only** (Customer receives 2 of the identical item).
+- Q: Is customization price applied per deal or per unit? → A: **Per Deal** (Add-on price applies once; both items receive the customization).
+- Q: Is there a maximum limit on deals per order? → A: **No Limit** (Customers can order any quantity subject to stock availability).
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Add Burger/Hotdog Deal to Cart (Priority: P1)
@@ -18,7 +25,7 @@ As a hungry customer, I want to see and select a Burger or Hotdog "Buy 1 Take 1"
 **Acceptance Scenarios**:
 
 1. **Given** I am on the Menu page, **When** I scroll to the "Burger & Hotdog" category, **Then** I should see "Burger Patty" priced at 55.
-2. **Given** I have selected a "Burger with Egg", **When** I add it to my cart, **Then** the cart total should increase by 85 and indicate a "Buy 1 Take 1" fulfillment.
+2. **Given** I have selected a "Burger with Egg", **When** I add it to my cart, **Then** the cart total should increase by 85 and correctly indicate that I will receive **two identical** "Burger with Egg" units.
 
 ---
 
@@ -55,7 +62,8 @@ As a budget-conscious customer, I want to see all available toppings and their c
   - Hotdog Sandwich: 69
 - **FR-003**: System MUST clearly label each item in this category as a "Buy 1 Take 1" deal.
 - **FR-004**: System MUST allow users to add these items to their order cart.
-- **FR-005**: All prices MUST be displayed in the local currency format (implicit: Pesos, as per context of "buy 1 take 1" food businesses).
+- **FR-005**: All prices MUST be displayed in the local currency format (PHP).
+- **FR-006**: Customizations or add-ons (if any) MUST be priced per deal, applying to both items in the Buy 1 Take 1 package for a single add-on fee.
 
 ### Key Entities
 
@@ -73,6 +81,7 @@ As a budget-conscious customer, I want to see all available toppings and their c
 ## Assumptions
 
 - **Currency**: Prices are in PHP (Philippine Pesos) given the common business model.
-- **Quantity**: "Buy 1 Take 1" implies the customer receives 2 units of the same item for the price of 1.
+- **Quantity**: "Buy 1 Take 1" implies the customer receives 2 units of the **exact same item** for the price of 1. Mix-and-match is not supported in this category.
 - **Category Name**: Combined name "Burger & Hotdog Sandwich" is used as requested.
 - **Availability**: Standard business hours for food fulfillment apply.
+- **Quantity Limits**: No artificial limit on the number of deals per order.
