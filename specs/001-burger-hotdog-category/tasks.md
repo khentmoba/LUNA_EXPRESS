@@ -41,9 +41,9 @@
 
 ### Implementation for User Story 1
 
-- [ ] T003 [US1] Create the new `MenuSection` object in `lib/main.dart` for "Burger & Hotdog Sandwich"
-- [ ] T004 [US1] Define all 6 variants in the new `MenuSection` with correct prices and `isBuy1Take1: true` in `lib/main.dart`
-- [ ] T005 [US1] Append the new section to the `kMenuSections` list in `lib/main.dart`
+- [x] T003 [US1] Create the new `MenuSection` object in `lib/main.dart` for "Burger & Hotdog Sandwich"
+- [x] T004 [US1] Define all 6 variants in the new `MenuSection` with correct prices and `isBuy1Take1: true` in `lib/main.dart`
+- [x] T005 [US1] Append the new section to the `kMenuSections` list in `lib/main.dart`
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently.
 
@@ -57,8 +57,8 @@
 
 ### Implementation for User Story 2
 
-- [ ] T006 [US2] Verify the new category is visible and functional in Staff Mode UI in `lib/main.dart`
-- [ ] T007 [US2] Test the end-to-end order flow for a walk-in customer using the new items
+- [x] T006 [US2] Verify the new category is visible and functional in Staff Mode UI in `lib/main.dart`
+- [x] T007 [US2] Test the end-to-end order flow for a walk-in customer using the new items
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently.
 
@@ -68,8 +68,8 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T008 [P] Verify item description and pricing accuracy across all platforms (PWA/Web) in `lib/main.dart`
-- [ ] T009 Run `quickstart.md` validation checklist
+- [x] T008 [P] Verify item description and pricing accuracy across all platforms (PWA/Web) in `lib/main.dart`
+- [x] T009 Run `quickstart.md` validation checklist
 
 ---
 
