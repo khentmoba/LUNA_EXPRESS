@@ -149,7 +149,14 @@
         localStorage.setItem(VERSION_STORAGE_KEY, _pendingServerVersion);
       }
 
-      // 3. Tell the *WAITING* Service Worker to take over (This fixes the Android/Windows loop)
+      // 3. Hard refresh: wipe ALL service worker caches so the next load is fresh
+      if ('caches' in window) {
+        caches.keys().then(function(names) {
+          names.forEach(function(name) { caches.delete(name); });
+        });
+      }
+
+      // 4. Tell the *WAITING* Service Worker to take over (This fixes the Android/Windows loop)
       if (navigator.serviceWorker) {
         navigator.serviceWorker.getRegistration().then(function(reg) {
           if (reg && reg.waiting) {
@@ -158,7 +165,7 @@
         });
       }
 
-      // 4. Force hard reload as a safety net if controllerchange doesn't fire fast enough
+      // 5. Force hard reload as a safety net if controllerchange doesn't fire fast enough
       setTimeout(function() {
         if (!_refreshing) {
           _refreshing = true;
@@ -189,9 +196,9 @@
         }
 
         if (storedVersion !== serverVersion) {
-          console.log('[Version] Update detected! Auto-applying update...');
+          console.log('[Version] Update detected! Showing banner...');
           _pendingServerVersion = serverVersion; 
-          applyUpdate();
+          showUpdateBanner();
         }
       })
       .catch(function(err) {
@@ -250,7 +257,7 @@
         }, 60000);
 
         function onWaiting() {
-          applyUpdate();
+          showUpdateBanner();
         }
 
         if (registration.waiting) onWaiting();
