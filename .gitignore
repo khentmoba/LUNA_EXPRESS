@@ -49,6 +49,10 @@ node_modules/
 .web/
 .firebase/
 
+# Environment / secrets
+.env
+functions/.env
+
 # OS related
 .DS_Store
 Thumbs.db
