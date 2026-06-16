@@ -38,6 +38,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   static const _storeLat = 9.0205090;
   static const _storeLng = 125.5175910;
+  static const _base2Lat = 9.1212590;
+  static const _base2Lng = 125.5429739;
 
   @override
   void initState() {
@@ -80,19 +82,23 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   bool get _needsCoordinates => _orderType == 'Delivery';
 
+  double _haversine(double lat1, double lng1, double lat2, double lng2) {
+    const p = 0.017453292519943295;
+    final a = 0.5 - cos((lat2 - lat1) * p) / 2 +
+        cos(lat1 * p) * cos(lat2 * p) * (1 - cos((lng2 - lng1) * p)) / 2;
+    return 12742 * asin(sqrt(a));
+  }
+
   void _calculateDeliveryFee(double plat, double plng) {
-    // Haversine formula
-    const p = 0.017453292519943295; // Math.PI / 180
-    final a = 0.5 - cos((plat - _storeLat) * p) / 2 +
-        cos(_storeLat * p) * cos(plat * p) * (1 - cos((plng - _storeLng) * p)) / 2;
-    final dist = 12742 * asin(sqrt(a)); // 2 * R; R = 6371 km
+    final distToStore = _haversine(_storeLat, _storeLng, plat, plng);
+    final distToBase2 = _haversine(_base2Lat, _base2Lng, plat, plng);
 
     setState(() {
-      _distance = dist;
-      if (dist > 10) {
+      _distance = distToStore <= distToBase2 ? distToStore : distToBase2;
+      if (_distance > 10) {
         _deliveryFee = 0;
       } else {
-        _deliveryFee = (dist * 39).round();
+        _deliveryFee = (_distance * 39).round();
       }
     });
   }
