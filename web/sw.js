@@ -8,7 +8,7 @@
 // ═══════════════════════════════════════════════════
 
 // ── Change this version string every time you deploy ──
-const SW_VERSION = 'v1.0.4';
+const SW_VERSION = 'v1.1.0';
 const CACHE_NAME = 'luna-express-' + SW_VERSION;
 
 const PRECACHE_URLS = [
@@ -28,8 +28,7 @@ self.addEventListener('install', function(event) {
       .then(function(cache) { return cache.addAll(PRECACHE_URLS); })
       .then(function() {
         console.log('[SW ' + SW_VERSION + '] Pre-cache done');
-        // Do NOT call skipWaiting() here — we show "Update Now" banner first
-        // skipWaiting() is called only when user taps the button
+        self.skipWaiting();
       })
   );
 });

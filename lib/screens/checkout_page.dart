@@ -1,0 +1,585 @@
+import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../widgets/kiosk/kiosk_theme.dart';
+import '../widgets/kiosk/juicy_feedback.dart';
+import '../models/cart.dart';
+import '../services/cart_notifier.dart';
+import '../services/telegram_service.dart';
+import '../services/order_service.dart';
+import '../services/session.dart';
+import '../models/order.dart';
+import 'map_picker_page.dart';
+import 'receipt_page.dart';
+
+class CheckoutPage extends StatefulWidget {
+  const CheckoutPage({super.key});
+
+  @override
+  State<CheckoutPage> createState() => _CheckoutPageState();
+}
+
+class _CheckoutPageState extends State<CheckoutPage> {
+  final _nameCtrl = TextEditingController();
+  final _addressCtrl = TextEditingController();
+  final _phoneCtrl = TextEditingController();
+  double _pinnedLat = 9.0205090; // Store default
+  double _pinnedLng = 125.5175910;
+  bool _locationPinned = false;
+  int _deliveryFee = 0;
+  double _distance = 0.0;
+  String _paymentMethod = 'Cash'; // 'Cash' or 'GCash'
+  String _orderType = 'Pickup';
+  bool _loading = false;
+
+  String _gcashNumber = 'Loading...';
+  String _gcashHolder = '';
+
+  static const _storeLat = 9.0205090;
+  static const _storeLng = 125.5175910;
+
+  @override
+  void initState() {
+    super.initState();
+    if (session.isStaff) {
+      _orderType = 'Walk-In';
+    }
+    _fetchGCashConfig();
+  }
+
+  void _fetchGCashConfig() {
+    FirebaseFirestore.instance.collection('config').doc('payment').get().then((doc) {
+      if (doc.exists && doc.data() != null) {
+        setState(() {
+          _gcashNumber = doc.data()?['number'] ?? '0998 348 5262';
+          _gcashHolder = doc.data()?['holder'] ?? 'MA*Y A** S.';
+        });
+      } else {
+        _setGCashFallback();
+      }
+    }).catchError((_) {
+      _setGCashFallback();
+    });
+  }
+
+  void _setGCashFallback() {
+    setState(() {
+      _gcashNumber = '0998 348 5262';
+      _gcashHolder = 'MA*Y A** S.';
+    });
+  }
+
+  @override
+  void dispose() {
+    _nameCtrl.dispose();
+    _addressCtrl.dispose();
+    _phoneCtrl.dispose();
+    super.dispose();
+  }
+
+  bool get _needsCoordinates => _orderType == 'Delivery';
+
+  void _calculateDeliveryFee(double plat, double plng) {
+    // Haversine formula
+    const p = 0.017453292519943295; // Math.PI / 180
+    final a = 0.5 - cos((plat - _storeLat) * p) / 2 +
+        cos(_storeLat * p) * cos(plat * p) * (1 - cos((plng - _storeLng) * p)) / 2;
+    final dist = 12742 * asin(sqrt(a)); // 2 * R; R = 6371 km
+
+    setState(() {
+      _distance = dist;
+      if (dist > 10) {
+        _deliveryFee = 0;
+      } else {
+        _deliveryFee = (dist * 39).round();
+      }
+    });
+  }
+
+  Future<void> _openMapPicker() async {
+    final result = await Navigator.push<Map<String, dynamic>>(
+        context,
+        MaterialPageRoute(
+            builder: (_) => MapPickerPage(
+                  initialAddress: _addressCtrl.text,
+                  initialLat: _pinnedLat,
+                  initialLng: _pinnedLng,
+                )));
+    if (result != null) {
+      setState(() {
+        _addressCtrl.text = result['address'] as String;
+        _pinnedLat = result['lat'] as double;
+        _pinnedLng = result['lng'] as double;
+        _locationPinned = true;
+      });
+      _calculateDeliveryFee(_pinnedLat, _pinnedLng);
+    }
+  }
+
+  Future<void> _submitOrder() async {
+    final name = _nameCtrl.text.trim().isEmpty
+        ? (session.isStaff ? 'Walk-in Customer' : '')
+        : _nameCtrl.text.trim();
+    final phone = _phoneCtrl.text.trim().isEmpty
+        ? (session.isStaff ? 'N/A' : '')
+        : _phoneCtrl.text.trim();
+    final address = _needsCoordinates ? _addressCtrl.text.trim() : _orderType;
+
+    if (name.isEmpty || (_needsCoordinates && address.isEmpty) || (!session.isStaff && phone.isEmpty)) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Please fill in all required fields!'),
+        backgroundColor: KioskTheme.lunaBrown,
+        behavior: SnackBarBehavior.floating,
+      ));
+      return;
+    }
+    setState(() => _loading = true);
+    final orderNumber = TelegramService.generateOrderNumber();
+    final items = List<CartItem>.from(cartNotifier.items);
+    final total = cartNotifier.totalPrice + (_needsCoordinates ? _deliveryFee : 0);
+    final now = DateTime.now();
+    String pad(int n) => n.toString().padLeft(2, '0');
+    final timeStr = '${now.year}-${pad(now.month)}-${pad(now.day)}  ${pad(now.hour)}:${pad(now.minute)}';
+    
+    // POS/Staff orders are immediately paid at counter. Online orders default to standard statuses.
+    final paymentStatus = session.isStaff
+        ? 'PAID'
+        : (_paymentMethod == 'GCash' ? 'PENDING VERIFICATION' : 'NOT PAID');
+
+    await TelegramService.sendOrder(
+      orderNumber: orderNumber,
+      customerName: name,
+      customerAddress: address,
+      customerPhone: phone,
+      items: items,
+      total: total,
+      timeStr: timeStr,
+      orderType: _orderType,
+      deliveryFee: _needsCoordinates ? _deliveryFee : 0,
+      paymentMethod: _paymentMethod,
+      paymentStatus: paymentStatus,
+      lat: _needsCoordinates ? _pinnedLat : null,
+      lng: _needsCoordinates ? _pinnedLng : null,
+    );
+
+    // Save order model to Firestore with custom entryType, status, and PHT timezone tags
+    await OrderService.saveOrder(OrderModel(
+      orderId: orderNumber,
+      items: items.map((i) => OrderItem(name: i.name, variant: i.variant, price: i.price, quantity: i.quantity)).toList(),
+      totalAmount: total,
+      timestamp: now,
+      dateLabel: OrderService.getPHTDateLabel(),
+      type: _orderType,
+      entryType: session.isStaff ? 'Staff' : 'Kiosk',
+      customerName: name,
+      customerPhone: phone,
+      customerAddress: address,
+      lat: _needsCoordinates ? _pinnedLat : null,
+      lng: _needsCoordinates ? _pinnedLng : null,
+      deliveryFee: _needsCoordinates ? _deliveryFee : 0,
+      totalDistance: _needsCoordinates ? _distance : 0.0,
+      paymentMethod: _paymentMethod,
+      paymentStatus: paymentStatus,
+      status: 'Pending',
+    ));
+
+    cartNotifier.clear();
+    setState(() => _loading = false);
+    if (!mounted) return;
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+            builder: (_) => ReceiptPage(
+                  orderNumber: orderNumber,
+                  customerName: name,
+                  customerAddress: address,
+                  customerPhone: phone,
+                  items: items,
+                  total: total,
+                  timeStr: timeStr,
+                  isWalkIn: session.isStaff,
+                  orderType: _orderType,
+                  deliveryFee: _needsCoordinates ? _deliveryFee : 0,
+                )),
+        (route) => route.isFirst);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: KioskTheme.lunaCream,
+      appBar: AppBar(
+        title: Text(
+          session.isStaff ? 'POS CHECKOUT' : 'CHECKOUT',
+          style: GoogleFonts.outfit(
+            fontWeight: FontWeight.w900,
+            fontSize: 20,
+            color: KioskTheme.lunaTan,
+            letterSpacing: 2,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: KioskTheme.lunaBrown,
+        foregroundColor: KioskTheme.lunaTan,
+        elevation: 0,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(32), boxShadow: [
+                BoxShadow(color: KioskTheme.lunaBrown.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, 4))
+              ]),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'ORDER SUMMARY',
+                    style: GoogleFonts.outfit(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 16,
+                      color: KioskTheme.lunaBrown,
+                      letterSpacing: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ...cartNotifier.items.map((item) => Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: Row(
+                          children: [
+                            Text('${item.quantity}x', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, color: KioskTheme.lunaBrown, fontSize: 15)),
+                            const SizedBox(width: 12),
+                            Expanded(
+                                child: Text('${item.name}${item.variant.isNotEmpty ? ' (${item.variant})' : ''}',
+                                    style: GoogleFonts.outfit(fontSize: 15, color: KioskTheme.lunaBrown, fontWeight: FontWeight.w600),
+                                    overflow: TextOverflow.ellipsis)),
+                            Text('₱${item.price * item.quantity}', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, color: KioskTheme.lunaBrown, fontSize: 15)),
+                          ],
+                        ),
+                      )),
+                  const Divider(height: 40, thickness: 1),
+                  if (_needsCoordinates && _locationPinned) ...[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('DELIVERY FEE (${_distance.toStringAsFixed(1)}km)',
+                            style: GoogleFonts.outfit(fontWeight: FontWeight.w600, fontSize: 14, color: KioskTheme.lunaBrown.withOpacity(0.6))),
+                        Text('₱$_deliveryFee', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, color: KioskTheme.lunaBrown, fontSize: 15)),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                  ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('TOTAL', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 18, color: KioskTheme.lunaBrown, letterSpacing: 1.5)),
+                      Text('₱${cartNotifier.totalPrice + (_needsCoordinates ? _deliveryFee : 0)}',
+                          style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 32, color: KioskTheme.lunaBrown)),
+                    ],
+                  ),
+                  if (_needsCoordinates && _locationPinned && _distance > 10) ...[
+                    const SizedBox(height: 20),
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withOpacity(0.05),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.red.withOpacity(0.1)),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.warning_amber_rounded, color: Colors.red, size: 20),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text('Outside delivery range (Max 10km). Distance: ${_distance.toStringAsFixed(1)}km',
+                                style: GoogleFonts.outfit(color: Colors.red, fontWeight: FontWeight.w700, fontSize: 13)),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(height: 32),
+            Text('ORDER TYPE', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 16, color: KioskTheme.lunaBrown, letterSpacing: 1.5)),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                if (session.isStaff) ...[
+                  Expanded(
+                    child: _typeBtn(
+                      label: 'Walk-In',
+                      icon: Icons.point_of_sale_rounded,
+                      selected: _orderType == 'Walk-In',
+                      onTap: () => setState(() => _orderType = 'Walk-In'),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                ],
+                Expanded(
+                  child: _typeBtn(
+                    label: 'Pickup',
+                    icon: Icons.storefront_rounded,
+                    selected: _orderType == 'Pickup',
+                    onTap: () => setState(() => _orderType = 'Pickup'),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: _typeBtn(
+                    label: 'Delivery',
+                    icon: Icons.motorcycle_rounded,
+                    selected: _orderType == 'Delivery',
+                    onTap: () => setState(() => _orderType = 'Delivery'),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 32),
+            Text('PAYMENT METHOD', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 16, color: KioskTheme.lunaBrown, letterSpacing: 1.5)),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: _typeBtn(
+                    label: 'Cash',
+                    icon: Icons.payments_rounded,
+                    selected: _paymentMethod == 'Cash',
+                    onTap: () => setState(() => _paymentMethod = 'Cash'),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: _typeBtn(
+                    label: 'GCash',
+                    icon: Icons.phone_android_rounded,
+                    selected: _paymentMethod == 'GCash',
+                    onTap: () => setState(() => _paymentMethod = 'GCash'),
+                  ),
+                ),
+              ],
+            ),
+            AnimatedSize(
+              duration: const Duration(milliseconds: 300),
+              child: _paymentMethod == 'Cash'
+                  ? const SizedBox.shrink()
+                  : Container(
+                      margin: const EdgeInsets.only(top: 24),
+                      padding: const EdgeInsets.all(24),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF007DFE).withOpacity(0.05),
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(color: const Color(0xFF007DFE).withOpacity(0.2)),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(Icons.payment_rounded, color: Color(0xFF007DFE)),
+                              const SizedBox(width: 12),
+                              Text('GCASH INSTRUCTIONS', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 13, color: const Color(0xFF007DFE), letterSpacing: 1)),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          Text('1. Scan the QR code or send to:', style: GoogleFonts.outfit(fontSize: 14, color: KioskTheme.lunaBrown, fontWeight: FontWeight.w600)),
+                          const SizedBox(height: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+                            child: Text(
+                              _gcashHolder.isNotEmpty ? '$_gcashNumber ($_gcashHolder)' : _gcashNumber,
+                              style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w900, color: const Color(0xFF007DFE)),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Text('2. Take a screenshot of the receipt.', style: GoogleFonts.outfit(fontSize: 14, color: KioskTheme.lunaBrown, fontWeight: FontWeight.w600)),
+                          Text('3. Show the screenshot to our staff.', style: GoogleFonts.outfit(fontSize: 14, color: KioskTheme.lunaBrown, fontWeight: FontWeight.w600)),
+                          const SizedBox(height: 12),
+                          Center(
+                            child: Container(
+                              width: 200,
+                              height: 280,
+                              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.grey[200]!)),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: Image.asset('images/gcash_qr.png', fit: BoxFit.contain),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+            ),
+            const SizedBox(height: 32),
+            Text(
+              _needsCoordinates ? 'DELIVERY DETAILS' : 'CUSTOMER DETAILS',
+              style: GoogleFonts.outfit(
+                fontWeight: FontWeight.w900,
+                fontSize: 16,
+                color: KioskTheme.lunaBrown,
+                letterSpacing: 1.5,
+              ),
+            ),
+            const SizedBox(height: 16),
+            _field(
+              ctrl: _nameCtrl,
+              label: session.isStaff ? 'FULL NAME (OPTIONAL FOR POS)' : 'FULL NAME',
+              icon: Icons.person_rounded,
+              hint: session.isStaff ? 'e.g. Walk-in Customer (Default)' : 'e.g. Juan Dela Cruz',
+            ),
+            const SizedBox(height: 16),
+            AnimatedSize(
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeInOut,
+              child: !_needsCoordinates
+                  ? const SizedBox.shrink()
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        GestureDetector(
+                          onTap: _openMapPicker,
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                            decoration: BoxDecoration(
+                              color: _locationPinned ? KioskTheme.lunaBrown.withOpacity(0.05) : Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: _locationPinned ? KioskTheme.lunaBrown : Colors.grey[200]!, width: 2),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(_locationPinned ? Icons.location_on : Icons.add_location_alt_outlined, color: KioskTheme.lunaBrown, size: 24),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Text(
+                                    _locationPinned ? 'Location pinned on map' : 'Tap to pin your location on map',
+                                    style: GoogleFonts.outfit(
+                                        color: KioskTheme.lunaBrown, fontSize: 15, fontWeight: _locationPinned ? FontWeight.w900 : FontWeight.w600),
+                                  ),
+                                ),
+                                const Icon(Icons.chevron_right, color: KioskTheme.lunaBrown, size: 20),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        TextField(
+                          controller: _addressCtrl,
+                          maxLines: 2,
+                          style: GoogleFonts.outfit(fontWeight: FontWeight.w600, color: KioskTheme.lunaBrown),
+                          decoration: InputDecoration(
+                            hintText: 'Address auto-fills from map...',
+                            hintStyle: GoogleFonts.outfit(color: Colors.grey[400], fontSize: 14),
+                            prefixIcon: const Icon(Icons.edit_location_alt, color: KioskTheme.lunaBrown, size: 20),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide(color: Colors.grey[200]!)),
+                            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide(color: Colors.grey[200]!)),
+                            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: const BorderSide(color: KioskTheme.lunaBrown, width: 2)),
+                            filled: true,
+                            fillColor: Colors.white,
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                    ),
+            ),
+            _field(
+              ctrl: _phoneCtrl,
+              label: session.isStaff ? 'CONTACT NUMBER (OPTIONAL FOR POS)' : 'CONTACT NUMBER',
+              icon: Icons.phone_rounded,
+              hint: 'e.g. 09XX XXX XXXX',
+              keyboard: TextInputType.phone,
+            ),
+            const SizedBox(height: 48),
+            Builder(
+              builder: (context) {
+                final isBlocked = _needsCoordinates && (!_locationPinned || _distance > 10);
+                final label = _orderType == 'Walk-In'
+                    ? 'CONFIRM POS ORDER'
+                    : (_orderType == 'Pickup' ? 'CONFIRM PICKUP ORDER' : (isBlocked && _locationPinned ? 'OUTSIDE DELIVERY RANGE' : 'PLACE DELIVERY ORDER'));
+
+                return JuicyFeedback(
+                  onPressed: (_loading || isBlocked) ? null : _submitOrder,
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 24),
+                    decoration: BoxDecoration(
+                      color: (_loading || isBlocked) ? Colors.grey[400] : KioskTheme.lunaBrown,
+                      borderRadius: BorderRadius.circular(50),
+                      boxShadow: (_loading || isBlocked)
+                          ? []
+                          : [
+                              BoxShadow(color: KioskTheme.lunaBrown.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, 10)),
+                            ],
+                    ),
+                    child: Center(
+                      child: _loading
+                          ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5))
+                          : Text(label, style: GoogleFonts.outfit(color: KioskTheme.lunaTan, fontWeight: FontWeight.w900, fontSize: 18, letterSpacing: 1.5)),
+                    ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 60),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _typeBtn({required String label, required IconData icon, required bool selected, required VoidCallback onTap}) {
+    return JuicyFeedback(
+      onPressed: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        decoration: BoxDecoration(
+          color: selected ? KioskTheme.lunaBrown : Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: selected ? KioskTheme.lunaBrown : Colors.grey[200]!, width: 2),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, size: 32, color: selected ? Colors.white : KioskTheme.lunaBrown),
+            const SizedBox(height: 8),
+            Text(label.toUpperCase(), style: GoogleFonts.outfit(color: selected ? Colors.white : KioskTheme.lunaBrown, fontWeight: FontWeight.w900, fontSize: 14, letterSpacing: 2)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _field({required TextEditingController ctrl, required String label, required IconData icon, required String hint, TextInputType keyboard = TextInputType.text}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 13, color: KioskTheme.lunaBrown, letterSpacing: 1)),
+        const SizedBox(height: 8),
+        TextField(
+          controller: ctrl,
+          keyboardType: keyboard,
+          style: GoogleFonts.outfit(fontWeight: FontWeight.w600, color: KioskTheme.lunaBrown),
+          decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: GoogleFonts.outfit(color: Colors.grey[400], fontSize: 14),
+            prefixIcon: Icon(icon, color: KioskTheme.lunaBrown, size: 20),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide(color: Colors.grey[200]!)),
+            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide(color: Colors.grey[200]!)),
+            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: const BorderSide(color: KioskTheme.lunaBrown, width: 2)),
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          ),
+        ),
+      ],
+    );
+  }
+}

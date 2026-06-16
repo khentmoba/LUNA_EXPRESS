@@ -1,0 +1,16 @@
+import { initializeApp } from 'firebase-admin/app';
+import { defineString } from 'firebase-functions/params';
+
+initializeApp();
+
+// Define params at the entry point for faster discovery
+export const telegramToken = defineString('TELEGRAM_TOKEN');
+export const telegramChatIds = defineString('TELEGRAM_CHAT_ID');
+
+export { dailySalesReport } from './reporting/daily_report';
+export { triggerManualReport } from './reporting/manual_report';
+export { verifyStaff } from './auth/verify_staff';
+export { sendOrderNotification } from './orders/send_notification';
+export { getActiveOrders, updateOrderStatus } from './orders/kds';
+export { getSalesAnalytics } from './reporting/analytics';
+
