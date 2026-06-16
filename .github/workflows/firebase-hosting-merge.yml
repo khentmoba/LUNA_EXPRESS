@@ -43,5 +43,5 @@ jobs:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_LUNAEXPRESS }}
         run: |
           echo "$FIREBASE_SERVICE_ACCOUNT" > "$HOME"/service-account.json
-          echo "GOOGLE_APPLICATION_CREDENTIALS=$HOME/service-account.json" >> $GITHUB_ENV
+          export GOOGLE_APPLICATION_CREDENTIALS="$HOME/service-account.json"
           npx firebase-tools deploy --only functions --project lunaexpress --non-interactive
