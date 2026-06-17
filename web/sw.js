@@ -8,7 +8,7 @@
 // ═══════════════════════════════════════════════════
 
 // ── Change this version string every time you deploy ──
-const SW_VERSION = 'v1.1.0';
+const SW_VERSION = 'v1.1.1';
 const CACHE_NAME = 'luna-express-' + SW_VERSION;
 
 const PRECACHE_URLS = [
@@ -28,7 +28,6 @@ self.addEventListener('install', function(event) {
       .then(function(cache) { return cache.addAll(PRECACHE_URLS); })
       .then(function() {
         console.log('[SW ' + SW_VERSION + '] Pre-cache done');
-        self.skipWaiting();
       })
   );
 });

@@ -77,18 +77,15 @@ class KioskMenuPage extends StatelessWidget {
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: Row(
-                      children: [
-                        Text(
-                          'LUNA BITES & DELIGHTS',
-                          style: GoogleFonts.outfit(
-                            fontSize: isMobile ? 14 : 18,
-                            fontWeight: FontWeight.w900,
-                            color: KioskTheme.textPrimary,
-                            letterSpacing: isMobile ? 1 : 2,
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      'LUNA BITES & DELIGHTS',
+                      style: GoogleFonts.outfit(
+                        fontSize: isMobile ? 14 : 18,
+                        fontWeight: FontWeight.w900,
+                        color: KioskTheme.textPrimary,
+                        letterSpacing: isMobile ? 1 : 2,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   ListenableBuilder(
