@@ -207,6 +207,7 @@
     }
 
     checkVersionUpdate();
+    setInterval(checkVersionUpdate, 60000);
 
     document.addEventListener('visibilitychange', function() {
       if (!document.hidden) {
