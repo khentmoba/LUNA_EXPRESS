@@ -88,48 +88,86 @@ class KioskMenuPage extends StatelessWidget {
                     softWrap: false,
                   ),
                   const Spacer(),
-                  ListenableBuilder(
-                    listenable: session,
-                    builder: (context, _) {
-                      return JuicyFeedback(
-                        onPressed: () {
-                          if (session.isStaff) {
-                            _openStaffMenu(context);
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (_) => const StaffLoginDialog(),
-                            );
-                          }
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListenableBuilder(
+                        listenable: session,
+                        builder: (context, _) {
+                          return JuicyFeedback(
+                            onPressed: () {
+                              if (session.isStaff) {
+                                _openStaffMenu(context);
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (_) => const StaffLoginDialog(),
+                                );
+                              }
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: isMobile ? 10 : 14, vertical: isMobile ? 6 : 8),
+                              decoration: BoxDecoration(
+                                color: session.isStaff
+                                    ? Colors.green.withOpacity(0.1)
+                                    : KioskTheme.lunaBrown.withOpacity(0.08),
+                                borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
+                                border: Border.all(
+                                  color: session.isStaff
+                                      ? Colors.green.withOpacity(0.3)
+                                      : KioskTheme.lunaBrown.withOpacity(0.1),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    session.isStaff
+                                        ? Icons.shield_rounded
+                                        : Icons.lock_outline_rounded,
+                                    color: session.isStaff ? KioskTheme.success : KioskTheme.lunaBrown,
+                                    size: isMobile ? 14 : 16,
+                                  ),
+                                  SizedBox(width: isMobile ? 4 : 6),
+                                  Text(
+                                    session.isStaff ? 'STAFF CONSOLE' : 'STAFF LOGIN',
+                                    style: GoogleFonts.outfit(
+                                      color: session.isStaff ? KioskTheme.success : KioskTheme.lunaBrown,
+                                      fontSize: isMobile ? 10 : 11,
+                                      fontWeight: FontWeight.w900,
+                                      letterSpacing: isMobile ? 0.5 : 1,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
                         },
-                          child: Container(
+                      ),
+                      SizedBox(height: isMobile ? 8 : 10),
+                      JuicyFeedback(
+                        onPressed: () {
+                          kioskSession.reset();
+                          cartNotifier.clear();
+                          Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+                        },
+                        child: Container(
                           padding: EdgeInsets.symmetric(horizontal: isMobile ? 10 : 14, vertical: isMobile ? 6 : 8),
                           decoration: BoxDecoration(
-                            color: session.isStaff
-                                ? Colors.green.withOpacity(0.1)
-                                : KioskTheme.lunaBrown.withOpacity(0.08),
+                            color: KioskTheme.lunaBrown.withOpacity(0.08),
                             borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
-                            border: Border.all(
-                              color: session.isStaff
-                                  ? Colors.green.withOpacity(0.3)
-                                  : KioskTheme.lunaBrown.withOpacity(0.1),
-                            ),
+                            border: Border.all(color: KioskTheme.lunaBrown.withOpacity(0.1)),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(
-                                session.isStaff
-                                    ? Icons.shield_rounded
-                                    : Icons.lock_outline_rounded,
-                                color: session.isStaff ? KioskTheme.success : KioskTheme.lunaBrown,
-                                size: isMobile ? 14 : 16,
-                              ),
+                              Icon(Icons.refresh_rounded, color: KioskTheme.lunaBrown, size: isMobile ? 14 : 16),
                               SizedBox(width: isMobile ? 4 : 6),
                               Text(
-                                session.isStaff ? 'STAFF CONSOLE' : 'STAFF LOGIN',
+                                'START OVER',
                                 style: GoogleFonts.outfit(
-                                  color: session.isStaff ? KioskTheme.success : KioskTheme.lunaBrown,
+                                  color: KioskTheme.lunaBrown,
                                   fontSize: isMobile ? 10 : 11,
                                   fontWeight: FontWeight.w900,
                                   letterSpacing: isMobile ? 0.5 : 1,
@@ -138,40 +176,8 @@ class KioskMenuPage extends StatelessWidget {
                             ],
                           ),
                         ),
-                      );
-                    },
-                  ),
-                  SizedBox(width: isMobile ? 8 : 12),
-                  JuicyFeedback(
-                    onPressed: () {
-                      kioskSession.reset();
-                      cartNotifier.clear();
-                      Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: isMobile ? 10 : 14, vertical: isMobile ? 6 : 8),
-                      decoration: BoxDecoration(
-                        color: KioskTheme.lunaBrown.withOpacity(0.08),
-                        borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
-                        border: Border.all(color: KioskTheme.lunaBrown.withOpacity(0.1)),
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.refresh_rounded, color: KioskTheme.lunaBrown, size: isMobile ? 14 : 16),
-                          SizedBox(width: isMobile ? 4 : 6),
-                          Text(
-                            'START OVER',
-                            style: GoogleFonts.outfit(
-                              color: KioskTheme.lunaBrown,
-                              fontSize: isMobile ? 10 : 11,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: isMobile ? 0.5 : 1,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    ],
                   ),
                 ],
               ),
