@@ -66,7 +66,6 @@ class KioskMenuPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Brand Identity Section
               Row(
                 children: [
                   Image.asset(
@@ -85,14 +84,13 @@ class KioskMenuPage extends StatelessWidget {
                           style: GoogleFonts.outfit(
                             fontSize: isMobile ? 14 : 18,
                             fontWeight: FontWeight.w900,
-                            color: KioskTheme.lunaBrown,
+                            color: KioskTheme.textPrimary,
                             letterSpacing: isMobile ? 1 : 2,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  // Staff Portal Button
                   ListenableBuilder(
                     listenable: session,
                     builder: (context, _) {
@@ -103,7 +101,7 @@ class KioskMenuPage extends StatelessWidget {
                           } else {
                             showDialog(
                               context: context,
-                              builder: (_) => StaffLoginDialog(),
+                              builder: (_) => const StaffLoginDialog(),
                             );
                           }
                         },
@@ -113,7 +111,7 @@ class KioskMenuPage extends StatelessWidget {
                             color: session.isStaff
                                 ? Colors.green.withOpacity(0.1)
                                 : KioskTheme.lunaBrown.withOpacity(0.08),
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
                             border: Border.all(
                               color: session.isStaff
                                   ? Colors.green.withOpacity(0.3)
@@ -127,14 +125,14 @@ class KioskMenuPage extends StatelessWidget {
                                 session.isStaff
                                     ? Icons.shield_rounded
                                     : Icons.lock_outline_rounded,
-                                color: session.isStaff ? Colors.green : KioskTheme.lunaBrown,
+                                color: session.isStaff ? KioskTheme.success : KioskTheme.lunaBrown,
                                 size: 16,
                               ),
                               const SizedBox(width: 6),
                               Text(
                                 session.isStaff ? 'STAFF CONSOLE' : 'STAFF LOGIN',
                                 style: GoogleFonts.outfit(
-                                  color: session.isStaff ? Colors.green : KioskTheme.lunaBrown,
+                                  color: session.isStaff ? KioskTheme.success : KioskTheme.lunaBrown,
                                   fontSize: 11,
                                   fontWeight: FontWeight.w900,
                                   letterSpacing: 1,
@@ -147,7 +145,6 @@ class KioskMenuPage extends StatelessWidget {
                     },
                   ),
                   const SizedBox(width: 12),
-                  // Start Over Button
                   JuicyFeedback(
                     onPressed: () {
                       kioskSession.reset();
@@ -158,7 +155,7 @@ class KioskMenuPage extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                       decoration: BoxDecoration(
                         color: KioskTheme.lunaBrown.withOpacity(0.08),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
                         border: Border.all(color: KioskTheme.lunaBrown.withOpacity(0.1)),
                       ),
                       child: Row(
@@ -179,7 +176,6 @@ class KioskMenuPage extends StatelessWidget {
                       ),
                     ),
                   ),
-
                 ],
               ),
               SizedBox(height: isMobile ? 16 : 32),
@@ -195,7 +191,7 @@ class KioskMenuPage extends StatelessWidget {
                           style: GoogleFonts.outfit(
                             fontSize: isMobile ? 28 : 40,
                             fontWeight: FontWeight.w900,
-                            color: KioskTheme.lunaBrown,
+                            color: KioskTheme.textPrimary,
                             letterSpacing: 1,
                           ),
                         ),
@@ -203,14 +199,13 @@ class KioskMenuPage extends StatelessWidget {
                           section.subtitle.isNotEmpty ? section.subtitle : section.title,
                           style: GoogleFonts.outfit(
                             fontSize: isMobile ? 14 : 18,
-                            color: Colors.grey[500],
+                            color: KioskTheme.textMuted,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  // Cart Status
                   _buildCartBadge(context, isMobile),
                 ],
               ),
@@ -306,7 +301,7 @@ class KioskMenuPage extends StatelessWidget {
                         height: 22,
                         decoration: BoxDecoration(
                           color: KioskTheme.lunaBrown,
-                          borderRadius: BorderRadius.circular(2),
+                          borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -315,14 +310,14 @@ class KioskMenuPage extends StatelessWidget {
                         style: GoogleFonts.outfit(
                           fontSize: isMobile ? 18 : 22,
                           fontWeight: FontWeight.w900,
-                          color: KioskTheme.lunaBrown,
+                          color: KioskTheme.textPrimary,
                           letterSpacing: 2,
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Divider(color: KioskTheme.lunaBrown.withOpacity(0.15), thickness: 1.5),
+                  KioskTheme.divider(),
                 ],
               ),
             ),
@@ -334,7 +329,6 @@ class KioskMenuPage extends StatelessWidget {
     }
     addGrid();
 
-    // Add bottom padding
     slivers.add(SliverToBoxAdapter(child: SizedBox(height: isMobile ? 120 : 100)));
 
     return slivers;
@@ -345,8 +339,8 @@ class KioskMenuPage extends StatelessWidget {
       listenable: cartNotifier,
       builder: (context, _) {
         if (cartNotifier.totalCount == 0) return const SizedBox.shrink();
-        return GestureDetector(
-          onTap: () => Navigator.pushNamed(context, '/cart'),
+        return JuicyFeedback(
+          onPressed: () => Navigator.pushNamed(context, '/cart'),
           child: Container(
             margin: EdgeInsets.only(bottom: isMobile ? 12 : 24),
             padding: EdgeInsets.symmetric(
@@ -355,22 +349,16 @@ class KioskMenuPage extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               color: KioskTheme.lunaBrown,
-              borderRadius: BorderRadius.circular(50),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 30,
-                  offset: Offset(0, 10),
-                )
-              ],
+              borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
+              boxShadow: KioskTheme.shadowXl,
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.shopping_basket, color: KioskTheme.lunaTan),
+                const Icon(Icons.shopping_basket, color: KioskTheme.textOnPrimary),
                 SizedBox(width: isMobile ? 12 : 16),
                 Text(
-                  'VIEW ORDER · ₱${cartNotifier.totalPrice}',
+                  'VIEW ORDER \u00B7 \u20B1${cartNotifier.totalPrice}',
                   style: GoogleFonts.outfit(
                     color: Colors.white,
                     fontWeight: FontWeight.w900,
@@ -397,18 +385,20 @@ class KioskMenuPage extends StatelessWidget {
               vertical: isMobile ? 8 : 12,
             ),
             decoration: BoxDecoration(
-              color: Colors.grey[100],
-              borderRadius: BorderRadius.circular(30),
+              color: KioskTheme.lunaWarmWhite,
+              borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
+              boxShadow: KioskTheme.shadowSm,
             ),
             child: Row(
               children: [
-                Icon(Icons.shopping_cart_outlined, size: isMobile ? 18 : 20),
+                Icon(Icons.shopping_cart_outlined, size: isMobile ? 18 : 20, color: KioskTheme.lunaBrown),
                 SizedBox(width: isMobile ? 6 : 8),
                 Text(
                   '${cartNotifier.totalCount}',
                   style: GoogleFonts.outfit(
                     fontWeight: FontWeight.w900,
                     fontSize: isMobile ? 14 : 16,
+                    color: KioskTheme.textPrimary,
                   ),
                 ),
               ],

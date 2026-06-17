@@ -21,7 +21,7 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(KioskTheme.radiusXl)),
       ),
       padding: const EdgeInsets.all(32),
       child: Column(
@@ -32,22 +32,15 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
             height: 4,
             decoration: BoxDecoration(
               color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(2),
+              borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
             ),
           ),
           const SizedBox(height: 24),
           Text(
             'STAFF CONTROL CONSOLE',
-            style: GoogleFonts.outfit(
-              fontSize: 18,
-              fontWeight: FontWeight.w900,
-              color: KioskTheme.lunaBrown,
-              letterSpacing: 2,
-            ),
+            style: KioskTheme.headerSmall.copyWith(letterSpacing: 2),
           ),
           const SizedBox(height: 24),
-          
-          // Row for KDS and Analytics
           Row(
             children: [
               Expanded(
@@ -78,7 +71,6 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
             ],
           ),
           const SizedBox(height: 16),
-
           _buildActionItem(
             context,
             icon: Icons.point_of_sale_rounded,
@@ -86,36 +78,33 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
             subtitle: 'Checkout walk-in orders directly',
             color: KioskTheme.lunaBrown,
             onTap: () {
-              Navigator.pop(context); // close dialog, ready for POS menu checkout
+              Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('POS CHECKOUT MODE ACTIVE', style: GoogleFonts.outfit(fontWeight: FontWeight.w900)),
                   backgroundColor: KioskTheme.lunaBrown,
-                  behavior: SnackBarBehavior.floating,
                 ),
               );
             },
           ),
           const SizedBox(height: 12),
-
           _buildActionItem(
             context,
             icon: _isGenerating ? Icons.hourglass_empty_rounded : Icons.telegram_rounded,
             title: _isGenerating ? 'GENERATING SUMMARY...' : 'TELEGRAM DAILY SUMMARY',
             subtitle: _isGenerating ? 'Sending report...' : 'Send today\'s sales metrics to Telegram',
-            color: _isGenerating ? Colors.grey : Colors.blue,
+            color: _isGenerating ? KioskTheme.textMuted : KioskTheme.info,
             onTap: _isGenerating ? () {} : () {
               _triggerManualReport(context);
             },
           ),
           const SizedBox(height: 12),
-
           _buildActionItem(
             context,
             icon: Icons.logout_rounded,
             title: 'LOGOUT STAFF PORTAL',
             subtitle: 'Exit staff mode and clear active POS state',
-            color: Colors.red,
+            color: KioskTheme.error,
             onTap: () {
               Navigator.pop(context);
               session.logout();
@@ -124,7 +113,6 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
                 SnackBar(
                   content: Text('STAFF LOGGED OUT', style: GoogleFonts.outfit(fontWeight: FontWeight.w900)),
                   backgroundColor: KioskTheme.lunaBrown,
-                  behavior: SnackBarBehavior.floating,
                 ),
               );
             },
@@ -148,7 +136,7 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
         padding: const EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
           color: color.withOpacity(0.05),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
           border: Border.all(color: color.withOpacity(0.15)),
         ),
         child: Column(
@@ -157,12 +145,7 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
             const SizedBox(height: 10),
             Text(
               title,
-              style: GoogleFonts.outfit(
-                fontWeight: FontWeight.w900,
-                fontSize: 13,
-                color: color,
-                letterSpacing: 1,
-              ),
+              style: KioskTheme.labelLarge.copyWith(color: color, fontSize: 13),
             ),
           ],
         ),
@@ -184,7 +167,7 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
           color: color.withOpacity(0.05),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
           border: Border.all(color: color.withOpacity(0.1)),
         ),
         child: Row(
@@ -204,20 +187,11 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
                 children: [
                   Text(
                     title,
-                    style: GoogleFonts.outfit(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 13,
-                      color: color,
-                      letterSpacing: 1,
-                    ),
+                    style: KioskTheme.labelLarge.copyWith(color: color, fontSize: 13),
                   ),
                   Text(
                     subtitle,
-                    style: GoogleFonts.outfit(
-                      fontSize: 11,
-                      color: Colors.grey[600],
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: KioskTheme.bodySmall.copyWith(fontSize: 11),
                   ),
                 ],
               ),
@@ -237,7 +211,7 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
             'triggerManualReport',
             options: HttpsCallableOptions(timeout: const Duration(seconds: 30)),
           );
-      
+
       final HttpsCallableResult result = await callable.call({});
       final data = result.data as Map<dynamic, dynamic>;
       final bool isSuccess = data['success'] == true;
@@ -249,8 +223,7 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('SALES REPORT SENT TO TELEGRAM!', style: GoogleFonts.outfit(fontWeight: FontWeight.w900)),
-              backgroundColor: Colors.green,
-              behavior: SnackBarBehavior.floating,
+              backgroundColor: KioskTheme.success,
             ),
           );
         } else {
@@ -258,8 +231,7 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('ERROR: $msg', style: GoogleFonts.outfit(fontWeight: FontWeight.w900)),
-              backgroundColor: Colors.orange,
-              behavior: SnackBarBehavior.floating,
+              backgroundColor: KioskTheme.warning,
             ),
           );
         }
@@ -276,8 +248,7 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('CRASH: $errorMessage', style: GoogleFonts.outfit(fontWeight: FontWeight.w900)),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
+            backgroundColor: KioskTheme.error,
           ),
         );
       }

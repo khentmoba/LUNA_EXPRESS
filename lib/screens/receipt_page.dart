@@ -32,7 +32,7 @@ class ReceiptPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'RECEIPT',
-          style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 20, color: KioskTheme.lunaBrown, letterSpacing: 2),
+          style: KioskTheme.headerSmall.copyWith(letterSpacing: 2),
         ),
         centerTitle: true,
         backgroundColor: Colors.transparent,
@@ -47,17 +47,7 @@ class ReceiptPage extends StatelessWidget {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 24),
-              decoration: BoxDecoration(
-                color: KioskTheme.lunaBrown,
-                borderRadius: BorderRadius.circular(40),
-                boxShadow: [
-                  BoxShadow(
-                    color: KioskTheme.lunaBrown.withOpacity(0.3),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
-                  )
-                ],
-              ),
+              decoration: KioskTheme.cardBrown,
               child: Column(
                 children: [
                   Container(
@@ -93,14 +83,8 @@ class ReceiptPage extends StatelessWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(40),
-                boxShadow: [
-                  BoxShadow(
-                    color: KioskTheme.lunaBrown.withOpacity(0.05),
-                    blurRadius: 32,
-                    offset: const Offset(0, 8),
-                  )
-                ],
+                borderRadius: BorderRadius.circular(KioskTheme.radiusXl),
+                boxShadow: KioskTheme.shadowLg,
               ),
               child: Column(
                 children: [
@@ -109,16 +93,16 @@ class ReceiptPage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 32),
                     decoration: BoxDecoration(
                       color: KioskTheme.lunaTan.withOpacity(0.3),
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(KioskTheme.radiusXl)),
                     ),
                     child: Column(
                       children: [
-                        Text('LUNA EXPRESS', style: GoogleFonts.outfit(color: KioskTheme.lunaBrown, fontWeight: FontWeight.w900, fontSize: 22, letterSpacing: 4)),
-                        Text('Luna Bites & Delights', style: GoogleFonts.outfit(color: KioskTheme.lunaBrown.withOpacity(0.5), fontSize: 14, fontWeight: FontWeight.w600)),
+                        Text('LUNA EXPRESS', style: KioskTheme.headerMedium.copyWith(letterSpacing: 4)),
+                        Text('Luna Bites & Delights', style: KioskTheme.bodyMedium),
                         const SizedBox(height: 20),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                          decoration: BoxDecoration(color: KioskTheme.lunaBrown, borderRadius: BorderRadius.circular(50)),
+                          decoration: KioskTheme.badgeBrown,
                           child: Text('ORDER # $orderNumber', style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 20, letterSpacing: 2)),
                         ),
                       ],
@@ -130,48 +114,49 @@ class ReceiptPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (!isWalkIn) ...[
-                          _row('👤 NAME', customerName),
+                          _row('FULL NAME', customerName),
                           const SizedBox(height: 12),
                           if (!_isPickup) ...[
-                            _row('📍 ADDRESS', customerAddress),
+                            _row('ADDRESS', customerAddress),
                             const SizedBox(height: 12),
                           ],
-                          _row('📞 PHONE', customerPhone),
+                          _row('PHONE', customerPhone),
                           const SizedBox(height: 12),
                         ],
-                        _row('🕐 TIME', timeStr),
+                        _row('TIME', timeStr),
                         const SizedBox(height: 24),
-                        const Divider(height: 1),
+                        KioskTheme.divider(),
                         const SizedBox(height: 24),
-                        Text('ITEMS ORDERED', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 14, color: Colors.grey, letterSpacing: 2)),
+                        Text('ITEMS ORDERED', style: KioskTheme.labelMedium.copyWith(color: KioskTheme.textMuted, fontSize: 14)),
                         const SizedBox(height: 16),
                         ...items.map((item) => Padding(
                               padding: const EdgeInsets.only(bottom: 16),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('${item.quantity}x', style: GoogleFonts.outfit(color: KioskTheme.lunaBrown, fontWeight: FontWeight.w900, fontSize: 16)),
+                                  Text('${item.quantity}x', style: KioskTheme.titleMedium.copyWith(fontSize: 16)),
                                   const SizedBox(width: 16),
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(item.name, style: GoogleFonts.outfit(fontWeight: FontWeight.w800, fontSize: 16, color: KioskTheme.lunaBrown)),
-                                        if (item.variant.isNotEmpty) Text(item.variant, style: GoogleFonts.outfit(fontSize: 12, color: Colors.grey[500])),
+                                        Text(item.name, style: KioskTheme.titleLarge.copyWith(fontSize: 16)),
+                                        if (item.variant.isNotEmpty) Text(item.variant, style: KioskTheme.bodySmall),
                                       ],
                                     ),
                                   ),
-                                  Text('₱${item.price * item.quantity}', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 16, color: KioskTheme.lunaBrown)),
+                                  Text('\u20B1${item.price * item.quantity}', style: KioskTheme.titleMedium.copyWith(fontSize: 16)),
                                 ],
                               ),
                             )),
-                        const Divider(height: 32, thickness: 1),
+                        KioskTheme.divider(),
+                        const SizedBox(height: 32),
                         if (!_isPickup && deliveryFee > 0) ...[
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('DELIVERY FEE', style: GoogleFonts.outfit(fontWeight: FontWeight.w700, fontSize: 14, color: Colors.grey[500], letterSpacing: 1)),
-                              Text('₱$deliveryFee', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 16, color: KioskTheme.lunaBrown)),
+                              Text('DELIVERY FEE', style: KioskTheme.bodyMedium.copyWith(letterSpacing: 1)),
+                              Text('\u20B1$deliveryFee', style: KioskTheme.titleMedium.copyWith(fontSize: 16)),
                             ],
                           ),
                           const SizedBox(height: 12),
@@ -179,8 +164,8 @@ class ReceiptPage extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('GRAND TOTAL', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 18, color: KioskTheme.lunaBrown, letterSpacing: 1)),
-                            Text('₱$total', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 36, color: KioskTheme.lunaBrown)),
+                            Text('GRAND TOTAL', style: KioskTheme.headerSmall.copyWith(letterSpacing: 1)),
+                            Text('\u20B1$total', style: KioskTheme.headerLarge.copyWith(fontSize: 36)),
                           ],
                         ),
                         const SizedBox(height: 32),
@@ -189,7 +174,7 @@ class ReceiptPage extends StatelessWidget {
                           padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
                             color: KioskTheme.lunaTan.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
                             border: Border.all(color: KioskTheme.lunaTan.withOpacity(0.5)),
                           ),
                           child: Center(
@@ -199,7 +184,7 @@ class ReceiptPage extends StatelessWidget {
                                   : _isPickup
                                       ? 'Please pick up your order at the counter.'
                                       : 'Screenshot this for your records!',
-                              style: GoogleFonts.outfit(fontSize: 14, color: KioskTheme.lunaBrown, fontWeight: FontWeight.w700),
+                              style: KioskTheme.bodyLarge.copyWith(fontSize: 14),
                               textAlign: TextAlign.center,
                             ),
                           ),
@@ -218,14 +203,8 @@ class ReceiptPage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 24),
                 decoration: BoxDecoration(
                   color: KioskTheme.lunaBrown,
-                  borderRadius: BorderRadius.circular(50),
-                  boxShadow: [
-                    BoxShadow(
-                      color: KioskTheme.lunaBrown.withOpacity(0.3),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    )
-                  ],
+                  borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
+                  boxShadow: KioskTheme.shadowPrimary,
                 ),
                 child: Center(
                   child: Text(
@@ -245,8 +224,9 @@ class ReceiptPage extends StatelessWidget {
   Widget _row(String label, String value) => Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(width: 120, child: Text(label, style: GoogleFonts.outfit(fontSize: 12, color: Colors.grey[500], fontWeight: FontWeight.w900, letterSpacing: 1))),
-          Expanded(child: Text(value, style: GoogleFonts.outfit(fontSize: 14, color: KioskTheme.lunaBrown, fontWeight: FontWeight.w700))),
+          SizedBox(width: 100, child: Text(label, style: KioskTheme.labelMedium.copyWith(color: KioskTheme.textMuted))),
+          const SizedBox(width: 16),
+          Expanded(child: Text(value, style: KioskTheme.bodyLarge.copyWith(fontSize: 14))),
         ],
       );
 }

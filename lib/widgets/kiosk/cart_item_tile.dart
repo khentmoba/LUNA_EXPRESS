@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../models/cart.dart';
 import '../../services/cart_notifier.dart';
 import 'kiosk_theme.dart';
+import 'juicy_feedback.dart';
 
 class CartItemTile extends StatelessWidget {
   final CartItem item;
@@ -13,21 +14,11 @@ class CartItemTile extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          )
-        ],
-      ),
+      decoration: KioskTheme.cardWhite,
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
             child: SizedBox(
               width: 64,
               height: 64,
@@ -47,19 +38,19 @@ class CartItemTile extends StatelessWidget {
               children: [
                 Text(
                   item.name,
-                  style: GoogleFonts.outfit(fontWeight: FontWeight.w800, fontSize: 14, color: KioskTheme.lunaBrown),
+                  style: GoogleFonts.outfit(fontWeight: FontWeight.w800, fontSize: 14, color: KioskTheme.textPrimary),
                 ),
                 if (item.variant.isNotEmpty)
                   Text(
                     item.variant,
-                    style: GoogleFonts.outfit(fontSize: 11, color: KioskTheme.lunaBrown.withOpacity(0.5)),
+                    style: GoogleFonts.outfit(fontSize: 11, color: KioskTheme.textMuted),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 const SizedBox(height: 4),
                 Text(
-                  '₱${item.price}',
-                  style: GoogleFonts.outfit(color: KioskTheme.lunaBrown, fontWeight: FontWeight.w900, fontSize: 14),
+                  '\u20B1${item.price}',
+                  style: GoogleFonts.outfit(color: KioskTheme.textPrimary, fontWeight: FontWeight.w900, fontSize: 14),
                 ),
               ],
             ),
@@ -67,9 +58,12 @@ class CartItemTile extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              GestureDetector(
-                onTap: () => cartNotifier.remove(item.id),
-                child: const Icon(Icons.close, color: Colors.grey, size: 18),
+              JuicyFeedback(
+                onPressed: () => cartNotifier.remove(item.id),
+                child: const Padding(
+                  padding: EdgeInsets.all(4.0),
+                  child: Icon(Icons.close, color: KioskTheme.textMuted, size: 18),
+                ),
               ),
               const SizedBox(height: 8),
               Row(
@@ -79,7 +73,7 @@ class CartItemTile extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Text(
                       '${item.quantity}',
-                      style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 15, color: KioskTheme.lunaBrown),
+                      style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 15, color: KioskTheme.textPrimary),
                     ),
                   ),
                   _qBtn(Icons.add, () => cartNotifier.increment(item.id)),
@@ -93,19 +87,19 @@ class CartItemTile extends StatelessWidget {
   }
 
   Widget _emoji() => Container(
-        color: const Color(0xFFFFF0CC),
+        color: KioskTheme.lunaLightTan.withOpacity(0.5),
         child: Center(
           child: Text(item.emoji, style: const TextStyle(fontSize: 30)),
         ),
       );
 
-  Widget _qBtn(IconData icon, VoidCallback fn) => GestureDetector(
-        onTap: fn,
+  Widget _qBtn(IconData icon, VoidCallback fn) => JuicyFeedback(
+        onPressed: fn,
         child: Container(
           width: 28,
           height: 28,
           decoration: BoxDecoration(
-            color: icon == Icons.add ? KioskTheme.lunaBrown : Colors.grey[100],
+            color: icon == Icons.add ? KioskTheme.lunaBrown : KioskTheme.lunaWarmWhite,
             shape: BoxShape.circle,
           ),
           child: Icon(

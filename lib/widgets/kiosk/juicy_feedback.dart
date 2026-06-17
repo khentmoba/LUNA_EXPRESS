@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'kiosk_theme.dart';
 
-/// A universal wrapper that provides "Juicy" tactile and visual feedback.
-/// It triggers a slight scale "Pop" and a light haptic vibration immediately on touch.
 class JuicyFeedback extends StatefulWidget {
   final Widget child;
   final VoidCallback? onPressed;
@@ -22,45 +20,62 @@ class JuicyFeedback extends StatefulWidget {
   State<JuicyFeedback> createState() => _JuicyFeedbackState();
 }
 
-class _JuicyFeedbackState extends State<JuicyFeedback> {
-  bool _isPressed = false;
-  bool _isHovered = false;
+class _JuicyFeedbackState extends State<JuicyFeedback> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnim;
   static int _lastHaptics = 0;
 
-  void _updatePressed(bool pressed) {
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: widget.duration ?? KioskTheme.kJuicyDuration,
+    );
+    _scaleAnim = Tween<double>(begin: 1.0, end: widget.scale ?? KioskTheme.kJuicyScale).animate(
+      CurvedAnimation(parent: _controller, curve: KioskTheme.kJuicyCurve),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onPointerDown(PointerDownEvent event) {
     final now = DateTime.now().millisecondsSinceEpoch;
-    if (pressed && !_isPressed && (now - _lastHaptics) > 100) {
-      // Immediate haptic confirmation on touch start
+    if (now - _lastHaptics > 100) {
       HapticFeedback.lightImpact();
       _lastHaptics = now;
     }
-    if (mounted && _isPressed != pressed) {
-      setState(() => _isPressed = pressed);
-    }
+    _controller.forward();
+  }
+
+  void _onPointerUp(PointerUpEvent event) {
+    _controller.reverse();
+  }
+
+  void _onPointerCancel(PointerCancelEvent event) {
+    _controller.reverse();
   }
 
   @override
   Widget build(BuildContext context) {
-    double currentScale = 1.0;
-    if (_isPressed) {
-      currentScale = widget.scale ?? KioskTheme.kJuicyScale;
-    } else if (_isHovered) {
-      currentScale = 1.02; // premium subtle scale on hover
-    }
-
-    Widget result = AnimatedScale(
-      scale: currentScale,
-      duration: widget.duration ?? KioskTheme.kJuicyDuration,
-      curve: KioskTheme.kJuicyCurve,
-      alignment: Alignment.center,
+    Widget result = AnimatedBuilder(
+      animation: _scaleAnim,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: _scaleAnim.value,
+          child: child,
+        );
+      },
       child: widget.child,
     );
 
     if (widget.onPressed != null) {
       result = MouseRegion(
         cursor: SystemMouseCursors.click,
-        onEnter: (_) => setState(() => _isHovered = true),
-        onExit: (_) => setState(() => _isHovered = false),
         child: GestureDetector(
           onTap: widget.onPressed,
           behavior: HitTestBehavior.opaque,
@@ -70,11 +85,10 @@ class _JuicyFeedbackState extends State<JuicyFeedback> {
     }
 
     return Listener(
-      onPointerDown: (_) => _updatePressed(true),
-      onPointerUp: (_) => _updatePressed(false),
-      onPointerCancel: (_) => _updatePressed(false),
+      onPointerDown: _onPointerDown,
+      onPointerUp: _onPointerUp,
+      onPointerCancel: _onPointerCancel,
       child: result,
     );
   }
 }
-

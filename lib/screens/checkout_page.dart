@@ -24,12 +24,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
   final _nameCtrl = TextEditingController();
   final _addressCtrl = TextEditingController();
   final _phoneCtrl = TextEditingController();
-  double _pinnedLat = 9.0205090; // Store default
+  double _pinnedLat = 9.0205090;
   double _pinnedLng = 125.5175910;
   bool _locationPinned = false;
   int _deliveryFee = 0;
   double _distance = 0.0;
-  String _paymentMethod = 'Cash'; // 'Cash' or 'GCash'
+  String _paymentMethod = 'Cash';
   String _orderType = 'Pickup';
   bool _loading = false;
 
@@ -136,7 +136,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Please fill in all required fields!'),
         backgroundColor: KioskTheme.lunaBrown,
-        behavior: SnackBarBehavior.floating,
       ));
       return;
     }
@@ -147,8 +146,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     final now = DateTime.now();
     String pad(int n) => n.toString().padLeft(2, '0');
     final timeStr = '${now.year}-${pad(now.month)}-${pad(now.day)}  ${pad(now.hour)}:${pad(now.minute)}';
-    
-    // POS/Staff orders are immediately paid at counter. Online orders default to standard statuses.
+
     final paymentStatus = session.isStaff
         ? 'PAID'
         : (_paymentMethod == 'GCash' ? 'PENDING VERIFICATION' : 'NOT PAID');
@@ -169,7 +167,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
       lng: _needsCoordinates ? _pinnedLng : null,
     );
 
-    // Save order model to Firestore with custom entryType, status, and PHT timezone tags
     await OrderService.saveOrder(OrderModel(
       orderId: orderNumber,
       items: items.map((i) => OrderItem(name: i.name, variant: i.variant, price: i.price, quantity: i.quantity)).toList(),
@@ -218,16 +215,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
       appBar: AppBar(
         title: Text(
           session.isStaff ? 'POS CHECKOUT' : 'CHECKOUT',
-          style: GoogleFonts.outfit(
-            fontWeight: FontWeight.w900,
-            fontSize: 20,
-            color: KioskTheme.lunaTan,
-            letterSpacing: 2,
-          ),
+          style: KioskTheme.headerSmall.copyWith(color: KioskTheme.textOnPrimary, letterSpacing: 2),
         ),
         centerTitle: true,
         backgroundColor: KioskTheme.lunaBrown,
-        foregroundColor: KioskTheme.lunaTan,
+        foregroundColor: KioskTheme.textOnPrimary,
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -235,46 +227,34 @@ class _CheckoutPageState extends State<CheckoutPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(32), boxShadow: [
-                BoxShadow(color: KioskTheme.lunaBrown.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, 4))
-              ]),
+            _buildSectionCard(
+              title: 'ORDER SUMMARY',
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'ORDER SUMMARY',
-                    style: GoogleFonts.outfit(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 16,
-                      color: KioskTheme.lunaBrown,
-                      letterSpacing: 1.5,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
                   ...cartNotifier.items.map((item) => Padding(
                         padding: const EdgeInsets.only(bottom: 12),
                         child: Row(
                           children: [
-                            Text('${item.quantity}x', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, color: KioskTheme.lunaBrown, fontSize: 15)),
+                            Text('${item.quantity}x', style: KioskTheme.titleMedium.copyWith(fontSize: 15)),
                             const SizedBox(width: 12),
                             Expanded(
                                 child: Text('${item.name}${item.variant.isNotEmpty ? ' (${item.variant})' : ''}',
-                                    style: GoogleFonts.outfit(fontSize: 15, color: KioskTheme.lunaBrown, fontWeight: FontWeight.w600),
+                                    style: KioskTheme.bodyLarge.copyWith(fontSize: 15),
                                     overflow: TextOverflow.ellipsis)),
-                            Text('₱${item.price * item.quantity}', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, color: KioskTheme.lunaBrown, fontSize: 15)),
+                            Text('\u20B1${item.price * item.quantity}', style: KioskTheme.titleMedium.copyWith(fontSize: 15)),
                           ],
                         ),
                       )),
-                  const Divider(height: 40, thickness: 1),
+                  KioskTheme.divider(),
+                  const SizedBox(height: 16),
                   if (_needsCoordinates && _locationPinned) ...[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('DELIVERY FEE (${_distance.toStringAsFixed(1)}km)',
-                            style: GoogleFonts.outfit(fontWeight: FontWeight.w600, fontSize: 14, color: KioskTheme.lunaBrown.withOpacity(0.6))),
-                        Text('₱$_deliveryFee', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, color: KioskTheme.lunaBrown, fontSize: 15)),
+                            style: KioskTheme.bodyMedium.copyWith(fontSize: 14)),
+                        Text('\u20B1$_deliveryFee', style: KioskTheme.titleMedium.copyWith(fontSize: 15)),
                       ],
                     ),
                     const SizedBox(height: 12),
@@ -282,9 +262,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('TOTAL', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 18, color: KioskTheme.lunaBrown, letterSpacing: 1.5)),
-                      Text('₱${cartNotifier.totalPrice + (_needsCoordinates ? _deliveryFee : 0)}',
-                          style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 32, color: KioskTheme.lunaBrown)),
+                      Text('TOTAL', style: KioskTheme.headerSmall.copyWith(letterSpacing: 1.5)),
+                      Text('\u20B1${cartNotifier.totalPrice + (_needsCoordinates ? _deliveryFee : 0)}',
+                          style: KioskTheme.headerLarge.copyWith(fontSize: 32)),
                     ],
                   ),
                   if (_needsCoordinates && _locationPinned && _distance > 10) ...[
@@ -292,17 +272,17 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.red.withOpacity(0.05),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Colors.red.withOpacity(0.1)),
+                        color: KioskTheme.error.withOpacity(0.05),
+                        borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
+                        border: Border.all(color: KioskTheme.error.withOpacity(0.1)),
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.warning_amber_rounded, color: Colors.red, size: 20),
+                          const Icon(Icons.warning_amber_rounded, color: KioskTheme.error, size: 20),
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text('Outside delivery range (Max 10km). Distance: ${_distance.toStringAsFixed(1)}km',
-                                style: GoogleFonts.outfit(color: Colors.red, fontWeight: FontWeight.w700, fontSize: 13)),
+                                style: GoogleFonts.outfit(color: KioskTheme.error, fontWeight: FontWeight.w700, fontSize: 13)),
                           ),
                         ],
                       ),
@@ -312,7 +292,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               ),
             ),
             const SizedBox(height: 32),
-            Text('ORDER TYPE', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 16, color: KioskTheme.lunaBrown, letterSpacing: 1.5)),
+            _buildSectionLabel('ORDER TYPE'),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -347,7 +327,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               ],
             ),
             const SizedBox(height: 32),
-            Text('PAYMENT METHOD', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 16, color: KioskTheme.lunaBrown, letterSpacing: 1.5)),
+            _buildSectionLabel('PAYMENT METHOD'),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -379,7 +359,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
                         color: const Color(0xFF007DFE).withOpacity(0.05),
-                        borderRadius: BorderRadius.circular(24),
+                        borderRadius: BorderRadius.circular(KioskTheme.radiusLg),
                         border: Border.all(color: const Color(0xFF007DFE).withOpacity(0.2)),
                       ),
                       child: Column(
@@ -389,31 +369,31 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             children: [
                               const Icon(Icons.payment_rounded, color: Color(0xFF007DFE)),
                               const SizedBox(width: 12),
-                              Text('GCASH INSTRUCTIONS', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 13, color: const Color(0xFF007DFE), letterSpacing: 1)),
+                              Text('GCASH INSTRUCTIONS', style: KioskTheme.labelLarge.copyWith(color: const Color(0xFF007DFE))),
                             ],
                           ),
                           const SizedBox(height: 16),
-                          Text('1. Scan the QR code or send to:', style: GoogleFonts.outfit(fontSize: 14, color: KioskTheme.lunaBrown, fontWeight: FontWeight.w600)),
+                          Text('1. Scan the QR code or send to:', style: KioskTheme.bodyLarge.copyWith(fontSize: 14)),
                           const SizedBox(height: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+                            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(KioskTheme.radiusSm)),
                             child: Text(
                               _gcashHolder.isNotEmpty ? '$_gcashNumber ($_gcashHolder)' : _gcashNumber,
-                              style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w900, color: const Color(0xFF007DFE)),
+                              style: KioskTheme.titleMedium.copyWith(color: const Color(0xFF007DFE), fontSize: 16),
                             ),
                           ),
                           const SizedBox(height: 16),
-                          Text('2. Take a screenshot of the receipt.', style: GoogleFonts.outfit(fontSize: 14, color: KioskTheme.lunaBrown, fontWeight: FontWeight.w600)),
-                          Text('3. Show the screenshot to our staff.', style: GoogleFonts.outfit(fontSize: 14, color: KioskTheme.lunaBrown, fontWeight: FontWeight.w600)),
+                          Text('2. Take a screenshot of the receipt.', style: KioskTheme.bodyLarge.copyWith(fontSize: 14)),
+                          Text('3. Show the screenshot to our staff.', style: KioskTheme.bodyLarge.copyWith(fontSize: 14)),
                           const SizedBox(height: 12),
                           Center(
                             child: Container(
                               width: 200,
                               height: 280,
-                              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.grey[200]!)),
+                              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(KioskTheme.radiusMd), border: Border.all(color: Colors.grey[200]!)),
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(16),
+                                borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
                                 child: Image.asset('images/gcash_qr.png', fit: BoxFit.contain),
                               ),
                             ),
@@ -425,12 +405,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             const SizedBox(height: 32),
             Text(
               _needsCoordinates ? 'DELIVERY DETAILS' : 'CUSTOMER DETAILS',
-              style: GoogleFonts.outfit(
-                fontWeight: FontWeight.w900,
-                fontSize: 16,
-                color: KioskTheme.lunaBrown,
-                letterSpacing: 1.5,
-              ),
+              style: KioskTheme.labelLarge.copyWith(fontSize: 16),
             ),
             const SizedBox(height: 16),
             _field(
@@ -456,7 +431,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                             decoration: BoxDecoration(
                               color: _locationPinned ? KioskTheme.lunaBrown.withOpacity(0.05) : Colors.white,
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
                               border: Border.all(color: _locationPinned ? KioskTheme.lunaBrown : Colors.grey[200]!, width: 2),
                             ),
                             child: Row(
@@ -479,17 +454,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         TextField(
                           controller: _addressCtrl,
                           maxLines: 2,
-                          style: GoogleFonts.outfit(fontWeight: FontWeight.w600, color: KioskTheme.lunaBrown),
-                          decoration: InputDecoration(
-                            hintText: 'Address auto-fills from map...',
-                            hintStyle: GoogleFonts.outfit(color: Colors.grey[400], fontSize: 14),
+                          style: GoogleFonts.outfit(fontWeight: FontWeight.w600, color: KioskTheme.textPrimary),
+                          decoration: KioskTheme.inputDecoration(
+                            hint: 'Address auto-fills from map...',
+                            icon: Icons.edit_location_alt,
+                          ).copyWith(
                             prefixIcon: const Icon(Icons.edit_location_alt, color: KioskTheme.lunaBrown, size: 20),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide(color: Colors.grey[200]!)),
-                            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide(color: Colors.grey[200]!)),
-                            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: const BorderSide(color: KioskTheme.lunaBrown, width: 2)),
-                            filled: true,
-                            fillColor: Colors.white,
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -518,17 +488,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     padding: const EdgeInsets.symmetric(vertical: 24),
                     decoration: BoxDecoration(
                       color: (_loading || isBlocked) ? Colors.grey[400] : KioskTheme.lunaBrown,
-                      borderRadius: BorderRadius.circular(50),
-                      boxShadow: (_loading || isBlocked)
-                          ? []
-                          : [
-                              BoxShadow(color: KioskTheme.lunaBrown.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, 10)),
-                            ],
+                      borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
+                      boxShadow: (_loading || isBlocked) ? [] : KioskTheme.shadowPrimary,
                     ),
                     child: Center(
                       child: _loading
                           ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5))
-                          : Text(label, style: GoogleFonts.outfit(color: KioskTheme.lunaTan, fontWeight: FontWeight.w900, fontSize: 18, letterSpacing: 1.5)),
+                          : Text(label, style: KioskTheme.labelLarge.copyWith(color: KioskTheme.textOnPrimary, fontSize: 18)),
                     ),
                   ),
                 );
@@ -541,6 +507,25 @@ class _CheckoutPageState extends State<CheckoutPage> {
     );
   }
 
+  Widget _buildSectionCard({required String title, required Widget child}) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: KioskTheme.cardWhite,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: KioskTheme.labelLarge.copyWith(fontSize: 16)),
+          const SizedBox(height: 20),
+          child,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionLabel(String text) {
+    return Text(text, style: KioskTheme.labelLarge.copyWith(fontSize: 16));
+  }
+
   Widget _typeBtn({required String label, required IconData icon, required bool selected, required VoidCallback onTap}) {
     return JuicyFeedback(
       onPressed: onTap,
@@ -549,7 +534,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         padding: const EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
           color: selected ? KioskTheme.lunaBrown : Colors.white,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(KioskTheme.radiusLg),
           border: Border.all(color: selected ? KioskTheme.lunaBrown : Colors.grey[200]!, width: 2),
         ),
         child: Column(
@@ -567,23 +552,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 13, color: KioskTheme.lunaBrown, letterSpacing: 1)),
+        Text(label, style: KioskTheme.labelLarge.copyWith(fontSize: 13)),
         const SizedBox(height: 8),
         TextField(
           controller: ctrl,
           keyboardType: keyboard,
-          style: GoogleFonts.outfit(fontWeight: FontWeight.w600, color: KioskTheme.lunaBrown),
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: GoogleFonts.outfit(color: Colors.grey[400], fontSize: 14),
-            prefixIcon: Icon(icon, color: KioskTheme.lunaBrown, size: 20),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide(color: Colors.grey[200]!)),
-            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide(color: Colors.grey[200]!)),
-            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: const BorderSide(color: KioskTheme.lunaBrown, width: 2)),
-            filled: true,
-            fillColor: Colors.white,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          ),
+          style: GoogleFonts.outfit(fontWeight: FontWeight.w600, color: KioskTheme.textPrimary),
+          decoration: KioskTheme.inputDecoration(hint: hint, icon: icon),
         ),
       ],
     );

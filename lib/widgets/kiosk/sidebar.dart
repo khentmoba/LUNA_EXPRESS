@@ -5,7 +5,6 @@ import 'kiosk_theme.dart';
 import '../../services/session.dart';
 import '../../data/menu_data.dart';
 
-
 class KioskSidebar extends StatelessWidget {
   const KioskSidebar({super.key});
 
@@ -14,7 +13,7 @@ class KioskSidebar extends StatelessWidget {
     return Consumer<KioskSession>(
       builder: (context, session, child) {
         return Container(
-          width: 120, // Kiosk style sidebar is usually narrow
+          width: 120,
           decoration: BoxDecoration(
             color: KioskTheme.lunaCream,
             border: Border(right: BorderSide(color: KioskTheme.lunaBrown.withOpacity(0.05), width: 1)),
@@ -25,7 +24,7 @@ class KioskSidebar extends StatelessWidget {
             itemBuilder: (context, index) {
               final section = kMenuSections[index];
               final isSelected = session.currentCategoryId == section.id;
-              
+
               return GestureDetector(
                 onTap: () => session.setCategory(section.id),
                 child: AnimatedContainer(
@@ -34,14 +33,8 @@ class KioskSidebar extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   decoration: BoxDecoration(
                     color: isSelected ? KioskTheme.lunaBrown : Colors.transparent,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: isSelected ? [
-                      BoxShadow(
-                        color: KioskTheme.lunaBrown.withOpacity(0.2),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      )
-                    ] : null,
+                    borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
+                    boxShadow: isSelected ? KioskTheme.shadowPrimary : null,
                   ),
                   child: Column(
                     children: [
@@ -56,7 +49,7 @@ class KioskSidebar extends StatelessWidget {
                         style: GoogleFonts.outfit(
                           fontSize: 12,
                           fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
-                          color: isSelected ? KioskTheme.lunaTan : KioskTheme.lunaBrown.withOpacity(0.4),
+                          color: isSelected ? KioskTheme.textOnPrimary : KioskTheme.textMuted,
                           letterSpacing: 1,
                         ),
                       ),
