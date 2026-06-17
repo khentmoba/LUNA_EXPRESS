@@ -76,18 +76,18 @@ class KioskMenuPage extends StatelessWidget {
                         Icon(Icons.nightlight_round, color: KioskTheme.lunaBrown, size: isMobile ? 24 : 32),
                   ),
                   const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'LUNA BITES & DELIGHTS',
-                      style: GoogleFonts.outfit(
-                        fontSize: isMobile ? 14 : 18,
-                        fontWeight: FontWeight.w900,
-                        color: KioskTheme.textPrimary,
-                        letterSpacing: isMobile ? 1 : 2,
-                      ),
-                      overflow: TextOverflow.ellipsis,
+                  Text(
+                    'LUNA BITES & DELIGHTS',
+                    style: GoogleFonts.outfit(
+                      fontSize: isMobile ? 13 : 18,
+                      fontWeight: FontWeight.w900,
+                      color: KioskTheme.textPrimary,
+                      letterSpacing: isMobile ? 0.5 : 2,
                     ),
+                    overflow: TextOverflow.visible,
+                    softWrap: false,
                   ),
+                  const Spacer(),
                   ListenableBuilder(
                     listenable: session,
                     builder: (context, _) {
@@ -102,8 +102,8 @@ class KioskMenuPage extends StatelessWidget {
                             );
                           }
                         },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                          child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: isMobile ? 10 : 14, vertical: isMobile ? 6 : 8),
                           decoration: BoxDecoration(
                             color: session.isStaff
                                 ? Colors.green.withOpacity(0.1)
@@ -123,16 +123,16 @@ class KioskMenuPage extends StatelessWidget {
                                     ? Icons.shield_rounded
                                     : Icons.lock_outline_rounded,
                                 color: session.isStaff ? KioskTheme.success : KioskTheme.lunaBrown,
-                                size: 16,
+                                size: isMobile ? 14 : 16,
                               ),
-                              const SizedBox(width: 6),
+                              SizedBox(width: isMobile ? 4 : 6),
                               Text(
                                 session.isStaff ? 'STAFF CONSOLE' : 'STAFF LOGIN',
                                 style: GoogleFonts.outfit(
                                   color: session.isStaff ? KioskTheme.success : KioskTheme.lunaBrown,
-                                  fontSize: 11,
+                                  fontSize: isMobile ? 10 : 11,
                                   fontWeight: FontWeight.w900,
-                                  letterSpacing: 1,
+                                  letterSpacing: isMobile ? 0.5 : 1,
                                 ),
                               ),
                             ],
@@ -141,7 +141,7 @@ class KioskMenuPage extends StatelessWidget {
                       );
                     },
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: isMobile ? 8 : 12),
                   JuicyFeedback(
                     onPressed: () {
                       kioskSession.reset();
@@ -149,7 +149,7 @@ class KioskMenuPage extends StatelessWidget {
                       Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
                     },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      padding: EdgeInsets.symmetric(horizontal: isMobile ? 10 : 14, vertical: isMobile ? 6 : 8),
                       decoration: BoxDecoration(
                         color: KioskTheme.lunaBrown.withOpacity(0.08),
                         borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
@@ -158,15 +158,15 @@ class KioskMenuPage extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.refresh_rounded, color: KioskTheme.lunaBrown, size: 16),
-                          const SizedBox(width: 6),
+                          Icon(Icons.refresh_rounded, color: KioskTheme.lunaBrown, size: isMobile ? 14 : 16),
+                          SizedBox(width: isMobile ? 4 : 6),
                           Text(
                             'START OVER',
                             style: GoogleFonts.outfit(
                               color: KioskTheme.lunaBrown,
-                              fontSize: 11,
+                              fontSize: isMobile ? 10 : 11,
                               fontWeight: FontWeight.w900,
-                              letterSpacing: 1,
+                              letterSpacing: isMobile ? 0.5 : 1,
                             ),
                           ),
                         ],
