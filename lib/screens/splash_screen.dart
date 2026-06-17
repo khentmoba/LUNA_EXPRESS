@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/kiosk/kiosk_theme.dart';
 import '../widgets/kiosk/juicy_feedback.dart';
-import '../main.dart';
 import 'staff_login_dialog.dart';
 import 'menu_page.dart';
-
 
 class KioskSplashScreen extends StatefulWidget {
   const KioskSplashScreen({super.key});
@@ -19,13 +17,26 @@ class _KioskSplashScreenState extends State<KioskSplashScreen> with TickerProvid
   late Animation<double> _pulseAnimation;
   late AnimationController _floatController;
   late Animation<Offset> _floatAnimation;
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
   late AnimationController _dotsController;
+  late AnimationController _scaleController;
+  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
-    
-    // Tap to start pulse
+
+    _scaleController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    );
+    _scaleAnimation = CurvedAnimation(
+      parent: _scaleController,
+      curve: Curves.easeOutCubic,
+    );
+    _scaleController.forward();
+
     _pulseController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1000),
@@ -34,7 +45,6 @@ class _KioskSplashScreenState extends State<KioskSplashScreen> with TickerProvid
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
 
-    // Moon float animation
     _floatController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2000),
@@ -43,7 +53,15 @@ class _KioskSplashScreenState extends State<KioskSplashScreen> with TickerProvid
       CurvedAnimation(parent: _floatController, curve: Curves.easeInOut),
     );
 
-    // Loading dots animation
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    )..forward();
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+
     _dotsController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1500),
@@ -54,12 +72,13 @@ class _KioskSplashScreenState extends State<KioskSplashScreen> with TickerProvid
   void dispose() {
     _pulseController.dispose();
     _floatController.dispose();
+    _fadeController.dispose();
     _dotsController.dispose();
+    _scaleController.dispose();
     super.dispose();
   }
 
   void _onStart() {
-    // Premium Skip: Directly navigate to the menu to speed up the kiosk experience.
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
@@ -67,7 +86,7 @@ class _KioskSplashScreenState extends State<KioskSplashScreen> with TickerProvid
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },
-        transitionDuration: const Duration(milliseconds: 800),
+        transitionDuration: KioskTheme.kPageTransition,
       ),
     );
   }
@@ -78,7 +97,6 @@ class _KioskSplashScreenState extends State<KioskSplashScreen> with TickerProvid
       backgroundColor: KioskTheme.lunaTan,
       body: Stack(
         children: [
-          // Minimal Artisanal Pattern (Optional subtle texture)
           Positioned.fill(
             child: Opacity(
               opacity: 0.03,
@@ -89,83 +107,78 @@ class _KioskSplashScreenState extends State<KioskSplashScreen> with TickerProvid
               ),
             ),
           ),
-          
-          Column(
-            children: [
-              const Spacer(flex: 2),
-              
-              // Animated Official Logo
-              AnimatedBuilder(
-                animation: _floatAnimation,
-                builder: (context, child) {
-                  return Transform.translate(
-                    offset: _floatAnimation.value,
-                    child: child,
-                  );
-                },
-                child: Container(
-                  width: 250,
-                  height: 250,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: KioskTheme.lunaBrown.withOpacity(0.05),
-                        blurRadius: 40,
-                        spreadRadius: 5,
-                      )
-                    ],
+          FadeTransition(
+            opacity: _fadeAnimation,
+            child: Column(
+              children: [
+                const Spacer(flex: 2),
+                AnimatedBuilder(
+                  animation: _floatAnimation,
+                  builder: (context, child) {
+                    return Transform.translate(
+                      offset: _floatAnimation.value,
+                      child: child,
+                    );
+                  },
+                  child: FadeTransition(
+                    opacity: _scaleAnimation,
+                    child: Container(
+                      width: 250,
+                      height: 250,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: KioskTheme.lunaBrown.withOpacity(0.08),
+                            blurRadius: 40,
+                            spreadRadius: 5,
+                          )
+                        ],
+                      ),
+                      child: Image.asset(
+                        'images/luna_logo.png',
+                        errorBuilder: (context, error, stackTrace) => const Icon(Icons.nightlight_round, size: 100, color: KioskTheme.lunaBrown),
+                      ),
+                    ),
                   ),
-                  child: Image.asset(
-                    'images/luna_logo.png',
-                    errorBuilder: (context, error, stackTrace) => const Icon(Icons.nightlight_round, size: 100, color: KioskTheme.lunaBrown),
+                ),
+                const SizedBox(height: 24),
+                FadeTransition(
+                  opacity: _scaleAnimation,
+                  child: Text(
+                    'LUNA EXPRESS',
+                    style: GoogleFonts.outfit(
+                      fontSize: 48,
+                      fontWeight: FontWeight.w900,
+                      color: KioskTheme.textPrimary,
+                      letterSpacing: 4,
+                    ),
                   ),
                 ),
-              ),
-              
-              const SizedBox(height: 16),
-              
-              // Brand Text (Artisanal Brown)
-              Text(
-                'LUNA EXPRESS',
-                style: GoogleFonts.outfit(
-                  fontSize: 48,
-                  fontWeight: FontWeight.w900,
-                  color: KioskTheme.lunaBrown,
-                  letterSpacing: 4,
+                const SizedBox(height: 8),
+                FadeTransition(
+                  opacity: _scaleAnimation,
+                  child: Text(
+                    'FAST DELIVERY \u2022 FRESH DAILY',
+                    style: GoogleFonts.outfit(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: KioskTheme.textSecondary,
+                      letterSpacing: 4,
+                    ),
+                  ),
                 ),
-              ),
-              
-              const SizedBox(height: 8),
-              
-              Text(
-                'FAST DELIVERY • FRESH DAILY',
-                style: GoogleFonts.outfit(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: KioskTheme.lunaBrown.withOpacity(0.6),
-                  letterSpacing: 4,
+                const SizedBox(height: 40),
+                _buildLoadingDots(),
+                const Spacer(),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 100),
+                  child: _buildStartButton(),
                 ),
-              ),
-              
-              const SizedBox(height: 32),
-              
-              // Custom Loading Dots
-              _buildLoadingDots(),
-              
-              const Spacer(),
-              
-              // Direct Start Button
-              Padding(
-                padding: const EdgeInsets.only(bottom: 100),
-                child: _buildStartButton(),
-              ),
-              
-              const SizedBox(height: 20),
-            ],
+                const SizedBox(height: 20),
+              ],
+            ),
           ),
-          
-          // Hidden Staff Mode Access (Triple Tap Bottom-Right)
           Positioned(
             bottom: 0,
             right: 0,
@@ -188,7 +201,7 @@ class _KioskSplashScreenState extends State<KioskSplashScreen> with TickerProvid
               child: Container(
                 width: 100,
                 height: 100,
-                color: Colors.transparent, // Invisible
+                color: Colors.transparent,
               ),
             ),
           ),
@@ -208,7 +221,6 @@ class _KioskSplashScreenState extends State<KioskSplashScreen> with TickerProvid
     );
   }
 
-
   Widget _buildLoadingDots() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -219,14 +231,14 @@ class _KioskSplashScreenState extends State<KioskSplashScreen> with TickerProvid
             final double offset = (index * 0.2);
             final double value = (_dotsController.value - offset).clamp(0.0, 1.0);
             final double opacity = 1.0 - value;
-            
+
             return Container(
               width: 10,
               height: 10,
               margin: const EdgeInsets.symmetric(horizontal: 4),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: KioskTheme.lunaBrown.withOpacity(opacity.clamp(0.2, 1.0)),
+                color: KioskTheme.textPrimary.withOpacity(opacity.clamp(0.2, 1.0)),
               ),
             );
           },
@@ -244,19 +256,13 @@ class _KioskSplashScreenState extends State<KioskSplashScreen> with TickerProvid
           padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 24),
           decoration: BoxDecoration(
             color: KioskTheme.lunaBrown,
-            borderRadius: BorderRadius.circular(50),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                blurRadius: 30,
-                offset: const Offset(0, 10),
-              )
-            ],
+            borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
+            boxShadow: KioskTheme.shadowPrimary,
           ),
           child: Text(
             'TOUCH TO START',
             style: GoogleFonts.outfit(
-              color: KioskTheme.lunaTan,
+              color: KioskTheme.textOnPrimary,
               fontSize: 22,
               fontWeight: FontWeight.w900,
               letterSpacing: 2.0,

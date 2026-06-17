@@ -2,7 +2,6 @@ import 'dart:js' as js;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
@@ -38,24 +37,19 @@ class _MapPickerPageState extends State<MapPickerPage> {
     _lat = widget.initialLat;
     _lng = widget.initialLng;
     _mapController = MapController();
-
-    // Get current location first, then initialize map
     _getCurrentLocationAndInit();
   }
 
   Future<void> _getCurrentLocationAndInit() async {
-    // On web, use native browser geolocation with timeout
     if (kIsWeb) {
       _getWebLocation();
       return;
     }
 
-    // Native platforms use Geolocator
     bool serviceEnabled;
     LocationPermission permission;
 
     try {
-      // Check if location services are enabled with timeout
       serviceEnabled = await Geolocator.isLocationServiceEnabled().timeout(
         const Duration(seconds: 5),
         onTimeout: () => false,
@@ -65,7 +59,6 @@ class _MapPickerPageState extends State<MapPickerPage> {
         return;
       }
 
-      // Check permission with timeout
       permission = await Geolocator.checkPermission().timeout(
         const Duration(seconds: 5),
         onTimeout: () => LocationPermission.denied,
@@ -86,7 +79,6 @@ class _MapPickerPageState extends State<MapPickerPage> {
         return;
       }
 
-      // Get current position with timeout
       final position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       ).timeout(
@@ -105,14 +97,12 @@ class _MapPickerPageState extends State<MapPickerPage> {
 
   void _getWebLocation() {
     try {
-      // Use native browser geolocation API
       final geolocation = js.context['navigator']['geolocation'];
       if (geolocation == null) {
         _initMapWithLocation(_lat, _lng);
         return;
       }
 
-      // Define success callback
       js.context['_geoSuccess'] = (pos) {
         final coords = pos['coords'];
         setState(() {
@@ -122,12 +112,10 @@ class _MapPickerPageState extends State<MapPickerPage> {
         _initMapWithLocation(_lat, _lng);
       };
 
-      // Define error callback
       js.context['_geoError'] = (_) {
         _initMapWithLocation(_lat, _lng);
       };
 
-      // Call getCurrentPosition with timeout options
       js.context.callMethod('eval', ['''
         navigator.geolocation.getCurrentPosition(
           function(pos) { window._geoSuccess(pos); },
@@ -141,7 +129,6 @@ class _MapPickerPageState extends State<MapPickerPage> {
   }
 
   void _initMapWithLocation(double lat, double lng) {
-    // Only initialize WebViewController on native platforms
     if (!kIsWeb) {
       _webCtrl = WebViewController()
         ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -158,9 +145,7 @@ class _MapPickerPageState extends State<MapPickerPage> {
         })
         ..loadHtmlString(_buildMapHtml(lat, lng));
     } else {
-      // On web, center map on current location and fetch address
       setState(() => _loading = false);
-      // Move map to current location after build
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _mapController.move(LatLng(lat, lng), 16);
         _fetchAddress(lat, lng);
@@ -358,14 +343,8 @@ fetchAddress();
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.12),
-                  blurRadius: 16,
-                  offset: const Offset(0, 4),
-                )
-              ],
+              borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
+              boxShadow: KioskTheme.shadowMd,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -376,17 +355,16 @@ fetchAddress();
                     const SizedBox(width: 6),
                     Text(
                       'PINNED ADDRESS',
-                      style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 12, color: KioskTheme.lunaBrown),
+                      style: KioskTheme.labelSmall.copyWith(fontSize: 12),
                     ),
                   ],
                 ),
                 const SizedBox(height: 6),
                 Text(
                   _address.isEmpty ? 'Move the map to find your location...' : _address,
-                  style: GoogleFonts.outfit(
+                  style: KioskTheme.bodyMedium.copyWith(
                     fontSize: 13,
-                    color: _address.isEmpty ? Colors.grey[400] : KioskTheme.lunaBrown,
-                    height: 1.4,
+                    color: _address.isEmpty ? KioskTheme.textMuted : KioskTheme.textPrimary,
                   ),
                 ),
               ],
@@ -406,7 +384,6 @@ fetchAddress();
 
   Future<void> _confirmLocation() async {
     if (kIsWeb) {
-      // Update from map center on web
       setState(() => _loading = true);
       final center = _mapController.camera.center;
       setState(() {
@@ -436,17 +413,17 @@ fetchAddress();
       appBar: AppBar(
         title: Text(
           'PIN YOUR LOCATION',
-          style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 18, letterSpacing: 1, color: KioskTheme.lunaTan),
+          style: KioskTheme.headerSmall.copyWith(color: KioskTheme.textOnPrimary, letterSpacing: 1, fontSize: 18),
         ),
         backgroundColor: KioskTheme.lunaBrown,
-        foregroundColor: KioskTheme.lunaTan,
+        foregroundColor: KioskTheme.textOnPrimary,
         elevation: 0,
         actions: [
           TextButton(
             onPressed: _address.isEmpty ? null : _confirmLocation,
             child: Text(
               'CONFIRM',
-              style: GoogleFonts.outfit(color: KioskTheme.lunaTan, fontWeight: FontWeight.w900, fontSize: 14, letterSpacing: 1),
+              style: KioskTheme.labelLarge.copyWith(color: KioskTheme.textOnPrimary, fontSize: 14),
             ),
           ),
         ],
@@ -469,14 +446,8 @@ fetchAddress();
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     decoration: BoxDecoration(
                       color: KioskTheme.lunaWhite,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: KioskTheme.lunaBrown.withOpacity(0.12),
-                          blurRadius: 16,
-                          offset: const Offset(0, 4),
-                        )
-                      ],
+                      borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
+                      boxShadow: KioskTheme.shadowMd,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -487,17 +458,16 @@ fetchAddress();
                             const SizedBox(width: 6),
                             Text(
                               'PINNED ADDRESS',
-                              style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 12, color: KioskTheme.lunaBrown),
+                              style: KioskTheme.labelSmall.copyWith(fontSize: 12),
                             ),
                           ],
                         ),
                         const SizedBox(height: 6),
                         Text(
                           _address.isEmpty ? 'Move the map to find your location...' : _address,
-                          style: GoogleFonts.outfit(
+                          style: KioskTheme.bodyMedium.copyWith(
                             fontSize: 13,
-                            color: _address.isEmpty ? Colors.grey[400] : KioskTheme.lunaBrown,
-                            height: 1.4,
+                            color: _address.isEmpty ? KioskTheme.textMuted : KioskTheme.textPrimary,
                           ),
                         ),
                       ],

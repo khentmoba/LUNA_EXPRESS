@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/kiosk/kiosk_theme.dart';
 import '../widgets/kiosk/juicy_feedback.dart';
-
-import '../services/session.dart'; 
+import '../services/session.dart';
 
 class StaffLoginDialog extends StatefulWidget {
   const StaffLoginDialog({super.key});
@@ -63,8 +62,8 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
       if (isSuccess) {
         final actualUser = data['username'] ?? user;
         session.login(actualUser);
-        Navigator.pop(context); // close login dialog
-        
+        Navigator.pop(context);
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
@@ -74,9 +73,8 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                 Text('Welcome, $actualUser! Staff mode active.', style: GoogleFonts.outfit(fontWeight: FontWeight.w700)),
               ],
             ),
-            backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            backgroundColor: KioskTheme.success,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(KioskTheme.radiusMd)),
           ),
         );
       } else {
@@ -87,7 +85,7 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
       }
     } catch (e) {
       if (!mounted) return;
-      
+
       String errorMessage;
       if (e is FirebaseFunctionsException) {
         errorMessage = e.message ?? e.code;
@@ -106,7 +104,7 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(KioskTheme.radiusXl)),
       elevation: 24,
       child: Container(
         constraints: const BoxConstraints(maxWidth: 400),
@@ -115,7 +113,6 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Locked Icon Header
               Container(
                 width: 80,
                 height: 80,
@@ -128,43 +125,32 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                 ),
               ),
               const SizedBox(height: 24),
-              
               Text(
                 'STAFF LOGIN',
-                style: GoogleFonts.outfit(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900,
-                  color: KioskTheme.lunaBrown,
-                  letterSpacing: 2,
-                ),
+                style: KioskTheme.headerSmall.copyWith(letterSpacing: 2),
               ),
               const SizedBox(height: 8),
               Text(
                 'Access staff operations console',
-                style: GoogleFonts.outfit(
-                  fontSize: 13,
-                  color: Colors.grey[500],
-                  fontWeight: FontWeight.w500,
-                ),
+                style: KioskTheme.bodyMedium,
               ),
               const SizedBox(height: 24),
-
               if (_error != null) ...[
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.05),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.red.withOpacity(0.1)),
+                    color: KioskTheme.error.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
+                    border: Border.all(color: KioskTheme.error.withOpacity(0.1)),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.error_outline_rounded, color: Colors.red, size: 20),
+                      const Icon(Icons.error_outline_rounded, color: KioskTheme.error, size: 20),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           _error!,
-                          style: GoogleFonts.outfit(color: Colors.red, fontWeight: FontWeight.w600, fontSize: 13),
+                          style: GoogleFonts.outfit(color: KioskTheme.error, fontWeight: FontWeight.w600, fontSize: 13),
                         ),
                       ),
                     ],
@@ -172,81 +158,46 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                 ),
                 const SizedBox(height: 20),
               ],
-
-              // Username Field
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'USERNAME',
-                    style: GoogleFonts.outfit(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 12,
-                      color: KioskTheme.lunaBrown,
-                      letterSpacing: 1,
-                    ),
-                  ),
+                  Text('USERNAME', style: KioskTheme.labelLarge.copyWith(fontSize: 12)),
                   const SizedBox(height: 8),
                   TextField(
                     controller: _userCtrl,
                     textInputAction: TextInputAction.next,
-                    style: GoogleFonts.outfit(fontWeight: FontWeight.w600, color: KioskTheme.lunaBrown),
-                    decoration: InputDecoration(
-                      hintText: 'e.g. staff1',
-                      hintStyle: GoogleFonts.outfit(color: Colors.grey[400], fontSize: 14),
-                      prefixIcon: const Icon(Icons.person_outline_rounded, color: KioskTheme.lunaBrown, size: 20),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide(color: Colors.grey[200]!)),
-                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide(color: Colors.grey[200]!)),
-                      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: const BorderSide(color: KioskTheme.lunaBrown, width: 2)),
-                      filled: true,
-                      fillColor: Colors.white,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                    style: GoogleFonts.outfit(fontWeight: FontWeight.w600, color: KioskTheme.textPrimary),
+                    decoration: KioskTheme.inputDecoration(
+                      hint: 'e.g. staff1',
+                      icon: Icons.person_outline_rounded,
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 20),
-
-              // Password Field
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'PASSWORD',
-                    style: GoogleFonts.outfit(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 12,
-                      color: KioskTheme.lunaBrown,
-                      letterSpacing: 1,
-                    ),
-                  ),
+                  Text('PASSWORD', style: KioskTheme.labelLarge.copyWith(fontSize: 12)),
                   const SizedBox(height: 8),
                   TextField(
                     controller: _passCtrl,
                     obscureText: _obscure,
                     onSubmitted: (_) => _login(),
-                    style: GoogleFonts.outfit(fontWeight: FontWeight.w600, color: KioskTheme.lunaBrown),
-                    decoration: InputDecoration(
-                      hintText: '••••••••',
-                      hintStyle: GoogleFonts.outfit(color: Colors.grey[400], fontSize: 14),
-                      prefixIcon: const Icon(Icons.lock_open_rounded, color: KioskTheme.lunaBrown, size: 20),
+                    style: GoogleFonts.outfit(fontWeight: FontWeight.w600, color: KioskTheme.textPrimary),
+                    decoration: KioskTheme.inputDecoration(
+                      hint: '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022',
+                      icon: Icons.lock_open_rounded,
+                    ).copyWith(
                       suffixIcon: GestureDetector(
                         onTap: () => setState(() => _obscure = !_obscure),
                         child: Icon(_obscure ? Icons.visibility_off_rounded : Icons.visibility_rounded, color: KioskTheme.lunaBrown, size: 20),
                       ),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide(color: Colors.grey[200]!)),
-                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide(color: Colors.grey[200]!)),
-                      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: const BorderSide(color: KioskTheme.lunaBrown, width: 2)),
-                      filled: true,
-                      fillColor: Colors.white,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 32),
-
-              // Buttons
               Row(
                 children: [
                   Expanded(
@@ -256,17 +207,12 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                         padding: const EdgeInsets.symmetric(vertical: 18),
                         decoration: BoxDecoration(
                           color: Colors.grey[100],
-                          borderRadius: BorderRadius.circular(50),
+                          borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
                         ),
                         child: Center(
                           child: Text(
                             'CANCEL',
-                            style: GoogleFonts.outfit(
-                              color: KioskTheme.lunaBrown,
-                              fontWeight: FontWeight.w900,
-                              fontSize: 14,
-                              letterSpacing: 1.5,
-                            ),
+                            style: KioskTheme.labelLarge.copyWith(fontSize: 14),
                           ),
                         ),
                       ),
@@ -280,14 +226,8 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                         padding: const EdgeInsets.symmetric(vertical: 18),
                         decoration: BoxDecoration(
                           color: KioskTheme.lunaBrown,
-                          borderRadius: BorderRadius.circular(50),
-                          boxShadow: [
-                            BoxShadow(
-                              color: KioskTheme.lunaBrown.withOpacity(0.2),
-                              blurRadius: 15,
-                              offset: const Offset(0, 5),
-                            )
-                          ],
+                          borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
+                          boxShadow: KioskTheme.shadowSm,
                         ),
                         child: Center(
                           child: _loading
@@ -298,12 +238,7 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                                 )
                               : Text(
                                   'LOG IN',
-                                  style: GoogleFonts.outfit(
-                                    color: KioskTheme.lunaTan,
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 14,
-                                    letterSpacing: 1.5,
-                                  ),
+                                  style: KioskTheme.labelLarge.copyWith(color: KioskTheme.textOnPrimary, fontSize: 14),
                                 ),
                         ),
                       ),

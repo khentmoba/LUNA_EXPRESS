@@ -22,7 +22,6 @@ class _KdsPageState extends State<KdsPage> {
   void initState() {
     super.initState();
     _fetchActiveOrders();
-    // Auto-refresh every 10 seconds
     _refreshTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
       _fetchActiveOrders(silent: true);
     });
@@ -79,14 +78,12 @@ class _KdsPageState extends State<KdsPage> {
       final data = result.data as Map<dynamic, dynamic>;
 
       if (data['success'] == true) {
-        // Refresh local list
         await _fetchActiveOrders(silent: true);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Order status updated to $newStatus', style: GoogleFonts.outfit(fontWeight: FontWeight.w700)),
-              backgroundColor: Colors.green,
-              behavior: SnackBarBehavior.floating,
+              backgroundColor: KioskTheme.success,
             ),
           );
         }
@@ -96,8 +93,7 @@ class _KdsPageState extends State<KdsPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Error: ${data['message']}', style: GoogleFonts.outfit(fontWeight: FontWeight.w700)),
-              backgroundColor: Colors.orange,
-              behavior: SnackBarBehavior.floating,
+              backgroundColor: KioskTheme.warning,
             ),
           );
         }
@@ -108,8 +104,7 @@ class _KdsPageState extends State<KdsPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to update status. Connection error.', style: GoogleFonts.outfit(fontWeight: FontWeight.w700)),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
+            backgroundColor: KioskTheme.error,
           ),
         );
       }
@@ -119,8 +114,7 @@ class _KdsPageState extends State<KdsPage> {
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 900;
-    
-    // Categorize orders
+
     final pendingOrders = _orders.where((o) => o['status'] == 'Pending').toList();
     final preparingOrders = _orders.where((o) => o['status'] == 'Preparing').toList();
     final readyOrders = _orders.where((o) => o['status'] == 'Ready').toList();
@@ -130,16 +124,11 @@ class _KdsPageState extends State<KdsPage> {
       appBar: AppBar(
         title: Text(
           'KITCHEN DISPLAY BOARD (KDS)',
-          style: GoogleFonts.outfit(
-            fontWeight: FontWeight.w900,
-            color: KioskTheme.lunaTan,
-            fontSize: 20,
-            letterSpacing: 2,
-          ),
+          style: KioskTheme.headerSmall.copyWith(color: KioskTheme.textOnPrimary, letterSpacing: 2, fontSize: 20),
         ),
         centerTitle: true,
         backgroundColor: KioskTheme.lunaBrown,
-        foregroundColor: KioskTheme.lunaTan,
+        foregroundColor: KioskTheme.textOnPrimary,
         elevation: 0,
         actions: [
           IconButton(
@@ -157,16 +146,16 @@ class _KdsPageState extends State<KdsPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.error_outline_rounded, color: Colors.red, size: 48),
+                      const Icon(Icons.error_outline_rounded, color: KioskTheme.error, size: 48),
                       const SizedBox(height: 16),
                       Text(
                         _error!,
-                        style: GoogleFonts.outfit(color: KioskTheme.lunaBrown, fontSize: 16, fontWeight: FontWeight.w700),
+                        style: KioskTheme.bodyLarge.copyWith(fontSize: 16),
                       ),
                       const SizedBox(height: 24),
                       ElevatedButton(
                         onPressed: () => _fetchActiveOrders(),
-                        style: ElevatedButton.styleFrom(backgroundColor: KioskTheme.lunaBrown),
+                        style: KioskTheme.primaryButton,
                         child: Text('Retry', style: GoogleFonts.outfit(color: Colors.white)),
                       )
                     ],
@@ -179,9 +168,9 @@ class _KdsPageState extends State<KdsPage> {
                         children: [
                           TabBar(
                             labelColor: KioskTheme.lunaBrown,
-                            unselectedLabelColor: Colors.grey,
+                            unselectedLabelColor: KioskTheme.textMuted,
                             indicatorColor: KioskTheme.lunaBrown,
-                            labelStyle: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 14, letterSpacing: 1),
+                            labelStyle: KioskTheme.labelLarge.copyWith(fontSize: 14),
                             tabs: [
                               Tab(text: 'PENDING (${pendingOrders.length})'),
                               Tab(text: 'PREPARING (${preparingOrders.length})'),
@@ -205,11 +194,11 @@ class _KdsPageState extends State<KdsPage> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Expanded(child: _buildKDSColumn('PENDING QUEUE', pendingOrders, 'Pending', Colors.red.withOpacity(0.08))),
+                          Expanded(child: _buildKDSColumn('PENDING QUEUE', pendingOrders, 'Pending', KioskTheme.warning.withOpacity(0.08))),
                           const SizedBox(width: 16),
-                          Expanded(child: _buildKDSColumn('PREPARING NOW', preparingOrders, 'Preparing', Colors.blue.withOpacity(0.08))),
+                          Expanded(child: _buildKDSColumn('PREPARING NOW', preparingOrders, 'Preparing', KioskTheme.info.withOpacity(0.08))),
                           const SizedBox(width: 16),
-                          Expanded(child: _buildKDSColumn('READY FOR PICKUP', readyOrders, 'Ready', Colors.green.withOpacity(0.08))),
+                          Expanded(child: _buildKDSColumn('READY FOR PICKUP', readyOrders, 'Ready', KioskTheme.success.withOpacity(0.08))),
                         ],
                       ),
                     ),
@@ -220,7 +209,7 @@ class _KdsPageState extends State<KdsPage> {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(KioskTheme.radiusLg),
         border: Border.all(color: KioskTheme.lunaBrown.withOpacity(0.08)),
       ),
       child: Column(
@@ -237,19 +226,11 @@ class _KdsPageState extends State<KdsPage> {
               children: [
                 Text(
                   title,
-                  style: GoogleFonts.outfit(
-                    fontWeight: FontWeight.w900,
-                    fontSize: 14,
-                    color: KioskTheme.lunaBrown,
-                    letterSpacing: 1.5,
-                  ),
+                  style: KioskTheme.labelLarge.copyWith(fontSize: 14),
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: KioskTheme.lunaBrown,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
+                  decoration: KioskTheme.badgeBrown,
                   child: Text(
                     '${orders.length}',
                     style: GoogleFonts.outfit(
@@ -286,7 +267,7 @@ class _KdsPageState extends State<KdsPage> {
             const SizedBox(height: 12),
             Text(
               'No orders in this phase',
-              style: GoogleFonts.outfit(color: Colors.grey[400], fontSize: 13, fontWeight: FontWeight.w600),
+              style: KioskTheme.bodySmall.copyWith(color: Colors.grey[400], fontSize: 13),
             ),
           ],
         ),
@@ -313,7 +294,6 @@ class _KdsPageState extends State<KdsPage> {
     final timestampStr = order['timestamp'] as String;
     final items = order['items'] as List<dynamic>? ?? [];
 
-    // Parse time
     String displayTime = 'Just now';
     try {
       final parsed = DateTime.parse(timestampStr).toLocal();
@@ -330,7 +310,6 @@ class _KdsPageState extends State<KdsPage> {
       typeIcon = Icons.storefront_rounded;
     }
 
-    // Action config
     String actionLabel = '';
     String nextStatus = '';
     Color actionColor = KioskTheme.lunaBrown;
@@ -338,11 +317,11 @@ class _KdsPageState extends State<KdsPage> {
     if (status == 'Pending') {
       actionLabel = 'START PREPARING';
       nextStatus = 'Preparing';
-      actionColor = Colors.blue;
+      actionColor = KioskTheme.info;
     } else if (status == 'Preparing') {
       actionLabel = 'MARK AS READY';
       nextStatus = 'Ready';
-      actionColor = Colors.green;
+      actionColor = KioskTheme.success;
     } else if (status == 'Ready') {
       actionLabel = 'COMPLETE ORDER';
       nextStatus = 'Completed';
@@ -351,10 +330,9 @@ class _KdsPageState extends State<KdsPage> {
 
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
-      elevation: 4,
-      shadowColor: KioskTheme.lunaBrown.withOpacity(0.06),
+      elevation: 0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
         side: BorderSide(color: KioskTheme.lunaBrown.withOpacity(0.08)),
       ),
       color: Colors.white,
@@ -368,10 +346,7 @@ class _KdsPageState extends State<KdsPage> {
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: KioskTheme.lunaBrown,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  decoration: KioskTheme.badgeBrown,
                   child: Text(
                     '#$orderNum',
                     style: GoogleFonts.outfit(
@@ -383,11 +358,7 @@ class _KdsPageState extends State<KdsPage> {
                 ),
                 Text(
                   displayTime,
-                  style: GoogleFonts.outfit(
-                    color: Colors.grey[500],
-                    fontWeight: FontWeight.w700,
-                    fontSize: 12,
-                  ),
+                  style: KioskTheme.bodySmall.copyWith(color: Colors.grey[500], fontSize: 12),
                 ),
               ],
             ),
@@ -398,43 +369,32 @@ class _KdsPageState extends State<KdsPage> {
                 const SizedBox(width: 6),
                 Text(
                   type.toUpperCase(),
-                  style: GoogleFonts.outfit(
-                    color: typeColor,
-                    fontWeight: FontWeight.w900,
-                    fontSize: 11,
-                    letterSpacing: 1,
-                  ),
+                  style: KioskTheme.labelSmall.copyWith(color: typeColor, fontSize: 11, letterSpacing: 1),
                 ),
                 const Spacer(),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: paymentStatus == 'PAID' ? Colors.green.withOpacity(0.1) : Colors.orange.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
+                    color: paymentStatus == 'PAID' ? KioskTheme.success.withOpacity(0.1) : KioskTheme.warning.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
                   ),
                   child: Text(
                     paymentStatus,
-                    style: GoogleFonts.outfit(
-                      color: paymentStatus == 'PAID' ? Colors.green : Colors.orange,
-                      fontWeight: FontWeight.w900,
+                    style: KioskTheme.labelSmall.copyWith(
+                      color: paymentStatus == 'PAID' ? KioskTheme.success : KioskTheme.warning,
                       fontSize: 9,
-                      letterSpacing: 0.5,
                     ),
                   ),
                 ),
               ],
             ),
-            const Divider(height: 24, thickness: 1),
+            KioskTheme.divider(),
+            const SizedBox(height: 8),
             Text(
               customerName,
-              style: GoogleFonts.outfit(
-                fontWeight: FontWeight.w800,
-                fontSize: 15,
-                color: KioskTheme.lunaBrown,
-              ),
+              style: KioskTheme.titleLarge.copyWith(fontSize: 15),
             ),
             const SizedBox(height: 12),
-            // Items List
             ...items.map((item) {
               final name = item['name'] as String;
               final qty = item['quantity'] as int;
@@ -447,11 +407,7 @@ class _KdsPageState extends State<KdsPage> {
                   children: [
                     Text(
                       '${qty}x',
-                      style: GoogleFonts.outfit(
-                        fontWeight: FontWeight.w900,
-                        color: KioskTheme.lunaBrown,
-                        fontSize: 13,
-                      ),
+                      style: KioskTheme.titleMedium.copyWith(fontSize: 13),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
@@ -460,20 +416,12 @@ class _KdsPageState extends State<KdsPage> {
                         children: [
                           Text(
                             name,
-                            style: GoogleFonts.outfit(
-                              fontWeight: FontWeight.w700,
-                              color: KioskTheme.lunaBrown,
-                              fontSize: 13,
-                            ),
+                            style: KioskTheme.bodyLarge.copyWith(fontSize: 13),
                           ),
                           if (variant != null && variant.isNotEmpty)
                             Text(
                               variant,
-                              style: GoogleFonts.outfit(
-                                fontSize: 10,
-                                color: Colors.grey[500],
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: KioskTheme.bodySmall.copyWith(fontSize: 10),
                             ),
                         ],
                       ),
@@ -483,7 +431,6 @@ class _KdsPageState extends State<KdsPage> {
               );
             }),
             const SizedBox(height: 20),
-            // Action Button
             JuicyFeedback(
               onPressed: () => _updateStatus(orderId, nextStatus),
               child: Container(
@@ -491,7 +438,7 @@ class _KdsPageState extends State<KdsPage> {
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 decoration: BoxDecoration(
                   color: actionColor,
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
                   boxShadow: [
                     BoxShadow(
                       color: actionColor.withOpacity(0.2),

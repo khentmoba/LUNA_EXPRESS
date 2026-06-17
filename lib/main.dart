@@ -16,9 +16,12 @@ import 'screens/analytics_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  
+
   SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+    ),
   );
 
   runApp(
@@ -45,8 +48,29 @@ class LunaExpressApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           seedColor: KioskTheme.lunaBrown,
           brightness: Brightness.light,
+          primary: KioskTheme.lunaBrown,
+          onPrimary: KioskTheme.textOnPrimary,
+          surface: KioskTheme.lunaWarmWhite,
         ),
         scaffoldBackgroundColor: KioskTheme.lunaCream,
+        fontFamily: 'Outfit',
+        appBarTheme: const AppBarTheme(
+          centerTitle: true,
+          elevation: 0,
+          scrolledUnderElevation: 2,
+        ),
+        cardTheme: CardThemeData(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(KioskTheme.radiusLg),
+          ),
+        ),
+        snackBarTheme: SnackBarThemeData(
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
+          ),
+        ),
       ),
       initialRoute: '/',
       routes: {

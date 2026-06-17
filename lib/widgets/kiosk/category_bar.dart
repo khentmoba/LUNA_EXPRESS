@@ -5,7 +5,6 @@ import 'kiosk_theme.dart';
 import '../../services/session.dart';
 import '../../data/menu_data.dart';
 
-
 class KioskCategoryBar extends StatelessWidget {
   const KioskCategoryBar({super.key});
 
@@ -26,7 +25,7 @@ class KioskCategoryBar extends StatelessWidget {
             itemBuilder: (context, index) {
               final section = kMenuSections[index];
               final isSelected = session.currentCategoryId == section.id;
-              
+
               return GestureDetector(
                 onTap: () => session.setCategory(section.id),
                 child: AnimatedContainer(
@@ -35,14 +34,8 @@ class KioskCategoryBar extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                   decoration: BoxDecoration(
                     color: isSelected ? KioskTheme.lunaBrown : Colors.transparent,
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: isSelected ? [
-                      BoxShadow(
-                        color: KioskTheme.lunaBrown.withOpacity(0.2),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      )
-                    ] : null,
+                    borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
+                    boxShadow: isSelected ? KioskTheme.shadowPrimary : null,
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -57,7 +50,7 @@ class KioskCategoryBar extends StatelessWidget {
                         style: GoogleFonts.outfit(
                           fontSize: 13,
                           fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
-                          color: isSelected ? KioskTheme.lunaTan : KioskTheme.lunaBrown.withOpacity(0.4),
+                          color: isSelected ? KioskTheme.textOnPrimary : KioskTheme.textMuted,
                           letterSpacing: 1,
                         ),
                       ),
