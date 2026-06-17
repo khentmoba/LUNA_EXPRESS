@@ -8,7 +8,7 @@
 // ═══════════════════════════════════════════════════
 
 // ── Change this version string every time you deploy ──
-const SW_VERSION = 'v1.1.2';
+const SW_VERSION = 'v1.1.3';
 const CACHE_NAME = 'luna-express-' + SW_VERSION;
 
 const PRECACHE_URLS = [
