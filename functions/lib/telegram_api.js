@@ -8,6 +8,7 @@ exports.sendToAll = sendToAll;
 exports.escapeMd = escapeMd;
 const node_telegram_bot_api_1 = __importDefault(require("node-telegram-bot-api"));
 const index_1 = require("./index");
+const firebase_functions_1 = require("firebase-functions");
 let bot;
 function getBot() {
     if (!bot) {
@@ -16,15 +17,32 @@ function getBot() {
     return bot;
 }
 async function sendToAll(message, options = {}) {
-    const ids = index_1.telegramChatIds.value().split(',');
+    const rawIds = index_1.telegramChatIds.value().split(',');
+    const ids = rawIds
+        .map(id => id.trim())
+        .filter(id => id.length > 0);
+    if (ids.length === 0) {
+        firebase_functions_1.logger.warn('No TELEGRAM_CHAT_ID configured; skipping notification');
+        return [];
+    }
     const telegram = getBot();
-    const promises = ids.map(id => {
-        return telegram.sendMessage(id.trim(), message, {
+    const results = await Promise.allSettled(ids.map(id => {
+        return telegram.sendMessage(id, message, {
             parse_mode: 'MarkdownV2',
             ...options
         });
-    });
-    return Promise.all(promises);
+    }));
+    const failures = results.filter(r => r.status === 'rejected');
+    if (failures.length > 0) {
+        firebase_functions_1.logger.error(`sendToAll: ${failures.length} of ${ids.length} messages failed`, failures.map((r, i) => ({
+            chatId: ids[i],
+            error: r.reason?.message || 'unknown'
+        })));
+    }
+    if (failures.length === ids.length) {
+        throw new Error(`All ${ids.length} Telegram messages failed`);
+    }
+    return results;
 }
 // Utility to escape MarkdownV2 special characters
 function escapeMd(text) {

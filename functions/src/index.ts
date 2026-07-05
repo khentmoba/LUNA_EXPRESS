@@ -13,4 +13,6 @@ export { verifyStaff } from './auth/verify_staff';
 export { sendOrderNotification } from './orders/send_notification';
 export { getActiveOrders, updateOrderStatus } from './orders/kds';
 export { getSalesAnalytics } from './reporting/analytics';
+export { createCheckoutSession } from './payments/create_checkout';
+export { paymongoWebhook } from './payments/webhook';
 

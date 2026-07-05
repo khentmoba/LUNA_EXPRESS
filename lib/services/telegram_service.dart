@@ -40,7 +40,7 @@ class TelegramService {
         'quantity': i.quantity,
       }).toList();
 
-      await callable.call({
+      final result = await callable.call({
         'orderNumber': orderNumber,
         'customerName': customerName,
         'customerAddress': customerAddress,
@@ -55,9 +55,15 @@ class TelegramService {
         'lat': lat,
         'lng': lng,
       });
-      debugPrint('Telegram notification sent successfully via Cloud Function');
+
+      final data = result.data as Map<String, dynamic>;
+      if (data['success'] != true) {
+        debugPrint('ALERT: Telegram notification failed for order $orderNumber: ${data['error'] ?? 'unknown error'}');
+      } else {
+        debugPrint('Telegram notification sent for $orderNumber');
+      }
     } catch (e) {
-      debugPrint('Telegram error: $e');
+      debugPrint('ALERT: Telegram notification error for order $orderNumber: $e');
     }
   }
 }

@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/kiosk/kiosk_theme.dart';
@@ -12,6 +11,7 @@ import '../services/session.dart';
 import '../models/order.dart';
 import 'map_picker_page.dart';
 import 'receipt_page.dart';
+import 'gcash_checkout_page.dart';
 
 class CheckoutPage extends StatefulWidget {
   const CheckoutPage({super.key});
@@ -33,9 +33,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
   String _orderType = 'Pickup';
   bool _loading = false;
 
-  String _gcashNumber = 'Loading...';
-  String _gcashHolder = '';
-
   static const _storeLat = 9.0205090;
   static const _storeLng = 125.5175910;
   static const _base2Lat = 9.1212590;
@@ -46,30 +43,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
     super.initState();
     if (session.isStaff) {
       _orderType = 'Walk-In';
+      _paymentMethod = 'Cash';
     }
-    _fetchGCashConfig();
-  }
-
-  void _fetchGCashConfig() {
-    FirebaseFirestore.instance.collection('config').doc('payment').get().then((doc) {
-      if (doc.exists && doc.data() != null) {
-        setState(() {
-          _gcashNumber = doc.data()?['number'] ?? '0998 348 5262';
-          _gcashHolder = doc.data()?['holder'] ?? 'MA*Y A** S.';
-        });
-      } else {
-        _setGCashFallback();
-      }
-    }).catchError((_) {
-      _setGCashFallback();
-    });
-  }
-
-  void _setGCashFallback() {
-    setState(() {
-      _gcashNumber = '0998 348 5262';
-      _gcashHolder = 'MA*Y A** S.';
-    });
   }
 
   @override
@@ -95,11 +70,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
     setState(() {
       _distance = distToStore <= distToBase2 ? distToStore : distToBase2;
-      if (_distance > 10) {
-        _deliveryFee = 0;
-      } else {
-        _deliveryFee = (_distance * 39).round();
-      }
+      _deliveryFee = (_distance * 39).round();
     });
   }
 
@@ -149,7 +120,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
     final paymentStatus = session.isStaff
         ? 'PAID'
-        : (_paymentMethod == 'GCash' ? 'PENDING VERIFICATION' : 'NOT PAID');
+        : (_paymentMethod == 'GCash' ? 'AWAITING_PAYMENT' : 'NOT PAID');
 
     await TelegramService.sendOrder(
       orderNumber: orderNumber,
@@ -190,22 +161,82 @@ class _CheckoutPageState extends State<CheckoutPage> {
     cartNotifier.clear();
     setState(() => _loading = false);
     if (!mounted) return;
-    Navigator.pushAndRemoveUntil(
+
+    if (_paymentMethod == 'GCash' && !session.isStaff) {
+      final serializedItems = items
+          .map((i) => {
+                'name': i.name,
+                'variant': i.variant,
+                'price': i.price,
+                'quantity': i.quantity,
+              })
+          .toList();
+
+      final paid = await Navigator.push<bool>(
         context,
         MaterialPageRoute(
+          builder: (_) => GCashCheckoutPage(
+            orderId: orderNumber,
+            amount: total,
+            items: serializedItems,
+            customerName: name,
+            customerPhone: phone,
+          ),
+        ),
+      );
+
+      if (!mounted) return;
+      if (paid == true) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
             builder: (_) => ReceiptPage(
-                  orderNumber: orderNumber,
-                  customerName: name,
-                  customerAddress: address,
-                  customerPhone: phone,
-                  items: items,
-                  total: total,
-                  timeStr: timeStr,
-                  isWalkIn: session.isStaff,
-                  orderType: _orderType,
-                  deliveryFee: _needsCoordinates ? _deliveryFee : 0,
-                )),
-        (route) => route.isFirst);
+              orderNumber: orderNumber,
+              customerName: name,
+              customerAddress: address,
+              customerPhone: phone,
+              items: items,
+              total: total,
+              timeStr: timeStr,
+              isWalkIn: false,
+              orderType: _orderType,
+              deliveryFee: _needsCoordinates ? _deliveryFee : 0,
+            ),
+          ),
+          (route) => route.isFirst,
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('GCash payment was cancelled or failed. Your order is saved but not yet paid.'),
+          backgroundColor: KioskTheme.error,
+          duration: Duration(seconds: 5),
+        ));
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const CheckoutPage()),
+          (route) => route.isFirst,
+        );
+      }
+    } else {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ReceiptPage(
+            orderNumber: orderNumber,
+            customerName: name,
+            customerAddress: address,
+            customerPhone: phone,
+            items: items,
+            total: total,
+            timeStr: timeStr,
+            isWalkIn: session.isStaff,
+            orderType: _orderType,
+            deliveryFee: _needsCoordinates ? _deliveryFee : 0,
+          ),
+        ),
+        (route) => route.isFirst,
+      );
+    }
   }
 
   @override
@@ -267,27 +298,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           style: KioskTheme.headerLarge.copyWith(fontSize: 32)),
                     ],
                   ),
-                  if (_needsCoordinates && _locationPinned && _distance > 10) ...[
-                    const SizedBox(height: 20),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: KioskTheme.error.withOpacity(0.05),
-                        borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
-                        border: Border.all(color: KioskTheme.error.withOpacity(0.1)),
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.warning_amber_rounded, color: KioskTheme.error, size: 20),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text('Outside delivery range (Max 10km). Distance: ${_distance.toStringAsFixed(1)}km',
-                                style: GoogleFonts.outfit(color: KioskTheme.error, fontWeight: FontWeight.w700, fontSize: 13)),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+
                 ],
               ),
             ),
@@ -369,33 +380,38 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             children: [
                               const Icon(Icons.payment_rounded, color: Color(0xFF007DFE)),
                               const SizedBox(width: 12),
-                              Text('GCASH INSTRUCTIONS', style: KioskTheme.labelLarge.copyWith(color: const Color(0xFF007DFE))),
+                              Text('GCASH VIA PAYMONGO', style: KioskTheme.labelLarge.copyWith(color: const Color(0xFF007DFE))),
                             ],
                           ),
                           const SizedBox(height: 16),
-                          Text('1. Scan the QR code or send to:', style: KioskTheme.bodyLarge.copyWith(fontSize: 14)),
-                          const SizedBox(height: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(KioskTheme.radiusSm)),
-                            child: Text(
-                              _gcashHolder.isNotEmpty ? '$_gcashNumber ($_gcashHolder)' : _gcashNumber,
-                              style: KioskTheme.titleMedium.copyWith(color: const Color(0xFF007DFE), fontSize: 16),
-                            ),
+                          Text(
+                            'You will be redirected to a secure GCash checkout page after confirming your order.',
+                            style: KioskTheme.bodyLarge.copyWith(fontSize: 14),
                           ),
-                          const SizedBox(height: 16),
-                          Text('2. Take a screenshot of the receipt.', style: KioskTheme.bodyLarge.copyWith(fontSize: 14)),
-                          Text('3. Show the screenshot to our staff.', style: KioskTheme.bodyLarge.copyWith(fontSize: 14)),
                           const SizedBox(height: 12),
-                          Center(
-                            child: Container(
-                              width: 200,
-                              height: 280,
-                              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(KioskTheme.radiusMd), border: Border.all(color: Colors.grey[200]!)),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
-                                child: Image.asset('images/gcash_qr.png', fit: BoxFit.contain),
-                              ),
+                          Text(
+                            'Select GCash as your payment method in the checkout page and authorize the payment in the GCash app.',
+                            style: KioskTheme.bodyMedium.copyWith(fontSize: 13, color: KioskTheme.textSecondary),
+                          ),
+                          const SizedBox(height: 12),
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
+                              border: Border.all(color: const Color(0xFF007DFE).withOpacity(0.1)),
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.lock_rounded, size: 16, color: Color(0xFF007DFE)),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    'Secured by PayMongo. Funds settle to the merchant\'s bank account.',
+                                    style: KioskTheme.bodySmall.copyWith(fontSize: 11, color: KioskTheme.textSecondary),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -476,10 +492,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
             const SizedBox(height: 48),
             Builder(
               builder: (context) {
-                final isBlocked = _needsCoordinates && (!_locationPinned || _distance > 10);
+                final isBlocked = _needsCoordinates && !_locationPinned;
                 final label = _orderType == 'Walk-In'
                     ? 'CONFIRM POS ORDER'
-                    : (_orderType == 'Pickup' ? 'CONFIRM PICKUP ORDER' : (isBlocked && _locationPinned ? 'OUTSIDE DELIVERY RANGE' : 'PLACE DELIVERY ORDER'));
+                    : (_orderType == 'Pickup' ? 'CONFIRM PICKUP ORDER' : 'PLACE DELIVERY ORDER');
 
                 return JuicyFeedback(
                   onPressed: (_loading || isBlocked) ? null : _submitOrder,
