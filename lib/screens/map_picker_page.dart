@@ -175,7 +175,7 @@ class _MapPickerPageState extends State<MapPickerPage>
             { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
           );
         ''']);
-        final pos = await completer.complete();
+        final pos = await completer.future;
         _mapController.move(LatLng(pos['lat']!, pos['lng']!), 17);
         _fetchAddress(pos['lat']!, pos['lng']!);
       } catch (_) {}
