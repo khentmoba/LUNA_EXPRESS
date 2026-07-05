@@ -35,7 +35,7 @@ exports.sendOrderNotification = (0, https_1.onCall)(async (request) => {
         '',
         `🚚 *Delivery Fee:* \u20B1${(0, telegram_api_1.escapeMd)((deliveryFee || 0).toString())}`,
         `💳 *Payment Method:* ${(0, telegram_api_1.escapeMd)(paymentMethod || 'Cash')}`,
-        `📝 *Payment Status:* ${(0, telegram_api_1.escapeMd)(paymentStatus || 'NOT PAID')}`,
+        `📝 *Payment Status:* ${(0, telegram_api_1.escapeMd)(paymentStatus || 'NOT PAID')}${paymentStatus === 'AWAITING_PAYMENT' ? ' (GCash)' : ''}`,
         '',
         `💰 *TOTAL:* \u20B1*${(0, telegram_api_1.escapeMd)(total.toString())}*`,
         `🕐 *Time:* ${(0, telegram_api_1.escapeMd)(timeStr || '')}`,
@@ -49,7 +49,7 @@ exports.sendOrderNotification = (0, https_1.onCall)(async (request) => {
     }
     catch (error) {
         firebase_functions_1.logger.error(`Error sending Telegram notification for ${orderNumber}`, error);
-        return { success: false, error: error?.message || 'Failed to send message' };
+        throw new https_1.HttpsError('internal', error?.message || 'Failed to send Telegram notification');
     }
 });
 //# sourceMappingURL=send_notification.js.map

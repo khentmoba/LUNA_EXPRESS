@@ -52,7 +52,7 @@ export const sendOrderNotification = onCall(async (request) => {
     '',
     `🚚 *Delivery Fee:* \u20B1${escapeMd((deliveryFee || 0).toString())}`,
     `💳 *Payment Method:* ${escapeMd(paymentMethod || 'Cash')}`,
-    `📝 *Payment Status:* ${escapeMd(paymentStatus || 'NOT PAID')}`,
+    `📝 *Payment Status:* ${escapeMd(paymentStatus || 'NOT PAID')}${paymentStatus === 'AWAITING_PAYMENT' ? ' (GCash)' : ''}`,
     '',
     `💰 *TOTAL:* \u20B1*${escapeMd(total.toString())}*`,
     `🕐 *Time:* ${escapeMd(timeStr || '')}`,
@@ -66,6 +66,6 @@ export const sendOrderNotification = onCall(async (request) => {
     return { success: true };
   } catch (error: any) {
     logger.error(`Error sending Telegram notification for ${orderNumber}`, error);
-    return { success: false, error: error?.message || 'Failed to send message' };
+    throw new HttpsError('internal', error?.message || 'Failed to send Telegram notification');
   }
 });

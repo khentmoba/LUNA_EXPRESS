@@ -1,4 +1,6 @@
 // ignore_for_file: avoid_web_libraries_in_flutter
+import 'dart:async';
+import 'dart:convert';
 import 'dart:js' as js;
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -1067,6 +1069,12 @@ class CartPage extends StatelessWidget {
 // ─────────────────────────────────────────────
 //  MAP PICKER PAGE  (delivery address selection)
 // ─────────────────────────────────────────────
+
+const _mtKey = 'WdrFoTJ8mK1mg0cZdDoM';
+const _mtTileUrl = 'https://api.maptiler.com/maps/streets-v2/256/{z}/{x}/{y}.png?key=$_mtKey';
+const _nomSearch = 'https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5';
+const _nomReverse = 'https://nominatim.openstreetmap.org/reverse?format=json&zoom=18&addressdetails=1';
+
 class MapPickerPage extends StatefulWidget {
   final String initialAddress;
   final double initialLat;
@@ -1075,110 +1083,77 @@ class MapPickerPage extends StatefulWidget {
   @override
   State<MapPickerPage> createState() => _MapPickerPageState();
 }
-class _MapPickerPageState extends State<MapPickerPage> {
-  late WebViewController? _webCtrl;
+
+class _MapPickerPageState extends State<MapPickerPage> with TickerProviderStateMixin {
+  WebViewController? _webCtrl;
   late MapController _mapController;
   String _address = '';
+  String _addressShort = '';
   bool _loading = true;
   double _lat = 0, _lng = 0;
+
+  late AnimationController _pulseCtrl;
+
+  final TextEditingController _searchCtrl = TextEditingController();
+  final FocusNode _searchFocus = FocusNode();
+  List<Map<String, dynamic>> _searchResults = [];
+  bool _searching = false;
+  Timer? _searchDebounce;
+  Timer? _addressDebounce;
+  bool _showResults = false;
 
   @override
   void initState() {
     super.initState();
     _address = widget.initialAddress;
+    _addressShort = widget.initialAddress;
     _lat = widget.initialLat;
     _lng = widget.initialLng;
     _mapController = MapController();
-
-    // Get current location first, then initialize map
+    _pulseCtrl = AnimationController(
+      duration: const Duration(milliseconds: 1600),
+      vsync: this,
+    )..repeat(reverse: true);
     _getCurrentLocationAndInit();
   }
 
   Future<void> _getCurrentLocationAndInit() async {
-    // On web, use native browser geolocation with timeout
-    if (kIsWeb) {
-      _getWebLocation();
-      return;
-    }
-
-    // Native platforms use Geolocator
+    if (kIsWeb) { _getWebLocation(); return; }
     bool serviceEnabled;
     LocationPermission permission;
-
     try {
-      // Check if location services are enabled with timeout
       serviceEnabled = await Geolocator.isLocationServiceEnabled().timeout(
-        const Duration(seconds: 5),
-        onTimeout: () => false,
+        const Duration(seconds: 5), onTimeout: () => false,
       );
-      if (!serviceEnabled) {
-        _initMapWithLocation(_lat, _lng);
-        return;
-      }
-
-      // Check permission with timeout
+      if (!serviceEnabled) { _initMapWithLocation(_lat, _lng); return; }
       permission = await Geolocator.checkPermission().timeout(
-        const Duration(seconds: 5),
-        onTimeout: () => LocationPermission.denied,
+        const Duration(seconds: 5), onTimeout: () => LocationPermission.denied,
       );
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission().timeout(
-          const Duration(seconds: 10),
-          onTimeout: () => LocationPermission.denied,
+          const Duration(seconds: 10), onTimeout: () => LocationPermission.denied,
         );
-        if (permission == LocationPermission.denied) {
-          _initMapWithLocation(_lat, _lng);
-          return;
-        }
+        if (permission == LocationPermission.denied) { _initMapWithLocation(_lat, _lng); return; }
       }
-
-      if (permission == LocationPermission.deniedForever) {
-        _initMapWithLocation(_lat, _lng);
-        return;
-      }
-
-      // Get current position with timeout
+      if (permission == LocationPermission.deniedForever) { _initMapWithLocation(_lat, _lng); return; }
       final position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
-      ).timeout(
-        const Duration(seconds: 10),
-        onTimeout: () => throw Exception('Location timeout'),
-      );
-      setState(() {
-        _lat = position.latitude;
-        _lng = position.longitude;
-      });
+      ).timeout(const Duration(seconds: 10), onTimeout: () => throw Exception());
+      setState(() { _lat = position.latitude; _lng = position.longitude; });
       _initMapWithLocation(_lat, _lng);
-    } catch (e) {
-      _initMapWithLocation(_lat, _lng);
-    }
+    } catch (_) { _initMapWithLocation(_lat, _lng); }
   }
 
   void _getWebLocation() {
     try {
-      // Use native browser geolocation API
-      final geolocation = js.context['navigator']['geolocation'];
-      if (geolocation == null) {
-        _initMapWithLocation(_lat, _lng);
-        return;
-      }
-
-      // Define success callback
+      final g = js.context['navigator']['geolocation'];
+      if (g == null) { _initMapWithLocation(_lat, _lng); return; }
       js.context['_geoSuccess'] = (pos) {
-        final coords = pos['coords'];
-        setState(() {
-          _lat = coords['latitude'];
-          _lng = coords['longitude'];
-        });
+        final c = pos['coords'];
+        setState(() { _lat = c['latitude']; _lng = c['longitude']; });
         _initMapWithLocation(_lat, _lng);
       };
-
-      // Define error callback
-      js.context['_geoError'] = (_) {
-        _initMapWithLocation(_lat, _lng);
-      };
-
-      // Call getCurrentPosition with timeout options
+      js.context['_geoError'] = (_) => _initMapWithLocation(_lat, _lng);
       js.context.callMethod('eval', ['''
         navigator.geolocation.getCurrentPosition(
           function(pos) { window._geoSuccess(pos); },
@@ -1186,67 +1161,147 @@ class _MapPickerPageState extends State<MapPickerPage> {
           { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
         );
       ''']);
-    } catch (e) {
-      _initMapWithLocation(_lat, _lng);
+    } catch (_) { _initMapWithLocation(_lat, _lng); }
+  }
+
+  Future<void> _goToMyLocation() async {
+    if (kIsWeb) {
+      try {
+        final c = Completer<Map<String, double>>();
+        js.context['_myLocSuccess'] = (pos) {
+          final coords = pos['coords'];
+          c.complete({'lat': coords['latitude'], 'lng': coords['longitude']});
+        };
+        js.context['_myLocError'] = (_) => c.completeError('error');
+        js.context.callMethod('eval', ['''
+          navigator.geolocation.getCurrentPosition(
+            function(p) { window._myLocSuccess(p); },
+            function(e) { window._myLocError(e); },
+            { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+          );
+        ''']);
+        final pos = await c.future;
+        _mapController.move(LatLng(pos['lat']!, pos['lng']!), 17);
+        _fetchAddress(pos['lat']!, pos['lng']!);
+      } catch (_) {}
+    } else {
+      try {
+        final pos = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high,
+        ).timeout(const Duration(seconds: 8), onTimeout: () => throw Exception());
+        if (_webCtrl != null) _webCtrl!.runJavaScript('moveMapTo(${pos.latitude}, ${pos.longitude});');
+      } catch (_) {}
     }
   }
 
   void _initMapWithLocation(double lat, double lng) {
-    // Only initialize WebViewController on native platforms
     if (!kIsWeb) {
       _webCtrl = WebViewController()
         ..setJavaScriptMode(JavaScriptMode.unrestricted)
         ..addJavaScriptChannel('AddressChannel', onMessageReceived: (msg) {
           final parts = msg.message.split('||');
-          if (parts.length >= 3) {
+          if (parts.length >= 4) {
             setState(() {
               _address = parts[0];
-              _lat     = double.tryParse(parts[1]) ?? _lat;
-              _lng     = double.tryParse(parts[2]) ?? _lng;
+              _addressShort = parts[1];
+              _lat = double.tryParse(parts[2]) ?? _lat;
+              _lng = double.tryParse(parts[3]) ?? _lng;
               _loading = false;
             });
           }
         })
         ..loadHtmlString(_buildMapHtml(lat, lng));
     } else {
-      // On web, center map on current location and fetch address
       setState(() => _loading = false);
-      // Move map to current location after build
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _mapController.move(LatLng(lat, lng), 16);
+        _mapController.move(LatLng(lat, lng), 17);
         _fetchAddress(lat, lng);
       });
     }
   }
 
   Future<void> _fetchAddress(double lat, double lng) async {
-    final url = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=$lat&lon=$lng&zoom=18&addressdetails=1';
+    final url = '$_nomReverse&lat=$lat&lon=$lng';
     try {
       final response = await http.get(Uri.parse(url), headers: {'Accept-Language': 'en'});
       if (response.statusCode == 200) {
-        final data = response.body;
-        final addressMatch = RegExp(r'"display_name"\s*:\s*"([^"]+)"').firstMatch(data);
-        setState(() {
-          _address = addressMatch != null ? addressMatch.group(1) ?? '' : '$lat, $lng';
-        });
+        final data = jsonDecode(response.body) as Map<String, dynamic>;
+        final display = data['display_name'] as String? ?? '$lat, $lng';
+        final addr = data['address'] as Map<String, dynamic>?;
+        final short = _parseAddress(addr);
+        setState(() { _address = display; _addressShort = short; });
       }
-    } catch (e) {
-      setState(() {
-        _address = '$lat, $lng';
-      });
+    } catch (_) { setState(() => _addressShort = ''); }
+  }
+
+  String _parseAddress(Map<String, dynamic>? a) {
+    if (a == null) return '';
+    final parts = <String>[];
+    if (a['road'] != null) parts.add(a['road'] as String);
+    if (a['suburb'] != null) parts.add(a['suburb'] as String);
+    final city = a['city'] ?? a['town'] ?? a['village'];
+    if (city != null) parts.add(city as String);
+    if (a['state'] != null && parts.length < 2) parts.add(a['state'] as String);
+    return parts.join(', ');
+  }
+
+  void _onSearchChanged(String q) {
+    _searchDebounce?.cancel();
+    if (q.trim().length < 2) {
+      setState(() { _showResults = false; _searchResults.clear(); _searching = false; });
+      return;
     }
+    setState(() => _searching = true);
+    _searchDebounce = Timer(const Duration(milliseconds: 400), () => _searchAddress(q.trim()));
+  }
+
+  Future<void> _searchAddress(String query) async {
+    final url = '$_nomSearch&q=${Uri.encodeComponent(query)}';
+    try {
+      final r = await http.get(Uri.parse(url), headers: {'Accept-Language': 'en'});
+      if (r.statusCode == 200) {
+        final data = jsonDecode(r.body) as List<dynamic>;
+        setState(() {
+          _searchResults = data.map((e) => e as Map<String, dynamic>).toList();
+          _showResults = _searchResults.isNotEmpty;
+          _searching = false;
+        });
+      } else { setState(() => _searching = false); }
+    } catch (_) { setState(() => _searching = false); }
+  }
+
+  void _selectSearchResult(Map<String, dynamic> r) {
+    final lat = double.tryParse(r['lat'].toString()) ?? _lat;
+    final lng = double.tryParse(r['lon'].toString()) ?? _lng;
+    final display = r['display_name'] as String? ?? '';
+    final addr = r['address'] as Map<String, dynamic>?;
+    final short = _parseAddress(addr);
+    setState(() {
+      _lat = lat; _lng = lng; _address = display; _addressShort = short;
+      _showResults = false; _searchCtrl.clear(); _searchFocus.unfocus();
+    });
+    if (kIsWeb) {
+      _mapController.move(LatLng(lat, lng), 17);
+    } else if (_webCtrl != null) {
+      _webCtrl!.runJavaScript('moveMapTo($lat, $lng);');
+    }
+  }
+
+  void _clearSearch() {
+    _searchCtrl.clear(); _searchDebounce?.cancel();
+    setState(() { _showResults = false; _searchResults.clear(); _searching = false; });
   }
 
   String _buildMapHtml(double lat, double lng) => '''
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
-html, body { height:100%; width:100%; }
+html, body { height:100%; width:100%; overflow:hidden; }
 #map { height:100%; width:100%; }
 #crosshair {
   position:fixed; top:50%; left:50%;
@@ -1254,81 +1309,70 @@ html, body { height:100%; width:100%; }
   z-index:9999; pointer-events:none;
   display:flex; flex-direction:column; align-items:center;
 }
-#crosshair .pin {
-  width:32px; height:40px;
+@keyframes pinPulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.06); } }
+.pin-container { animation:pinPulse 1.6s ease-in-out infinite; }
+.pin-body {
+  width:36px; height:44px;
   background:#E8192C; border-radius:50% 50% 50% 0;
   transform:rotate(-45deg); border:3px solid #fff;
-  box-shadow:0 2px 8px rgba(0,0,0,0.35);
+  box-shadow:0 3px 10px rgba(0,0,0,0.35);
+  position:relative;
 }
-#crosshair .pin-dot {
+.pin-dot {
   position:absolute; top:50%; left:50%;
   transform:translate(-50%,-50%);
-  width:10px; height:10px;
+  width:12px; height:12px;
   background:#fff; border-radius:50%;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,0.15);
 }
-#crosshair .pin-shadow {
-  width:12px; height:6px;
-  background:rgba(0,0,0,0.2);
-  border-radius:50%; margin-top:3px;
-  filter:blur(2px);
-}
-#address-bar {
-  position:fixed; bottom:0; left:0; right:0;
-  background:#fff; padding:14px 16px;
-  border-top:1px solid #eee;
-  font-family:sans-serif; z-index:9999;
-}
-#addr-text {
-  font-size:13px; color:#333;
-  margin-bottom:10px; min-height:18px;
-  line-height:1.4;
-}
-#loading-text {
-  font-size:12px; color:#999;
-  margin-bottom:10px;
+.pin-shadow {
+  width:14px; height:7px;
+  background:rgba(0,0,0,0.18);
+  border-radius:50%; margin-top:2px;
+  filter:blur(3px);
 }
 </style>
 </head>
 <body>
 <div id="map"></div>
 <div id="crosshair">
-  <div class="pin"><div class="pin-dot"></div></div>
-  <div class="pin-shadow"></div>
-</div>
-<div id="address-bar">
-  <div id="loading-text">Move map to pin your location...</div>
-  <div id="addr-text"></div>
+  <div class="pin-container">
+    <div class="pin-body"><div class="pin-dot"></div></div>
+    <div class="pin-shadow"></div>
+  </div>
 </div>
 <script>
-var map = L.map('map', { zoomControl:true, attributionControl:false }).setView([$lat, $lng], 16);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19 }).addTo(map);
-
+var map = L.map('map', { zoomControl:true, attributionControl:false }).setView([$lat, $lng], 17);
+L.tileLayer('$_mtTileUrl', { maxZoom:19 }).addTo(map);
 var debounce;
-function onMapMove() {
+function fetchAddressAt(lat, lng) {
   clearTimeout(debounce);
-  debounce = setTimeout(fetchAddress, 600);
+  debounce = setTimeout(function() {
+    var url = '$_nomReverse&lat=' + lat + '&lon=' + lng;
+    fetch(url, { headers: { 'Accept-Language': 'en' } })
+      .then(function(r){ return r.json(); })
+      .then(function(d) {
+        var display = d.display_name || (lat.toFixed(6) + ', ' + lng.toFixed(6));
+        var short = display;
+        var a = d.address || {};
+        var parts = [];
+        if (a.road) parts.push(a.road);
+        if (a.suburb) parts.push(a.suburb);
+        var city = a.city || a.town || a.village;
+        if (city) parts.push(city);
+        if (a.state && parts.length < 2) parts.push(a.state);
+        if (parts.length > 0) short = parts.join(', ');
+        AddressChannel.postMessage(display + '||' + short + '||' + lat + '||' + lng);
+      })
+      .catch(function() {
+        var fb = lat.toFixed(6) + ', ' + lng.toFixed(6);
+        AddressChannel.postMessage(fb + '||' + fb + '||' + lat + '||' + lng);
+      });
+  }, 600);
 }
-
-function fetchAddress() {
-  var c = map.getCenter();
-  var url = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + c.lat + '&lon=' + c.lng + '&zoom=18&addressdetails=1';
-  fetch(url, { headers: { 'Accept-Language': 'en' } })
-    .then(function(r){ return r.json(); })
-    .then(function(d) {
-      var addr = d.display_name || (c.lat.toFixed(6) + ', ' + c.lng.toFixed(6));
-      document.getElementById('addr-text').textContent = addr;
-      document.getElementById('loading-text').textContent = 'Drag map to adjust pin';
-      AddressChannel.postMessage(addr + '||' + c.lat + '||' + c.lng);
-    })
-    .catch(function() {
-      var fallback = c.lat.toFixed(6) + ', ' + c.lng.toFixed(6);
-      document.getElementById('addr-text').textContent = fallback;
-      AddressChannel.postMessage(fallback + '||' + c.lat + '||' + c.lng);
-    });
-}
-
-map.on('moveend', onMapMove);
-fetchAddress();
+map.on('moveend', function() { var c = map.getCenter(); fetchAddressAt(c.lat, c.lng); });
+function moveMapTo(lat, lng) { map.setView([lat, lng], 17); }
+fetchAddressAt($lat, $lng);
 </script>
 </body>
 </html>
@@ -1336,18 +1380,12 @@ fetchAddress();
 
   Future<void> _confirmLocation() async {
     if (kIsWeb) {
-      // Update from map center on web
       setState(() => _loading = true);
-      final center = _mapController.camera.center;
-      setState(() {
-        _lat = center.latitude;
-        _lng = center.longitude;
-      });
+      final c = _mapController.camera.center;
+      setState(() { _lat = c.latitude; _lng = c.longitude; });
       await _fetchAddress(_lat, _lng);
       setState(() => _loading = false);
-      if (mounted) {
-        Navigator.pop(context, {'address': _address, 'lat': _lat, 'lng': _lng});
-      }
+      if (mounted) Navigator.pop(context, {'address': _address, 'lat': _lat, 'lng': _lng});
     } else {
       Navigator.pop(context, {'address': _address, 'lat': _lat, 'lng': _lng});
     }
@@ -1356,131 +1394,187 @@ fetchAddress();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kCream,
       appBar: AppBar(
         title: const Text('Pin Your Location', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18)),
         backgroundColor: kRed, foregroundColor: Colors.white, elevation: 0,
         actions: [
           TextButton(
-            onPressed: _address.isEmpty ? null : _confirmLocation,
+            onPressed: _addressShort.isEmpty ? null : _confirmLocation,
             child: const Text('CONFIRM', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 14, letterSpacing: 1)),
           ),
         ],
       ),
-      body: kIsWeb 
-        ? _buildWebMap()
-        : Stack(children: [
-            WebViewWidget(controller: _webCtrl!),
-            if (_loading)
-              Container(color: Colors.white.withOpacity(0.85), child: const Center(child: CircularProgressIndicator(color: kRed))),
-            Positioned(
-              bottom: 90, left: 16, right: 16,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16),
-                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.12), blurRadius: 16, offset: const Offset(0, 4))]),
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  const Row(children: [Icon(Icons.location_on, color: kRed, size: 16), SizedBox(width: 6),
-                    Text('Pinned Address', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 12, color: kDark))]),
-                  const SizedBox(height: 6),
-                  Text(_address.isEmpty ? 'Move the map to find your location...' : _address,
-                      style: TextStyle(fontSize: 13, color: _address.isEmpty ? Colors.grey[400] : kDark, height: 1.4)),
-                ]),
-              ),
-            ),
-          ]),
+      body: Column(children: [
+        _buildSearchBar(),
+        if (_showResults && _searchResults.isNotEmpty) _buildSearchResults(),
+        Expanded(child: kIsWeb ? _buildWebMap() : _buildNativeMap()),
+      ]),
+    );
+  }
+
+  Widget _buildSearchBar() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8, offset: const Offset(0, 2))],
+      ),
+      child: TextField(
+        controller: _searchCtrl, focusNode: _searchFocus,
+        onChanged: _onSearchChanged,
+        onTap: () { if (_searchResults.isNotEmpty) setState(() => _showResults = true); },
+        decoration: InputDecoration(
+          hintText: 'Search address...',
+          hintStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Colors.grey.shade400),
+          prefixIcon: const Icon(Icons.search, color: kRed, size: 20),
+          suffixIcon: _searching
+            ? const Padding(padding: EdgeInsets.all(12), child: SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: kRed)))
+            : _searchCtrl.text.isNotEmpty
+              ? IconButton(icon: const Icon(Icons.clear, size: 18), color: Colors.grey.shade400, onPressed: _clearSearch)
+              : null,
+          filled: true, fillColor: kCream,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: kRed.withOpacity(0.3), width: 1)),
+        ),
+        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: kDark),
+      ),
+    );
+  }
+
+  Widget _buildSearchResults() {
+    return Container(
+      constraints: const BoxConstraints(maxHeight: 220),
+      decoration: BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 8, offset: const Offset(0, 4))]),
+      child: ListView.separated(
+        shrinkWrap: true, padding: EdgeInsets.zero,
+        itemCount: _searchResults.length,
+        separatorBuilder: (_, __) => Divider(color: kDark.withOpacity(0.05), height: 1),
+        itemBuilder: (ctx, i) {
+          final r = _searchResults[i];
+          return ListTile(
+            dense: true,
+            leading: const Icon(Icons.location_on, color: kRed, size: 20),
+            title: Text(r['display_name'] ?? '', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: kDark), maxLines: 2, overflow: TextOverflow.ellipsis),
+            onTap: () => _selectSearchResult(r),
+          );
+        },
+      ),
     );
   }
 
   Widget _buildWebMap() {
-    return Stack(
-      children: [
-        FlutterMap(
-          mapController: _mapController,
-          options: MapOptions(
-            initialCenter: LatLng(_lat, _lng),
-            initialZoom: 16,
-          ),
-          children: [
-            TileLayer(
-              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              userAgentPackageName: 'com.example.app',
-              maxZoom: 19,
-            ),
-          ],
+    return Stack(children: [
+      FlutterMap(
+        mapController: _mapController,
+        options: MapOptions(
+          initialCenter: LatLng(_lat, _lng), initialZoom: 17,
+          onMapEvent: (e) {
+            if (e is MapEventMoveEnd) {
+              final c = _mapController.camera.center;
+              setState(() { _lat = c.latitude; _lng = c.longitude; });
+              _addressDebounce?.cancel();
+              _addressDebounce = Timer(const Duration(milliseconds: 600), () => _fetchAddress(c.latitude, c.longitude));
+            }
+          },
         ),
-        Positioned(
-          top: 50,
-          left: 50,
-          right: 50,
-          bottom: 110,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 32,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: kRed,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(32),
-                      topRight: Radius.circular(32),
-                      bottomRight: Radius.circular(32),
-                    ),
-                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.35), blurRadius: 8, offset: const Offset(0, 2))],
-                  ),
-                  child: Center(
-                    child: Container(
-                      width: 10,
-                      height: 10,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  ),
+        children: [TileLayer(urlTemplate: _mtTileUrl, userAgentPackageName: 'com.example.app', maxZoom: 19)],
+      ),
+      _buildPinOverlay(),
+      _buildMyLocationButton(),
+      _buildAddressCard(),
+      if (_loading) Container(color: Colors.white.withOpacity(0.85), child: const Center(child: CircularProgressIndicator(color: kRed))),
+    ]);
+  }
+
+  Widget _buildNativeMap() {
+    return Stack(children: [
+      if (_webCtrl != null) WebViewWidget(controller: _webCtrl!),
+      _buildMyLocationButton(),
+      _buildAddressCard(),
+      if (_loading) Container(color: Colors.white.withOpacity(0.85), child: const Center(child: CircularProgressIndicator(color: kRed))),
+    ]);
+  }
+
+  Widget _buildPinOverlay() {
+    return Positioned(
+      top: 0, left: 0, right: 0, bottom: 120,
+      child: IgnorePointer(
+        child: Center(
+          child: AnimatedBuilder(
+            animation: _pulseCtrl,
+            builder: (ctx, child) => Transform.scale(scale: 0.94 + (_pulseCtrl.value * 0.06), child: child),
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              Container(
+                width: 36, height: 44,
+                decoration: BoxDecoration(
+                  color: kRed,
+                  borderRadius: const BorderRadius.only(topLeft: Radius.circular(36), topRight: Radius.circular(36), bottomRight: Radius.circular(36)),
+                  border: Border.all(color: Colors.white, width: 3),
+                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.35), blurRadius: 10, offset: const Offset(0, 3))],
                 ),
-                const SizedBox(height: 3),
-                Container(
-                  width: 12,
-                  height: 6,
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Positioned(
-          bottom: 90, left: 16, right: 16,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.12), blurRadius: 16, offset: const Offset(0, 4))]),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Row(children: [Icon(Icons.location_on, color: kRed, size: 16), SizedBox(width: 6),
-                Text('Pinned Address', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 12, color: kDark))]),
-              const SizedBox(height: 6),
-              Text(_address.isEmpty ? 'Move the map to find your location...' : _address,
-                  style: TextStyle(fontSize: 13, color: _address.isEmpty ? Colors.grey[400] : kDark, height: 1.4)),
+                child: Center(child: Container(width: 12, height: 12, decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle, boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 2)]))),
+              ),
+              const SizedBox(height: 2),
+              Container(width: 14, height: 7, decoration: BoxDecoration(color: kRed.withOpacity(0.15), borderRadius: BorderRadius.circular(7))),
             ]),
           ),
         ),
-        if (_loading)
-          Container(
-            color: Colors.white.withOpacity(0.85),
-            child: const Center(
-              child: CircularProgressIndicator(color: kRed),
-            ),
+      ),
+    );
+  }
+
+  Widget _buildMyLocationButton() {
+    return Positioned(
+      right: 16, bottom: 110,
+      child: Material(
+        color: Colors.white, borderRadius: BorderRadius.circular(50), elevation: 4, shadowColor: Colors.black.withOpacity(0.2),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(50), onTap: _goToMyLocation,
+          child: Container(
+            width: 44, height: 44,
+            decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: kRed.withOpacity(0.1))),
+            child: const Icon(Icons.my_location, color: kRed, size: 22),
           ),
-      ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAddressCard() {
+    final has = _addressShort.isNotEmpty;
+    return Positioned(
+      bottom: 16, left: 16, right: 16,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24),
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.12), blurRadius: 16, offset: const Offset(0, 4))]),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
+          Row(children: [
+            const Icon(Icons.location_on, color: kRed, size: 18), const SizedBox(width: 6),
+            const Text('PINNED LOCATION', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 11, color: kDark, letterSpacing: 1.5)),
+            const Spacer(),
+            if (has) const Icon(Icons.check_circle, color: Colors.green, size: 18),
+          ]),
+          const SizedBox(height: 6),
+          Text(
+            has ? _addressShort : 'Move the map to pin your location',
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: has ? kDark : Colors.grey.shade400, height: 1.4),
+            maxLines: 3, overflow: TextOverflow.ellipsis,
+          ),
+        ]),
+      ),
     );
   }
 
   @override
   void dispose() {
+    _pulseCtrl.dispose();
+    _searchCtrl.dispose();
+    _searchFocus.dispose();
+    _searchDebounce?.cancel();
+    _addressDebounce?.cancel();
     _mapController.dispose();
     super.dispose();
   }

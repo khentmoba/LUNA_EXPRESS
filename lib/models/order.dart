@@ -5,9 +5,9 @@ class OrderModel {
   final List<OrderItem> items;
   final int totalAmount;
   final DateTime timestamp;
-  final String dateLabel; // YYYY-MM-DD
-  final String type; // Delivery/Pickup/Walk-In
-  final String entryType; // Kiosk/Staff
+  final String dateLabel;
+  final String type;
+  final String entryType;
   final String customerName;
   final String customerPhone;
   final String customerAddress;
@@ -18,6 +18,8 @@ class OrderModel {
   final String paymentMethod;
   final String paymentStatus;
   final String status;
+  final String? checkoutSessionId;
+  final String? paymongoPaymentId;
 
   OrderModel({
     required this.orderId,
@@ -37,6 +39,8 @@ class OrderModel {
     this.paymentMethod = 'Cash',
     this.paymentStatus = 'NOT PAID',
     this.status = 'Pending',
+    this.checkoutSessionId,
+    this.paymongoPaymentId,
   });
 
   Map<String, dynamic> toJson() {
@@ -58,6 +62,8 @@ class OrderModel {
       'paymentMethod': paymentMethod,
       'paymentStatus': paymentStatus,
       'status': status,
+      'checkoutSessionId': checkoutSessionId,
+      'paymongoPaymentId': paymongoPaymentId,
     };
   }
 }
