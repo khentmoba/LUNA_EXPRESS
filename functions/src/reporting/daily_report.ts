@@ -18,7 +18,8 @@ export const dailySalesReport = onSchedule({
   const report = await aggregateDailySales(dateLabel);
 
   if (!report) {
-    await sendToAll(`📊 *Daily Sales Report \u2014 ${escapeMd(dateLabel)}*\n\n_No orders recorded today\\._`);
+    const noOrdersMsg = `📊 *Daily Sales Report \u2014 ${escapeMd(dateLabel)}*\n\n_No orders recorded today\\._`;
+    await sendToAll(noOrdersMsg);
     return;
   }
 

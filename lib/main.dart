@@ -12,6 +12,7 @@ import 'screens/cart_page.dart';
 import 'screens/checkout_page.dart';
 import 'screens/kds_page.dart';
 import 'screens/analytics_page.dart';
+import 'screens/lifetime_analytics_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -80,6 +81,7 @@ class LunaExpressApp extends StatelessWidget {
         '/checkout_process': (context) => const CheckoutPage(),
         '/kds': (context) => const KdsPage(),
         '/analytics': (context) => const AnalyticsPage(),
+        '/lifetime-analytics': (context) => const LifetimeAnalyticsPage(),
       },
     );
   }

@@ -8,7 +8,7 @@ final List<MenuSection> kMenuSections = [
     MenuItem(id: 's4', name: 'Shawarma Burger', emoji: '🍔', description: 'Juicy shawarma patty on a soft bun with sauce and veggies.', price: 95, imageUrl: 'images/shawarma_burger.jpg', isBuy1Take1: true),
     MenuItem(id: 's5', name: 'Shawarma Fries', emoji: '🍟', description: 'Crispy fries loaded with shawarma toppings, cheese, and garlic sauce.', price: 75, imageUrl: 'images/shawarma_fries.png'),
     MenuItem(id: 's6', name: 'Shawarma Nachos', emoji: '🫔', description: 'Crunchy nachos topped with shawarma meat, salsa, and melted cheese.', price: 75, imageUrl: 'images/shawarma_nachos.png'),
-    MenuItem(id: 's7', name: 'Shawarma Quesadilla', emoji: '🫓', description: 'Crispy quesadilla filled with shawarma meat and melted cheese.', price: 75, imageUrl: 'images/shawarma_quesadilla.png'),
+    MenuItem(id: 's7', name: 'Shawarma Quesadilla', emoji: '🫓', description: 'Crispy quesadilla filled with shawarma meat and melted cheese.', price: 99, imageUrl: 'images/shawarma_quesadilla.png'),
     MenuItem(id: 's8', name: 'Nachos & Fries Overload', emoji: '🧀', description: 'Massive plate of nachos and fries loaded with shawarma toppings.', price: 99, imageUrl: 'images/nachos_fries_overload.png'),
     MenuItem(id: 's9', name: 'Shawarma Wrap + Fries + Drinks', emoji: '🌯', description: 'Complete Shawarma Wrap meal with crispy fries and refreshing drinks.', price: 128, imageUrl: 'images/shawarma_full_meal.png'),
   ]),
@@ -71,6 +71,7 @@ final List<MenuSection> kMenuSections = [
       imageUrl: 'images/halo_halo.png',
       optionHeader: 'CHOOSE SIZE',
       variants: [MenuVariant(label: 'Solo', price: 49), MenuVariant(label: 'Overload', price: 65)]),
+    MenuItem(id: 'e3', name: 'Mango-Graham Ice Cream Overload', emoji: '🍨', description: 'Creamy mango ice cream loaded with crushed graham crackers.', price: 65, imageUrl: 'images/halo_halo.png'),
   ]),
   MenuSection(id: 'drinks', title: 'Refreshments', emoji: '🥤', items: [
     MenuItem(id: 'header_coolers', name: 'Coolers', emoji: '', description: '', isHeader: true),

@@ -429,7 +429,11 @@ class _StaffLoginPageState extends State<StaffLoginPage> {
       if (!mounted) return;
       if (kStaffAccounts[user] == pass) {
         session.login(user);
-        Navigator.of(context).pop(); // close login page, go back to landing
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const AdminDashboard()),
+          (route) => false,
+        );
         // Show success snack
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Row(children: [const Icon(Icons.verified_user_rounded, color: Colors.white), const SizedBox(width: 10),
@@ -631,6 +635,21 @@ class CartNotifier extends ChangeNotifier {
 final cartNotifier = CartNotifier();
 
 // ─────────────────────────────────────────────
+//  ORDER HISTORY (in-memory — resets on page reload)
+// ─────────────────────────────────────────────
+final List<Map<String, dynamic>> orderHistory = [];
+int get todayRevenue => _todayOrders.fold(0, (s, o) => s + (o['total'] as int));
+int get todayOrders => _todayOrders.length;
+int get todayItems => _todayOrders.fold(0, (s, o) => s + (o['itemsCount'] as int));
+double get avgOrderValue => todayOrders > 0 ? todayRevenue / todayOrders : 0;
+List<Map<String, dynamic>> get _todayOrders => orderHistory.where((o) {
+  final t = o['time'] as String;
+  final now = DateTime.now();
+  final todayPrefix = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+  return t.startsWith(todayPrefix);
+}).toList();
+
+// ─────────────────────────────────────────────
 //  LANDING PAGE
 // ─────────────────────────────────────────────
 class LandingPage extends StatelessWidget {
@@ -654,18 +673,30 @@ class LandingPage extends StatelessWidget {
             // ── Profile / Login button ──────────
             ListenableBuilder(listenable: session, builder: (_, _) {
               if (session.isStaff) {
-                // Logged in — show username + logout
-                return GestureDetector(
-                  onTap: () => _confirmLogout(context),
-                  child: Container(decoration: BoxDecoration(color: kGreen, borderRadius: BorderRadius.circular(20)),
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                    child: Row(children: [
-                      const Icon(Icons.verified_user_rounded, color: Colors.white, size: 16),
-                      const SizedBox(width: 6),
-                      Text(session.username, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 13)),
-                      const SizedBox(width: 8),
-                      const Icon(Icons.logout_rounded, color: Colors.white70, size: 15),
-                    ])));
+                // Logged in — show username + dashboard + logout
+                return Row(mainAxisSize: MainAxisSize.min, children: [
+                  GestureDetector(
+                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminDashboard())),
+                    child: Container(decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.white38, width: 1.5)),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      child: const Row(children: [
+                        Icon(Icons.dashboard_rounded, color: Colors.white, size: 16),
+                        SizedBox(width: 4),
+                        Text('Dashboard', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 12)),
+                      ]))),
+                  const SizedBox(width: 8),
+                  GestureDetector(
+                    onTap: () => _confirmLogout(context),
+                    child: Container(decoration: BoxDecoration(color: kGreen, borderRadius: BorderRadius.circular(20)),
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      child: Row(children: [
+                        const Icon(Icons.verified_user_rounded, color: Colors.white, size: 16),
+                        const SizedBox(width: 6),
+                        Text(session.username, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 13)),
+                        const SizedBox(width: 8),
+                        const Icon(Icons.logout_rounded, color: Colors.white70, size: 15),
+                      ]))),
+                ]);
               } else {
                 // Not logged in — show login button
                 return GestureDetector(
@@ -1648,6 +1679,21 @@ class _CheckoutPageState extends State<CheckoutPage> {
       lng: _isPickup ? null : _pinnedLng,
     );
 
+    // Record in order history for dashboard analytics
+    orderHistory.add({
+      'orderNumber': orderNumber,
+      'customerName': _nameCtrl.text.trim(),
+      'items': items.map((i) => {
+        'name': i.name, 'variant': i.variant,
+        'qty': i.quantity, 'price': i.price,
+      }).toList(),
+      'itemsCount': items.fold(0, (s, i) => s + i.quantity),
+      'total': total,
+      'time': timeStr,
+      'type': _orderType,
+      'isWalkIn': session.isStaff,
+    });
+
     cartNotifier.clear();
     setState(() => _loading = false);
     if (!mounted) return;
@@ -2042,4 +2088,314 @@ class _CartItemTile extends StatelessWidget {
   Widget _qBtn(IconData icon, VoidCallback fn) => GestureDetector(onTap: fn,
     child: Container(width: 28, height: 28, decoration: BoxDecoration(color: icon == Icons.add ? kRed : Colors.grey[100], shape: BoxShape.circle),
       child: Icon(icon, size: 14, color: icon == Icons.add ? Colors.white : kDark)));
+}
+
+// ─────────────────────────────────────────────
+//  ADMIN DASHBOARD PAGE
+// ─────────────────────────────────────────────
+class AdminDashboard extends StatefulWidget {
+  const AdminDashboard({super.key});
+  @override
+  State<AdminDashboard> createState() => _AdminDashboardState();
+}
+class _AdminDashboardState extends State<AdminDashboard> {
+  void _logout() {
+    session.logout();
+    cartNotifier.clear();
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => const InstallCheckPage()),
+      (route) => false,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final revenue = todayRevenue;
+    final orderCount = todayOrders;
+    final itemsSold = todayItems;
+    final avg = avgOrderValue;
+    final recentOrders = orderHistory.reversed.take(10).toList();
+
+    return Scaffold(
+      backgroundColor: kCream,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            // ── Header ──────────────────────────
+            _buildHeader(),
+            const SizedBox(height: 20),
+
+            // ── Today's Overview ────────────────
+            const Text("📊 TODAY'S OVERVIEW",
+                style: TextStyle(fontWeight: FontWeight.w900, fontSize: 13, color: Colors.grey, letterSpacing: 1)),
+            const SizedBox(height: 12),
+            _buildStatsGrid(revenue, orderCount, avg, itemsSold),
+            const SizedBox(height: 24),
+
+            // ── Walk-in Orders Button ───────────
+            _buildWalkInButton(),
+            const SizedBox(height: 24),
+
+            // ── Quick Actions ───────────────────
+            const Text("⚡ QUICK ACTIONS",
+                style: TextStyle(fontWeight: FontWeight.w900, fontSize: 13, color: Colors.grey, letterSpacing: 1)),
+            const SizedBox(height: 12),
+            _buildQuickActions(),
+            const SizedBox(height: 24),
+
+            // ── Recent Orders ───────────────────
+            const Text("🕐 RECENT ORDERS",
+                style: TextStyle(fontWeight: FontWeight.w900, fontSize: 13, color: Colors.grey, letterSpacing: 1)),
+            const SizedBox(height: 12),
+            if (recentOrders.isEmpty)
+              _buildEmptyOrders()
+            else
+              ...recentOrders.map((o) => _buildOrderTile(o)),
+            const SizedBox(height: 32),
+          ]),
+        ),
+      ),
+    );
+  }
+
+  // ── Header ──────────────────────────────────
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(colors: [kRed, kOrange], begin: Alignment.topLeft, end: Alignment.bottomRight),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [BoxShadow(color: kRed.withOpacity(0.3), blurRadius: 16, offset: const Offset(0, 6))],
+      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [
+          Container(width: 44, height: 44, decoration: BoxDecoration(color: Colors.white24, shape: BoxShape.circle, border: Border.all(color: Colors.white38, width: 1.5)),
+            child: const Center(child: Text('🌙', style: TextStyle(fontSize: 22)))),
+          const SizedBox(width: 12),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Text('Luna Bites & Delights', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 18)),
+            Text('Welcome, ${session.username}!', style: TextStyle(color: Colors.white.withOpacity(0.85), fontSize: 13)),
+          ])),
+          GestureDetector(
+            onTap: _logout,
+            child: Container(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.white38)),
+              child: const Row(children: [
+                Icon(Icons.logout_rounded, color: Colors.white, size: 16),
+                SizedBox(width: 4),
+                Text('Logout', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 12)),
+              ])),
+          ),
+        ]),
+        const SizedBox(height: 14),
+        Container(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+          decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(20)),
+          child: const Text('ADMIN DASHBOARD', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 11, letterSpacing: 1.5))),
+      ]),
+    );
+  }
+
+  // ── Stats Grid ──────────────────────────────
+  Widget _buildStatsGrid(int revenue, int orderCount, double avg, int itemsSold) {
+    return LayoutBuilder(
+      builder: (_, constraints) => Wrap(
+        spacing: 12,
+        runSpacing: 12,
+        children: [
+          _statCard('💰 Today\'s Sales', '₱$revenue', Icons.trending_up, kGreen, constraints.maxWidth),
+          _statCard('📋 Total Orders', '$orderCount', Icons.receipt_long, kRed, constraints.maxWidth),
+          _statCard('📊 Avg Order', '₱${avg.toStringAsFixed(0)}', Icons.analytics, const Color(0xFFFF8C00), constraints.maxWidth),
+          _statCard('🛒 Items Sold', '$itemsSold', Icons.shopping_bag, const Color(0xFF6A5ACD), constraints.maxWidth),
+        ],
+      ),
+    );
+  }
+
+  Widget _statCard(String label, String value, IconData icon, Color color, double parentWidth) {
+    final cardWidth = (parentWidth - 12) / 2;
+    return Container(
+      width: cardWidth,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 10, offset: const Offset(0, 2))],
+      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Container(width: 40, height: 40, decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+          child: Icon(icon, color: color, size: 22)),
+        const SizedBox(height: 12),
+        Text(value, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 22, color: kDark)),
+        const SizedBox(height: 2),
+        Text(label, style: TextStyle(fontSize: 11, color: Colors.grey[500], fontWeight: FontWeight.w700)),
+      ]),
+    );
+  }
+
+  // ── Walk-in Button ─────────────────────────
+  Widget _buildWalkInButton() {
+    return GestureDetector(
+      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const MenuPage())),
+      child: Container(
+        width: double.infinity, padding: const EdgeInsets.symmetric(vertical: 18),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(colors: [kGreen, Color(0xFF3AA85A)]),
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [BoxShadow(color: kGreen.withOpacity(0.35), blurRadius: 16, offset: const Offset(0, 6))],
+        ),
+        child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Icon(Icons.storefront_rounded, color: Colors.white, size: 24),
+          SizedBox(width: 12),
+          Text('🧾  New Walk-in Order', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 18, letterSpacing: 0.5)),
+          SizedBox(width: 8),
+          Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 22),
+        ]),
+      ),
+    );
+  }
+
+  // ── Quick Actions ──────────────────────────
+  Widget _buildQuickActions() {
+    return LayoutBuilder(
+      builder: (_, constraints) => Wrap(
+        spacing: 12,
+        runSpacing: 12,
+        children: [
+          _actionCard('📊 Sales Report', 'View detailed analytics', Icons.bar_chart_rounded, kRed, () {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text('Sales report coming soon!'),
+              behavior: SnackBarBehavior.floating, backgroundColor: kDark));
+          }, constraints.maxWidth),
+          _actionCard('📋 Order History', 'All past orders', Icons.receipt_long, kOrange, () {
+            final orders = orderHistory.reversed.toList();
+            if (orders.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text('No orders yet today.'),
+                behavior: SnackBarBehavior.floating, backgroundColor: kDark));
+              return;
+            }
+            _showOrdersSheet(context, orders);
+          }, constraints.maxWidth),
+          _actionCard('🍽️ Menu Manager', 'View menu items', Icons.menu_book_rounded, kGreen, () {
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const MenuPage()));
+          }, constraints.maxWidth),
+          _actionCard('🛵 View KDS', 'Kitchen Display', Icons.tv_rounded, const Color(0xFF6A5ACD), () {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text('KDS coming soon!'),
+              behavior: SnackBarBehavior.floating, backgroundColor: kDark));
+          }, constraints.maxWidth),
+        ],
+      ),
+    );
+  }
+
+  Widget _actionCard(String title, String subtitle, IconData icon, Color color, VoidCallback onTap, double parentWidth) {
+    final cardWidth = (parentWidth - 12) / 2;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: cardWidth,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 10, offset: const Offset(0, 2))],
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Container(width: 40, height: 40, decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+            child: Icon(icon, color: color, size: 22)),
+          const SizedBox(height: 10),
+          Text(title, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 13, color: kDark)),
+          const SizedBox(height: 2),
+          Text(subtitle, style: TextStyle(fontSize: 10, color: Colors.grey[500])),
+        ]),
+      ),
+    );
+  }
+
+  // ── Empty State ────────────────────────────
+  Widget _buildEmptyOrders() {
+    return Container(
+      width: double.infinity, padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 10, offset: const Offset(0, 2))]),
+      child: Column(children: [
+        Text('🛵', style: const TextStyle(fontSize: 48)),
+        const SizedBox(height: 12),
+        const Text('No orders yet today', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: kDark)),
+        const SizedBox(height: 4),
+        Text('Start by placing a walk-in order!', style: TextStyle(fontSize: 13, color: Colors.grey[500])),
+      ]),
+    );
+  }
+
+  // ── Order Tile ─────────────────────────────
+  Widget _buildOrderTile(Map<String, dynamic> order) {
+    final type = order['isWalkIn'] == true ? 'Walk-In' : (order['type'] as String);
+    final typeIcon = order['isWalkIn'] == true ? '🧾' : (type == 'Pickup' ? '🏪' : '🛵');
+    final typeColor = order['isWalkIn'] == true ? kGreen : (type == 'Pickup' ? const Color(0xFFFF8C00) : kRed);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2))]),
+      child: Row(children: [
+        Container(width: 44, height: 44, decoration: BoxDecoration(color: typeColor.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+          child: Center(child: Text(typeIcon, style: const TextStyle(fontSize: 22)))),
+        const SizedBox(width: 12),
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            Text(order['orderNumber'] as String, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14, color: kDark)),
+            const SizedBox(width: 8),
+            Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              decoration: BoxDecoration(color: typeColor.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
+              child: Text(type, style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w800, color: kDark))),
+          ]),
+          const SizedBox(height: 2),
+          Text('${order['customerName']}  ·  ${order['time']}',
+              style: TextStyle(fontSize: 11, color: Colors.grey[500])),
+        ])),
+        Text('₱${order['total']}', style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 18, color: kRed)),
+      ]),
+    );
+  }
+
+  // ── Orders Bottom Sheet ─────────────────────
+  void _showOrdersSheet(BuildContext context, List<Map<String, dynamic>> orders) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => Container(
+        height: MediaQuery.of(context).size.height * 0.75,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        ),
+        child: Column(children: [
+          Container(width: 40, height: 4, margin: const EdgeInsets.only(top: 12, bottom: 8),
+            decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2))),
+          Padding(padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+            child: Row(children: [
+              const Text('📋 All Orders', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18, color: kDark)),
+              const Spacer(),
+              Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(color: kRed.withOpacity(0.1), borderRadius: BorderRadius.circular(20)),
+                child: Text('${orders.length} total', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12, color: kRed))),
+            ])),
+          const Divider(height: 1),
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: orders.length,
+              itemBuilder: (_, i) => _buildOrderTile(orders[i]),
+            ),
+          ),
+        ]),
+      ),
+    );
+  }
 }
