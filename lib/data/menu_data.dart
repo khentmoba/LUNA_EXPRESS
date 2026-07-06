@@ -71,7 +71,7 @@ final List<MenuSection> kMenuSections = [
       imageUrl: 'images/halo_halo.png',
       optionHeader: 'CHOOSE SIZE',
       variants: [MenuVariant(label: 'Solo', price: 49), MenuVariant(label: 'Overload', price: 65)]),
-    MenuItem(id: 'e3', name: 'Mango-Graham Ice Cream Overload', emoji: '🍨', description: 'Creamy mango ice cream loaded with crushed graham crackers.', price: 65, imageUrl: 'images/halo_halo.png'),
+    MenuItem(id: 'e3', name: 'Mango-Graham Ice Cream Overload', emoji: '🍨', description: 'Creamy mango ice cream loaded with crushed graham crackers, cornflakes, chocolate drizzle, and leche flan.', price: 65, imageUrl: 'images/mango_graham_ice_cream.png'),
   ]),
   MenuSection(id: 'drinks', title: 'Refreshments', emoji: '🥤', items: [
     MenuItem(id: 'header_coolers', name: 'Coolers', emoji: '', description: '', isHeader: true),
