@@ -158,6 +158,21 @@ class _CheckoutPageState extends State<CheckoutPage> {
       status: 'Pending',
     ));
 
+    // Record in-memory order history for admin dashboard
+    orderHistory.add({
+      'orderNumber': orderNumber,
+      'customerName': name,
+      'items': items.map((i) => {
+        'name': i.name, 'variant': i.variant,
+        'qty': i.quantity, 'price': i.price,
+      }).toList(),
+      'itemsCount': items.fold(0, (s, i) => s + i.quantity),
+      'total': total,
+      'time': timeStr,
+      'type': _orderType,
+      'isWalkIn': session.isStaff,
+    });
+
     cartNotifier.clear();
     setState(() => _loading = false);
     if (!mounted) return;

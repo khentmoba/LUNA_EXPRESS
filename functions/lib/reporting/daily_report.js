@@ -17,7 +17,8 @@ exports.dailySalesReport = (0, scheduler_1.onSchedule)({
     firebase_functions_1.logger.info(`Running daily report for ${dateLabel}`);
     const report = await (0, aggregator_1.aggregateDailySales)(dateLabel);
     if (!report) {
-        await (0, telegram_api_1.sendToAll)(`📊 *Daily Sales Report \u2014 ${(0, telegram_api_1.escapeMd)(dateLabel)}*\n\n_No orders recorded today\\._`);
+        const noOrdersMsg = `📊 *Daily Sales Report \u2014 ${(0, telegram_api_1.escapeMd)(dateLabel)}*\n\n_No orders recorded today\\._`;
+        await (0, telegram_api_1.sendToAll)(noOrdersMsg);
         return;
     }
     const itemsList = report.topItems

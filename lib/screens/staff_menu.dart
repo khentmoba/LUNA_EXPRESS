@@ -5,6 +5,8 @@ import '../services/session.dart';
 import '../services/cart_notifier.dart';
 import '../widgets/kiosk/kiosk_theme.dart';
 import '../widgets/kiosk/juicy_feedback.dart';
+import 'admin_dashboard.dart';
+import 'menu_page.dart';
 
 class StaffMenuDialog extends StatefulWidget {
   const StaffMenuDialog({super.key});
@@ -59,12 +61,15 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
               Expanded(
                 child: _buildConsoleButton(
                   context,
-                  icon: Icons.analytics_rounded,
-                  title: 'ANALYTICS',
+                  icon: Icons.dashboard_rounded,
+                  title: 'DASHBOARD',
                   color: Colors.purple,
                   onTap: () {
                     Navigator.pop(context);
-                    Navigator.pushNamed(context, '/analytics');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const AdminDashboard()),
+                    );
                   },
                 ),
               ),
@@ -74,16 +79,14 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
           _buildActionItem(
             context,
             icon: Icons.point_of_sale_rounded,
-            title: 'STAFF POS CHECKOUT',
-            subtitle: 'Checkout walk-in orders directly',
-            color: KioskTheme.lunaBrown,
+            title: 'WALK-IN ORDER',
+            subtitle: 'Take a walk-in order',
+            color: KioskTheme.success,
             onTap: () {
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('POS CHECKOUT MODE ACTIVE', style: GoogleFonts.outfit(fontWeight: FontWeight.w900)),
-                  backgroundColor: KioskTheme.lunaBrown,
-                ),
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const KioskMenuPage()),
               );
             },
           ),
@@ -106,6 +109,7 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
             subtitle: 'Exit staff mode and clear active POS state',
             color: KioskTheme.error,
             onTap: () {
+              Navigator.pop(context);
               Navigator.pop(context);
               session.logout();
               cartNotifier.clear();

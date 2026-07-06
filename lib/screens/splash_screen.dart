@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/kiosk/kiosk_theme.dart';
 import '../widgets/kiosk/juicy_feedback.dart';
+import '../services/session.dart';
 import 'staff_login_dialog.dart';
 import 'menu_page.dart';
+import 'admin_dashboard.dart';
 
 class KioskSplashScreen extends StatefulWidget {
   const KioskSplashScreen({super.key});
@@ -82,7 +84,9 @@ class _KioskSplashScreenState extends State<KioskSplashScreen> with TickerProvid
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => const KioskMenuPage(),
+        pageBuilder: (context, animation, secondaryAnimation) => session.isStaff
+            ? const AdminDashboard()
+            : const KioskMenuPage(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },

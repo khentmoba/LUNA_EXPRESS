@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../widgets/kiosk/kiosk_theme.dart';
 import '../widgets/kiosk/juicy_feedback.dart';
 import '../services/session.dart';
+import 'admin_dashboard.dart';
 
 class StaffLoginDialog extends StatefulWidget {
   const StaffLoginDialog({super.key});
@@ -70,12 +71,18 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
               children: [
                 const Icon(Icons.verified_user_rounded, color: Colors.white),
                 const SizedBox(width: 12),
-                Text('Welcome, $actualUser! Staff mode active.', style: GoogleFonts.outfit(fontWeight: FontWeight.w700)),
+                Text('Welcome, $actualUser!', style: GoogleFonts.outfit(fontWeight: FontWeight.w700)),
               ],
             ),
             backgroundColor: KioskTheme.success,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(KioskTheme.radiusMd)),
           ),
+        );
+
+        // Navigate to Admin Dashboard
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const AdminDashboard()),
         );
       } else {
         setState(() {
