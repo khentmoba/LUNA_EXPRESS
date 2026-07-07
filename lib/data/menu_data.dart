@@ -37,7 +37,7 @@ final List<MenuSection> kMenuSections = [
         MenuVariant(label: 'Sour Cream', price: 0),
       ]),
     MenuItem(id: 'f5', name: 'Bucket Fries', emoji: '🍟', description: 'A massive bucket of crispy fries. Choose your flavor!',
-      price: 120,
+      price: 99,
       imageUrl: 'images/bucket_fries.png',
       allowMultiSelect: true,
       maxSelect: 1,
@@ -66,7 +66,7 @@ final List<MenuSection> kMenuSections = [
     MenuItem(id: 'sc2', name: 'Super Combo 2 – Burger + Fries + Drink', emoji: '🍔', description: 'Juicy burger, crispy fries, and a refreshing cold drink.', price: 99, imageUrl: 'images/super_combo_burger.png'),
   ]),
   MenuSection(id: 'extras', title: 'Extras', emoji: '🧀', items: [
-    MenuItem(id: 'e1', name: 'Quesadilla', emoji: '🫓', description: 'Crispy golden quesadilla with melted cheese filling.', price: 50, imageUrl: 'images/quesadilla_extra.png'),
+    MenuItem(id: 'e1', name: 'Quesadilla', emoji: '🫓', description: 'Crispy golden quesadilla with melted cheese filling.', price: 75, imageUrl: 'images/quesadilla_extra.png'),
     MenuItem(id: 'e2', name: 'Ice Cream Halo-Halo', emoji: '🍨', description: 'Refreshing Filipino halo-halo topped with creamy ice cream. Choose Solo or Overload!',
       imageUrl: 'images/halo_halo.png',
       optionHeader: 'CHOOSE SIZE',
@@ -125,7 +125,7 @@ final List<MenuSection> kMenuSections = [
     ),
     MenuItem(id: 'cf_chuckie', name: 'Chuckie Float', emoji: '🥤', description: 'Classic Chuckie with a creamy vanilla soft serve ice cream float.', price: 59, promoLabel: 'LARGE', imageUrl: 'images/chuckie_float.png'),
     MenuItem(id: 'cf_milo', name: 'Milo Float', emoji: '🍦', description: 'Classic Milo with a creamy vanilla ice cream float.', price: 59, promoLabel: 'LARGE', imageUrl: 'images/milo_float_premium.png'),
-    MenuItem(id: 'cf_cnc', name: 'Cookies and Cream Float', emoji: '🍦', description: 'Creamy cookies and cream blend topped with a vanilla soft serve float.', price: 50, promoLabel: 'LARGE', imageUrl: 'images/cookies_cream_float.png'),
+    MenuItem(id: 'cf_cnc', name: 'Cookies and Cream Float', emoji: '🍦', description: 'Creamy cookies and cream blend topped with a vanilla soft serve float.', price: 65, promoLabel: 'LARGE', imageUrl: 'images/cookies_cream_float.png'),
 
     MenuItem(id: 'header_coffee_foam', name: 'COFFEE FOAM', emoji: '', description: '', isHeader: true),
     MenuItem(

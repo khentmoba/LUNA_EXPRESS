@@ -567,7 +567,7 @@ final List<MenuSection> kMenuSections = [
   MenuSection(id: 'fries', title: 'French Fries', emoji: '🍟', items: [
     MenuItem(id: 'f1', name: 'French Fries', emoji: '🍟', description: 'Golden crispy fries seasoned to perfection. Choose your size!',
       imageUrl: 'https://i.postimg.cc/KY6HYXWz/image-2026-03-25-014126404.png',
-      variants: [MenuVariant(label: 'Buy1 Take1 French Fries', price: 50, isBuy1Take1: true), MenuVariant(label: 'Large Fries', price: 75), MenuVariant(label: 'Bucket Fries', price: 120)]),
+      variants: [MenuVariant(label: 'Buy1 Take1 French Fries', price: 50, isBuy1Take1: true), MenuVariant(label: 'Large Fries', price: 75), MenuVariant(label: 'Bucket Fries', price: 99)]),
   ]),
   MenuSection(id: 'burgers', title: 'Burgers', emoji: '🍔', items: [
     MenuItem(id: 'b1', name: 'Burger', emoji: '🍔', description: 'Juicy beef patty burger. Choose Buy1 Take1 or Solo!',
@@ -593,7 +593,7 @@ final List<MenuSection> kMenuSections = [
     MenuItem(id: 'sc2', name: 'Super Combo 2 – Burger + Fries + Drink', emoji: '🍔', description: 'Juicy burger, crispy fries, and a refreshing cold drink.', price: 99, imageUrl: 'https://i.postimg.cc/QxNhD55K/image-2026-03-25-015035139.png'),
   ]),
   MenuSection(id: 'extras', title: 'Extras', emoji: '🧀', items: [
-    MenuItem(id: 'e1', name: 'Quesadilla', emoji: '🫓', description: 'Crispy golden quesadilla with melted cheese filling.', price: 50, imageUrl: 'https://i.postimg.cc/qqPRbvbs/image-2026-03-25-014523908.png'),
+    MenuItem(id: 'e1', name: 'Quesadilla', emoji: '🫓', description: 'Crispy golden quesadilla with melted cheese filling.', price: 75, imageUrl: 'https://i.postimg.cc/qqPRbvbs/image-2026-03-25-014523908.png'),
     MenuItem(id: 'e2', name: 'Ice Cream Halo-Halo', emoji: '🍨', description: 'Refreshing Filipino halo-halo topped with creamy ice cream. Choose Solo or Overload!',
       imageUrl: 'https://i.postimg.cc/g2nXSTH4/image-2026-03-25-021206135.png',
       variants: [MenuVariant(label: 'Solo', price: 49), MenuVariant(label: 'Overload', price: 65)]),
