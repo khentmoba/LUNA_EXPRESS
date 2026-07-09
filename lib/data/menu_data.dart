@@ -2,7 +2,13 @@ import '../models/menu.dart';
 
 final List<MenuSection> kMenuSections = [
   MenuSection(id: 'shawarma', title: 'Shawarma Favorites', emoji: '🌯', items: [
-    MenuItem(id: 's1', name: 'Shawarma Wrap', emoji: '🌯', description: 'Tender marinated shawarma meat wrapped in warm flatbread with garlic sauce and fresh veggies.', price: 60, imageUrl: 'images/shawarma_wrap.jpg'),
+    MenuItem(id: 's1', name: 'Shawarma Wrap', emoji: '🌯', description: 'Tender marinated shawarma meat wrapped in warm flatbread with garlic sauce and fresh veggies.',
+      imageUrl: 'images/shawarma_wrap.jpg',
+      optionHeader: 'CHOOSE OPTION',
+      variants: [
+        MenuVariant(label: 'Buy 1 Take 1', price: 99, isBuy1Take1: true),
+        MenuVariant(label: 'Solo', price: 60),
+      ]),
     MenuItem(id: 's2', name: 'Shawarma All Meat', emoji: '🥩', description: 'Extra-loaded shawarma wrap packed with all-meat goodness and special sauce.', price: 80, imageUrl: 'images/shawarma_all_meat.jpg'),
     MenuItem(id: 's3', name: 'Shawarma Rice Bowl', emoji: '🍚', description: 'Fragrant rice topped with tender shawarma chicken, pickled vegetables, and garlic sauce.', price: 50, imageUrl: 'images/shawarma_rice_bowl.jpg'),
     MenuItem(id: 's4', name: 'Shawarma Burger', emoji: '🍔', description: 'Juicy shawarma patty on a soft bun with sauce and veggies.', price: 95, imageUrl: 'images/shawarma_burger.jpg', isBuy1Take1: true),
@@ -11,6 +17,7 @@ final List<MenuSection> kMenuSections = [
     MenuItem(id: 's7', name: 'Shawarma Quesadilla', emoji: '🫓', description: 'Crispy quesadilla filled with shawarma meat and melted cheese.', price: 99, imageUrl: 'images/shawarma_quesadilla.png'),
     MenuItem(id: 's8', name: 'Nachos & Fries Overload', emoji: '🧀', description: 'Massive plate of nachos and fries loaded with shawarma toppings.', price: 99, imageUrl: 'images/nachos_fries_overload.png'),
     MenuItem(id: 's9', name: 'Shawarma Wrap + Fries + Drinks', emoji: '🌯', description: 'Complete Shawarma Wrap meal with crispy fries and refreshing drinks.', price: 128, imageUrl: 'images/shawarma_full_meal.png'),
+    MenuItem(id: 's10', name: 'Shawarma Burger + Shawarma Wrap + Drinks', emoji: '🍔🌯🥤', description: 'A complete meal featuring a juicy shawarma burger, tender shawarma wrap, and refreshing drinks.', price: 149, imageUrl: 'images/shawarma_full_meal.png'),
   ]),
   MenuSection(id: 'fries', title: 'French Fries', emoji: '🍟', items: [
     MenuItem(id: 'f4', name: 'Buy 1 Take 1 French Fries', emoji: '🍟', description: 'Double the crispy goodness! Pick two flavors.',
@@ -64,6 +71,8 @@ final List<MenuSection> kMenuSections = [
     MenuItem(id: 'c2', name: 'Combo 2 – Hotdog + Fries', emoji: '🌭', description: 'Hotdog bun with crispy fries on the side.', price: 60, imageUrl: 'images/combo_hotdog_fries.png'),
     MenuItem(id: 'sc1', name: 'Super Combo 1 – Hotdog + Fries + Drink', emoji: '🌭', description: 'Hotdog bun, crispy fries, and a refreshing cold drink.', price: 99, imageUrl: 'images/super_combo_hotdog.png'),
     MenuItem(id: 'sc2', name: 'Super Combo 2 – Burger + Fries + Drink', emoji: '🍔', description: 'Juicy burger, crispy fries, and a refreshing cold drink.', price: 99, imageUrl: 'images/super_combo_burger.png'),
+    MenuItem(id: 'c3', name: 'Couple Snack Combo', emoji: '🍔🍟🥤', description: 'Two juicy burgers, crispy golden fries, and two refreshing drinks to share.', price: 169, imageUrl: 'images/super_combo_burger.png'),
+    MenuItem(id: 'c4', name: 'Combo Promo - Halo Halo + Fries + Shawarma Wrap', emoji: '🍨🍟🌯', description: 'A perfect trio of ice cream halo halo, cheesy fries, and a delicious shawarma wrap.', price: 149, imageUrl: 'images/combo_promo_halo_fries_wrap.jpg'),
   ]),
   MenuSection(id: 'extras', title: 'Extras', emoji: '🧀', items: [
     MenuItem(id: 'e1', name: 'Quesadilla', emoji: '🫓', description: 'Crispy golden quesadilla with melted cheese filling.', price: 75, imageUrl: 'images/quesadilla_extra.png'),
@@ -72,6 +81,7 @@ final List<MenuSection> kMenuSections = [
       optionHeader: 'CHOOSE SIZE',
       variants: [MenuVariant(label: 'Solo', price: 49), MenuVariant(label: 'Overload', price: 65)]),
     MenuItem(id: 'e3', name: 'Mango-Graham Ice Cream Overload', emoji: '🍨', description: 'Creamy mango ice cream loaded with crushed graham crackers, cornflakes, chocolate drizzle, and leche flan.', price: 65, imageUrl: 'images/mango_graham_ice_cream.png'),
+    MenuItem(id: 'e4', name: 'Leche Flan', emoji: '🍮', description: 'Creamy and sweet traditional Filipino Leche Flan.', price: 20, imageUrl: 'images/leche_flan.png'),
   ]),
   MenuSection(id: 'drinks', title: 'Refreshments', emoji: '🥤', items: [
     MenuItem(id: 'header_coolers', name: 'Coolers', emoji: '', description: '', isHeader: true),
@@ -83,6 +93,23 @@ final List<MenuSection> kMenuSections = [
     MenuItem(id: 'c_straw', name: 'Strawberry', emoji: '🥤', description: 'Sweet Strawberry refreshment. Refreshing and large!', price: 39, promoLabel: 'LARGE', imageUrl: 'images/strawberry_cooler.png'),
     MenuItem(id: 'c_rocky', name: 'Rocky Road', emoji: '🥤', description: 'Chocolaty Rocky Road with a crunch. Refreshing and large!', price: 39, promoLabel: 'LARGE', imageUrl: 'images/rocky_road_cooler.png'),
     MenuItem(id: 'c_kisses', name: 'Choco Kisses', emoji: '🥤', description: 'Sweet Choco Kisses delight. Refreshing and large!', price: 39, promoLabel: 'LARGE', imageUrl: 'images/choco_kisses_cooler.png'),
+
+    MenuItem(id: 'c_3for100', name: '3 for ₱100 Coolers', emoji: '🥤', description: 'Mix and match any 3 large coolers for only ₱100! Choose your favorites.',
+      price: 100,
+      imageUrl: 'images/coolers_3_for_100.png',
+      allowMultiSelect: true,
+      maxSelect: 3,
+      optionHeader: 'CHOOSE 3 FLAVORS',
+      variants: [
+        MenuVariant(label: 'Purple Taro', price: 0),
+        MenuVariant(label: 'Cookies N Cream', price: 0),
+        MenuVariant(label: 'Dark Chocolate', price: 0),
+        MenuVariant(label: 'Black Forest', price: 0),
+        MenuVariant(label: 'Leche Flan', price: 0),
+        MenuVariant(label: 'Strawberry', price: 0),
+        MenuVariant(label: 'Rocky Road', price: 0),
+        MenuVariant(label: 'Choco Kisses', price: 0),
+      ]),
 
     MenuItem(id: 'header_lemon', name: 'LEMON SERIES', emoji: '', description: '', isHeader: true),
     MenuItem(id: 'ls1', name: 'Classic Lemonade', emoji: '🍋', description: 'Freshly squeezed classic lemonade.', price: 49, promoLabel: 'LARGE', imageUrl: 'images/lemon_classic.png'),

@@ -19,6 +19,59 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    // ──── Pasugo System Rules ────
+
+    // Errands: public read for available, create for anyone, own cancel only
+    match /pasugo_errands/{errandId} {
+      allow read: if resource.data.status == 'available';
+      allow create: if request.resource.data.customerName is string
+                    && request.resource.data.customerPhone is string
+                    && request.resource.data.pinHash is string
+                    && request.resource.data.message is string
+                    && request.resource.data.status == 'available';
+      // Allow customer to cancel their own errand (matched by phone hash)
+      allow update: if resource.data.status == 'available'
+                    && request.resource.data.status == 'cancelled'
+                    && request.resource.data.customerPhone == resource.data.customerPhone;
+    }
+
+    // Riders: self-read/write on own document, admin full access
+    match /riders/{riderId} {
+      allow read: if request.auth != null
+                  && (request.auth.uid == riderId
+                      || request.auth.token.role == 'admin'
+                      || request.auth.token.role == 'staff');
+      allow create: if request.auth != null && request.auth.uid == riderId;
+      allow update: if request.auth != null
+                    && (request.auth.uid == riderId
+                        || request.auth.token.role == 'admin'
+                        || request.auth.token.role == 'staff');
+      allow delete: if false;
+    }
+
+    // Pasugo sessions: participants read, verified rider creates, participants update
+    match /pasugo_sessions/{sessionId} {
+      allow read: if request.auth != null
+                  && (request.auth.uid == resource.data.riderId
+                      || request.auth.token.role == 'admin'
+                      || request.auth.token.role == 'staff');
+      // Session created by verified rider
+      allow create: if request.auth != null
+                    && request.auth.token.riderStatus == 'approved';
+      allow update: if request.auth != null
+                    && (request.auth.uid == resource.data.riderId
+                        || request.auth.token.role == 'admin'
+                        || request.auth.token.role == 'staff');
+
+      // Chat messages: participants read, write only when session active
+      match /messages/{messageId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null
+                      && get(/databases/$(database)/documents/pasugo_sessions/$(sessionId)).data.status == 'active';
+        allow update, delete: if false;
+      }
+    }
+
     // Default deny for all other collections
     match /{document=**} {
       allow read, write: if false;

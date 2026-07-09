@@ -23,7 +23,47 @@ export const sendOrderNotification = onCall(async (request) => {
     throw new HttpsError('invalid-argument', 'Missing required order fields');
   }
 
+  const isWalkIn = orderType === 'Walk-In';
   const isPickup = orderType === 'Pickup';
+
+  // ── Walk-In formatting ──────────────────────────────────
+  if (isWalkIn) {
+    const itemLines = items
+      .map((i: any) => {
+        const variantText = i.variant && i.variant.length > 0 ? ` \(${escapeMd(i.variant)}\)` : '';
+        return `  \u2022 ${i.quantity}x ${escapeMd(i.name)}${variantText} \u2014 \u20B1${escapeMd((i.price * i.quantity).toString())}`;
+      })
+      .join('\n');
+
+    const message = [
+      `🔔 *WALK\\-IN ORDER \u2014 ${escapeMd(orderNumber)}*`,
+      `🏪 *Type:* Walk\\-In  \\[STAFF ENTRY\\]`,
+      '',
+      `👤 *Name:* ${escapeMd(customerName)}`,
+      `📞 *Phone:* ${escapeMd(customerPhone || '')}`,
+      '',
+      `🛒 *Items:*`,
+      itemLines,
+      '',
+      `💳 *Payment:* ${escapeMd(paymentMethod || 'Cash')}  \\-  ✅ *${escapeMd(paymentStatus || 'PAID')}*`,
+      '',
+      `💰 *TOTAL:* \u20B1*${escapeMd(total.toString())}*`,
+      `🕐 *Time:* ${escapeMd(timeStr || '')}`,
+      '',
+      `✅ _Walk\\-in complete \u2014 paid at POS\\._`
+    ].join('\n');
+
+    logger.info(`Sending walk-in order notification for ${orderNumber} to Telegram`);
+    try {
+      await sendToAll(message);
+      return { success: true };
+    } catch (error: any) {
+      logger.error(`Error sending Telegram notification for ${orderNumber}`, error);
+      throw new HttpsError('internal', error?.message || 'Failed to send Telegram notification');
+    }
+  }
+
+  // ── Delivery / Pickup formatting ────────────────────────
   const typeEmoji = isPickup ? '🏪' : '🛵';
   const addressLine = isPickup ? '' : `📍 *Address:* ${escapeMd(customerAddress || '')}\n`;
 
@@ -35,7 +75,7 @@ export const sendOrderNotification = onCall(async (request) => {
   // Form items list lines
   const itemLines = items
     .map((i: any) => {
-      const variantText = i.variant && i.variant.length > 0 ? ` (${escapeMd(i.variant)})` : '';
+      const variantText = i.variant && i.variant.length > 0 ? ` \(${escapeMd(i.variant)}\)` : '';
       return `  \u2022 ${i.quantity}x ${escapeMd(i.name)}${variantText} \u2014 \u20B1${escapeMd((i.price * i.quantity).toString())}`;
     })
     .join('\n');
@@ -52,7 +92,7 @@ export const sendOrderNotification = onCall(async (request) => {
     '',
     `🚚 *Delivery Fee:* \u20B1${escapeMd((deliveryFee || 0).toString())}`,
     `💳 *Payment Method:* ${escapeMd(paymentMethod || 'Cash')}`,
-    `📝 *Payment Status:* ${escapeMd(paymentStatus || 'NOT PAID')}${paymentStatus === 'AWAITING_PAYMENT' ? ' (GCash)' : ''}`,
+    `📝 *Payment Status:* ${escapeMd(paymentStatus || 'NOT PAID')}${paymentStatus === 'AWAITING_PAYMENT' ? ' \(GCash\)' : ''}`,
     '',
     `💰 *TOTAL:* \u20B1*${escapeMd(total.toString())}*`,
     `🕐 *Time:* ${escapeMd(timeStr || '')}`,

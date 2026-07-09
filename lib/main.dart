@@ -13,6 +13,19 @@ import 'screens/checkout_page.dart';
 import 'screens/kds_page.dart';
 import 'screens/analytics_page.dart';
 import 'screens/lifetime_analytics_page.dart';
+import 'features/pasugo/providers/errand_provider.dart';
+import 'features/pasugo/providers/session_provider.dart';
+import 'features/pasugo/providers/chat_provider.dart';
+import 'features/pasugo/providers/rider_provider.dart';
+import 'features/pasugo/screens/pasugo_screen.dart';
+import 'features/pasugo/screens/bulletin_board_screen.dart';
+import 'features/pasugo/screens/create_errand_screen.dart';
+import 'features/pasugo/screens/chat_screen.dart';
+import 'features/pasugo/screens/rider_registration_screen.dart';
+import 'features/pasugo/screens/rider_login_screen.dart';
+import 'features/pasugo/screens/rider_dashboard_screen.dart';
+import 'features/pasugo/admin/rider_management_screen.dart';
+import 'features/pasugo/screens/customer_errand_status_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +43,10 @@ void main() async {
       providers: [
         ChangeNotifierProvider.value(value: kioskSession),
         ChangeNotifierProvider.value(value: cartNotifier),
+        ChangeNotifierProvider(create: (_) => ErrandProvider()),
+        ChangeNotifierProvider(create: (_) => SessionProvider()),
+        ChangeNotifierProvider(create: (_) => ChatProvider()),
+        ChangeNotifierProvider(create: (_) => RiderProvider()),
       ],
       child: const LunaExpressApp(),
     ),
@@ -82,6 +99,15 @@ class LunaExpressApp extends StatelessWidget {
         '/kds': (context) => const KdsPage(),
         '/analytics': (context) => const AnalyticsPage(),
         '/lifetime-analytics': (context) => const LifetimeAnalyticsPage(),
+        '/pasugo': (context) => const PasugoScreen(),
+        '/pasugo/bulletin': (context) => const BulletinBoardScreen(),
+        '/pasugo/create': (context) => const CreateErrandScreen(),
+        '/pasugo/chat': (context) => const ChatScreen(),
+        '/pasugo/rider-register': (context) => const RiderRegistrationScreen(),
+        '/pasugo/rider-login': (context) => const RiderLoginScreen(),
+        '/pasugo/rider-dashboard': (context) => const RiderDashboardScreen(),
+        '/pasugo/admin/riders': (context) => const RiderManagementScreen(),
+        '/pasugo/customer-status': (context) => const CustomerErrandStatusScreen(),
       },
     );
   }

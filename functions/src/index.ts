@@ -10,6 +10,7 @@ export const telegramChatIds = defineString('TELEGRAM_CHAT_ID');
 export { dailySalesReport } from './reporting/daily_report';
 export { triggerManualReport } from './reporting/manual_report';
 export { verifyStaff } from './auth/verify_staff';
+export { manageRiderStatus } from './auth/manage_rider_status';
 export { sendOrderNotification } from './orders/send_notification';
 export { getActiveOrders, updateOrderStatus } from './orders/kds';
 export { getSalesAnalytics } from './reporting/analytics';
