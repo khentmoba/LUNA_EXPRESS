@@ -47,10 +47,17 @@ jobs:
           PAYMONGO_WEBHOOK_SECRET=${{ secrets.PAYMONGO_WEBHOOK_SECRET }}
           EOF
 
-      - name: Deploy Cloud Functions
+      - name: Delete conflicting functions
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_LUNAEXPRESS }}
         run: |
           echo "$FIREBASE_SERVICE_ACCOUNT" > "$HOME"/service-account.json
+          export GOOGLE_APPLICATION_CREDENTIALS="$HOME/service-account.json"
+          npx firebase-tools functions:delete createCheckoutSession paymongoWebhook --project lunaexpress --non-interactive --force || true
+
+      - name: Deploy Cloud Functions
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_LUNAEXPRESS }}
+        run: |
           export GOOGLE_APPLICATION_CREDENTIALS="$HOME/service-account.json"
           npx firebase-tools deploy --only functions --project lunaexpress --non-interactive --force
