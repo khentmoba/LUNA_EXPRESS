@@ -18,8 +18,7 @@ export async function sendToAll(message: string, options: any = {}) {
     .filter(id => id.length > 0);
 
   if (ids.length === 0) {
-    logger.warn('No TELEGRAM_CHAT_ID configured; skipping notification');
-    return [];
+    throw new Error('TELEGRAM_CHAT_ID is not configured — no recipients to notify');
   }
 
   const telegram = getBot();

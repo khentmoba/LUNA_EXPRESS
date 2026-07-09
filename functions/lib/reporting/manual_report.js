@@ -27,7 +27,7 @@ exports.triggerManualReport = (0, https_1.onCall)(async (request) => {
             .join('\n');
         const message = [
             `📊 *Manual Sales Report \u2014 ${(0, telegram_api_1.escapeMd)(report.date)}*`,
-            `_(Triggered by Staff)_`,
+            `_\\(Triggered by Staff\\)_`,
             '',
             `💰 *Total Sales:* \u20B1*${(0, telegram_api_1.escapeMd)(report.totalSales.toString())}*`,
             `🛒 *Total Orders:* ${report.totalOrders}`,

@@ -9,7 +9,44 @@ exports.sendOrderNotification = (0, https_1.onCall)(async (request) => {
     if (!orderNumber || !customerName || !items || !total) {
         throw new https_1.HttpsError('invalid-argument', 'Missing required order fields');
     }
+    const isWalkIn = orderType === 'Walk-In';
     const isPickup = orderType === 'Pickup';
+    // ── Walk-In formatting ──────────────────────────────────
+    if (isWalkIn) {
+        const itemLines = items
+            .map((i) => {
+            const variantText = i.variant && i.variant.length > 0 ? ` \(${(0, telegram_api_1.escapeMd)(i.variant)}\)` : '';
+            return `  \u2022 ${i.quantity}x ${(0, telegram_api_1.escapeMd)(i.name)}${variantText} \u2014 \u20B1${(0, telegram_api_1.escapeMd)((i.price * i.quantity).toString())}`;
+        })
+            .join('\n');
+        const message = [
+            `🔔 *WALK\\-IN ORDER \u2014 ${(0, telegram_api_1.escapeMd)(orderNumber)}*`,
+            `🏪 *Type:* Walk\\-In  \\[STAFF ENTRY\\]`,
+            '',
+            `👤 *Name:* ${(0, telegram_api_1.escapeMd)(customerName)}`,
+            `📞 *Phone:* ${(0, telegram_api_1.escapeMd)(customerPhone || '')}`,
+            '',
+            `🛒 *Items:*`,
+            itemLines,
+            '',
+            `💳 *Payment:* ${(0, telegram_api_1.escapeMd)(paymentMethod || 'Cash')}  \\-  ✅ *${(0, telegram_api_1.escapeMd)(paymentStatus || 'PAID')}*`,
+            '',
+            `💰 *TOTAL:* \u20B1*${(0, telegram_api_1.escapeMd)(total.toString())}*`,
+            `🕐 *Time:* ${(0, telegram_api_1.escapeMd)(timeStr || '')}`,
+            '',
+            `✅ _Walk\\-in complete \u2014 paid at POS\\._`
+        ].join('\n');
+        firebase_functions_1.logger.info(`Sending walk-in order notification for ${orderNumber} to Telegram`);
+        try {
+            await (0, telegram_api_1.sendToAll)(message);
+            return { success: true };
+        }
+        catch (error) {
+            firebase_functions_1.logger.error(`Error sending Telegram notification for ${orderNumber}`, error);
+            throw new https_1.HttpsError('internal', error?.message || 'Failed to send Telegram notification');
+        }
+    }
+    // ── Delivery / Pickup formatting ────────────────────────
     const typeEmoji = isPickup ? '🏪' : '🛵';
     const addressLine = isPickup ? '' : `📍 *Address:* ${(0, telegram_api_1.escapeMd)(customerAddress || '')}\n`;
     // Create map link if coordinates are available
@@ -19,7 +56,7 @@ exports.sendOrderNotification = (0, https_1.onCall)(async (request) => {
     // Form items list lines
     const itemLines = items
         .map((i) => {
-        const variantText = i.variant && i.variant.length > 0 ? ` (${(0, telegram_api_1.escapeMd)(i.variant)})` : '';
+        const variantText = i.variant && i.variant.length > 0 ? ` \(${(0, telegram_api_1.escapeMd)(i.variant)}\)` : '';
         return `  \u2022 ${i.quantity}x ${(0, telegram_api_1.escapeMd)(i.name)}${variantText} \u2014 \u20B1${(0, telegram_api_1.escapeMd)((i.price * i.quantity).toString())}`;
     })
         .join('\n');
@@ -35,7 +72,7 @@ exports.sendOrderNotification = (0, https_1.onCall)(async (request) => {
         '',
         `🚚 *Delivery Fee:* \u20B1${(0, telegram_api_1.escapeMd)((deliveryFee || 0).toString())}`,
         `💳 *Payment Method:* ${(0, telegram_api_1.escapeMd)(paymentMethod || 'Cash')}`,
-        `📝 *Payment Status:* ${(0, telegram_api_1.escapeMd)(paymentStatus || 'NOT PAID')}${paymentStatus === 'AWAITING_PAYMENT' ? ' (GCash)' : ''}`,
+        `📝 *Payment Status:* ${(0, telegram_api_1.escapeMd)(paymentStatus || 'NOT PAID')}${paymentStatus === 'AWAITING_PAYMENT' ? ' \(GCash\)' : ''}`,
         '',
         `💰 *TOTAL:* \u20B1*${(0, telegram_api_1.escapeMd)(total.toString())}*`,
         `🕐 *Time:* ${(0, telegram_api_1.escapeMd)(timeStr || '')}`,
