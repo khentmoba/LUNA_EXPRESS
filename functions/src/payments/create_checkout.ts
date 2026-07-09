@@ -1,13 +1,10 @@
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { getFirestore } from 'firebase-admin/firestore';
-import { defineString } from 'firebase-functions/params';
 import { logger } from 'firebase-functions';
 
-export const paymongoSecretKey = defineString('PAYMONGO_SECRET_KEY');
 const PAYMONGO_API = 'https://api.paymongo.com/v2/checkout_sessions';
 
 export const createCheckoutSession = onCall(
-  { secrets: [paymongoSecretKey] },
   async (request) => {
     const { orderId, amount, items, customerName, customerPhone } = request.data;
 
@@ -22,7 +19,11 @@ export const createCheckoutSession = onCall(
       quantity: i.quantity,
     }));
 
-    const auth = Buffer.from(`${paymongoSecretKey.value()}:`).toString('base64');
+    const paymongoKey = process.env.PAYMONGO_SECRET_KEY;
+    if (!paymongoKey) {
+      throw new HttpsError('internal', 'PAYMONGO_SECRET_KEY not configured');
+    }
+    const auth = Buffer.from(`${paymongoKey}:`).toString('base64');
 
     try {
       const response = await fetch(PAYMONGO_API, {

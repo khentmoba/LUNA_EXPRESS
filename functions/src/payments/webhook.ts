@@ -1,13 +1,9 @@
 import { onRequest } from 'firebase-functions/v2/https';
 import { getFirestore } from 'firebase-admin/firestore';
-import { defineString } from 'firebase-functions/params';
 import { logger } from 'firebase-functions';
 import { sendToAll, escapeMd } from '../telegram_api';
 
-export const paymongoWebhookSecret = defineString('PAYMONGO_WEBHOOK_SECRET');
-
 export const paymongoWebhook = onRequest(
-  { secrets: [paymongoWebhookSecret] },
   async (req, res) => {
     if (req.method !== 'POST') {
       res.status(405).send('Method Not Allowed');
