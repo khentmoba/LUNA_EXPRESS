@@ -29,7 +29,7 @@ export const triggerManualReport = onCall(async (request) => {
 
     const message = [
       `📊 *Manual Sales Report \u2014 ${escapeMd(report.date)}*`,
-      `_(Triggered by Staff)_`,
+      `_\\(Triggered by Staff\\)_`,
       '',
       `💰 *Total Sales:* \u20B1*${escapeMd(report.totalSales.toString())}*`,
       `🛒 *Total Orders:* ${report.totalOrders}`,

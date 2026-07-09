@@ -122,7 +122,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         ? 'PAID'
         : (_paymentMethod == 'GCash' ? 'AWAITING_PAYMENT' : 'NOT PAID');
 
-    await TelegramService.sendOrder(
+    final telegramSent = await TelegramService.sendOrder(
       orderNumber: orderNumber,
       customerName: name,
       customerAddress: address,
@@ -176,6 +176,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
     cartNotifier.clear();
     setState(() => _loading = false);
     if (!mounted) return;
+
+    // Show Telegram notification status on screen
+    TelegramService.showTelegramStatus(context, telegramSent, orderNumber);
 
     if (_paymentMethod == 'GCash' && !session.isStaff) {
       final serializedItems = items
