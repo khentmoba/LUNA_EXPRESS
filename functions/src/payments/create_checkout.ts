@@ -1,9 +1,9 @@
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { getFirestore } from 'firebase-admin/firestore';
-import { defineSecret } from 'firebase-functions/params';
+import { defineString } from 'firebase-functions/params';
 import { logger } from 'firebase-functions';
 
-export const paymongoSecretKey = defineSecret('PAYMONGO_SECRET_KEY');
+export const paymongoSecretKey = defineString('PAYMONGO_SECRET_KEY');
 const PAYMONGO_API = 'https://api.paymongo.com/v2/checkout_sessions';
 
 export const createCheckoutSession = onCall(
