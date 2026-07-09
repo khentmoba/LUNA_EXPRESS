@@ -71,7 +71,7 @@ final List<MenuSection> kMenuSections = [
     MenuItem(id: 'c2', name: 'Combo 2 – Hotdog + Fries', emoji: '🌭', description: 'Hotdog bun with crispy fries on the side.', price: 60, imageUrl: 'images/combo_hotdog_fries.png'),
     MenuItem(id: 'sc1', name: 'Super Combo 1 – Hotdog + Fries + Drink', emoji: '🌭', description: 'Hotdog bun, crispy fries, and a refreshing cold drink.', price: 99, imageUrl: 'images/super_combo_hotdog.png'),
     MenuItem(id: 'sc2', name: 'Super Combo 2 – Burger + Fries + Drink', emoji: '🍔', description: 'Juicy burger, crispy fries, and a refreshing cold drink.', price: 99, imageUrl: 'images/super_combo_burger.png'),
-    MenuItem(id: 'c3', name: 'Couple Snack Combo', emoji: '🍔🍟🥤', description: 'Two juicy burgers, crispy golden fries, and two refreshing drinks to share.', price: 169, imageUrl: 'images/super_combo_burger.png'),
+    MenuItem(id: 'c3', name: 'Couple Snack Combo', emoji: '🍔🍟🥤', description: 'Two juicy burgers, crispy golden fries, and two refreshing drinks to share.', price: 169, imageUrl: 'images/couple_snack_combo.png'),
     MenuItem(id: 'c4', name: 'Combo Promo - Halo Halo + Fries + Shawarma Wrap', emoji: '🍨🍟🌯', description: 'A perfect trio of ice cream halo halo, cheesy fries, and a delicious shawarma wrap.', price: 149, imageUrl: 'images/combo_promo_halo_fries_wrap.jpg'),
   ]),
   MenuSection(id: 'extras', title: 'Extras', emoji: '🧀', items: [
