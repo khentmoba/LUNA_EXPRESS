@@ -6,7 +6,7 @@ const firestore_1 = require("firebase-admin/firestore");
 const params_1 = require("firebase-functions/params");
 const firebase_functions_1 = require("firebase-functions");
 const telegram_api_1 = require("../telegram_api");
-exports.paymongoWebhookSecret = (0, params_1.defineSecret)('PAYMONGO_WEBHOOK_SECRET');
+exports.paymongoWebhookSecret = (0, params_1.defineString)('PAYMONGO_WEBHOOK_SECRET');
 exports.paymongoWebhook = (0, https_1.onRequest)({ secrets: [exports.paymongoWebhookSecret] }, async (req, res) => {
     if (req.method !== 'POST') {
         res.status(405).send('Method Not Allowed');

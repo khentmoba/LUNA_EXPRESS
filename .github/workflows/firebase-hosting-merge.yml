@@ -43,6 +43,8 @@ jobs:
           cat > functions/.env << 'EOF'
           TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}
+          PAYMONGO_SECRET_KEY=${{ secrets.PAYMONGO_SECRET_KEY }}
+          PAYMONGO_WEBHOOK_SECRET=${{ secrets.PAYMONGO_WEBHOOK_SECRET }}
           EOF
 
       - name: Deploy Cloud Functions

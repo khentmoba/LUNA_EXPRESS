@@ -5,7 +5,7 @@ const https_1 = require("firebase-functions/v2/https");
 const firestore_1 = require("firebase-admin/firestore");
 const params_1 = require("firebase-functions/params");
 const firebase_functions_1 = require("firebase-functions");
-exports.paymongoSecretKey = (0, params_1.defineSecret)('PAYMONGO_SECRET_KEY');
+exports.paymongoSecretKey = (0, params_1.defineString)('PAYMONGO_SECRET_KEY');
 const PAYMONGO_API = 'https://api.paymongo.com/v2/checkout_sessions';
 exports.createCheckoutSession = (0, https_1.onCall)({ secrets: [exports.paymongoSecretKey] }, async (request) => {
     const { orderId, amount, items, customerName, customerPhone } = request.data;
