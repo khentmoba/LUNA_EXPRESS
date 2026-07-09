@@ -22,8 +22,7 @@ async function sendToAll(message, options = {}) {
         .map(id => id.trim())
         .filter(id => id.length > 0);
     if (ids.length === 0) {
-        firebase_functions_1.logger.warn('No TELEGRAM_CHAT_ID configured; skipping notification');
-        return [];
+        throw new Error('TELEGRAM_CHAT_ID is not configured — no recipients to notify');
     }
     const telegram = getBot();
     const results = await Promise.allSettled(ids.map(id => {
