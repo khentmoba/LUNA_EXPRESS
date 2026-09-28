@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../services/functions.dart';
 import '../widgets/kiosk/kiosk_theme.dart';
 
 class GCashCheckoutPage extends StatefulWidget {
@@ -48,7 +48,20 @@ class _GCashCheckoutPageState extends State<GCashCheckoutPage> {
               _onPaymentResult(false);
               return NavigationDecision.prevent;
             }
-            return NavigationDecision.navigate;
+            // #15: only allow payment-provider + app hosts in the WebView.
+            final host = Uri.tryParse(request.url)?.host ?? '';
+            const allowed = [
+              'lunaexpress.web.app',
+              'lunaexpress.firebaseapp.com',
+              'paymongo.com',
+              'gcash.com',
+              'paymaya.com',
+              'maya.ph',
+            ];
+            if (allowed.any((a) => host == a || host.endsWith('.$a'))) {
+              return NavigationDecision.navigate;
+            }
+            return NavigationDecision.prevent;
           },
           onPageFinished: (_) {
             if (mounted) setState(() => _loading = false);
@@ -63,10 +76,7 @@ class _GCashCheckoutPageState extends State<GCashCheckoutPage> {
 
   Future<void> _startCheckout() async {
     try {
-      final callable = FirebaseFunctions.instanceFor(region: 'us-central1')
-          .httpsCallable('createCheckoutSession');
-
-      final result = await callable.call({
+      final data = await callFn('createCheckoutSession', {
         'orderId': widget.orderId,
         'amount': widget.amount,
         'items': widget.items,
@@ -74,7 +84,7 @@ class _GCashCheckoutPageState extends State<GCashCheckoutPage> {
         'customerPhone': widget.customerPhone,
       });
 
-      final checkoutUrl = result.data['checkoutUrl'] as String;
+      final checkoutUrl = data['checkoutUrl'] as String;
       await _controller.loadRequest(Uri.parse(checkoutUrl));
     } catch (e) {
       if (mounted) setState(() => _error = e.toString());
@@ -115,12 +125,17 @@ class _GCashCheckoutPageState extends State<GCashCheckoutPage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.error_outline_rounded,
-                        size: 64, color: KioskTheme.error),
+                    const Icon(
+                      Icons.error_outline_rounded,
+                      size: 64,
+                      color: KioskTheme.error,
+                    ),
                     const SizedBox(height: 16),
                     Text(
                       'Payment Error',
-                      style: KioskTheme.headerSmall.copyWith(color: KioskTheme.error),
+                      style: KioskTheme.headerSmall.copyWith(
+                        color: KioskTheme.error,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Text(
@@ -151,7 +166,9 @@ class _GCashCheckoutPageState extends State<GCashCheckoutPage> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          CircularProgressIndicator(color: KioskTheme.lunaBrown),
+                          CircularProgressIndicator(
+                            color: KioskTheme.lunaBrown,
+                          ),
                           SizedBox(height: 16),
                           Text(
                             'Connecting to GCash...',

@@ -17,8 +17,10 @@ void main() async {
 
     final file = entity;
     final path = file.path.toLowerCase();
-    
-    if (!path.endsWith('.png') && !path.endsWith('.jpg') && !path.endsWith('.jpeg')) {
+
+    if (!path.endsWith('.png') &&
+        !path.endsWith('.jpg') &&
+        !path.endsWith('.jpeg')) {
       continue;
     }
 
@@ -45,7 +47,9 @@ void main() async {
           width = (width * (maxDimension / height)).round();
           height = maxDimension;
         }
-        print('  Resizing from ${image.width}x${image.height} to ${width}x${height}...');
+        print(
+          '  Resizing from ${image.width}x${image.height} to ${width}x${height}...',
+        );
         resizedImage = img.copyResize(image, width: width, height: height);
       }
 

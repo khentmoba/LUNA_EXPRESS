@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/errand_provider.dart';
-import '../providers/session_provider.dart';
-import '../providers/rider_provider.dart';
+import '../state/errands.dart';
+import '../state/sessions.dart';
+import '../state/rider_auth.dart';
 import '../widgets/errand_card.dart';
 import '../models/errand.dart';
 
@@ -19,15 +19,15 @@ class _BulletinBoardScreenState extends State<BulletinBoardScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ErrandProvider>().startListeningToBoard();
+      context.read<Errands>().startListeningToBoard();
     });
   }
 
   Future<void> _handleAccept(Errand errand) async {
     if (errand.id == null) return;
 
-    final riderProvider = context.read<RiderProvider>();
-    final sessionProvider = context.read<SessionProvider>();
+    final riderProvider = context.read<RiderAuth>();
+    final sessionProvider = context.read<Sessions>();
 
     if (riderProvider.currentUid == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -81,12 +81,12 @@ class _BulletinBoardScreenState extends State<BulletinBoardScreen> {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              context.read<ErrandProvider>().startListeningToBoard();
+              context.read<Errands>().startListeningToBoard();
             },
           ),
         ],
       ),
-      body: Consumer<ErrandProvider>(
+      body: Consumer<Errands>(
         builder: (context, errandProvider, _) {
           if (errandProvider.isLoadingBoard) {
             return const Center(child: CircularProgressIndicator());
@@ -97,9 +97,11 @@ class _BulletinBoardScreenState extends State<BulletinBoardScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.error_outline,
-                      size: 48,
-                      color: theme.colorScheme.error),
+                  Icon(
+                    Icons.error_outline,
+                    size: 48,
+                    color: theme.colorScheme.error,
+                  ),
                   const SizedBox(height: 16),
                   Text(
                     'Something went wrong',
@@ -128,14 +130,13 @@ class _BulletinBoardScreenState extends State<BulletinBoardScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.inbox,
-                      size: 64,
-                      color: theme.colorScheme.onSurface.withOpacity(0.3)),
-                  const SizedBox(height: 16),
-                  Text(
-                    'No errands yet',
-                    style: theme.textTheme.titleMedium,
+                  Icon(
+                    Icons.inbox,
+                    size: 64,
+                    color: theme.colorScheme.onSurface.withOpacity(0.3),
                   ),
+                  const SizedBox(height: 16),
+                  Text('No errands yet', style: theme.textTheme.titleMedium),
                   const SizedBox(height: 8),
                   Text(
                     'Be the first to post an errand!',
@@ -156,7 +157,7 @@ class _BulletinBoardScreenState extends State<BulletinBoardScreen> {
           }
 
           // Check if current user is a verified rider
-          final isVerifiedRider = context.watch<RiderProvider>().isVerified;
+          final isVerifiedRider = context.watch<RiderAuth>().isVerified;
 
           return RefreshIndicator(
             onRefresh: () async {
@@ -170,7 +171,7 @@ class _BulletinBoardScreenState extends State<BulletinBoardScreen> {
                 return ErrandCard(
                   errand: errand,
                   showAcceptButton: isVerifiedRider,
-                  isAccepting: context.watch<SessionProvider>().isAccepting,
+                  isAccepting: context.watch<Sessions>().isAccepting,
                   onAccept: isVerifiedRider
                       ? () => _handleAccept(errand)
                       : null,
@@ -181,8 +182,7 @@ class _BulletinBoardScreenState extends State<BulletinBoardScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            Navigator.pushNamed(context, '/pasugo/create'),
+        onPressed: () => Navigator.pushNamed(context, '/pasugo/create'),
         child: const Icon(Icons.add),
       ),
     );

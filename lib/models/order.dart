@@ -68,7 +68,6 @@ class OrderModel {
   }
 }
 
-
 class OrderItem {
   final String name;
   final String variant;

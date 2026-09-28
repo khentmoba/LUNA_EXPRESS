@@ -20,7 +20,8 @@ class JuicyFeedback extends StatefulWidget {
   State<JuicyFeedback> createState() => _JuicyFeedbackState();
 }
 
-class _JuicyFeedbackState extends State<JuicyFeedback> with SingleTickerProviderStateMixin {
+class _JuicyFeedbackState extends State<JuicyFeedback>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnim;
   static int _lastHaptics = 0;
@@ -32,9 +33,13 @@ class _JuicyFeedbackState extends State<JuicyFeedback> with SingleTickerProvider
       vsync: this,
       duration: widget.duration ?? KioskTheme.kJuicyDuration,
     );
-    _scaleAnim = Tween<double>(begin: 1.0, end: widget.scale ?? KioskTheme.kJuicyScale).animate(
-      CurvedAnimation(parent: _controller, curve: KioskTheme.kJuicyCurve),
-    );
+    _scaleAnim =
+        Tween<double>(
+          begin: 1.0,
+          end: widget.scale ?? KioskTheme.kJuicyScale,
+        ).animate(
+          CurvedAnimation(parent: _controller, curve: KioskTheme.kJuicyCurve),
+        );
   }
 
   @override
@@ -65,10 +70,7 @@ class _JuicyFeedbackState extends State<JuicyFeedback> with SingleTickerProvider
     Widget result = AnimatedBuilder(
       animation: _scaleAnim,
       builder: (context, child) {
-        return Transform.scale(
-          scale: _scaleAnim.value,
-          child: child,
-        );
+        return Transform.scale(scale: _scaleAnim.value, child: child);
       },
       child: widget.child,
     );

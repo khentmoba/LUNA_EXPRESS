@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import '../../../utils/format.dart';
 import '../models/errand.dart';
 
 /// Displays a single errand card for the bulletin board.
@@ -21,7 +21,7 @@ class ErrandCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final timeAgo = _formatTimeAgo(errand.createdAt);
+    final ago = timeAgo(errand.createdAt, absolute: true);
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
@@ -44,8 +44,10 @@ class ErrandCard extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: _statusColor.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(12),
@@ -78,21 +80,25 @@ class ErrandCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.access_time,
-                        size: 14,
-                        color: theme.colorScheme.onSurface.withOpacity(0.5)),
+                    Icon(
+                      Icons.access_time,
+                      size: 14,
+                      color: theme.colorScheme.onSurface.withOpacity(0.5),
+                    ),
                     const SizedBox(width: 4),
                     Text(
-                      timeAgo,
+                      ago,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurface.withOpacity(0.5),
                       ),
                     ),
                     if (errand.locationPin != null) ...[
                       const SizedBox(width: 12),
-                      Icon(Icons.location_on,
-                          size: 14,
-                          color: theme.colorScheme.onSurface.withOpacity(0.5)),
+                      Icon(
+                        Icons.location_on,
+                        size: 14,
+                        color: theme.colorScheme.onSurface.withOpacity(0.5),
+                      ),
                       const SizedBox(width: 2),
                       Text(
                         'Has pin',
@@ -133,16 +139,5 @@ class ErrandCard extends StatelessWidget {
       case ErrandStatus.cancelled:
         return Colors.grey;
     }
-  }
-
-  String _formatTimeAgo(DateTime dateTime) {
-    final now = DateTime.now();
-    final diff = now.difference(dateTime);
-
-    if (diff.inMinutes < 1) return 'Just now';
-    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
-    if (diff.inHours < 24) return '${diff.inHours}h ago';
-    if (diff.inDays < 7) return '${diff.inDays}d ago';
-    return DateFormat('MMM d').format(dateTime);
   }
 }

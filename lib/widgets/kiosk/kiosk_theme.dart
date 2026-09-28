@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:ui';
 
 class KioskTheme {
   // ─── Spacing System ───────────────────────────────────────────
@@ -24,11 +23,6 @@ class KioskTheme {
   static const Duration kJuicyDuration = Duration(milliseconds: 180);
   static const Curve kJuicyCurve = Curves.easeOutCubic;
   static const Duration kPageTransition = Duration(milliseconds: 400);
-
-  // ─── Theme Actions ────────────────────────────────────────────
-  static const Color primaryAction = Color(0xFF4A3728);
-  static const Color primaryYellow = Color(0xFFFFBC0D);
-  static const Color darkBackground = Color(0xFF1A1A1A);
 
   // ─── Brand Palette ────────────────────────────────────────────
   static const Color lunaBrown = Color(0xFF4A3728);
@@ -65,12 +59,6 @@ class KioskTheme {
 
   static const Gradient brandGradient = LinearGradient(
     colors: [lunaBrown, lunaDarkBrown],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-
-  static Gradient subtleWarmGradient = LinearGradient(
-    colors: [lunaCream.withOpacity(0.5), lunaWarmWhite],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -231,20 +219,11 @@ class KioskTheme {
     height: 1.2,
   );
 
-  // ─── Legacy Text Styles (backward compat) ─────────────────────
-  static TextStyle get lunaHeaderStyle => headerLarge;
-  static TextStyle get lunaBodyStyle => bodyLarge;
-
   // ─── Decorations ──────────────────────────────────────────────
   static BoxDecoration get cardWhite => BoxDecoration(
     color: lunaWhite,
     borderRadius: BorderRadius.circular(radiusLg),
     boxShadow: shadowMd,
-  );
-
-  static BoxDecoration get cardCream => BoxDecoration(
-    color: lunaCream,
-    borderRadius: BorderRadius.circular(radiusLg),
   );
 
   static BoxDecoration get cardBrown => BoxDecoration(
@@ -259,41 +238,21 @@ class KioskTheme {
     boxShadow: shadowMd,
   );
 
-  static BoxDecoration sidebarDecoration = BoxDecoration(
-    color: lunaCream,
-    border: Border(right: BorderSide(color: lunaBrown.withOpacity(0.05))),
-  );
-
-  // ─── Glass Effect ─────────────────────────────────────────────
-  static Widget glassEffect({required Widget child, double sigma = 10}) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(radiusLg),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
-        child: child,
-      ),
-    );
-  }
-
   // ─── Button Styles ────────────────────────────────────────────
   static ButtonStyle get primaryButton => ElevatedButton.styleFrom(
     backgroundColor: lunaBrown,
     foregroundColor: textOnPrimary,
     padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radiusFull)),
-    elevation: 0,
-    textStyle: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 18, letterSpacing: 1),
-    shadowColor: lunaBrown.withOpacity(0.3),
-  );
-
-  static ButtonStyle get secondaryButton => OutlinedButton.styleFrom(
-    foregroundColor: lunaBrown,
-    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(radiusFull),
     ),
-    side: BorderSide(color: lunaBrown.withOpacity(0.2)),
-    textStyle: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 16, letterSpacing: 1),
+    elevation: 0,
+    textStyle: GoogleFonts.outfit(
+      fontWeight: FontWeight.w900,
+      fontSize: 18,
+      letterSpacing: 1,
+    ),
+    shadowColor: lunaBrown.withOpacity(0.3),
   );
 
   // ─── Input Decoration ─────────────────────────────────────────
@@ -336,9 +295,6 @@ class KioskTheme {
   );
 
   // ─── Divider ──────────────────────────────────────────────────
-  static Widget divider({double opacity = 0.1}) => Divider(
-    color: lunaBrown.withOpacity(opacity),
-    thickness: 1,
-    height: 1,
-  );
+  static Widget divider({double opacity = 0.1}) =>
+      Divider(color: lunaBrown.withOpacity(opacity), thickness: 1, height: 1);
 }

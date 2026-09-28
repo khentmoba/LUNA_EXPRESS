@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../providers/errand_provider.dart';
+import '../state/errands.dart';
 import '../widgets/map_pin_picker.dart';
 import '../services/pasugo_constants.dart';
 
@@ -85,7 +85,7 @@ class _CreateErrandScreenState extends State<CreateErrandScreen> {
   Future<void> _handleSubmit() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final provider = context.read<ErrandProvider>();
+    final provider = context.read<Errands>();
     final success = await provider.createErrand(
       name: _nameController.text.trim(),
       phone: _phoneController.text.trim(),
@@ -121,10 +121,7 @@ class _CreateErrandScreenState extends State<CreateErrandScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Post an Errand'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Post an Errand'), centerTitle: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -242,7 +239,7 @@ class _CreateErrandScreenState extends State<CreateErrandScreen> {
               const SizedBox(height: 24),
 
               // Submit button
-              Consumer<ErrandProvider>(
+              Consumer<Errands>(
                 builder: (context, provider, _) {
                   return FilledButton.icon(
                     onPressed: provider.isCreating ? null : _handleSubmit,
@@ -256,8 +253,9 @@ class _CreateErrandScreenState extends State<CreateErrandScreen> {
                             ),
                           )
                         : const Icon(Icons.send),
-                    label:
-                        Text(provider.isCreating ? 'Posting...' : 'Post Errand'),
+                    label: Text(
+                      provider.isCreating ? 'Posting...' : 'Post Errand',
+                    ),
                     style: FilledButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),

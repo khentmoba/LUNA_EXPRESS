@@ -12,10 +12,7 @@ class RiderManagementScreen extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Rider Management'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Rider Management'), centerTitle: true),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection(PasugoCollections.riders)
@@ -23,9 +20,7 @@ class RiderManagementScreen extends StatelessWidget {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
+            return Center(child: Text('Error: ${snapshot.error}'));
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -39,12 +34,16 @@ class RiderManagementScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.people_outline,
-                      size: 64,
-                      color: theme.colorScheme.onSurface.withOpacity(0.3)),
+                  Icon(
+                    Icons.people_outline,
+                    size: 64,
+                    color: theme.colorScheme.onSurface.withOpacity(0.3),
+                  ),
                   const SizedBox(height: 16),
-                  Text('No riders registered yet',
-                      style: theme.textTheme.titleMedium),
+                  Text(
+                    'No riders registered yet',
+                    style: theme.textTheme.titleMedium,
+                  ),
                 ],
               ),
             );
@@ -72,24 +71,28 @@ class _RiderManagementCard extends StatelessWidget {
   const _RiderManagementCard({required this.rider});
 
   Future<void> _updateRiderStatus(
-      BuildContext context, String newStatus) async {
+    BuildContext context,
+    String newStatus,
+  ) async {
     try {
       await FirebaseFirestore.instance
           .collection(PasugoCollections.riders)
           .doc(rider.id)
           .update({
-        'status': newStatus,
-        if (newStatus == RiderStatus.approved.toJson())
-          'approvedAt': DateTime.now().toIso8601String(),
-      });
+            'status': newStatus,
+            if (newStatus == RiderStatus.approved.toJson())
+              'approvedAt': DateTime.now().toIso8601String(),
+          });
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                'Rider ${rider.name} ${newStatus == "approved" ? "approved" : "rejected"}'),
-            backgroundColor:
-                newStatus == 'approved' ? Colors.green : Colors.orange,
+              'Rider ${rider.name} ${newStatus == "approved" ? "approved" : "rejected"}',
+            ),
+            backgroundColor: newStatus == 'approved'
+                ? Colors.green
+                : Colors.orange,
           ),
         );
       }
@@ -142,8 +145,10 @@ class _RiderManagementCard extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: statusColor.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(12),
@@ -160,28 +165,23 @@ class _RiderManagementCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            Text('Phone: ${rider.phone}',
-                style: theme.textTheme.bodyMedium),
+            Text('Phone: ${rider.phone}', style: theme.textTheme.bodyMedium),
             const SizedBox(height: 2),
-            Text('Address: ${rider.address}',
-                style: theme.textTheme.bodySmall),
-            if (rider.registeredAt != null) ...[
-              const SizedBox(height: 2),
-              Text(
-                'Registered: ${rider.registeredAt.toLocal().toString().substring(0, 16)}',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.5),
-                ),
+            Text('Address: ${rider.address}', style: theme.textTheme.bodySmall),
+            const SizedBox(height: 2),
+            Text(
+              'Registered: ${rider.registeredAt.toLocal().toString().substring(0, 16)}',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurface.withOpacity(0.5),
               ),
-            ],
+            ),
             if (rider.status == RiderStatus.pending) ...[
               const SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   OutlinedButton.icon(
-                    onPressed: () =>
-                        _updateRiderStatus(context, 'rejected'),
+                    onPressed: () => _updateRiderStatus(context, 'rejected'),
                     icon: const Icon(Icons.close, size: 18),
                     label: const Text('Reject'),
                     style: OutlinedButton.styleFrom(
@@ -190,8 +190,7 @@ class _RiderManagementCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   FilledButton.icon(
-                    onPressed: () =>
-                        _updateRiderStatus(context, 'approved'),
+                    onPressed: () => _updateRiderStatus(context, 'approved'),
                     icon: const Icon(Icons.check, size: 18),
                     label: const Text('Approve'),
                   ),

@@ -53,8 +53,7 @@ class _MapPinPickerState extends State<MapPinPicker> {
             ),
             children: [
               TileLayer(
-                urlTemplate:
-                    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                 userAgentPackageName: 'com.lunaexpress.app',
               ),
               if (_pinnedLocation != null)

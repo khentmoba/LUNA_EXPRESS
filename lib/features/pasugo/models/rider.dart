@@ -44,44 +44,6 @@ class Rider {
     this.isActive = true,
   });
 
-  Rider copyWith({
-    String? id,
-    String? name,
-    String? phone,
-    String? address,
-    RiderStatus? status,
-    DateTime? registeredAt,
-    DateTime? approvedAt,
-    String? approvedBy,
-    bool? isActive,
-  }) {
-    return Rider(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      phone: phone ?? this.phone,
-      address: address ?? this.address,
-      status: status ?? this.status,
-      registeredAt: registeredAt ?? this.registeredAt,
-      approvedAt: approvedAt ?? this.approvedAt,
-      approvedBy: approvedBy ?? this.approvedBy,
-      isActive: isActive ?? this.isActive,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      if (id != null) 'id': id,
-      'name': name,
-      'phone': phone,
-      'address': address,
-      'status': status.toJson(),
-      'registeredAt': registeredAt.toIso8601String(),
-      if (approvedAt != null) 'approvedAt': approvedAt!.toIso8601String(),
-      if (approvedBy != null) 'approvedBy': approvedBy,
-      'isActive': isActive,
-    };
-  }
-
   factory Rider.fromMap(Map<String, dynamic> map, {String? id}) {
     return Rider(
       id: id ?? map['id'] as String?,
@@ -97,4 +59,19 @@ class Rider {
       isActive: map['isActive'] as bool? ?? true,
     );
   }
+}
+
+/// Result of a rider login attempt.
+class RiderLoginResult {
+  final bool success;
+  final RiderStatus status;
+  final String? uid;
+  final String? error;
+
+  const RiderLoginResult({
+    required this.success,
+    required this.status,
+    this.uid,
+    this.error,
+  });
 }

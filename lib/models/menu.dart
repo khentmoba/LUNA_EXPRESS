@@ -2,7 +2,11 @@ class MenuVariant {
   final String label;
   final int price;
   final bool isBuy1Take1;
-  const MenuVariant({required this.label, required this.price, this.isBuy1Take1 = false});
+  const MenuVariant({
+    required this.label,
+    required this.price,
+    this.isBuy1Take1 = false,
+  });
 }
 
 class MenuItem {

@@ -29,14 +29,18 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
     }
 
     return widget.item.hasVariants
-        ? (_selectedVariantIdx < 0 ? widget.item.displayPrice : widget.item.variants[_selectedVariantIdx].price)
+        ? (_selectedVariantIdx < 0
+              ? widget.item.displayPrice
+              : widget.item.variants[_selectedVariantIdx].price)
         : (widget.item.price ?? 0);
   }
 
   String get _variantLabel {
     if (widget.item.allowMultiSelect) {
       if (_selectedIndices.isEmpty) return '';
-      return _selectedIndices.map((idx) => widget.item.variants[idx].label).join(', ');
+      return _selectedIndices
+          .map((idx) => widget.item.variants[idx].label)
+          .join(', ');
     }
     return (!widget.item.hasVariants || _selectedVariantIdx < 0)
         ? ''
@@ -49,15 +53,17 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
 
   void _addToCart() {
     if (!_canAdd) return;
-    cartNotifier.add(CartItem(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      name: widget.item.name,
-      emoji: widget.item.emoji,
-      imageUrl: widget.item.imageUrl,
-      variant: _variantLabel,
-      price: _price,
-      quantity: _qty,
-    ));
+    cartNotifier.add(
+      CartItem(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        name: widget.item.name,
+        emoji: widget.item.emoji,
+        imageUrl: widget.item.imageUrl,
+        variant: _variantLabel,
+        price: _price,
+        quantity: _qty,
+      ),
+    );
     Navigator.pop(context);
   }
 
@@ -93,26 +99,40 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
                       tag: 'product_${widget.item.id}',
                       child: Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(KioskTheme.radiusXl),
+                          borderRadius: BorderRadius.circular(
+                            KioskTheme.radiusXl,
+                          ),
                           boxShadow: KioskTheme.shadowXl,
                         ),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(KioskTheme.radiusXl),
+                          borderRadius: BorderRadius.circular(
+                            KioskTheme.radiusXl,
+                          ),
                           child: widget.item.imageUrl.startsWith('http')
-                            ? Image.network(
-                                widget.item.imageUrl,
-                                width: isMobile ? 250 : 400,
-                                height: isMobile ? 250 : 400,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) => Icon(Icons.fastfood, size: isMobile ? 80 : 120),
-                              )
-                            : Image.asset(
-                                widget.item.imageUrl.isNotEmpty ? widget.item.imageUrl : 'images/placeholder.png',
-                                width: isMobile ? 250 : 400,
-                                height: isMobile ? 250 : 400,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) => Icon(Icons.fastfood, size: isMobile ? 80 : 120),
-                              ),
+                              ? Image.network(
+                                  widget.item.imageUrl,
+                                  width: isMobile ? 250 : 400,
+                                  height: isMobile ? 250 : 400,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Icon(
+                                        Icons.fastfood,
+                                        size: isMobile ? 80 : 120,
+                                      ),
+                                )
+                              : Image.asset(
+                                  widget.item.imageUrl.isNotEmpty
+                                      ? widget.item.imageUrl
+                                      : 'images/placeholder.png',
+                                  width: isMobile ? 250 : 400,
+                                  height: isMobile ? 250 : 400,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Icon(
+                                        Icons.fastfood,
+                                        size: isMobile ? 80 : 120,
+                                      ),
+                                ),
                         ),
                       ),
                     ),
@@ -146,9 +166,11 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
                       children: [
                         Text(
                           widget.item.maxSelect > 1
-                            ? '${widget.item.optionHeader} (Pick up to ${widget.item.maxSelect})'
-                            : widget.item.optionHeader,
-                          style: KioskTheme.labelLarge.copyWith(color: KioskTheme.textMuted),
+                              ? '${widget.item.optionHeader} (Pick up to ${widget.item.maxSelect})'
+                              : widget.item.optionHeader,
+                          style: KioskTheme.labelLarge.copyWith(
+                            color: KioskTheme.textMuted,
+                          ),
                         ),
                         if (widget.item.allowMultiSelect)
                           Text(
@@ -169,12 +191,15 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
                             if (widget.item.allowMultiSelect) {
                               if (_selectedIndices.contains(e.key)) {
                                 _selectedIndices.remove(e.key);
-                              } else if (_selectedIndices.length < widget.item.maxSelect) {
+                              } else if (_selectedIndices.length <
+                                  widget.item.maxSelect) {
                                 _selectedIndices.add(e.key);
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: Text('Maximum of ${widget.item.maxSelect} flavors reached'),
+                                    content: Text(
+                                      'Maximum of ${widget.item.maxSelect} flavors reached',
+                                    ),
                                     duration: const Duration(seconds: 1),
                                   ),
                                 );
@@ -186,12 +211,21 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
                         },
                         child: Container(
                           margin: const EdgeInsets.only(bottom: 12),
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 20,
+                          ),
                           decoration: BoxDecoration(
-                            color: isSelected ? KioskTheme.lunaBrown.withOpacity(0.08) : Colors.grey[50],
-                            borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
+                            color: isSelected
+                                ? KioskTheme.lunaBrown.withOpacity(0.08)
+                                : Colors.grey[50],
+                            borderRadius: BorderRadius.circular(
+                              KioskTheme.radiusMd,
+                            ),
                             border: Border.all(
-                              color: isSelected ? KioskTheme.lunaBrown : Colors.transparent,
+                              color: isSelected
+                                  ? KioskTheme.lunaBrown
+                                  : Colors.transparent,
                               width: 2,
                             ),
                           ),
@@ -201,15 +235,29 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
                                 width: 24,
                                 height: 24,
                                 decoration: BoxDecoration(
-                                  shape: widget.item.allowMultiSelect ? BoxShape.rectangle : BoxShape.circle,
-                                  borderRadius: widget.item.allowMultiSelect ? BorderRadius.circular(6) : null,
+                                  shape: widget.item.allowMultiSelect
+                                      ? BoxShape.rectangle
+                                      : BoxShape.circle,
+                                  borderRadius: widget.item.allowMultiSelect
+                                      ? BorderRadius.circular(6)
+                                      : null,
                                   border: Border.all(
-                                    color: isSelected ? KioskTheme.lunaBrown : Colors.grey[300]!,
+                                    color: isSelected
+                                        ? KioskTheme.lunaBrown
+                                        : Colors.grey[300]!,
                                     width: 2,
                                   ),
-                                  color: isSelected ? KioskTheme.lunaBrown : Colors.transparent,
+                                  color: isSelected
+                                      ? KioskTheme.lunaBrown
+                                      : Colors.transparent,
                                 ),
-                                child: isSelected ? const Icon(Icons.check, size: 16, color: Colors.white) : null,
+                                child: isSelected
+                                    ? const Icon(
+                                        Icons.check,
+                                        size: 16,
+                                        color: Colors.white,
+                                      )
+                                    : null,
                               ),
                               const SizedBox(width: 16),
                               Expanded(
@@ -217,8 +265,12 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
                                   e.value.label,
                                   style: GoogleFonts.outfit(
                                     fontSize: 18,
-                                    fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                                    color: isSelected ? KioskTheme.textPrimary : KioskTheme.textSecondary,
+                                    fontWeight: isSelected
+                                        ? FontWeight.w800
+                                        : FontWeight.w600,
+                                    color: isSelected
+                                        ? KioskTheme.textPrimary
+                                        : KioskTheme.textSecondary,
                                   ),
                                 ),
                               ),
@@ -228,7 +280,9 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
                                   style: GoogleFonts.outfit(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w900,
-                                    color: isSelected ? KioskTheme.lunaBrown : KioskTheme.textPrimary,
+                                    color: isSelected
+                                        ? KioskTheme.lunaBrown
+                                        : KioskTheme.textPrimary,
                                   ),
                                 ),
                             ],
@@ -268,7 +322,9 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
                   ),
                   child: Row(
                     children: [
-                      _buildQtyBtn(Icons.remove, () { if (_qty > 1) setState(() => _qty--); }, isMobile),
+                      _buildQtyBtn(Icons.remove, () {
+                        if (_qty > 1) setState(() => _qty--);
+                      }, isMobile),
                       SizedBox(
                         width: isMobile ? 32 : 40,
                         child: Text(
@@ -281,7 +337,11 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
                           ),
                         ),
                       ),
-                      _buildQtyBtn(Icons.add, () => setState(() => _qty++), isMobile),
+                      _buildQtyBtn(
+                        Icons.add,
+                        () => setState(() => _qty++),
+                        isMobile,
+                      ),
                     ],
                   ),
                 ),
@@ -293,10 +353,18 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: KioskTheme.lunaBrown,
                         foregroundColor: KioskTheme.textOnPrimary,
-                        disabledBackgroundColor: KioskTheme.lunaBrown.withOpacity(0.4),
-                        disabledForegroundColor: KioskTheme.textOnPrimary.withOpacity(0.8),
-                        padding: EdgeInsets.symmetric(vertical: isMobile ? 18 : 24),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(KioskTheme.radiusFull)),
+                        disabledBackgroundColor: KioskTheme.lunaBrown
+                            .withOpacity(0.4),
+                        disabledForegroundColor: KioskTheme.textOnPrimary
+                            .withOpacity(0.8),
+                        padding: EdgeInsets.symmetric(
+                          vertical: isMobile ? 18 : 24,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            KioskTheme.radiusFull,
+                          ),
+                        ),
                         elevation: 0,
                       ),
                       child: Text(
@@ -322,7 +390,11 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
       onPressed: onTap,
       child: Padding(
         padding: EdgeInsets.all(isMobile ? 10 : 12.0),
-        child: Icon(icon, color: KioskTheme.textPrimary, size: isMobile ? 22 : 28),
+        child: Icon(
+          icon,
+          color: KioskTheme.textPrimary,
+          size: isMobile ? 22 : 28,
+        ),
       ),
     );
   }

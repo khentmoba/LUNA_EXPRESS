@@ -44,44 +44,6 @@ class PasugoSession {
     this.cancellationReason,
   });
 
-  PasugoSession copyWith({
-    String? id,
-    String? errandId,
-    String? riderId,
-    String? customerPhone,
-    SessionStatus? status,
-    DateTime? acceptedAt,
-    DateTime? completedAt,
-    String? cancelledBy,
-    String? cancellationReason,
-  }) {
-    return PasugoSession(
-      id: id ?? this.id,
-      errandId: errandId ?? this.errandId,
-      riderId: riderId ?? this.riderId,
-      customerPhone: customerPhone ?? this.customerPhone,
-      status: status ?? this.status,
-      acceptedAt: acceptedAt ?? this.acceptedAt,
-      completedAt: completedAt ?? this.completedAt,
-      cancelledBy: cancelledBy ?? this.cancelledBy,
-      cancellationReason: cancellationReason ?? this.cancellationReason,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      if (id != null) 'id': id,
-      'errandId': errandId,
-      'riderId': riderId,
-      'customerPhone': customerPhone,
-      'status': status.toJson(),
-      'acceptedAt': acceptedAt.toIso8601String(),
-      if (completedAt != null) 'completedAt': completedAt!.toIso8601String(),
-      if (cancelledBy != null) 'cancelledBy': cancelledBy,
-      if (cancellationReason != null) 'cancellationReason': cancellationReason,
-    };
-  }
-
   factory PasugoSession.fromMap(Map<String, dynamic> map, {String? id}) {
     return PasugoSession(
       id: id ?? map['id'] as String?,

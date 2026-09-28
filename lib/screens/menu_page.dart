@@ -55,7 +55,9 @@ class KioskMenuPage extends StatelessWidget {
   Widget _buildHeader(BuildContext context, bool isMobile) {
     return Consumer<KioskSession>(
       builder: (context, kSession, child) {
-        final section = kMenuSections.firstWhere((s) => s.id == kSession.currentCategoryId);
+        final section = kMenuSections.firstWhere(
+          (s) => s.id == kSession.currentCategoryId,
+        );
         return Container(
           padding: EdgeInsets.fromLTRB(
             isMobile ? 20 : 32,
@@ -72,8 +74,11 @@ class KioskMenuPage extends StatelessWidget {
                     'images/luna_logo.png',
                     width: isMobile ? 32 : 40,
                     height: isMobile ? 32 : 40,
-                    errorBuilder: (context, error, stackTrace) =>
-                        Icon(Icons.nightlight_round, color: KioskTheme.lunaBrown, size: isMobile ? 24 : 32),
+                    errorBuilder: (context, error, stackTrace) => Icon(
+                      Icons.nightlight_round,
+                      color: KioskTheme.lunaBrown,
+                      size: isMobile ? 24 : 32,
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Text(
@@ -107,12 +112,17 @@ class KioskMenuPage extends StatelessWidget {
                               }
                             },
                             child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: isMobile ? 10 : 14, vertical: isMobile ? 6 : 8),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: isMobile ? 10 : 14,
+                                vertical: isMobile ? 6 : 8,
+                              ),
                               decoration: BoxDecoration(
                                 color: session.isStaff
                                     ? Colors.green.withOpacity(0.1)
                                     : KioskTheme.lunaBrown.withOpacity(0.08),
-                                borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
+                                borderRadius: BorderRadius.circular(
+                                  KioskTheme.radiusFull,
+                                ),
                                 border: Border.all(
                                   color: session.isStaff
                                       ? Colors.green.withOpacity(0.3)
@@ -126,14 +136,20 @@ class KioskMenuPage extends StatelessWidget {
                                     session.isStaff
                                         ? Icons.shield_rounded
                                         : Icons.lock_outline_rounded,
-                                    color: session.isStaff ? KioskTheme.success : KioskTheme.lunaBrown,
+                                    color: session.isStaff
+                                        ? KioskTheme.success
+                                        : KioskTheme.lunaBrown,
                                     size: isMobile ? 14 : 16,
                                   ),
                                   SizedBox(width: isMobile ? 4 : 6),
                                   Text(
-                                    session.isStaff ? 'STAFF CONSOLE' : 'STAFF LOGIN',
+                                    session.isStaff
+                                        ? 'STAFF CONSOLE'
+                                        : 'STAFF LOGIN',
                                     style: GoogleFonts.outfit(
-                                      color: session.isStaff ? KioskTheme.success : KioskTheme.lunaBrown,
+                                      color: session.isStaff
+                                          ? KioskTheme.success
+                                          : KioskTheme.lunaBrown,
                                       fontSize: isMobile ? 10 : 11,
                                       fontWeight: FontWeight.w900,
                                       letterSpacing: isMobile ? 0.5 : 1,
@@ -150,19 +166,32 @@ class KioskMenuPage extends StatelessWidget {
                         onPressed: () {
                           kioskSession.reset();
                           cartNotifier.clear();
-                          Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+                          Navigator.of(
+                            context,
+                          ).pushNamedAndRemoveUntil('/', (route) => false);
                         },
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: isMobile ? 10 : 14, vertical: isMobile ? 6 : 8),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: isMobile ? 10 : 14,
+                            vertical: isMobile ? 6 : 8,
+                          ),
                           decoration: BoxDecoration(
                             color: KioskTheme.lunaBrown.withOpacity(0.08),
-                            borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
-                            border: Border.all(color: KioskTheme.lunaBrown.withOpacity(0.1)),
+                            borderRadius: BorderRadius.circular(
+                              KioskTheme.radiusFull,
+                            ),
+                            border: Border.all(
+                              color: KioskTheme.lunaBrown.withOpacity(0.1),
+                            ),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.refresh_rounded, color: KioskTheme.lunaBrown, size: isMobile ? 14 : 16),
+                              Icon(
+                                Icons.refresh_rounded,
+                                color: KioskTheme.lunaBrown,
+                                size: isMobile ? 14 : 16,
+                              ),
                               SizedBox(width: isMobile ? 4 : 6),
                               Text(
                                 'START OVER',
@@ -199,7 +228,9 @@ class KioskMenuPage extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          section.subtitle.isNotEmpty ? section.subtitle : section.title,
+                          section.subtitle.isNotEmpty
+                              ? section.subtitle
+                              : section.title,
                           style: GoogleFonts.outfit(
                             fontSize: isMobile ? 14 : 18,
                             color: KioskTheme.textMuted,
@@ -222,7 +253,9 @@ class KioskMenuPage extends StatelessWidget {
   Widget _buildProductGrid(BuildContext context, bool isMobile) {
     return Consumer<KioskSession>(
       builder: (context, session, child) {
-        final section = kMenuSections.firstWhere((s) => s.id == session.currentCategoryId);
+        final section = kMenuSections.firstWhere(
+          (s) => s.id == session.currentCategoryId,
+        );
         return AnimatedSwitcher(
           duration: const Duration(milliseconds: 500),
           child: CustomScrollView(
@@ -237,7 +270,11 @@ class KioskMenuPage extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildDynamicSlivers(List<MenuItem> items, bool isMobile, BuildContext context) {
+  List<Widget> _buildDynamicSlivers(
+    List<MenuItem> items,
+    bool isMobile,
+    BuildContext context,
+  ) {
     final slivers = <Widget>[];
     var currentGroup = <MenuItem>[];
 
@@ -259,23 +296,20 @@ class KioskMenuPage extends StatelessWidget {
               crossAxisSpacing: isMobile ? 16 : 24,
               mainAxisSpacing: isMobile ? 16 : 24,
             ),
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final item = groupToRender[index];
-                return KioskProductCard(
-                  item: item,
-                  onTap: () {
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                      builder: (_) => KioskProductSheet(item: item),
-                    );
-                  },
-                );
-              },
-              childCount: groupToRender.length,
-            ),
+            delegate: SliverChildBuilderDelegate((context, index) {
+              final item = groupToRender[index];
+              return KioskProductCard(
+                item: item,
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (_) => KioskProductSheet(item: item),
+                  );
+                },
+              );
+            }, childCount: groupToRender.length),
           ),
         ),
       );
@@ -304,7 +338,9 @@ class KioskMenuPage extends StatelessWidget {
                         height: 22,
                         decoration: BoxDecoration(
                           color: KioskTheme.lunaBrown,
-                          borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
+                          borderRadius: BorderRadius.circular(
+                            KioskTheme.radiusSm,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -332,7 +368,9 @@ class KioskMenuPage extends StatelessWidget {
     }
     addGrid();
 
-    slivers.add(SliverToBoxAdapter(child: SizedBox(height: isMobile ? 120 : 100)));
+    slivers.add(
+      SliverToBoxAdapter(child: SizedBox(height: isMobile ? 120 : 100)),
+    );
 
     return slivers;
   }
@@ -358,7 +396,10 @@ class KioskMenuPage extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.shopping_basket, color: KioskTheme.textOnPrimary),
+                const Icon(
+                  Icons.shopping_basket,
+                  color: KioskTheme.textOnPrimary,
+                ),
                 SizedBox(width: isMobile ? 12 : 16),
                 Text(
                   'VIEW ORDER \u00B7 \u20B1${cartNotifier.totalPrice}',
@@ -394,7 +435,11 @@ class KioskMenuPage extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(Icons.shopping_cart_outlined, size: isMobile ? 18 : 20, color: KioskTheme.lunaBrown),
+                Icon(
+                  Icons.shopping_cart_outlined,
+                  size: isMobile ? 18 : 20,
+                  color: KioskTheme.lunaBrown,
+                ),
                 SizedBox(width: isMobile ? 6 : 8),
                 Text(
                   '${cartNotifier.totalCount}',

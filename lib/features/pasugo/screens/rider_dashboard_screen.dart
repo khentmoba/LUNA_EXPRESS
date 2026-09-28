@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/session_provider.dart';
-import '../providers/rider_provider.dart';
+import '../state/sessions.dart';
+import '../state/rider_auth.dart';
 
 /// Rider dashboard — shows active sessions and access to bulletin board.
 class RiderDashboardScreen extends StatefulWidget {
@@ -16,11 +16,11 @@ class _RiderDashboardScreenState extends State<RiderDashboardScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final riderProvider = context.read<RiderProvider>();
+      final riderProvider = context.read<RiderAuth>();
       if (riderProvider.currentUid != null) {
-        context.read<SessionProvider>().startListeningToActiveSessions(
-              riderProvider.currentUid!,
-            );
+        context.read<Sessions>().startListeningToActiveSessions(
+          riderProvider.currentUid!,
+        );
       }
     });
   }
@@ -37,7 +37,7 @@ class _RiderDashboardScreenState extends State<RiderDashboardScreen> {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
-              await context.read<RiderProvider>().logout();
+              await context.read<RiderAuth>().logout();
               if (context.mounted) {
                 Navigator.pushReplacementNamed(context, '/pasugo');
               }
@@ -79,7 +79,7 @@ class _RiderDashboardScreenState extends State<RiderDashboardScreen> {
           ),
           // Active sessions list
           Expanded(
-            child: Consumer<SessionProvider>(
+            child: Consumer<Sessions>(
               builder: (context, provider, _) {
                 if (provider.isLoadingSessions) {
                   return const Center(child: CircularProgressIndicator());
@@ -90,10 +90,11 @@ class _RiderDashboardScreenState extends State<RiderDashboardScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.inbox,
-                            size: 48,
-                            color: theme.colorScheme.onSurface
-                                .withOpacity(0.3)),
+                        Icon(
+                          Icons.inbox,
+                          size: 48,
+                          color: theme.colorScheme.onSurface.withOpacity(0.3),
+                        ),
                         const SizedBox(height: 16),
                         Text(
                           'No active sessions',
@@ -103,8 +104,7 @@ class _RiderDashboardScreenState extends State<RiderDashboardScreen> {
                         Text(
                           'Browse available errands to find one to accept',
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface
-                                .withOpacity(0.6),
+                            color: theme.colorScheme.onSurface.withOpacity(0.6),
                           ),
                         ),
                       ],
@@ -119,12 +119,13 @@ class _RiderDashboardScreenState extends State<RiderDashboardScreen> {
                     final session = provider.activeSessions[index];
                     return Card(
                       child: ListTile(
-                        leading: const CircleAvatar(
-                          child: Icon(Icons.chat),
+                        leading: const CircleAvatar(child: Icon(Icons.chat)),
+                        title: Text(
+                          'Errand #${session.errandId.substring(0, 8)}...',
                         ),
-                        title: Text('Errand #${session.errandId.substring(0, 8)}...'),
                         subtitle: Text(
-                          'Accepted ${_formatTimeAgo(session.acceptedAt)}'),
+                          'Accepted ${_formatTimeAgo(session.acceptedAt)}',
+                        ),
                         trailing: const Icon(Icons.chevron_right),
                         onTap: () {
                           Navigator.pushNamed(

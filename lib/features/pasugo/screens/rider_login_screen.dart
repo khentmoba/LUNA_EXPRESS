@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/rider_provider.dart';
+import '../state/rider_auth.dart';
+import '../../../utils/validate.dart';
 import '../models/rider.dart';
 
 /// Rider login screen — email/password login with status-based redirection.
@@ -26,7 +27,7 @@ class _RiderLoginScreenState extends State<RiderLoginScreen> {
   Future<void> _handleLogin() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final provider = context.read<RiderProvider>();
+    final provider = context.read<RiderAuth>();
     final result = await provider.loginRider(
       email: _emailController.text.trim(),
       password: _passwordController.text,
@@ -40,7 +41,7 @@ class _RiderLoginScreenState extends State<RiderLoginScreen> {
       _showStatusDialog(
         'Pending Approval',
         'Your account is still pending approval from an admin. '
-        'Please wait for verification.',
+            'Please wait for verification.',
       );
     } else if (result.status == RiderStatus.rejected) {
       _showStatusDialog(
@@ -69,10 +70,7 @@ class _RiderLoginScreenState extends State<RiderLoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Rider Login'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Rider Login'), centerTitle: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -95,8 +93,7 @@ class _RiderLoginScreenState extends State<RiderLoginScreen> {
                   prefixIcon: Icon(Icons.email),
                   border: OutlineInputBorder(),
                 ),
-                validator: (v) =>
-                    v == null || v.trim().isEmpty ? 'Email is required' : null,
+                validator: (v) => V.email(v),
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -107,12 +104,12 @@ class _RiderLoginScreenState extends State<RiderLoginScreen> {
                   prefixIcon: Icon(Icons.lock),
                   border: OutlineInputBorder(),
                 ),
-                validator: (v) => v == null || v.isEmpty
-                    ? 'Password is required'
-                    : null,
+                validator: (v) =>
+                    v == null || v.isEmpty ? 'Password is required' : null,
+                maxLength: 128,
               ),
               const SizedBox(height: 24),
-              Consumer<RiderProvider>(
+              Consumer<RiderAuth>(
                 builder: (context, provider, _) {
                   if (provider.authError != null) {
                     return Padding(
@@ -120,14 +117,15 @@ class _RiderLoginScreenState extends State<RiderLoginScreen> {
                       child: Text(
                         provider.authError!,
                         style: TextStyle(
-                            color: Theme.of(context).colorScheme.error),
+                          color: Theme.of(context).colorScheme.error,
+                        ),
                       ),
                     );
                   }
                   return const SizedBox.shrink();
                 },
               ),
-              Consumer<RiderProvider>(
+              Consumer<RiderAuth>(
                 builder: (context, provider, _) {
                   return FilledButton(
                     onPressed: provider.isLoggingIn ? null : _handleLogin,

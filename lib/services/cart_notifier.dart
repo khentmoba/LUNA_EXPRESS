@@ -9,7 +9,9 @@ class CartNotifier extends ChangeNotifier {
   int get totalPrice => _items.fold(0, (s, i) => s + i.price * i.quantity);
 
   void add(CartItem item) {
-    final existing = _items.where((c) => c.name == item.name && c.variant == item.variant);
+    final existing = _items.where(
+      (c) => c.name == item.name && c.variant == item.variant,
+    );
     if (existing.isNotEmpty) {
       existing.first.quantity += item.quantity;
     } else {

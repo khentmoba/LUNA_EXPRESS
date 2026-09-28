@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/chat_message.dart';
-import '../providers/chat_provider.dart';
-import '../providers/session_provider.dart';
+import '../state/chat.dart';
+import '../state/sessions.dart';
 import '../widgets/chat_bubble.dart';
 
 /// Chat screen for communication between customer and rider.
@@ -19,7 +19,6 @@ class _ChatScreenState extends State<ChatScreen> {
   final _scrollController = ScrollController();
   bool _isRider = false;
   String? _sessionId;
-  String? _errandId;
 
   @override
   void initState() {
@@ -28,11 +27,10 @@ class _ChatScreenState extends State<ChatScreen> {
       final args =
           ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
       _sessionId = args?['sessionId'] as String?;
-      _errandId = args?['errandId'] as String?;
       _isRider = args?['isRider'] as bool? ?? false;
 
       if (_sessionId != null) {
-        context.read<ChatProvider>().startListeningToMessages(_sessionId!);
+        context.read<Chat>().startListeningToMessages(_sessionId!);
       }
     });
   }
@@ -41,7 +39,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void dispose() {
     _messageController.dispose();
     _scrollController.dispose();
-    context.read<ChatProvider>().disposeChat();
+    context.read<Chat>().reset();
     super.dispose();
   }
 
@@ -62,7 +60,7 @@ class _ChatScreenState extends State<ChatScreen> {
     if (text.trim().isEmpty || _sessionId == null) return;
 
     _messageController.clear();
-    final provider = context.read<ChatProvider>();
+    final provider = context.read<Chat>();
     await provider.sendMessage(
       sessionId: _sessionId!,
       sender: _isRider ? MessageSender.rider : MessageSender.customer,
@@ -95,7 +93,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
 
     if (confirmed == true && _sessionId != null) {
-      final provider = context.read<SessionProvider>();
+      final provider = context.read<Sessions>();
       final success = await provider.markSessionDone(_sessionId!);
       if (mounted && success) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -119,7 +117,7 @@ class _ChatScreenState extends State<ChatScreen> {
         centerTitle: true,
         actions: [
           if (_isRider)
-            Consumer<ChatProvider>(
+            Consumer<Chat>(
               builder: (context, provider, _) {
                 if (provider.isSessionActive) {
                   return IconButton(
@@ -137,7 +135,7 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           // Messages list
           Expanded(
-            child: Consumer<ChatProvider>(
+            child: Consumer<Chat>(
               builder: (context, provider, _) {
                 if (provider.isLoadingMessages) {
                   return const Center(child: CircularProgressIndicator());
@@ -148,10 +146,11 @@ class _ChatScreenState extends State<ChatScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.chat_bubble_outline,
-                            size: 48,
-                            color: theme.colorScheme.onSurface
-                                .withOpacity(0.3)),
+                        Icon(
+                          Icons.chat_bubble_outline,
+                          size: 48,
+                          color: theme.colorScheme.onSurface.withOpacity(0.3),
+                        ),
                         const SizedBox(height: 16),
                         Text(
                           'No messages yet',
@@ -161,8 +160,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         Text(
                           'Send a message to start coordinating',
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface
-                                .withOpacity(0.6),
+                            color: theme.colorScheme.onSurface.withOpacity(0.6),
                           ),
                         ),
                       ],
@@ -195,7 +193,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
 
           // Session status banner (if completed)
-          Consumer<ChatProvider>(
+          Consumer<Chat>(
             builder: (context, provider, _) {
               if (!provider.isSessionActive) {
                 return Container(
@@ -205,18 +203,18 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.lock,
-                          size: 16,
-                          color: theme.colorScheme.onSurface
-                              .withOpacity(0.6)),
+                      Icon(
+                        Icons.lock,
+                        size: 16,
+                        color: theme.colorScheme.onSurface.withOpacity(0.6),
+                      ),
                       const SizedBox(width: 8),
                       Text(
                         provider.isSessionCompleted
                             ? 'Chat closed (completed)'
                             : 'Chat closed',
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface
-                              .withOpacity(0.6),
+                          color: theme.colorScheme.onSurface.withOpacity(0.6),
                         ),
                       ),
                     ],
@@ -228,7 +226,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
 
           // Input area (only if session is active)
-          Consumer<ChatProvider>(
+          Consumer<Chat>(
             builder: (context, provider, _) {
               if (!provider.isSessionActive) return const SizedBox.shrink();
 
@@ -265,7 +263,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      Consumer<ChatProvider>(
+                      Consumer<Chat>(
                         builder: (context, provider, _) {
                           return IconButton.filled(
                             onPressed: provider.isSending ? null : _handleSend,

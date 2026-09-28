@@ -1,9 +1,10 @@
 import 'dart:async';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../services/functions.dart';
 import '../widgets/kiosk/kiosk_theme.dart';
 import '../widgets/kiosk/juicy_feedback.dart';
+import '../widgets/report/report_widgets.dart';
 
 class KdsPage extends StatefulWidget {
   const KdsPage({super.key});
@@ -22,7 +23,7 @@ class _KdsPageState extends State<KdsPage> {
   void initState() {
     super.initState();
     _fetchActiveOrders();
-    _refreshTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
+    _refreshTimer = Timer.periodic(const Duration(seconds: 10), (_) {
       _fetchActiveOrders(silent: true);
     });
   }
@@ -34,31 +35,19 @@ class _KdsPageState extends State<KdsPage> {
   }
 
   Future<void> _fetchActiveOrders({bool silent = false}) async {
-    if (!silent) {
-      setState(() {
-        _loading = true;
-        _error = null;
-      });
-    }
-
+    if (!silent) setState(() => _loading = true);
+    setState(() => _error = null);
     try {
-      final HttpsCallable callable = FirebaseFunctions.instanceFor(region: 'us-central1')
-          .httpsCallable('getActiveOrders');
-      final result = await callable.call();
-      final data = result.data as Map<dynamic, dynamic>;
-
-      if (data['success'] == true) {
-        setState(() {
+      final data = await callFn('getActiveOrders');
+      setState(() {
+        if (data['success'] == true) {
           _orders = data['orders'] as List<dynamic>;
-          _loading = false;
-        });
-      } else {
-        setState(() {
+        } else {
           _error = data['message'] ?? 'Failed to load active orders.';
-          _loading = false;
-        });
-      }
-    } catch (e) {
+        }
+        _loading = false;
+      });
+    } catch (_) {
       setState(() {
         _error = 'Error connecting to server. Please try again.';
         _loading = false;
@@ -69,143 +58,123 @@ class _KdsPageState extends State<KdsPage> {
   Future<void> _updateStatus(String orderId, String newStatus) async {
     setState(() => _loading = true);
     try {
-      final HttpsCallable callable = FirebaseFunctions.instanceFor(region: 'us-central1')
-          .httpsCallable('updateOrderStatus');
-      final result = await callable.call({
+      final data = await callFn('updateOrderStatus', {
         'orderId': orderId,
         'status': newStatus,
       });
-      final data = result.data as Map<dynamic, dynamic>;
-
       if (data['success'] == true) {
         await _fetchActiveOrders(silent: true);
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Order status updated to $newStatus', style: GoogleFonts.outfit(fontWeight: FontWeight.w700)),
-              backgroundColor: KioskTheme.success,
-            ),
-          );
-        }
+        if (mounted)
+          _snack('Order status updated to $newStatus', KioskTheme.success);
       } else {
         setState(() => _loading = false);
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Error: ${data['message']}', style: GoogleFonts.outfit(fontWeight: FontWeight.w700)),
-              backgroundColor: KioskTheme.warning,
-            ),
-          );
-        }
+        if (mounted) _snack('Error: ${data['message']}', KioskTheme.warning);
       }
-    } catch (e) {
+    } catch (_) {
       setState(() => _loading = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to update status. Connection error.', style: GoogleFonts.outfit(fontWeight: FontWeight.w700)),
-            backgroundColor: KioskTheme.error,
-          ),
-        );
+        _snack('Failed to update status. Connection error.', KioskTheme.error);
       }
     }
+  }
+
+  void _snack(String msg, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          msg,
+          style: GoogleFonts.outfit(fontWeight: FontWeight.w700),
+        ),
+        backgroundColor: color,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 900;
+    final pending = _orders.where((o) => o['status'] == 'Pending').toList();
+    final preparing = _orders.where((o) => o['status'] == 'Preparing').toList();
+    final ready = _orders.where((o) => o['status'] == 'Ready').toList();
 
-    final pendingOrders = _orders.where((o) => o['status'] == 'Pending').toList();
-    final preparingOrders = _orders.where((o) => o['status'] == 'Preparing').toList();
-    final readyOrders = _orders.where((o) => o['status'] == 'Ready').toList();
-
-    return Scaffold(
-      backgroundColor: KioskTheme.lunaCream,
-      appBar: AppBar(
-        title: Text(
-          'KITCHEN DISPLAY BOARD (KDS)',
-          style: KioskTheme.headerSmall.copyWith(color: KioskTheme.textOnPrimary, letterSpacing: 2, fontSize: 20),
-        ),
-        centerTitle: true,
-        backgroundColor: KioskTheme.lunaBrown,
-        foregroundColor: KioskTheme.textOnPrimary,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh_rounded),
-            tooltip: 'Refresh Active Orders',
-            onPressed: () => _fetchActiveOrders(),
-          ),
-          const SizedBox(width: 8),
-        ],
-      ),
-      body: _loading && _orders.isEmpty
-          ? const Center(child: CircularProgressIndicator(color: KioskTheme.lunaBrown))
-          : _error != null
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.error_outline_rounded, color: KioskTheme.error, size: 48),
-                      const SizedBox(height: 16),
-                      Text(
-                        _error!,
-                        style: KioskTheme.bodyLarge.copyWith(fontSize: 16),
-                      ),
-                      const SizedBox(height: 24),
-                      ElevatedButton(
-                        onPressed: () => _fetchActiveOrders(),
-                        style: KioskTheme.primaryButton,
-                        child: Text('Retry', style: GoogleFonts.outfit(color: Colors.white)),
-                      )
+    return ReportScaffold(
+      title: 'KITCHEN DISPLAY BOARD (KDS)',
+      loading: _loading && _orders.isEmpty,
+      error: _error,
+      onRetry: _fetchActiveOrders,
+      onRefresh: _fetchActiveOrders,
+      refreshTooltip: 'Refresh Active Orders',
+      body: isMobile
+          ? DefaultTabController(
+              length: 3,
+              child: Column(
+                children: [
+                  TabBar(
+                    labelColor: KioskTheme.lunaBrown,
+                    unselectedLabelColor: KioskTheme.textMuted,
+                    indicatorColor: KioskTheme.lunaBrown,
+                    labelStyle: KioskTheme.labelLarge.copyWith(fontSize: 14),
+                    tabs: [
+                      Tab(text: 'PENDING (${pending.length})'),
+                      Tab(text: 'PREPARING (${preparing.length})'),
+                      Tab(text: 'READY (${ready.length})'),
                     ],
                   ),
-                )
-              : isMobile
-                  ? DefaultTabController(
-                      length: 3,
-                      child: Column(
-                        children: [
-                          TabBar(
-                            labelColor: KioskTheme.lunaBrown,
-                            unselectedLabelColor: KioskTheme.textMuted,
-                            indicatorColor: KioskTheme.lunaBrown,
-                            labelStyle: KioskTheme.labelLarge.copyWith(fontSize: 14),
-                            tabs: [
-                              Tab(text: 'PENDING (${pendingOrders.length})'),
-                              Tab(text: 'PREPARING (${preparingOrders.length})'),
-                              Tab(text: 'READY (${readyOrders.length})'),
-                            ],
-                          ),
-                          Expanded(
-                            child: TabBarView(
-                              children: [
-                                _buildOrderColumnList(pendingOrders, 'Pending'),
-                                _buildOrderColumnList(preparingOrders, 'Preparing'),
-                                _buildOrderColumnList(readyOrders, 'Ready'),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Expanded(child: _buildKDSColumn('PENDING QUEUE', pendingOrders, 'Pending', KioskTheme.warning.withOpacity(0.08))),
-                          const SizedBox(width: 16),
-                          Expanded(child: _buildKDSColumn('PREPARING NOW', preparingOrders, 'Preparing', KioskTheme.info.withOpacity(0.08))),
-                          const SizedBox(width: 16),
-                          Expanded(child: _buildKDSColumn('READY FOR PICKUP', readyOrders, 'Ready', KioskTheme.success.withOpacity(0.08))),
-                        ],
-                      ),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        _buildOrderColumnList(pending, 'Pending'),
+                        _buildOrderColumnList(preparing, 'Preparing'),
+                        _buildOrderColumnList(ready, 'Ready'),
+                      ],
                     ),
+                  ),
+                ],
+              ),
+            )
+          : Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: _buildKDSColumn(
+                      'PENDING QUEUE',
+                      pending,
+                      'Pending',
+                      KioskTheme.warning.withOpacity(0.08),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: _buildKDSColumn(
+                      'PREPARING NOW',
+                      preparing,
+                      'Preparing',
+                      KioskTheme.info.withOpacity(0.08),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: _buildKDSColumn(
+                      'READY FOR PICKUP',
+                      ready,
+                      'Ready',
+                      KioskTheme.success.withOpacity(0.08),
+                    ),
+                  ),
+                ],
+              ),
+            ),
     );
   }
 
-  Widget _buildKDSColumn(String title, List<dynamic> orders, String columnStatus, Color headerColor) {
+  Widget _buildKDSColumn(
+    String title,
+    List<dynamic> orders,
+    String columnStatus,
+    Color headerColor,
+  ) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -219,7 +188,9 @@ class _KdsPageState extends State<KdsPage> {
             padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
             decoration: BoxDecoration(
               color: headerColor,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(23)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(23),
+              ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -229,7 +200,10 @@ class _KdsPageState extends State<KdsPage> {
                   style: KioskTheme.labelLarge.copyWith(fontSize: 14),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: KioskTheme.badgeBrown,
                   child: Text(
                     '${orders.length}',
@@ -239,7 +213,7 @@ class _KdsPageState extends State<KdsPage> {
                       fontSize: 12,
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -259,15 +233,18 @@ class _KdsPageState extends State<KdsPage> {
               columnStatus == 'Pending'
                   ? Icons.hourglass_empty_rounded
                   : columnStatus == 'Preparing'
-                      ? Icons.restaurant_rounded
-                      : Icons.done_all_rounded,
+                  ? Icons.restaurant_rounded
+                  : Icons.done_all_rounded,
               color: Colors.grey[300],
               size: 48,
             ),
             const SizedBox(height: 12),
             Text(
               'No orders in this phase',
-              style: KioskTheme.bodySmall.copyWith(color: Colors.grey[400], fontSize: 13),
+              style: KioskTheme.bodySmall.copyWith(
+                color: Colors.grey[400],
+                fontSize: 13,
+              ),
             ),
           ],
         ),
@@ -277,10 +254,7 @@ class _KdsPageState extends State<KdsPage> {
     return ListView.builder(
       padding: const EdgeInsets.all(16),
       itemCount: orders.length,
-      itemBuilder: (context, index) {
-        final order = orders[index];
-        return _buildOrderCard(order);
-      },
+      itemBuilder: (context, index) => _buildOrderCard(orders[index]),
     );
   }
 
@@ -297,7 +271,8 @@ class _KdsPageState extends State<KdsPage> {
     String displayTime = 'Just now';
     try {
       final parsed = DateTime.parse(timestampStr).toLocal();
-      displayTime = '${parsed.hour.toString().padLeft(2, '0')}:${parsed.minute.toString().padLeft(2, '0')}';
+      displayTime =
+          '${parsed.hour.toString().padLeft(2, '0')}:${parsed.minute.toString().padLeft(2, '0')}';
     } catch (_) {}
 
     Color typeColor = Colors.orange;
@@ -313,7 +288,6 @@ class _KdsPageState extends State<KdsPage> {
     String actionLabel = '';
     String nextStatus = '';
     Color actionColor = KioskTheme.lunaBrown;
-
     if (status == 'Pending') {
       actionLabel = 'START PREPARING';
       nextStatus = 'Preparing';
@@ -345,7 +319,10 @@ class _KdsPageState extends State<KdsPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: KioskTheme.badgeBrown,
                   child: Text(
                     '#$orderNum',
@@ -358,7 +335,10 @@ class _KdsPageState extends State<KdsPage> {
                 ),
                 Text(
                   displayTime,
-                  style: KioskTheme.bodySmall.copyWith(color: Colors.grey[500], fontSize: 12),
+                  style: KioskTheme.bodySmall.copyWith(
+                    color: Colors.grey[500],
+                    fontSize: 12,
+                  ),
                 ),
               ],
             ),
@@ -369,19 +349,30 @@ class _KdsPageState extends State<KdsPage> {
                 const SizedBox(width: 6),
                 Text(
                   type.toUpperCase(),
-                  style: KioskTheme.labelSmall.copyWith(color: typeColor, fontSize: 11, letterSpacing: 1),
+                  style: KioskTheme.labelSmall.copyWith(
+                    color: typeColor,
+                    fontSize: 11,
+                    letterSpacing: 1,
+                  ),
                 ),
                 const Spacer(),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
-                    color: paymentStatus == 'PAID' ? KioskTheme.success.withOpacity(0.1) : KioskTheme.warning.withOpacity(0.1),
+                    color: paymentStatus == 'PAID'
+                        ? KioskTheme.success.withOpacity(0.1)
+                        : KioskTheme.warning.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
                   ),
                   child: Text(
                     paymentStatus,
                     style: KioskTheme.labelSmall.copyWith(
-                      color: paymentStatus == 'PAID' ? KioskTheme.success : KioskTheme.warning,
+                      color: paymentStatus == 'PAID'
+                          ? KioskTheme.success
+                          : KioskTheme.warning,
                       fontSize: 9,
                     ),
                   ),
@@ -399,7 +390,6 @@ class _KdsPageState extends State<KdsPage> {
               final name = item['name'] as String;
               final qty = item['quantity'] as int;
               final variant = item['variant'] as String?;
-
               return Padding(
                 padding: const EdgeInsets.only(bottom: 6),
                 child: Row(
@@ -421,11 +411,13 @@ class _KdsPageState extends State<KdsPage> {
                           if (variant != null && variant.isNotEmpty)
                             Text(
                               variant,
-                              style: KioskTheme.bodySmall.copyWith(fontSize: 10),
+                              style: KioskTheme.bodySmall.copyWith(
+                                fontSize: 10,
+                              ),
                             ),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               );
@@ -459,7 +451,7 @@ class _KdsPageState extends State<KdsPage> {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

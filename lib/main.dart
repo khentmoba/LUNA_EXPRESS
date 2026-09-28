@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:flutter/foundation.dart';
 import 'firebase_options.dart';
 import 'widgets/kiosk/kiosk_theme.dart';
 import 'services/session.dart';
@@ -13,10 +15,10 @@ import 'screens/checkout_page.dart';
 import 'screens/kds_page.dart';
 import 'screens/analytics_page.dart';
 import 'screens/lifetime_analytics_page.dart';
-import 'features/pasugo/providers/errand_provider.dart';
-import 'features/pasugo/providers/session_provider.dart';
-import 'features/pasugo/providers/chat_provider.dart';
-import 'features/pasugo/providers/rider_provider.dart';
+import 'features/pasugo/state/errands.dart';
+import 'features/pasugo/state/sessions.dart';
+import 'features/pasugo/state/chat.dart';
+import 'features/pasugo/state/rider_auth.dart';
 import 'features/pasugo/screens/pasugo_screen.dart';
 import 'features/pasugo/screens/bulletin_board_screen.dart';
 import 'features/pasugo/screens/create_errand_screen.dart';
@@ -27,9 +29,36 @@ import 'features/pasugo/screens/rider_dashboard_screen.dart';
 import 'features/pasugo/admin/rider_management_screen.dart';
 import 'features/pasugo/screens/customer_errand_status_screen.dart';
 
+/// #12 bot protection: Firebase App Check (reCAPTCHA Enterprise on web).
+/// Site key is injected at build time so it never lands in git:
+///   flutter build web --dart-define=RECAPTCHA_SITE_KEY=<key>
+/// Until the key is set, activation is skipped (requests still work).
+Future<void> _activateAppCheck() async {
+  const siteKey = String.fromEnvironment('RECAPTCHA_SITE_KEY');
+  try {
+    if (kDebugMode) {
+      await FirebaseAppCheck.instance.activate(
+        androidProvider: AndroidProvider.debug,
+        appleProvider: AppleProvider.debug,
+      );
+    } else if (siteKey.isNotEmpty) {
+      await FirebaseAppCheck.instance.activate(
+        androidProvider: AndroidProvider.playIntegrity,
+        appleProvider: AppleProvider.appAttest,
+        webProvider: ReCaptchaEnterpriseProvider(siteKey),
+      );
+    } else {
+      debugPrint('AppCheck skipped: no RECAPTCHA_SITE_KEY defined');
+    }
+  } catch (e) {
+    debugPrint('AppCheck activation failed: $e');
+  }
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await _activateAppCheck();
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -43,10 +72,10 @@ void main() async {
       providers: [
         ChangeNotifierProvider.value(value: kioskSession),
         ChangeNotifierProvider.value(value: cartNotifier),
-        ChangeNotifierProvider(create: (_) => ErrandProvider()),
-        ChangeNotifierProvider(create: (_) => SessionProvider()),
-        ChangeNotifierProvider(create: (_) => ChatProvider()),
-        ChangeNotifierProvider(create: (_) => RiderProvider()),
+        ChangeNotifierProvider(create: (_) => Errands()),
+        ChangeNotifierProvider(create: (_) => Sessions()),
+        ChangeNotifierProvider(create: (_) => Chat()),
+        ChangeNotifierProvider(create: (_) => RiderAuth()),
       ],
       child: const LunaExpressApp(),
     ),
@@ -107,7 +136,8 @@ class LunaExpressApp extends StatelessWidget {
         '/pasugo/rider-login': (context) => const RiderLoginScreen(),
         '/pasugo/rider-dashboard': (context) => const RiderDashboardScreen(),
         '/pasugo/admin/riders': (context) => const RiderManagementScreen(),
-        '/pasugo/customer-status': (context) => const CustomerErrandStatusScreen(),
+        '/pasugo/customer-status': (context) =>
+            const CustomerErrandStatusScreen(),
       },
     );
   }

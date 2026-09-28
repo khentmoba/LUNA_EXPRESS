@@ -1,11 +1,15 @@
 import { initializeApp } from 'firebase-admin/app';
-import { defineString } from 'firebase-functions/params';
+import { defineSecret } from 'firebase-functions/params';
 
 initializeApp();
 
-// Define params at the entry point for faster discovery
-export const telegramToken = defineString('TELEGRAM_TOKEN');
-export const telegramChatIds = defineString('TELEGRAM_CHAT_ID');
+// Secrets (NOT params): values stay out of config/logs. Set via:
+//   firebase functions:secrets:set TELEGRAM_TOKEN
+//   firebase functions:secrets:set TELEGRAM_CHAT_ID
+//   firebase functions:secrets:set PAYMONGO_SECRET_KEY
+export const telegramToken = defineSecret('TELEGRAM_TOKEN');
+export const telegramChatIds = defineSecret('TELEGRAM_CHAT_ID');
+export const paymongoSecret = defineSecret('PAYMONGO_SECRET_KEY');
 
 export { dailySalesReport } from './reporting/daily_report';
 export { triggerManualReport } from './reporting/manual_report';
@@ -17,4 +21,3 @@ export { getSalesAnalytics } from './reporting/analytics';
 export { getLifetimeSalesReport } from './reporting/lifetime_report';
 export { createCheckoutSession } from './payments/create_checkout';
 export { paymongoWebhook } from './payments/webhook';
-

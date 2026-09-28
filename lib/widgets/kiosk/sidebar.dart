@@ -16,7 +16,12 @@ class KioskSidebar extends StatelessWidget {
           width: 120,
           decoration: BoxDecoration(
             color: KioskTheme.lunaCream,
-            border: Border(right: BorderSide(color: KioskTheme.lunaBrown.withOpacity(0.05), width: 1)),
+            border: Border(
+              right: BorderSide(
+                color: KioskTheme.lunaBrown.withOpacity(0.05),
+                width: 1,
+              ),
+            ),
           ),
           child: ListView.builder(
             padding: const EdgeInsets.symmetric(vertical: 20),
@@ -29,27 +34,33 @@ class KioskSidebar extends StatelessWidget {
                 onTap: () => session.setCategory(section.id),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
-                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 12,
+                  ),
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   decoration: BoxDecoration(
-                    color: isSelected ? KioskTheme.lunaBrown : Colors.transparent,
+                    color: isSelected
+                        ? KioskTheme.lunaBrown
+                        : Colors.transparent,
                     borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
                     boxShadow: isSelected ? KioskTheme.shadowPrimary : null,
                   ),
                   child: Column(
                     children: [
-                      Text(
-                        section.emoji,
-                        style: const TextStyle(fontSize: 32),
-                      ),
+                      Text(section.emoji, style: const TextStyle(fontSize: 32)),
                       const SizedBox(height: 8),
                       Text(
                         section.title.toUpperCase(),
                         textAlign: TextAlign.center,
                         style: GoogleFonts.outfit(
                           fontSize: 12,
-                          fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
-                          color: isSelected ? KioskTheme.textOnPrimary : KioskTheme.textMuted,
+                          fontWeight: isSelected
+                              ? FontWeight.w900
+                              : FontWeight.w600,
+                          color: isSelected
+                              ? KioskTheme.textOnPrimary
+                              : KioskTheme.textMuted,
                           letterSpacing: 1,
                         ),
                       ),

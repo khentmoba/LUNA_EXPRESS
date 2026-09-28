@@ -1,38 +1,32 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.aggregateDailySales = aggregateDailySales;
+exports.salesReportMessage = salesReportMessage;
 const firestore_1 = require("firebase-admin/firestore");
+const util_1 = require("../util");
+const telegram_api_1 = require("../telegram_api");
 async function aggregateDailySales(dateLabel) {
     const db = (0, firestore_1.getFirestore)();
-    const ordersRef = db.collection('orders');
-    const snapshot = await ordersRef
+    const snapshot = await db.collection('orders')
         .where('dateLabel', '==', dateLabel)
         .get();
-    if (snapshot.empty) {
+    if (snapshot.empty)
         return null;
-    }
     let totalSales = 0;
     let kioskSales = 0;
     let staffSales = 0;
-    let totalOrders = 0;
     const itemCounts = {};
     snapshot.forEach(doc => {
         const data = doc.data();
         const amount = data.totalAmount || 0;
         totalSales += amount;
-        totalOrders++;
-        if (data.entryType === 'Staff') {
+        if (data.entryType === 'Staff')
             staffSales += amount;
-        }
-        else {
+        else
             kioskSales += amount;
-        }
-        // Aggregate items
-        if (data.items && Array.isArray(data.items)) {
-            data.items.forEach((item) => {
-                const key = `${item.name}${item.variant ? ` (${item.variant})` : ''}`;
-                itemCounts[key] = (itemCounts[key] || 0) + (item.quantity || 1);
-            });
+        for (const item of data.items || []) {
+            const key = (0, util_1.itemKey)(item.name, item.variant);
+            itemCounts[key] = (itemCounts[key] || 0) + (item.quantity || 1);
         }
     });
     return {
@@ -40,10 +34,32 @@ async function aggregateDailySales(dateLabel) {
         totalSales,
         kioskSales,
         staffSales,
-        totalOrders,
+        totalOrders: snapshot.size,
         topItems: Object.entries(itemCounts)
             .map(([name, qty]) => ({ name, qty }))
             .sort((a, b) => b.qty - a.qty)
     };
+}
+/** Shared Telegram body for the daily and manual sales reports. */
+function salesReportMessage(report, opts) {
+    const itemsList = report.topItems
+        .slice(0, 10)
+        .map(i => `  • ${(0, telegram_api_1.escapeMd)(i.name)}: *${i.qty}*`)
+        .join('\n');
+    return [
+        `📊 *${opts.title} — ${(0, telegram_api_1.escapeMd)(report.date)}*`,
+        ...(opts.subtitle ? [opts.subtitle] : []),
+        '',
+        `💰 *Total Sales:* ₱*${(0, telegram_api_1.escapeMd)(report.totalSales.toString())}*`,
+        `🛒 *Total Orders:* ${report.totalOrders}`,
+        '',
+        `🏷 *Breakdown:*`,
+        `  • Kiosk Orders: ₱${(0, telegram_api_1.escapeMd)(report.kioskSales.toString())}`,
+        `  • Walk\\-in/Staff: ₱${(0, telegram_api_1.escapeMd)(report.staffSales.toString())}`,
+        '',
+        `🔥 *Top Items:*`,
+        itemsList,
+        ...(opts.footer ? ['', opts.footer] : []),
+    ].join('\n');
 }
 //# sourceMappingURL=aggregator.js.map

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/session.dart';
 import '../services/cart_notifier.dart';
+import '../services/order_service.dart';
 import '../widgets/kiosk/kiosk_theme.dart';
 import '../widgets/kiosk/juicy_feedback.dart';
+import '../widgets/report/report_widgets.dart';
 import 'menu_page.dart';
 import 'analytics_page.dart';
 import 'lifetime_analytics_page.dart';
@@ -89,9 +91,14 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.15),
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white.withOpacity(0.25), width: 1.5),
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.25),
+                    width: 1.5,
+                  ),
                 ),
-                child: const Center(child: Text('🌙', style: TextStyle(fontSize: 24))),
+                child: const Center(
+                  child: Text('🌙', style: TextStyle(fontSize: 24)),
+                ),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -121,7 +128,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
               JuicyFeedback(
                 onPressed: _logout,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 9,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
@@ -130,7 +140,11 @@ class _AdminDashboardState extends State<AdminDashboard> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.logout_rounded, color: Colors.white.withOpacity(0.9), size: 16),
+                      Icon(
+                        Icons.logout_rounded,
+                        color: Colors.white.withOpacity(0.9),
+                        size: 16,
+                      ),
                       const SizedBox(width: 6),
                       Text(
                         'Logout',
@@ -219,16 +233,16 @@ class _AdminDashboardState extends State<AdminDashboard> {
     );
   }
 
-  Widget _statCard(String label, String value, IconData icon, Color color, double cardWidth) {
-    return Container(
+  Widget _statCard(
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+    double cardWidth,
+  ) {
+    return WhiteCard(
       width: cardWidth,
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
-        border: Border.all(color: KioskTheme.lunaBrown.withOpacity(0.06)),
-        boxShadow: KioskTheme.shadowSm,
-      ),
+      pad: 18,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -242,10 +256,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
             child: Icon(icon, color: color, size: 22),
           ),
           const SizedBox(height: 14),
-          Text(
-            value,
-            style: KioskTheme.headerMedium.copyWith(fontSize: 24),
-          ),
+          Text(value, style: KioskTheme.headerMedium.copyWith(fontSize: 24)),
           const SizedBox(height: 2),
           Text(
             label,
@@ -291,7 +302,11 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 color: Colors.white.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
               ),
-              child: const Icon(Icons.storefront_rounded, color: Colors.white, size: 24),
+              child: const Icon(
+                Icons.storefront_rounded,
+                color: Colors.white,
+                size: 24,
+              ),
             ),
             const SizedBox(width: 16),
             Text(
@@ -304,7 +319,11 @@ class _AdminDashboardState extends State<AdminDashboard> {
               ),
             ),
             const SizedBox(width: 12),
-            const Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 22),
+            const Icon(
+              Icons.arrow_forward_rounded,
+              color: Colors.white,
+              size: 22,
+            ),
           ],
         ),
       ),
@@ -336,9 +355,14 @@ class _AdminDashboardState extends State<AdminDashboard> {
           if (orders.isEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('No orders yet today.', style: GoogleFonts.outfit(fontWeight: FontWeight.w700)),
+                content: Text(
+                  'No orders yet today.',
+                  style: GoogleFonts.outfit(fontWeight: FontWeight.w700),
+                ),
                 backgroundColor: KioskTheme.lunaBrown,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(KioskTheme.radiusMd)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
+                ),
               ),
             );
             return;
@@ -373,7 +397,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
           builder: (_, constraints) => Wrap(
             spacing: 14,
             runSpacing: 14,
-            children: actions.map((a) => _actionCard(a, (constraints.maxWidth - 14) / 2)).toList(),
+            children: actions
+                .map((a) => _actionCard(a, (constraints.maxWidth - 14) / 2))
+                .toList(),
           ),
         ),
         const SizedBox(height: 14),
@@ -411,7 +437,11 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 color: Colors.white.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
               ),
-              child: const Icon(Icons.leaderboard_rounded, color: Colors.white, size: 22),
+              child: const Icon(
+                Icons.leaderboard_rounded,
+                color: Colors.white,
+                size: 22,
+              ),
             ),
             const SizedBox(width: 14),
             Column(
@@ -437,7 +467,11 @@ class _AdminDashboardState extends State<AdminDashboard> {
               ],
             ),
             const Spacer(),
-            Icon(Icons.arrow_forward_rounded, color: Colors.white.withOpacity(0.8), size: 20),
+            Icon(
+              Icons.arrow_forward_rounded,
+              color: Colors.white.withOpacity(0.8),
+              size: 20,
+            ),
           ],
         ),
       ),
@@ -447,15 +481,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
   Widget _actionCard(_ActionItem item, double cardWidth) {
     return GestureDetector(
       onTap: item.onTap,
-      child: Container(
+      child: WhiteCard(
         width: cardWidth,
-        padding: const EdgeInsets.all(18),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
-          border: Border.all(color: KioskTheme.lunaBrown.withOpacity(0.06)),
-          boxShadow: KioskTheme.shadowSm,
-        ),
+        pad: 18,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -515,22 +543,18 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
   // ── Order Tile ─────────────────────────────────────────────
   Widget _buildOrderTile(Map<String, dynamic> order) {
-    final type = order['isWalkIn'] == true ? 'Walk-In' : (order['type'] as String);
+    final type = order['isWalkIn'] == true
+        ? 'Walk-In'
+        : (order['type'] as String);
     final isWalkIn = order['isWalkIn'] == true;
     final typeIcon = isWalkIn ? '🧾' : (type == 'Pickup' ? '🏪' : '🛵');
     final typeColor = isWalkIn
         ? KioskTheme.success
         : (type == 'Pickup' ? const Color(0xFFFF8C00) : KioskTheme.info);
 
-    return Container(
+    return WhiteCard(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
-        border: Border.all(color: KioskTheme.lunaBrown.withOpacity(0.06)),
-        boxShadow: KioskTheme.shadowSm,
-      ),
+      pad: 16,
       child: Row(
         children: [
           Container(
@@ -540,7 +564,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
               color: typeColor.withOpacity(0.1),
               borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
             ),
-            child: Center(child: Text(typeIcon, style: const TextStyle(fontSize: 24))),
+            child: Center(
+              child: Text(typeIcon, style: const TextStyle(fontSize: 24)),
+            ),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -555,10 +581,15 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     ),
                     const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
                       decoration: BoxDecoration(
                         color: typeColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
+                        borderRadius: BorderRadius.circular(
+                          KioskTheme.radiusFull,
+                        ),
                       ),
                       child: Text(
                         type,
@@ -581,7 +612,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
           ),
           Text(
             '₱${order['total']}',
-            style: KioskTheme.headerSmall.copyWith(fontSize: 20, color: KioskTheme.lunaBrown),
+            style: KioskTheme.headerSmall.copyWith(
+              fontSize: 20,
+              color: KioskTheme.lunaBrown,
+            ),
           ),
         ],
       ),
@@ -589,7 +623,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
   }
 
   // ── Orders Bottom Sheet ────────────────────────────────────
-  void _showOrdersSheet(BuildContext context, List<Map<String, dynamic>> orders) {
+  void _showOrdersSheet(
+    BuildContext context,
+    List<Map<String, dynamic>> orders,
+  ) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -598,7 +635,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
         height: MediaQuery.of(context).size.height * 0.75,
         decoration: const BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(KioskTheme.radiusXl)),
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(KioskTheme.radiusXl),
+          ),
         ),
         child: Column(
           children: [
@@ -621,10 +660,15 @@ class _AdminDashboardState extends State<AdminDashboard> {
                   ),
                   const Spacer(),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 5,
+                    ),
                     decoration: BoxDecoration(
                       color: KioskTheme.lunaBrown.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
+                      borderRadius: BorderRadius.circular(
+                        KioskTheme.radiusFull,
+                      ),
                     ),
                     child: Text(
                       '${orders.length} total',

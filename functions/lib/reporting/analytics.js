@@ -4,52 +4,31 @@ exports.getSalesAnalytics = void 0;
 const https_1 = require("firebase-functions/v2/https");
 const firestore_1 = require("firebase-admin/firestore");
 const firebase_functions_1 = require("firebase-functions");
+const util_1 = require("../util");
+const security_1 = require("../util/security");
 exports.getSalesAnalytics = (0, https_1.onCall)(async (request) => {
+    (0, security_1.requireStaff)(request);
     const db = (0, firestore_1.getFirestore)();
     try {
-        // Philippines is UTC+8
-        const nowUtc = new Date();
-        const phtTime = new Date(nowUtc.getTime() + 8 * 60 * 60 * 1000);
-        const dateLabel = `${phtTime.getUTCFullYear()}-${String(phtTime.getUTCMonth() + 1).padStart(2, '0')}-${String(phtTime.getUTCDate()).padStart(2, '0')}`;
+        const dateLabel = (0, util_1.phtDateLabel)();
         firebase_functions_1.logger.info(`Fetching sales analytics for dateLabel: ${dateLabel}`);
         const snapshot = await db.collection('orders')
             .where('dateLabel', '==', dateLabel)
             .get();
         let totalRevenue = 0;
-        let orderCount = 0;
-        let walkInRevenue = 0;
-        let walkInCount = 0;
-        let deliveryRevenue = 0;
-        let deliveryCount = 0;
-        let pickupRevenue = 0;
-        let pickupCount = 0;
+        const channel = (0, util_1.emptyChannel)();
         const itemCounts = {};
         for (const doc of snapshot.docs) {
             const data = doc.data();
             const totalAmount = data.totalAmount || 0;
-            const orderType = data.type || 'Pickup'; // 'Delivery', 'Pickup', 'Walk-In'
-            const items = data.items || [];
             totalRevenue += totalAmount;
-            orderCount += 1;
-            if (orderType === 'Walk-In') {
-                walkInRevenue += totalAmount;
-                walkInCount += 1;
-            }
-            else if (orderType === 'Delivery') {
-                deliveryRevenue += totalAmount;
-                deliveryCount += 1;
-            }
-            else {
-                // Pickup is default
-                pickupRevenue += totalAmount;
-                pickupCount += 1;
-            }
-            for (const item of items) {
+            (0, util_1.addToChannel)(channel, data.type || 'Pickup', totalAmount);
+            for (const item of data.items || []) {
                 const name = item.name || 'Unknown';
-                const qty = item.quantity || 1;
-                itemCounts[name] = (itemCounts[name] || 0) + qty;
+                itemCounts[name] = (itemCounts[name] || 0) + (item.quantity || 1);
             }
         }
+        const orderCount = snapshot.size;
         const topItems = Object.entries(itemCounts)
             .map(([name, count]) => ({ name, count }))
             .sort((a, b) => b.count - a.count)
@@ -61,16 +40,16 @@ exports.getSalesAnalytics = (0, https_1.onCall)(async (request) => {
             orderCount,
             averageOrderValue: orderCount > 0 ? Math.round(totalRevenue / orderCount) : 0,
             breakdown: {
-                walkIn: { revenue: walkInRevenue, count: walkInCount },
-                delivery: { revenue: deliveryRevenue, count: deliveryCount },
-                pickup: { revenue: pickupRevenue, count: pickupCount }
+                walkIn: channel.walkIn,
+                delivery: channel.delivery,
+                pickup: channel.pickup,
             },
             topItems
         };
     }
     catch (error) {
         firebase_functions_1.logger.error('Error getting sales analytics:', error);
-        throw new https_1.HttpsError('internal', error?.message || 'Failed to retrieve sales analytics');
+        throw new https_1.HttpsError('internal', 'Failed to retrieve sales analytics');
     }
 });
 //# sourceMappingURL=analytics.js.map

@@ -20,13 +20,19 @@ class KioskCartPage extends StatelessWidget {
         appBar: AppBar(
           title: Text(
             'MY ORDER',
-            style: KioskTheme.headerSmall.copyWith(letterSpacing: isMobile ? 1 : 2),
+            style: KioskTheme.headerSmall.copyWith(
+              letterSpacing: isMobile ? 1 : 2,
+            ),
           ),
           centerTitle: true,
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios_new_rounded, color: KioskTheme.lunaBrown, size: isMobile ? 18 : 24),
+            icon: Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: KioskTheme.lunaBrown,
+              size: isMobile ? 18 : 24,
+            ),
             onPressed: () => Navigator.pop(context),
           ),
           actions: [
@@ -38,7 +44,9 @@ class KioskCartPage extends StatelessWidget {
                   onPressed: () {
                     cartNotifier.clear();
                     kioskSession.reset();
-                    Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+                    Navigator.of(
+                      context,
+                    ).pushNamedAndRemoveUntil('/', (route) => false);
                   },
                   child: Text(
                     'CANCEL ORDER',
@@ -74,20 +82,26 @@ class KioskCartPage extends StatelessWidget {
                       Text(
                         'YOUR CART IS EMPTY',
                         textAlign: TextAlign.center,
-                        style: KioskTheme.headerMedium.copyWith(fontSize: isMobile ? 18 : 24),
+                        style: KioskTheme.headerMedium.copyWith(
+                          fontSize: isMobile ? 18 : 24,
+                        ),
                       ),
                       SizedBox(height: isMobile ? 24 : 32),
                       ElevatedButton(
                         onPressed: () => Navigator.pop(context),
                         style: KioskTheme.primaryButton.copyWith(
-                          padding: WidgetStateProperty.all(EdgeInsets.symmetric(
-                            horizontal: isMobile ? 32 : 40,
-                            vertical: isMobile ? 16 : 20,
-                          )),
+                          padding: WidgetStateProperty.all(
+                            EdgeInsets.symmetric(
+                              horizontal: isMobile ? 32 : 40,
+                              vertical: isMobile ? 16 : 20,
+                            ),
+                          ),
                         ),
                         child: Text(
                           'BROWSE MENU',
-                          style: GoogleFonts.outfit(fontWeight: FontWeight.w900),
+                          style: GoogleFonts.outfit(
+                            fontWeight: FontWeight.w900,
+                          ),
                         ),
                       ),
                     ],
@@ -103,7 +117,8 @@ class KioskCartPage extends StatelessWidget {
                       ? ListView.separated(
                           padding: const EdgeInsets.all(16),
                           itemCount: cartNotifier.items.length,
-                          separatorBuilder: (context, index) => const SizedBox(height: 12),
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 12),
                           itemBuilder: (context, index) {
                             final item = cartNotifier.items[index];
                             return Dismissible(
@@ -114,9 +129,15 @@ class KioskCartPage extends StatelessWidget {
                                 padding: const EdgeInsets.only(right: 20),
                                 decoration: BoxDecoration(
                                   color: KioskTheme.error,
-                                  borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
+                                  borderRadius: BorderRadius.circular(
+                                    KioskTheme.radiusMd,
+                                  ),
                                 ),
-                                child: const Icon(Icons.delete_forever_rounded, color: Colors.white, size: 28),
+                                child: const Icon(
+                                  Icons.delete_forever_rounded,
+                                  color: Colors.white,
+                                  size: 28,
+                                ),
                               ),
                               onDismissed: (_) {
                                 cartNotifier.remove(item.id);
@@ -127,12 +148,13 @@ class KioskCartPage extends StatelessWidget {
                         )
                       : GridView.builder(
                           padding: const EdgeInsets.all(32),
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 2.2,
-                            crossAxisSpacing: 24,
-                            mainAxisSpacing: 24,
-                          ),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 2.2,
+                                crossAxisSpacing: 24,
+                                mainAxisSpacing: 24,
+                              ),
                           itemCount: cartNotifier.items.length,
                           itemBuilder: (context, index) {
                             final item = cartNotifier.items[index];
@@ -145,11 +167,15 @@ class KioskCartPage extends StatelessWidget {
                     isMobile ? 20 : 60,
                     isMobile ? 24 : 40,
                     isMobile ? 20 : 60,
-                    isMobile ? (MediaQuery.of(context).padding.bottom + 20) : 60,
+                    isMobile
+                        ? (MediaQuery.of(context).padding.bottom + 20)
+                        : 60,
                   ),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(KioskTheme.radiusXl)),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(KioskTheme.radiusXl),
+                    ),
                     boxShadow: KioskTheme.shadowLg,
                   ),
                   child: Column(
@@ -160,11 +186,16 @@ class KioskCartPage extends StatelessWidget {
                         children: [
                           Text(
                             'TOTAL',
-                            style: KioskTheme.labelMedium.copyWith(fontSize: isMobile ? 14 : 18, color: KioskTheme.textMuted),
+                            style: KioskTheme.labelMedium.copyWith(
+                              fontSize: isMobile ? 14 : 18,
+                              color: KioskTheme.textMuted,
+                            ),
                           ),
                           Text(
                             '\u20B1${cartNotifier.totalPrice}',
-                            style: KioskTheme.displayMedium.copyWith(fontSize: isMobile ? 32 : 48),
+                            style: KioskTheme.displayMedium.copyWith(
+                              fontSize: isMobile ? 32 : 48,
+                            ),
                           ),
                         ],
                       ),
@@ -175,7 +206,10 @@ class KioskCartPage extends StatelessWidget {
                             _buildMobileAction(
                               context,
                               'CHECKOUT NOW',
-                              onPressed: () => Navigator.pushNamed(context, '/checkout_process'),
+                              onPressed: () => Navigator.pushNamed(
+                                context,
+                                '/checkout_process',
+                              ),
                               isPrimary: true,
                             ),
                             const SizedBox(height: 10),
@@ -195,13 +229,26 @@ class KioskCartPage extends StatelessWidget {
                                 child: OutlinedButton(
                                   onPressed: () => Navigator.pop(context),
                                   style: OutlinedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(vertical: 24),
-                                    side: BorderSide(color: KioskTheme.lunaBrown.withOpacity(0.2), width: 2),
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(KioskTheme.radiusFull)),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 24,
+                                    ),
+                                    side: BorderSide(
+                                      color: KioskTheme.lunaBrown.withOpacity(
+                                        0.2,
+                                      ),
+                                      width: 2,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        KioskTheme.radiusFull,
+                                      ),
+                                    ),
                                   ),
                                   child: Text(
                                     '+ ADD MORE ITEMS',
-                                    style: KioskTheme.titleLarge.copyWith(color: KioskTheme.lunaBrown),
+                                    style: KioskTheme.titleLarge.copyWith(
+                                      color: KioskTheme.lunaBrown,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -210,13 +257,21 @@ class KioskCartPage extends StatelessWidget {
                             Expanded(
                               child: JuicyFeedback(
                                 child: ElevatedButton(
-                                  onPressed: () => Navigator.pushNamed(context, '/checkout_process'),
+                                  onPressed: () => Navigator.pushNamed(
+                                    context,
+                                    '/checkout_process',
+                                  ),
                                   style: KioskTheme.primaryButton.copyWith(
-                                    padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 24)),
+                                    padding: WidgetStateProperty.all(
+                                      const EdgeInsets.symmetric(vertical: 24),
+                                    ),
                                   ),
                                   child: Text(
                                     'CHECKOUT NOW',
-                                    style: GoogleFonts.outfit(fontSize: 18, fontWeight: FontWeight.w900),
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w900,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -234,7 +289,12 @@ class KioskCartPage extends StatelessWidget {
     );
   }
 
-  Widget _buildMobileAction(BuildContext context, String label, {required VoidCallback onPressed, bool isPrimary = false}) {
+  Widget _buildMobileAction(
+    BuildContext context,
+    String label, {
+    required VoidCallback onPressed,
+    bool isPrimary = false,
+  }) {
     return JuicyFeedback(
       child: SizedBox(
         width: double.infinity,
@@ -242,17 +302,24 @@ class KioskCartPage extends StatelessWidget {
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
             backgroundColor: isPrimary ? KioskTheme.lunaBrown : Colors.white,
-            foregroundColor: isPrimary ? KioskTheme.textOnPrimary : KioskTheme.lunaBrown,
+            foregroundColor: isPrimary
+                ? KioskTheme.textOnPrimary
+                : KioskTheme.lunaBrown,
             padding: const EdgeInsets.symmetric(vertical: 18),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
-              side: isPrimary ? BorderSide.none : BorderSide(color: KioskTheme.lunaBrown.withOpacity(0.2)),
+              side: isPrimary
+                  ? BorderSide.none
+                  : BorderSide(color: KioskTheme.lunaBrown.withOpacity(0.2)),
             ),
             elevation: 0,
           ),
           child: Text(
             label,
-            style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w900),
+            style: GoogleFonts.outfit(
+              fontSize: 16,
+              fontWeight: FontWeight.w900,
+            ),
           ),
         ),
       ),
@@ -268,7 +335,9 @@ class KioskCartPage extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
             child: Image.asset(
-              item.imageUrl.isNotEmpty ? item.imageUrl : 'images/placeholder.png',
+              item.imageUrl.isNotEmpty
+                  ? item.imageUrl
+                  : 'images/placeholder.png',
               width: 60,
               height: 60,
               fit: BoxFit.cover,
@@ -314,7 +383,11 @@ class KioskCartPage extends StatelessWidget {
                   onPressed: () => cartNotifier.decrement(item.id),
                   child: const Padding(
                     padding: EdgeInsets.all(6.0),
-                    child: Icon(Icons.remove_rounded, size: 18, color: KioskTheme.lunaBrown),
+                    child: Icon(
+                      Icons.remove_rounded,
+                      size: 18,
+                      color: KioskTheme.lunaBrown,
+                    ),
                   ),
                 ),
                 Text(
@@ -325,7 +398,11 @@ class KioskCartPage extends StatelessWidget {
                   onPressed: () => cartNotifier.increment(item.id),
                   child: const Padding(
                     padding: EdgeInsets.all(6.0),
-                    child: Icon(Icons.add_rounded, size: 18, color: KioskTheme.lunaBrown),
+                    child: Icon(
+                      Icons.add_rounded,
+                      size: 18,
+                      color: KioskTheme.lunaBrown,
+                    ),
                   ),
                 ),
               ],
@@ -347,7 +424,9 @@ class KioskCartPage extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
             child: Image.asset(
-              item.imageUrl.isNotEmpty ? item.imageUrl : 'images/placeholder.png',
+              item.imageUrl.isNotEmpty
+                  ? item.imageUrl
+                  : 'images/placeholder.png',
               width: 100,
               height: 100,
               fit: BoxFit.cover,
@@ -392,7 +471,11 @@ class KioskCartPage extends StatelessWidget {
                   onPressed: () => cartNotifier.increment(item.id),
                   child: const Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: Icon(Icons.add_rounded, size: 28, color: KioskTheme.lunaBrown),
+                    child: Icon(
+                      Icons.add_rounded,
+                      size: 28,
+                      color: KioskTheme.lunaBrown,
+                    ),
                   ),
                 ),
                 Padding(
@@ -406,7 +489,11 @@ class KioskCartPage extends StatelessWidget {
                   onPressed: () => cartNotifier.decrement(item.id),
                   child: const Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: Icon(Icons.remove_rounded, size: 28, color: KioskTheme.lunaBrown),
+                    child: Icon(
+                      Icons.remove_rounded,
+                      size: 28,
+                      color: KioskTheme.lunaBrown,
+                    ),
                   ),
                 ),
               ],

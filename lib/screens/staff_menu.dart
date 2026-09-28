@@ -1,6 +1,7 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../services/functions.dart';
 import '../services/session.dart';
 import '../services/cart_notifier.dart';
 import '../widgets/kiosk/kiosk_theme.dart';
@@ -23,7 +24,9 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(KioskTheme.radiusXl)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(KioskTheme.radiusXl),
+        ),
       ),
       padding: const EdgeInsets.all(32),
       child: Column(
@@ -93,13 +96,21 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
           const SizedBox(height: 12),
           _buildActionItem(
             context,
-            icon: _isGenerating ? Icons.hourglass_empty_rounded : Icons.telegram_rounded,
-            title: _isGenerating ? 'GENERATING SUMMARY...' : 'TELEGRAM DAILY SUMMARY',
-            subtitle: _isGenerating ? 'Sending report...' : 'Send today\'s sales metrics to Telegram',
+            icon: _isGenerating
+                ? Icons.hourglass_empty_rounded
+                : Icons.telegram_rounded,
+            title: _isGenerating
+                ? 'GENERATING SUMMARY...'
+                : 'TELEGRAM DAILY SUMMARY',
+            subtitle: _isGenerating
+                ? 'Sending report...'
+                : 'Send today\'s sales metrics to Telegram',
             color: _isGenerating ? KioskTheme.textMuted : KioskTheme.info,
-            onTap: _isGenerating ? () {} : () {
-              _triggerManualReport(context);
-            },
+            onTap: _isGenerating
+                ? () {}
+                : () {
+                    _triggerManualReport(context);
+                  },
           ),
           const SizedBox(height: 12),
           _buildActionItem(
@@ -115,7 +126,10 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
               cartNotifier.clear();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('STAFF LOGGED OUT', style: GoogleFonts.outfit(fontWeight: FontWeight.w900)),
+                  content: Text(
+                    'STAFF LOGGED OUT',
+                    style: GoogleFonts.outfit(fontWeight: FontWeight.w900),
+                  ),
                   backgroundColor: KioskTheme.lunaBrown,
                 ),
               );
@@ -191,7 +205,10 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
                 children: [
                   Text(
                     title,
-                    style: KioskTheme.labelLarge.copyWith(color: color, fontSize: 13),
+                    style: KioskTheme.labelLarge.copyWith(
+                      color: color,
+                      fontSize: 13,
+                    ),
                   ),
                   Text(
                     subtitle,
@@ -200,7 +217,11 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
                 ],
               ),
             ),
-            Icon(Icons.arrow_forward_ios_rounded, size: 14, color: color.withOpacity(0.5)),
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 14,
+              color: color.withOpacity(0.5),
+            ),
           ],
         ),
       ),
@@ -210,14 +231,7 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
   Future<void> _triggerManualReport(BuildContext context) async {
     setState(() => _isGenerating = true);
     try {
-      final HttpsCallable callable = FirebaseFunctions.instanceFor(region: 'us-central1')
-          .httpsCallable(
-            'triggerManualReport',
-            options: HttpsCallableOptions(timeout: const Duration(seconds: 30)),
-          );
-
-      final HttpsCallableResult result = await callable.call({});
-      final data = result.data as Map<dynamic, dynamic>;
+      final data = await callFn('triggerManualReport', {}, 30);
       final bool isSuccess = data['success'] == true;
       final String msg = data['message'] ?? 'No message';
 
@@ -226,7 +240,10 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
           Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('SALES REPORT SENT TO TELEGRAM!', style: GoogleFonts.outfit(fontWeight: FontWeight.w900)),
+              content: Text(
+                'SALES REPORT SENT TO TELEGRAM!',
+                style: GoogleFonts.outfit(fontWeight: FontWeight.w900),
+              ),
               backgroundColor: KioskTheme.success,
             ),
           );
@@ -234,7 +251,10 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
           setState(() => _isGenerating = false);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('ERROR: $msg', style: GoogleFonts.outfit(fontWeight: FontWeight.w900)),
+              content: Text(
+                'ERROR: $msg',
+                style: GoogleFonts.outfit(fontWeight: FontWeight.w900),
+              ),
               backgroundColor: KioskTheme.warning,
             ),
           );
@@ -251,7 +271,10 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
         }
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('CRASH: $errorMessage', style: GoogleFonts.outfit(fontWeight: FontWeight.w900)),
+            content: Text(
+              'CRASH: $errorMessage',
+              style: GoogleFonts.outfit(fontWeight: FontWeight.w900),
+            ),
             backgroundColor: KioskTheme.error,
           ),
         );
