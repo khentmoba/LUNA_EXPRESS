@@ -146,10 +146,11 @@ class _ChatScreenState extends State<ChatScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.chat_bubble_outline,
-                            size: 48,
-                            color: theme.colorScheme.onSurface
-                                .withOpacity(0.3)),
+                        Icon(
+                          Icons.chat_bubble_outline,
+                          size: 48,
+                          color: theme.colorScheme.onSurface.withOpacity(0.3),
+                        ),
                         const SizedBox(height: 16),
                         Text(
                           'No messages yet',
@@ -159,8 +160,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         Text(
                           'Send a message to start coordinating',
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface
-                                .withOpacity(0.6),
+                            color: theme.colorScheme.onSurface.withOpacity(0.6),
                           ),
                         ),
                       ],
@@ -203,18 +203,18 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.lock,
-                          size: 16,
-                          color: theme.colorScheme.onSurface
-                              .withOpacity(0.6)),
+                      Icon(
+                        Icons.lock,
+                        size: 16,
+                        color: theme.colorScheme.onSurface.withOpacity(0.6),
+                      ),
                       const SizedBox(width: 8),
                       Text(
                         provider.isSessionCompleted
                             ? 'Chat closed (completed)'
                             : 'Chat closed',
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface
-                              .withOpacity(0.6),
+                          color: theme.colorScheme.onSurface.withOpacity(0.6),
                         ),
                       ),
                     ],

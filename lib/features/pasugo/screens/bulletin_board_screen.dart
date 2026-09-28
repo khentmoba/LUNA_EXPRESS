@@ -97,9 +97,11 @@ class _BulletinBoardScreenState extends State<BulletinBoardScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.error_outline,
-                      size: 48,
-                      color: theme.colorScheme.error),
+                  Icon(
+                    Icons.error_outline,
+                    size: 48,
+                    color: theme.colorScheme.error,
+                  ),
                   const SizedBox(height: 16),
                   Text(
                     'Something went wrong',
@@ -128,14 +130,13 @@ class _BulletinBoardScreenState extends State<BulletinBoardScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.inbox,
-                      size: 64,
-                      color: theme.colorScheme.onSurface.withOpacity(0.3)),
-                  const SizedBox(height: 16),
-                  Text(
-                    'No errands yet',
-                    style: theme.textTheme.titleMedium,
+                  Icon(
+                    Icons.inbox,
+                    size: 64,
+                    color: theme.colorScheme.onSurface.withOpacity(0.3),
                   ),
+                  const SizedBox(height: 16),
+                  Text('No errands yet', style: theme.textTheme.titleMedium),
                   const SizedBox(height: 8),
                   Text(
                     'Be the first to post an errand!',
@@ -181,8 +182,7 @@ class _BulletinBoardScreenState extends State<BulletinBoardScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            Navigator.pushNamed(context, '/pasugo/create'),
+        onPressed: () => Navigator.pushNamed(context, '/pasugo/create'),
         child: const Icon(Icons.add),
       ),
     );

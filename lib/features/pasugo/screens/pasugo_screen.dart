@@ -48,9 +48,7 @@ class _PasugoScreenState extends State<PasugoScreen> {
       if (found) {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (_) => const CustomerErrandStatusScreen(),
-          ),
+          MaterialPageRoute(builder: (_) => const CustomerErrandStatusScreen()),
         );
       } else {
         _showSnackBar('No errands found for this phone number');
@@ -61,9 +59,9 @@ class _PasugoScreenState extends State<PasugoScreen> {
   }
 
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -71,10 +69,7 @@ class _PasugoScreenState extends State<PasugoScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Pasugo'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Pasugo'), centerTitle: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -109,9 +104,7 @@ class _PasugoScreenState extends State<PasugoScreen> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => const CreateErrandScreen(),
-                  ),
+                  MaterialPageRoute(builder: (_) => const CreateErrandScreen()),
                 );
               },
               icon: const Icon(Icons.post_add),

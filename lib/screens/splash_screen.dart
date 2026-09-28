@@ -14,7 +14,8 @@ class KioskSplashScreen extends StatefulWidget {
   State<KioskSplashScreen> createState() => _KioskSplashScreenState();
 }
 
-class _KioskSplashScreenState extends State<KioskSplashScreen> with TickerProviderStateMixin {
+class _KioskSplashScreenState extends State<KioskSplashScreen>
+    with TickerProviderStateMixin {
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
   late AnimationController _floatController;
@@ -51,9 +52,10 @@ class _KioskSplashScreenState extends State<KioskSplashScreen> with TickerProvid
       vsync: this,
       duration: const Duration(milliseconds: 2000),
     )..repeat(reverse: true);
-    _floatAnimation = Tween<Offset>(begin: Offset.zero, end: const Offset(0, 10)).animate(
-      CurvedAnimation(parent: _floatController, curve: Curves.easeInOut),
-    );
+    _floatAnimation =
+        Tween<Offset>(begin: Offset.zero, end: const Offset(0, 10)).animate(
+          CurvedAnimation(parent: _floatController, curve: Curves.easeInOut),
+        );
 
     _fadeController = AnimationController(
       vsync: this,
@@ -84,9 +86,8 @@ class _KioskSplashScreenState extends State<KioskSplashScreen> with TickerProvid
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => session.isStaff
-            ? const AdminDashboard()
-            : const KioskMenuPage(),
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            session.isStaff ? const AdminDashboard() : const KioskMenuPage(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },
@@ -136,12 +137,17 @@ class _KioskSplashScreenState extends State<KioskSplashScreen> with TickerProvid
                             color: KioskTheme.lunaBrown.withOpacity(0.08),
                             blurRadius: 40,
                             spreadRadius: 5,
-                          )
+                          ),
                         ],
                       ),
                       child: Image.asset(
                         'images/luna_logo.png',
-                        errorBuilder: (context, error, stackTrace) => const Icon(Icons.nightlight_round, size: 100, color: KioskTheme.lunaBrown),
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(
+                              Icons.nightlight_round,
+                              size: 100,
+                              color: KioskTheme.lunaBrown,
+                            ),
                       ),
                     ),
                   ),
@@ -190,7 +196,9 @@ class _KioskSplashScreenState extends State<KioskSplashScreen> with TickerProvid
               behavior: HitTestBehavior.translucent,
               onTap: () {
                 final now = DateTime.now();
-                if (_lastTapTime != null && now.difference(_lastTapTime!) < const Duration(milliseconds: 500)) {
+                if (_lastTapTime != null &&
+                    now.difference(_lastTapTime!) <
+                        const Duration(milliseconds: 500)) {
                   _tapCount++;
                 } else {
                   _tapCount = 1;
@@ -233,7 +241,10 @@ class _KioskSplashScreenState extends State<KioskSplashScreen> with TickerProvid
           animation: _dotsController,
           builder: (context, child) {
             final double offset = (index * 0.2);
-            final double value = (_dotsController.value - offset).clamp(0.0, 1.0);
+            final double value = (_dotsController.value - offset).clamp(
+              0.0,
+              1.0,
+            );
             final double opacity = 1.0 - value;
 
             return Container(
@@ -242,7 +253,9 @@ class _KioskSplashScreenState extends State<KioskSplashScreen> with TickerProvid
               margin: const EdgeInsets.symmetric(horizontal: 4),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: KioskTheme.textPrimary.withOpacity(opacity.clamp(0.2, 1.0)),
+                color: KioskTheme.textPrimary.withOpacity(
+                  opacity.clamp(0.2, 1.0),
+                ),
               ),
             );
           },

@@ -243,9 +243,15 @@ class KioskTheme {
     backgroundColor: lunaBrown,
     foregroundColor: textOnPrimary,
     padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radiusFull)),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(radiusFull),
+    ),
     elevation: 0,
-    textStyle: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 18, letterSpacing: 1),
+    textStyle: GoogleFonts.outfit(
+      fontWeight: FontWeight.w900,
+      fontSize: 18,
+      letterSpacing: 1,
+    ),
     shadowColor: lunaBrown.withOpacity(0.3),
   );
 
@@ -289,9 +295,6 @@ class KioskTheme {
   );
 
   // ─── Divider ──────────────────────────────────────────────────
-  static Widget divider({double opacity = 0.1}) => Divider(
-    color: lunaBrown.withOpacity(opacity),
-    thickness: 1,
-    height: 1,
-  );
+  static Widget divider({double opacity = 0.1}) =>
+      Divider(color: lunaBrown.withOpacity(opacity), thickness: 1, height: 1);
 }

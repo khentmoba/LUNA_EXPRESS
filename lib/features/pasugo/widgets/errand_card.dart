@@ -44,8 +44,10 @@ class ErrandCard extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: _statusColor.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(12),
@@ -78,9 +80,11 @@ class ErrandCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.access_time,
-                        size: 14,
-                        color: theme.colorScheme.onSurface.withOpacity(0.5)),
+                    Icon(
+                      Icons.access_time,
+                      size: 14,
+                      color: theme.colorScheme.onSurface.withOpacity(0.5),
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       ago,
@@ -90,9 +94,11 @@ class ErrandCard extends StatelessWidget {
                     ),
                     if (errand.locationPin != null) ...[
                       const SizedBox(width: 12),
-                      Icon(Icons.location_on,
-                          size: 14,
-                          color: theme.colorScheme.onSurface.withOpacity(0.5)),
+                      Icon(
+                        Icons.location_on,
+                        size: 14,
+                        color: theme.colorScheme.onSurface.withOpacity(0.5),
+                      ),
                       const SizedBox(width: 2),
                       Text(
                         'Has pin',
@@ -134,5 +140,4 @@ class ErrandCard extends StatelessWidget {
         return Colors.grey;
     }
   }
-
 }

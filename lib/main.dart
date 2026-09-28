@@ -136,7 +136,8 @@ class LunaExpressApp extends StatelessWidget {
         '/pasugo/rider-login': (context) => const RiderLoginScreen(),
         '/pasugo/rider-dashboard': (context) => const RiderDashboardScreen(),
         '/pasugo/admin/riders': (context) => const RiderManagementScreen(),
-        '/pasugo/customer-status': (context) => const CustomerErrandStatusScreen(),
+        '/pasugo/customer-status': (context) =>
+            const CustomerErrandStatusScreen(),
       },
     );
   }

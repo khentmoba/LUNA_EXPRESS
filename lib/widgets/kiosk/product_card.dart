@@ -8,11 +8,7 @@ class KioskProductCard extends StatefulWidget {
   final MenuItem item;
   final VoidCallback onTap;
 
-  const KioskProductCard({
-    super.key,
-    required this.item,
-    required this.onTap,
-  });
+  const KioskProductCard({super.key, required this.item, required this.onTap});
 
   @override
   State<KioskProductCard> createState() => _KioskProductCardState();
@@ -42,21 +38,38 @@ class _KioskProductCardState extends State<KioskProductCard> {
                           ? Image.network(
                               widget.item.imageUrl,
                               fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) => Container(
-                                color: KioskTheme.lunaLightTan.withOpacity(0.3),
-                                child: Icon(Icons.fastfood, size: isMobile ? 32 : 40, color: KioskTheme.textMuted),
-                              ),
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Container(
+                                    color: KioskTheme.lunaLightTan.withOpacity(
+                                      0.3,
+                                    ),
+                                    child: Icon(
+                                      Icons.fastfood,
+                                      size: isMobile ? 32 : 40,
+                                      color: KioskTheme.textMuted,
+                                    ),
+                                  ),
                             )
                           : Image.asset(
-                              widget.item.imageUrl.isNotEmpty ? widget.item.imageUrl : 'images/placeholder.png',
+                              widget.item.imageUrl.isNotEmpty
+                                  ? widget.item.imageUrl
+                                  : 'images/placeholder.png',
                               fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) => Container(
-                                color: KioskTheme.lunaLightTan.withOpacity(0.3),
-                                child: Icon(Icons.fastfood, size: isMobile ? 32 : 40, color: KioskTheme.textMuted),
-                              ),
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Container(
+                                    color: KioskTheme.lunaLightTan.withOpacity(
+                                      0.3,
+                                    ),
+                                    child: Icon(
+                                      Icons.fastfood,
+                                      size: isMobile ? 32 : 40,
+                                      color: KioskTheme.textMuted,
+                                    ),
+                                  ),
                             ),
                     ),
-                    if (widget.item.isBuy1Take1 || widget.item.promoLabel != null)
+                    if (widget.item.isBuy1Take1 ||
+                        widget.item.promoLabel != null)
                       Positioned(
                         top: isMobile ? 8 : 12,
                         left: isMobile ? 8 : 12,
@@ -67,7 +80,9 @@ class _KioskProductCardState extends State<KioskProductCard> {
                           ),
                           decoration: BoxDecoration(
                             color: KioskTheme.lunaBrown,
-                            borderRadius: BorderRadius.circular(isMobile ? 8 : 12),
+                            borderRadius: BorderRadius.circular(
+                              isMobile ? 8 : 12,
+                            ),
                             boxShadow: KioskTheme.shadowSm,
                           ),
                           child: Text(
@@ -114,7 +129,9 @@ class _KioskProductCardState extends State<KioskProductCard> {
                           ),
                           decoration: BoxDecoration(
                             color: KioskTheme.lunaBrown.withOpacity(0.05),
-                            borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
+                            borderRadius: BorderRadius.circular(
+                              KioskTheme.radiusSm,
+                            ),
                           ),
                           child: Text(
                             '\u20B1${widget.item.displayPrice}',

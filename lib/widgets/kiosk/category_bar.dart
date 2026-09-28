@@ -16,7 +16,12 @@ class KioskCategoryBar extends StatelessWidget {
           height: 80,
           decoration: BoxDecoration(
             color: KioskTheme.lunaCream,
-            border: Border(bottom: BorderSide(color: KioskTheme.lunaBrown.withOpacity(0.05), width: 1)),
+            border: Border(
+              bottom: BorderSide(
+                color: KioskTheme.lunaBrown.withOpacity(0.05),
+                width: 1,
+              ),
+            ),
           ),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -31,26 +36,32 @@ class KioskCategoryBar extends StatelessWidget {
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
                   margin: const EdgeInsets.symmetric(horizontal: 6),
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
-                    color: isSelected ? KioskTheme.lunaBrown : Colors.transparent,
+                    color: isSelected
+                        ? KioskTheme.lunaBrown
+                        : Colors.transparent,
                     borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
                     boxShadow: isSelected ? KioskTheme.shadowPrimary : null,
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        section.emoji,
-                        style: const TextStyle(fontSize: 20),
-                      ),
+                      Text(section.emoji, style: const TextStyle(fontSize: 20)),
                       const SizedBox(width: 8),
                       Text(
                         section.title.toUpperCase(),
                         style: GoogleFonts.outfit(
                           fontSize: 13,
-                          fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
-                          color: isSelected ? KioskTheme.textOnPrimary : KioskTheme.textMuted,
+                          fontWeight: isSelected
+                              ? FontWeight.w900
+                              : FontWeight.w700,
+                          color: isSelected
+                              ? KioskTheme.textOnPrimary
+                              : KioskTheme.textMuted,
                           letterSpacing: 1,
                         ),
                       ),

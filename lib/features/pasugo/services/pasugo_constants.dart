@@ -26,7 +26,8 @@ class PasugoErrorMessages {
   static const String pinRequired = 'PIN is required';
   static const String pinInvalid = 'PIN must be exactly 4 digits';
   static const String messageRequired = 'Message is required';
-  static const String messageTooShort = 'Message must be at least 10 characters';
+  static const String messageTooShort =
+      'Message must be at least 10 characters';
   static const String messageTooLong = 'Message must be under 500 characters';
   static const String errandNotFound = 'Errand not found';
   static const String errandNotAvailable = 'This errand is no longer available';

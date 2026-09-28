@@ -112,8 +112,9 @@ class _RiderRegistrationScreenState extends State<RiderRegistrationScreen> {
                   prefixIcon: Icon(Icons.home),
                   border: OutlineInputBorder(),
                 ),
-                validator: (v) =>
-                    v == null || v.trim().isEmpty ? 'Address is required' : null,
+                validator: (v) => v == null || v.trim().isEmpty
+                    ? 'Address is required'
+                    : null,
                 maxLength: 500,
                 textCapitalization: TextCapitalization.sentences,
               ),
@@ -163,7 +164,9 @@ class _RiderRegistrationScreenState extends State<RiderRegistrationScreen> {
                       padding: const EdgeInsets.only(bottom: 16),
                       child: Text(
                         provider.authError!,
-                        style: TextStyle(color: Theme.of(context).colorScheme.error),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
                       ),
                     );
                   }

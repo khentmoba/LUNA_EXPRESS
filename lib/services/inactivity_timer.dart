@@ -68,7 +68,9 @@ class _InactivityWatcherState extends State<InactivityWatcher> {
           builder: (context, setDialogState) {
             return AlertDialog(
               backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(32),
+              ),
               title: Center(
                 child: Text(
                   'ARE YOU STILL THERE?',
@@ -127,7 +129,10 @@ class _InactivityWatcherState extends State<InactivityWatcher> {
                       _resetInactivityTimer();
                     },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 40,
+                        vertical: 16,
+                      ),
                       decoration: BoxDecoration(
                         color: KioskTheme.lunaBrown,
                         borderRadius: BorderRadius.circular(50),

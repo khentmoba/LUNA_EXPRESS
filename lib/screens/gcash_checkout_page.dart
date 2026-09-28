@@ -125,12 +125,17 @@ class _GCashCheckoutPageState extends State<GCashCheckoutPage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.error_outline_rounded,
-                        size: 64, color: KioskTheme.error),
+                    const Icon(
+                      Icons.error_outline_rounded,
+                      size: 64,
+                      color: KioskTheme.error,
+                    ),
                     const SizedBox(height: 16),
                     Text(
                       'Payment Error',
-                      style: KioskTheme.headerSmall.copyWith(color: KioskTheme.error),
+                      style: KioskTheme.headerSmall.copyWith(
+                        color: KioskTheme.error,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Text(
@@ -161,7 +166,9 @@ class _GCashCheckoutPageState extends State<GCashCheckoutPage> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          CircularProgressIndicator(color: KioskTheme.lunaBrown),
+                          CircularProgressIndicator(
+                            color: KioskTheme.lunaBrown,
+                          ),
                           SizedBox(height: 16),
                           Text(
                             'Connecting to GCash...',

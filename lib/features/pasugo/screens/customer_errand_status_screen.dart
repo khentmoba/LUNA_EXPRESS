@@ -12,10 +12,7 @@ class CustomerErrandStatusScreen extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('My Errands'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('My Errands'), centerTitle: true),
       body: Consumer<Errands>(
         builder: (context, provider, _) {
           if (provider.isLookingUp) {
@@ -27,14 +24,13 @@ class CustomerErrandStatusScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.inbox,
-                      size: 64,
-                      color: theme.colorScheme.onSurface.withOpacity(0.3)),
-                  const SizedBox(height: 16),
-                  Text(
-                    'No errands found',
-                    style: theme.textTheme.titleMedium,
+                  Icon(
+                    Icons.inbox,
+                    size: 64,
+                    color: theme.colorScheme.onSurface.withOpacity(0.3),
                   ),
+                  const SizedBox(height: 16),
+                  Text('No errands found', style: theme.textTheme.titleMedium),
                   const SizedBox(height: 8),
                   FilledButton.icon(
                     onPressed: () =>
@@ -61,7 +57,10 @@ class CustomerErrandStatusScreen extends StatelessWidget {
   }
 
   Widget _buildErrandCard(
-      BuildContext context, Errand errand, Errands provider) {
+    BuildContext context,
+    Errand errand,
+    Errands provider,
+  ) {
     final theme = Theme.of(context);
 
     IconData statusIcon;
@@ -87,10 +86,7 @@ class CustomerErrandStatusScreen extends StatelessWidget {
           Navigator.pushNamed(
             context,
             '/pasugo/chat',
-            arguments: {
-              'errandId': errand.id,
-              'isRider': false,
-            },
+            arguments: {'errandId': errand.id, 'isRider': false},
           );
         };
         break;
@@ -103,10 +99,7 @@ class CustomerErrandStatusScreen extends StatelessWidget {
           Navigator.pushNamed(
             context,
             '/pasugo/chat',
-            arguments: {
-              'errandId': errand.id,
-              'isRider': false,
-            },
+            arguments: {'errandId': errand.id, 'isRider': false},
           );
         };
         break;
@@ -175,7 +168,10 @@ class CustomerErrandStatusScreen extends StatelessWidget {
   }
 
   Future<void> _cancelErrand(
-      BuildContext context, Errand errand, Errands provider) async {
+    BuildContext context,
+    Errand errand,
+    Errands provider,
+  ) async {
     if (errand.id == null) return;
 
     final confirmed = await showDialog<bool>(

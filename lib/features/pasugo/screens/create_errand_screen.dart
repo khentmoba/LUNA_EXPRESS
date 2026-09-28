@@ -121,10 +121,7 @@ class _CreateErrandScreenState extends State<CreateErrandScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Post an Errand'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Post an Errand'), centerTitle: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -256,8 +253,9 @@ class _CreateErrandScreenState extends State<CreateErrandScreen> {
                             ),
                           )
                         : const Icon(Icons.send),
-                    label:
-                        Text(provider.isCreating ? 'Posting...' : 'Post Errand'),
+                    label: Text(
+                      provider.isCreating ? 'Posting...' : 'Post Errand',
+                    ),
                     style: FilledButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),

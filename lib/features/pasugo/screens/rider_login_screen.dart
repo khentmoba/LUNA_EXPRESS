@@ -41,7 +41,7 @@ class _RiderLoginScreenState extends State<RiderLoginScreen> {
       _showStatusDialog(
         'Pending Approval',
         'Your account is still pending approval from an admin. '
-        'Please wait for verification.',
+            'Please wait for verification.',
       );
     } else if (result.status == RiderStatus.rejected) {
       _showStatusDialog(
@@ -70,10 +70,7 @@ class _RiderLoginScreenState extends State<RiderLoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Rider Login'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Rider Login'), centerTitle: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -120,7 +117,8 @@ class _RiderLoginScreenState extends State<RiderLoginScreen> {
                       child: Text(
                         provider.authError!,
                         style: TextStyle(
-                            color: Theme.of(context).colorScheme.error),
+                          color: Theme.of(context).colorScheme.error,
+                        ),
                       ),
                     );
                   }

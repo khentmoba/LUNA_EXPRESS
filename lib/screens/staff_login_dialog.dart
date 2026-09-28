@@ -71,11 +71,16 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
               children: [
                 const Icon(Icons.verified_user_rounded, color: Colors.white),
                 const SizedBox(width: 12),
-                Text('Welcome, $actualUser!', style: GoogleFonts.outfit(fontWeight: FontWeight.w700)),
+                Text(
+                  'Welcome, $actualUser!',
+                  style: GoogleFonts.outfit(fontWeight: FontWeight.w700),
+                ),
               ],
             ),
             backgroundColor: KioskTheme.success,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(KioskTheme.radiusMd)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
+            ),
           ),
         );
 
@@ -86,7 +91,9 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
         );
       } else {
         setState(() {
-          _error = data['message'] ?? 'Incorrect username or password. Please try again.';
+          _error =
+              data['message'] ??
+              'Incorrect username or password. Please try again.';
           _loading = false;
         });
       }
@@ -111,7 +118,9 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(KioskTheme.radiusXl)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(KioskTheme.radiusXl),
+      ),
       elevation: 24,
       child: Container(
         constraints: const BoxConstraints(maxWidth: 400),
@@ -128,7 +137,11 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                   shape: BoxShape.circle,
                 ),
                 child: const Center(
-                  child: Icon(Icons.lock_outline_rounded, color: KioskTheme.lunaBrown, size: 36),
+                  child: Icon(
+                    Icons.lock_outline_rounded,
+                    color: KioskTheme.lunaBrown,
+                    size: 36,
+                  ),
                 ),
               ),
               const SizedBox(height: 24),
@@ -144,20 +157,33 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
               const SizedBox(height: 24),
               if (_error != null) ...[
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                   decoration: BoxDecoration(
                     color: KioskTheme.error.withOpacity(0.05),
                     borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
-                    border: Border.all(color: KioskTheme.error.withOpacity(0.1)),
+                    border: Border.all(
+                      color: KioskTheme.error.withOpacity(0.1),
+                    ),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.error_outline_rounded, color: KioskTheme.error, size: 20),
+                      const Icon(
+                        Icons.error_outline_rounded,
+                        color: KioskTheme.error,
+                        size: 20,
+                      ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           _error!,
-                          style: GoogleFonts.outfit(color: KioskTheme.error, fontWeight: FontWeight.w600, fontSize: 13),
+                          style: GoogleFonts.outfit(
+                            color: KioskTheme.error,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                          ),
                         ),
                       ),
                     ],
@@ -168,12 +194,18 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('USERNAME', style: KioskTheme.labelLarge.copyWith(fontSize: 12)),
+                  Text(
+                    'USERNAME',
+                    style: KioskTheme.labelLarge.copyWith(fontSize: 12),
+                  ),
                   const SizedBox(height: 8),
                   TextField(
                     controller: _userCtrl,
                     textInputAction: TextInputAction.next,
-                    style: GoogleFonts.outfit(fontWeight: FontWeight.w600, color: KioskTheme.textPrimary),
+                    style: GoogleFonts.outfit(
+                      fontWeight: FontWeight.w600,
+                      color: KioskTheme.textPrimary,
+                    ),
                     decoration: KioskTheme.inputDecoration(
                       hint: 'e.g. staff1',
                       icon: Icons.person_outline_rounded,
@@ -185,22 +217,36 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('PASSWORD', style: KioskTheme.labelLarge.copyWith(fontSize: 12)),
+                  Text(
+                    'PASSWORD',
+                    style: KioskTheme.labelLarge.copyWith(fontSize: 12),
+                  ),
                   const SizedBox(height: 8),
                   TextField(
                     controller: _passCtrl,
                     obscureText: _obscure,
                     onSubmitted: (_) => _login(),
-                    style: GoogleFonts.outfit(fontWeight: FontWeight.w600, color: KioskTheme.textPrimary),
-                    decoration: KioskTheme.inputDecoration(
-                      hint: '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022',
-                      icon: Icons.lock_open_rounded,
-                    ).copyWith(
-                      suffixIcon: GestureDetector(
-                        onTap: () => setState(() => _obscure = !_obscure),
-                        child: Icon(_obscure ? Icons.visibility_off_rounded : Icons.visibility_rounded, color: KioskTheme.lunaBrown, size: 20),
-                      ),
+                    style: GoogleFonts.outfit(
+                      fontWeight: FontWeight.w600,
+                      color: KioskTheme.textPrimary,
                     ),
+                    decoration:
+                        KioskTheme.inputDecoration(
+                          hint:
+                              '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022',
+                          icon: Icons.lock_open_rounded,
+                        ).copyWith(
+                          suffixIcon: GestureDetector(
+                            onTap: () => setState(() => _obscure = !_obscure),
+                            child: Icon(
+                              _obscure
+                                  ? Icons.visibility_off_rounded
+                                  : Icons.visibility_rounded,
+                              color: KioskTheme.lunaBrown,
+                              size: 20,
+                            ),
+                          ),
+                        ),
                   ),
                 ],
               ),
@@ -214,7 +260,9 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                         padding: const EdgeInsets.symmetric(vertical: 18),
                         decoration: BoxDecoration(
                           color: Colors.grey[100],
-                          borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
+                          borderRadius: BorderRadius.circular(
+                            KioskTheme.radiusFull,
+                          ),
                         ),
                         child: Center(
                           child: Text(
@@ -233,7 +281,9 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                         padding: const EdgeInsets.symmetric(vertical: 18),
                         decoration: BoxDecoration(
                           color: KioskTheme.lunaBrown,
-                          borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
+                          borderRadius: BorderRadius.circular(
+                            KioskTheme.radiusFull,
+                          ),
                           boxShadow: KioskTheme.shadowSm,
                         ),
                         child: Center(
@@ -241,11 +291,17 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                               ? const SizedBox(
                                   width: 18,
                                   height: 18,
-                                  child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
                                 )
                               : Text(
                                   'LOG IN',
-                                  style: KioskTheme.labelLarge.copyWith(color: KioskTheme.textOnPrimary, fontSize: 14),
+                                  style: KioskTheme.labelLarge.copyWith(
+                                    color: KioskTheme.textOnPrimary,
+                                    fontSize: 14,
+                                  ),
                                 ),
                         ),
                       ),
