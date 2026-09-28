@@ -38,14 +38,10 @@ jobs:
           channelId: live
           projectId: lunaexpress
 
-      - name: Create .env for functions
-        run: |
-          cat > functions/.env << 'EOF'
-          TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}
-          PAYMONGO_SECRET_KEY=${{ secrets.PAYMONGO_SECRET_KEY }}
-          PAYMONGO_WEBHOOK_SECRET=${{ secrets.PAYMONGO_WEBHOOK_SECRET }}
-          EOF
+      # Secrets (TELEGRAM_*, PAYMONGO_*) are read from Secret Manager at runtime
+      # (see functions/src/index.ts). Set values once via:
+      #   firebase functions:secrets:set TELEGRAM_TOKEN (etc.)
+      # No .env file needed — never commit secret values.
 
       - name: Delete conflicting functions
         env:

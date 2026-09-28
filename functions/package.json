@@ -8,7 +8,8 @@
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "logs": "firebase functions:log",
+    "test:rules": "npx --yes firebase-tools emulators:exec --only firestore \"node --test test/firestore-rules.test.js\""
   },
   "engines": {
     "node": "20"
@@ -20,11 +21,16 @@
     "node-telegram-bot-api": "^0.66.0"
   },
   "devDependencies": {
+    "@firebase/rules-unit-testing": "^5.0.2",
     "@types/node-telegram-bot-api": "^0.64.14",
     "eslint": "^8.57.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-import": "^2.29.1",
+    "firebase": "^12.19.0",
     "typescript": "^5.4.5"
   },
-  "private": true
+  "private": true,
+  "overrides": {
+    "form-data": "^2.5.6"
+  }
 }

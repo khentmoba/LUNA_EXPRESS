@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../state/rider_auth.dart';
+import '../../../utils/validate.dart';
 import '../models/rider.dart';
 
 /// Rider login screen — email/password login with status-based redirection.
@@ -95,8 +96,7 @@ class _RiderLoginScreenState extends State<RiderLoginScreen> {
                   prefixIcon: Icon(Icons.email),
                   border: OutlineInputBorder(),
                 ),
-                validator: (v) =>
-                    v == null || v.trim().isEmpty ? 'Email is required' : null,
+                validator: (v) => V.email(v),
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -107,9 +107,9 @@ class _RiderLoginScreenState extends State<RiderLoginScreen> {
                   prefixIcon: Icon(Icons.lock),
                   border: OutlineInputBorder(),
                 ),
-                validator: (v) => v == null || v.isEmpty
-                    ? 'Password is required'
-                    : null,
+                validator: (v) =>
+                    v == null || v.isEmpty ? 'Password is required' : null,
+                maxLength: 128,
               ),
               const SizedBox(height: 24),
               Consumer<RiderAuth>(

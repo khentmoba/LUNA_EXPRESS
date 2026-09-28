@@ -2,6 +2,7 @@ import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { getFirestore } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 import { phtDateLabel, itemKey, emptyChannel, addToChannel, ChannelBucket } from '../util';
+import { requireStaff } from '../util/security';
 
 interface LifeTimeReportParams {
   startDate?: string; // YYYY-MM-DD (optional, default: earliest order)
@@ -11,10 +12,16 @@ interface LifeTimeReportParams {
 const zero = (): ChannelBucket => ({ revenue: 0, count: 0 });
 
 export const getLifetimeSalesReport = onCall(async (request) => {
+  requireStaff(request);
   const db = getFirestore();
   try {
     const params = request.data as LifeTimeReportParams;
     const todayLabel = phtDateLabel();
+    const dateRe = /^\d{4}-\d{2}-\d{2}$/;
+    if ((params.startDate && !dateRe.test(params.startDate)) ||
+        (params.endDate && !dateRe.test(params.endDate))) {
+      throw new HttpsError('invalid-argument', 'Dates must be YYYY-MM-DD');
+    }
 
     const effectiveStart = params.startDate || '2020-01-01';
     const effectiveEnd = params.endDate || todayLabel;
@@ -123,6 +130,6 @@ export const getLifetimeSalesReport = onCall(async (request) => {
     };
   } catch (error: any) {
     logger.error('Error getting lifetime sales report:', error);
-    throw new HttpsError('internal', error?.message || 'Failed to retrieve lifetime sales report');
+    throw new HttpsError('internal', 'Failed to retrieve lifetime sales report');
   }
 });

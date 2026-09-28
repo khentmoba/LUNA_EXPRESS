@@ -1,4 +1,5 @@
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/functions.dart';
@@ -55,6 +56,12 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
 
       if (isSuccess) {
         final actualUser = data['username'] ?? user;
+        // Establish the real Firebase staff session. Callables check the
+        // staff claim server-side; without this, KDS/analytics reject calls.
+        final token = data['customToken'] as String?;
+        if (token != null && token.isNotEmpty) {
+          await FirebaseAuth.instance.signInWithCustomToken(token);
+        }
         session.login(actualUser);
         Navigator.pop(context);
 

@@ -2,8 +2,10 @@ import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { getFirestore } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 import { phtDateLabel, emptyChannel, addToChannel } from '../util';
+import { requireStaff } from '../util/security';
 
-export const getSalesAnalytics = onCall(async () => {
+export const getSalesAnalytics = onCall(async (request) => {
+  requireStaff(request);
   const db = getFirestore();
   try {
     const dateLabel = phtDateLabel();
@@ -50,6 +52,6 @@ export const getSalesAnalytics = onCall(async () => {
     };
   } catch (error: any) {
     logger.error('Error getting sales analytics:', error);
-    throw new HttpsError('internal', error?.message || 'Failed to retrieve sales analytics');
+    throw new HttpsError('internal', 'Failed to retrieve sales analytics');
   }
 });

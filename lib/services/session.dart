@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Session extends ChangeNotifier {
@@ -10,8 +11,12 @@ class Session extends ChangeNotifier {
     notifyListeners();
   }
 
-  void logout() {
+  Future<void> logout() async {
     _username = null;
+    // End the Firebase staff session too (custom token from verifyStaff).
+    try {
+      await FirebaseAuth.instance.signOut();
+    } catch (_) {}
     notifyListeners();
   }
 }

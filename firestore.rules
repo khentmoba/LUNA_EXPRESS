@@ -2,77 +2,161 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Kiosk clients can only create orders, but cannot read, update, or delete them.
+    function isStaff() {
+      return request.auth != null
+        && (request.auth.token.role == 'staff' || request.auth.token.role == 'admin');
+    }
+    function isAdmin() {
+      return request.auth != null && request.auth.token.role == 'admin';
+    }
+
+    // ──── Orders: kiosk creates, nobody reads via client (#4 + #7) ────
+    // Reads/updates go through staff-only callables (KDS). Create is
+    // field-validated so clients can't inject junk (#8).
     match /orders/{orderId} {
-      allow create: if true;
+      allow create: if request.resource.data.keys().hasOnly([
+          'orderId', 'customerName', 'customerAddress', 'customerPhone',
+          'items', 'totalAmount', 'type', 'entryType', 'paymentMethod',
+          'paymentStatus', 'deliveryFee', 'totalDistance', 'lat', 'lng',
+          'timestamp', 'dateLabel', 'status',
+          'checkoutSessionId', 'paymongoPaymentId'
+        ])
+        && request.resource.data.customerName is string
+        && request.resource.data.customerName.size() >= 1
+        && request.resource.data.customerName.size() <= 100
+        && request.resource.data.items is list
+        && request.resource.data.items.size() >= 1
+        && request.resource.data.items.size() <= 50
+        && request.resource.data.totalAmount is number
+        && request.resource.data.totalAmount >= 0
+        && request.resource.data.totalAmount <= 1000000;
       allow read, update, delete: if false;
     }
 
-    // Config collection is read-only for public client access.
+    // Config: public read-only.
     match /config/{docId} {
       allow read: if true;
       allow write: if false;
     }
 
-    // Staff accounts are only queried/validated via callable Cloud Functions (Admin SDK).
+    // Staff credentials: server only, always.
     match /staff_accounts/{username} {
       allow read, write: if false;
     }
 
-    // ──── Pasugo System Rules ────
-
-    // Errands: public read for available, create for anyone, own cancel only
-    match /pasugo_errands/{errandId} {
-      allow read: if resource.data.status == 'available';
-      allow create: if request.resource.data.customerName is string
-                    && request.resource.data.customerPhone is string
-                    && request.resource.data.pinHash is string
-                    && request.resource.data.message is string
-                    && request.resource.data.status == 'available';
-      // Allow customer to cancel their own errand (matched by phone hash)
-      allow update: if resource.data.status == 'available'
-                    && request.resource.data.status == 'cancelled'
-                    && request.resource.data.customerPhone == resource.data.customerPhone;
+    // Login rate-limit counters: server only.
+    match /login_attempts/{key} {
+      allow read, write: if false;
     }
 
-    // Riders: self-read/write on own document, admin full access
-    match /riders/{riderId} {
-      allow read: if request.auth != null
-                  && (request.auth.uid == riderId
-                      || request.auth.token.role == 'admin'
-                      || request.auth.token.role == 'staff');
-      allow create: if request.auth != null && request.auth.uid == riderId;
-      allow update: if request.auth != null
-                    && (request.auth.uid == riderId
-                        || request.auth.token.role == 'admin'
-                        || request.auth.token.role == 'staff');
+    // ──── Pasugo errands: public bulletin board by design ────
+    // PII note: the board shows names/phones publicly (needed for riders to
+    // contact customers). Mitigation: clients display masked phones; full
+    // contact is revealed only inside an active session.
+    match /pasugo_errands/{errandId} {
+      allow get: if resource.data.status == 'available'
+        || resource.data.status == 'cancelled';
+      allow list: if true;
+      allow create: if request.resource.data.keys().hasOnly([
+          'customerName', 'customerPhone', 'phoneHash', 'pinHash',
+          'message', 'locationPin', 'status', 'createdAt', 'expiresAt'
+        ])
+        && request.resource.data.customerName is string
+        && request.resource.data.customerName.size() >= 1
+        && request.resource.data.customerName.size() <= 100
+        && request.resource.data.customerPhone is string
+        && request.resource.data.customerPhone.size() >= 7
+        && request.resource.data.customerPhone.size() <= 32
+        && request.resource.data.pinHash is string
+        && request.resource.data.pinHash.size() <= 128
+        && request.resource.data.message is string
+        && request.resource.data.message.size() >= 1
+        && request.resource.data.message.size() <= 1000
+        && request.resource.data.status == 'available';
+      // Status machine: only `status` may change, and only along legal edges.
+      // available→cancelled: customer (phone must still match);
+      // available→accepted: approved rider; accepted→completed: rider/staff.
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+        && (
+          (resource.data.status == 'available'
+            && request.resource.data.status == 'cancelled'
+            && request.resource.data.customerPhone == resource.data.customerPhone)
+          || (resource.data.status == 'available'
+            && request.resource.data.status == 'accepted'
+            && request.auth != null
+            && request.auth.token.riderStatus == 'approved')
+          || (resource.data.status == 'accepted'
+            && request.resource.data.status == 'completed'
+            && request.auth != null
+            && (request.auth.token.riderStatus == 'approved' || isStaff()))
+        );
       allow delete: if false;
     }
 
-    // Pasugo sessions: participants read, verified rider creates, participants update
+    // ──── Riders: self + staff; no privilege self-escalation (#8) ────
+    match /riders/{riderId} {
+      allow read: if request.auth != null
+        && (request.auth.uid == riderId || isStaff());
+      // New riders must start as pending/active — fixed values, no escalation.
+      allow create: if request.auth != null && request.auth.uid == riderId
+        && request.resource.data.status == 'pending'
+        && request.resource.data.isActive == true
+        && !('role' in request.resource.data)
+        && request.resource.data.name is string
+        && request.resource.data.phone is string;
+      allow update: if request.auth != null
+        && (request.auth.uid == riderId || isStaff())
+        && (
+          isAdmin()
+          // Non-admins can't touch privilege fields.
+          || (
+            (!('status' in request.resource.data) || request.resource.data.status == resource.data.status)
+            && (!('isActive' in request.resource.data) || request.resource.data.isActive == resource.data.isActive)
+            && !('role' in request.resource.data)
+          )
+        );
+      allow delete: if false;
+    }
+
+    // ──── Sessions + chat ────
     match /pasugo_sessions/{sessionId} {
       allow read: if request.auth != null
-                  && (request.auth.uid == resource.data.riderId
-                      || request.auth.token.role == 'admin'
-                      || request.auth.token.role == 'staff');
-      // Session created by verified rider
+        && (request.auth.uid == resource.data.riderId || isStaff());
       allow create: if request.auth != null
-                    && request.auth.token.riderStatus == 'approved';
+        && request.auth.token.riderStatus == 'approved'
+        && request.resource.data.keys().hasOnly([
+          'errandId', 'riderId', 'customerPhone', 'status', 'acceptedAt'
+        ])
+        && request.resource.data.riderId == request.auth.uid
+        && request.resource.data.status == 'active';
       allow update: if request.auth != null
-                    && (request.auth.uid == resource.data.riderId
-                        || request.auth.token.role == 'admin'
-                        || request.auth.token.role == 'staff');
+        && (request.auth.uid == resource.data.riderId || isStaff())
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['status', 'completedAt']);
+      allow delete: if false;
 
-      // Chat messages: participants read, write only when session active
       match /messages/{messageId} {
-        allow read: if request.auth != null;
+        // Only session participants read (was: any signed-in user).
+        allow read: if request.auth != null
+          && (
+            request.auth.uid == get(/databases/$(database)/documents/pasugo_sessions/$(sessionId)).data.riderId
+            || isStaff()
+          );
         allow create: if request.auth != null
-                      && get(/databases/$(database)/documents/pasugo_sessions/$(sessionId)).data.status == 'active';
+          && request.resource.data.keys().hasOnly([
+            'sender', 'text', 'timestamp', 'type'
+          ])
+          && (request.resource.data.sender == 'rider'
+            || request.resource.data.sender == 'customer')
+          && request.resource.data.text is string
+          && request.resource.data.text.size() >= 1
+          && request.resource.data.text.size() <= 2000
+          && get(/databases/$(database)/documents/pasugo_sessions/$(sessionId)).data.status == 'active';
         allow update, delete: if false;
       }
     }
 
-    // Default deny for all other collections
+    // Default deny.
     match /{document=**} {
       allow read, write: if false;
     }

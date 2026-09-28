@@ -36,58 +36,71 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyStaff = void 0;
 const https_1 = require("firebase-functions/v2/https");
 const firestore_1 = require("firebase-admin/firestore");
-const crypto = __importStar(require("crypto"));
+const auth_1 = require("firebase-admin/auth");
 const firebase_functions_1 = require("firebase-functions");
-function hashPassword(password) {
-    return crypto.createHash('sha256').update(password).digest('hex');
-}
+const crypto = __importStar(require("crypto"));
+const security_1 = require("../util/security");
+const GENERIC_FAIL = 'Invalid username or password';
 exports.verifyStaff = (0, https_1.onCall)(async (request) => {
-    const { username, password } = request.data;
-    if (!username || !password) {
-        throw new https_1.HttpsError('invalid-argument', 'Missing username or password');
-    }
+    // #14 validate all input (length-capped, type-checked)
+    const username = (0, security_1.cleanStr)(request.data?.username, 64, 'username').toLowerCase();
+    const password = (0, security_1.cleanStr)(request.data?.password, 128, 'password');
+    if (!/^[a-z0-9._-]{2,64}$/.test(username))
+        throw new https_1.HttpsError('invalid-argument', GENERIC_FAIL);
+    // #11 rate limit login (lockout after 5 failures)
+    await (0, security_1.checkRateLimit)(`staff:${username}`);
+    const fail = async () => {
+        await (0, security_1.recordLoginFailure)(`staff:${username}`);
+        return { success: false, message: GENERIC_FAIL };
+    };
     const db = (0, firestore_1.getFirestore)();
-    const collectionRef = db.collection('staff_accounts');
-    // Auto-seed if the collection is empty
-    const snapshot = await collectionRef.limit(1).get();
-    if (snapshot.empty) {
-        firebase_functions_1.logger.info('staff_accounts collection is empty. Seeding default accounts...');
-        const batch = db.batch();
-        const defaults = [
-            { username: 'admin', password: '***REMOVED***' },
-            { username: 'staff1', password: '***REMOVED***' },
-            { username: 'staff2', password: '***REMOVED***' }
+    // First-run seed: random per-deploy passwords (logged ONCE — rotate after).
+    // Never seed well-known defaults; they end up in git/history forever.
+    if ((await db.collection('staff_accounts').limit(1).get()).empty) {
+        const mk = () => crypto.randomBytes(9).toString('base64url');
+        const seeds = [
+            { username: 'admin', role: 'admin' },
+            { username: 'staff1', role: 'staff' },
         ];
-        for (const user of defaults) {
-            const docRef = collectionRef.doc(user.username);
-            batch.set(docRef, {
-                username: user.username,
-                passwordHash: hashPassword(user.password),
-                createdAt: new Date()
+        const batch = db.batch();
+        for (const s of seeds) {
+            const pw = mk();
+            batch.set(db.collection('staff_accounts').doc(s.username), {
+                username: s.username, role: s.role,
+                passwordHash: (0, security_1.hashPassword)(pw), createdAt: new Date(),
             });
+            firebase_functions_1.logger.warn(`SEEDED staff account ${s.username} password: ${pw} — CHANGE AFTER FIRST LOGIN`);
         }
         await batch.commit();
-        firebase_functions_1.logger.info('Successfully seeded default staff accounts.');
     }
-    const staffRef = collectionRef.doc(username.toLowerCase());
+    const staffRef = db.collection('staff_accounts').doc(username);
     const doc = await staffRef.get();
     if (!doc.exists) {
-        firebase_functions_1.logger.info(`Staff login failed: User ${username} not found`);
-        return { success: false, message: 'Invalid username or password' };
+        firebase_functions_1.logger.info('Staff login failed: unknown user');
+        return fail();
     }
     const data = doc.data();
-    if (!data || !data.passwordHash) {
-        firebase_functions_1.logger.error(`Staff login failed: User ${username} has no passwordHash field`);
-        return { success: false, message: 'Invalid server configuration' };
+    if (!data.passwordHash) {
+        firebase_functions_1.logger.error('Staff account missing passwordHash');
+        throw new https_1.HttpsError('internal', 'Server misconfigured');
     }
-    const hash = hashPassword(password);
-    if (hash === data.passwordHash) {
-        firebase_functions_1.logger.info(`Staff login successful: ${username}`);
-        return { success: true, username: data.username || username };
+    const result = (0, security_1.verifyPassword)(password, data.passwordHash);
+    if (result === 'bad') {
+        firebase_functions_1.logger.info('Staff login failed: bad password');
+        return fail();
     }
-    else {
-        firebase_functions_1.logger.info(`Staff login failed: Incorrect password for ${username}`);
-        return { success: false, message: 'Invalid username or password' };
+    // Auto-upgrade legacy sha256 hashes to scrypt (#10)
+    if (result === 'ok-legacy') {
+        await staffRef.update({ passwordHash: (0, security_1.hashPassword)(password) });
+        firebase_functions_1.logger.info('Upgraded legacy staff password hash to scrypt');
     }
+    await (0, security_1.clearLoginAttempts)(`staff:${username}`);
+    await staffRef.update({ lastLoginAt: firestore_1.FieldValue.serverTimestamp() }).catch(() => { });
+    // #6 + #9: issue a real Firebase session (custom token with staff claim)
+    // instead of a bare {success:true} the client could forge.
+    const role = data.role === 'admin' ? 'admin' : 'staff';
+    const customToken = await (0, auth_1.getAuth)().createCustomToken(`staff_${username}`, { role });
+    firebase_functions_1.logger.info('Staff login successful');
+    return { success: true, username: data.username || username, customToken };
 });
 //# sourceMappingURL=verify_staff.js.map

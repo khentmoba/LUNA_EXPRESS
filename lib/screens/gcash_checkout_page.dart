@@ -48,7 +48,20 @@ class _GCashCheckoutPageState extends State<GCashCheckoutPage> {
               _onPaymentResult(false);
               return NavigationDecision.prevent;
             }
-            return NavigationDecision.navigate;
+            // #15: only allow payment-provider + app hosts in the WebView.
+            final host = Uri.tryParse(request.url)?.host ?? '';
+            const allowed = [
+              'lunaexpress.web.app',
+              'lunaexpress.firebaseapp.com',
+              'paymongo.com',
+              'gcash.com',
+              'paymaya.com',
+              'maya.ph',
+            ];
+            if (allowed.any((a) => host == a || host.endsWith('.$a'))) {
+              return NavigationDecision.navigate;
+            }
+            return NavigationDecision.prevent;
           },
           onPageFinished: (_) {
             if (mounted) setState(() => _loading = false);

@@ -1,12 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.paymongoWebhook = exports.createCheckoutSession = exports.getLifetimeSalesReport = exports.getSalesAnalytics = exports.updateOrderStatus = exports.getActiveOrders = exports.sendOrderNotification = exports.manageRiderStatus = exports.verifyStaff = exports.triggerManualReport = exports.dailySalesReport = exports.telegramChatIds = exports.telegramToken = void 0;
+exports.paymongoWebhook = exports.createCheckoutSession = exports.getLifetimeSalesReport = exports.getSalesAnalytics = exports.updateOrderStatus = exports.getActiveOrders = exports.sendOrderNotification = exports.manageRiderStatus = exports.verifyStaff = exports.triggerManualReport = exports.dailySalesReport = exports.paymongoSecret = exports.telegramChatIds = exports.telegramToken = void 0;
 const app_1 = require("firebase-admin/app");
 const params_1 = require("firebase-functions/params");
 (0, app_1.initializeApp)();
-// Define params at the entry point for faster discovery
-exports.telegramToken = (0, params_1.defineString)('TELEGRAM_TOKEN');
-exports.telegramChatIds = (0, params_1.defineString)('TELEGRAM_CHAT_ID');
+// Secrets (NOT params): values stay out of config/logs. Set via:
+//   firebase functions:secrets:set TELEGRAM_TOKEN
+//   firebase functions:secrets:set TELEGRAM_CHAT_ID
+//   firebase functions:secrets:set PAYMONGO_SECRET_KEY
+exports.telegramToken = (0, params_1.defineSecret)('TELEGRAM_TOKEN');
+exports.telegramChatIds = (0, params_1.defineSecret)('TELEGRAM_CHAT_ID');
+exports.paymongoSecret = (0, params_1.defineSecret)('PAYMONGO_SECRET_KEY');
 var daily_report_1 = require("./reporting/daily_report");
 Object.defineProperty(exports, "dailySalesReport", { enumerable: true, get: function () { return daily_report_1.dailySalesReport; } });
 var manual_report_1 = require("./reporting/manual_report");

@@ -4,126 +4,79 @@ exports.getLifetimeSalesReport = void 0;
 const https_1 = require("firebase-functions/v2/https");
 const firestore_1 = require("firebase-admin/firestore");
 const firebase_functions_1 = require("firebase-functions");
+const util_1 = require("../util");
+const security_1 = require("../util/security");
+const zero = () => ({ revenue: 0, count: 0 });
 exports.getLifetimeSalesReport = (0, https_1.onCall)(async (request) => {
+    (0, security_1.requireStaff)(request);
     const db = (0, firestore_1.getFirestore)();
     try {
         const params = request.data;
-        // Philippines is UTC+8
-        const nowUtc = new Date();
-        const phtNow = new Date(nowUtc.getTime() + 8 * 60 * 60 * 1000);
-        const todayLabel = `${phtNow.getUTCFullYear()}-${String(phtNow.getUTCMonth() + 1).padStart(2, '0')}-${String(phtNow.getUTCDate()).padStart(2, '0')}`;
-        // Default: all time (lifetime). If startDate not provided, use '2020-01-01' as earliest bound
+        const todayLabel = (0, util_1.phtDateLabel)();
+        const dateRe = /^\d{4}-\d{2}-\d{2}$/;
+        if ((params.startDate && !dateRe.test(params.startDate)) ||
+            (params.endDate && !dateRe.test(params.endDate))) {
+            throw new https_1.HttpsError('invalid-argument', 'Dates must be YYYY-MM-DD');
+        }
         const effectiveStart = params.startDate || '2020-01-01';
         const effectiveEnd = params.endDate || todayLabel;
-        firebase_functions_1.logger.info(`Fetching lifetime sales report from ${effectiveStart} to ${effectiveEnd}`);
-        // Firestore query — we use dateLabel range if start/end differ from defaults
-        let query;
-        const ordersRef = db.collection('orders');
-        // We need all orders in the range. Since dateLabel is a string in YYYY-MM-DD format,
-        // we can use range queries on it.
         const isAllTime = params.startDate === undefined && params.endDate === undefined;
-        if (isAllTime) {
-            // Fetch all orders (lifetime) — no filter needed
-            query = ordersRef;
-        }
-        else {
-            // Filter by date range
-            query = ordersRef
+        firebase_functions_1.logger.info(`Fetching lifetime sales report from ${effectiveStart} to ${effectiveEnd}`);
+        // dateLabel is 'YYYY-MM-DD', so string range queries work.
+        const ordersRef = db.collection('orders');
+        const query = isAllTime
+            ? ordersRef
+            : ordersRef
                 .where('dateLabel', '>=', effectiveStart)
                 .where('dateLabel', '<=', effectiveEnd);
-        }
         const snapshot = await query.get();
         let totalRevenue = 0;
-        let orderCount = 0;
-        let walkInRevenue = 0;
-        let walkInCount = 0;
-        let deliveryRevenue = 0;
-        let deliveryCount = 0;
-        let pickupRevenue = 0;
-        let pickupCount = 0;
-        let kioskRevenue = 0;
-        let kioskCount = 0;
-        let staffRevenue = 0;
-        let staffCount = 0;
-        let cashRevenue = 0;
-        let cashCount = 0;
-        let gcashRevenue = 0;
-        let gcashCount = 0;
         let totalItemsSold = 0;
+        const channel = (0, util_1.emptyChannel)();
+        const kiosk = zero();
+        const staff = zero();
+        const cash = zero();
+        const gcash = zero();
         const itemCounts = {};
         const dailyRevenue = {};
         const dailyOrders = {};
+        const add = (b, amount) => {
+            b.revenue += amount;
+            b.count += 1;
+        };
         for (const doc of snapshot.docs) {
             const data = doc.data();
             const totalAmount = data.totalAmount || 0;
-            const orderType = data.type || 'Pickup';
-            const entryType = data.entryType || 'Kiosk';
-            const paymentMethod = (data.paymentMethod || 'Cash');
-            const items = data.items || [];
             const dateLabel = data.dateLabel || 'unknown';
             totalRevenue += totalAmount;
-            orderCount += 1;
-            // Channel breakdown
-            if (orderType === 'Walk-In') {
-                walkInRevenue += totalAmount;
-                walkInCount += 1;
-            }
-            else if (orderType === 'Delivery') {
-                deliveryRevenue += totalAmount;
-                deliveryCount += 1;
-            }
-            else {
-                pickupRevenue += totalAmount;
-                pickupCount += 1;
-            }
-            // Entry type breakdown
-            if (entryType === 'Staff') {
-                staffRevenue += totalAmount;
-                staffCount += 1;
-            }
-            else {
-                kioskRevenue += totalAmount;
-                kioskCount += 1;
-            }
-            // Payment method breakdown
-            if (paymentMethod.toLowerCase() === 'gcash') {
-                gcashRevenue += totalAmount;
-                gcashCount += 1;
-            }
-            else {
-                cashRevenue += totalAmount;
-                cashCount += 1;
-            }
-            // Daily aggregates
+            (0, util_1.addToChannel)(channel, data.type || 'Pickup', totalAmount);
+            add(data.entryType === 'Staff' ? staff : kiosk, totalAmount);
+            add(String(data.paymentMethod || 'Cash').toLowerCase() === 'gcash' ? gcash : cash, totalAmount);
             dailyRevenue[dateLabel] = (dailyRevenue[dateLabel] || 0) + totalAmount;
             dailyOrders[dateLabel] = (dailyOrders[dateLabel] || 0) + 1;
-            // Item aggregation
-            for (const item of items) {
+            for (const item of data.items || []) {
                 const name = item.name || 'Unknown';
                 const variant = item.variant || '';
                 const qty = item.quantity || 1;
-                const itemRevenue = (item.price || 0) * qty;
                 totalItemsSold += qty;
-                // Create a composite key that includes variant
-                const key = variant ? `${name} (${variant})` : name;
+                const key = (0, util_1.itemKey)(name, variant);
                 if (!itemCounts[key]) {
                     itemCounts[key] = { name, variant, quantity: 0, revenue: 0 };
                 }
                 itemCounts[key].quantity += qty;
-                itemCounts[key].revenue += itemRevenue;
+                itemCounts[key].revenue += (item.price || 0) * qty;
             }
         }
-        // Sort and rank top items
+        const orderCount = snapshot.size;
         const topItems = Object.values(itemCounts)
             .sort((a, b) => b.quantity - a.quantity)
             .slice(0, 20)
             .map((item, index) => ({
             rank: index + 1,
-            name: item.variant ? `${item.name} (${item.variant})` : item.name,
+            name: (0, util_1.itemKey)(item.name, item.variant),
             quantity: item.quantity,
             revenue: item.revenue,
         }));
-        // Build daily time-series data (sorted by date)
         const dailySeries = Object.entries(dailyRevenue)
             .map(([date, revenue]) => ({
             date,
@@ -146,18 +99,12 @@ exports.getLifetimeSalesReport = (0, https_1.onCall)(async (request) => {
             },
             breakdown: {
                 channel: {
-                    walkIn: { revenue: walkInRevenue, count: walkInCount },
-                    delivery: { revenue: deliveryRevenue, count: deliveryCount },
-                    pickup: { revenue: pickupRevenue, count: pickupCount },
+                    walkIn: channel.walkIn,
+                    delivery: channel.delivery,
+                    pickup: channel.pickup,
                 },
-                entryType: {
-                    kiosk: { revenue: kioskRevenue, count: kioskCount },
-                    staff: { revenue: staffRevenue, count: staffCount },
-                },
-                paymentMethod: {
-                    cash: { revenue: cashRevenue, count: cashCount },
-                    gcash: { revenue: gcashRevenue, count: gcashCount },
-                },
+                entryType: { kiosk, staff },
+                paymentMethod: { cash, gcash },
             },
             topItems,
             dailySeries,
@@ -165,7 +112,7 @@ exports.getLifetimeSalesReport = (0, https_1.onCall)(async (request) => {
     }
     catch (error) {
         firebase_functions_1.logger.error('Error getting lifetime sales report:', error);
-        throw new https_1.HttpsError('internal', error?.message || 'Failed to retrieve lifetime sales report');
+        throw new https_1.HttpsError('internal', 'Failed to retrieve lifetime sales report');
     }
 });
 //# sourceMappingURL=lifetime_report.js.map

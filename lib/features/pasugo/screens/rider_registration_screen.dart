@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../state/rider_auth.dart';
+import '../../../utils/validate.dart';
 
 /// Rider registration screen — collects name, phone, address, email, password.
 class RiderRegistrationScreen extends StatefulWidget {
@@ -89,8 +90,7 @@ class _RiderRegistrationScreenState extends State<RiderRegistrationScreen> {
                   prefixIcon: Icon(Icons.person),
                   border: OutlineInputBorder(),
                 ),
-                validator: (v) =>
-                    v == null || v.trim().isEmpty ? 'Name is required' : null,
+                validator: (v) => V.name(v),
                 textCapitalization: TextCapitalization.words,
               ),
               const SizedBox(height: 16),
@@ -102,9 +102,7 @@ class _RiderRegistrationScreenState extends State<RiderRegistrationScreen> {
                   prefixIcon: Icon(Icons.phone),
                   border: OutlineInputBorder(),
                 ),
-                validator: (v) => v == null || v.trim().isEmpty
-                    ? 'Phone is required'
-                    : null,
+                validator: (v) => V.phone(v),
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -114,9 +112,9 @@ class _RiderRegistrationScreenState extends State<RiderRegistrationScreen> {
                   prefixIcon: Icon(Icons.home),
                   border: OutlineInputBorder(),
                 ),
-                validator: (v) => v == null || v.trim().isEmpty
-                    ? 'Address is required'
-                    : null,
+                validator: (v) =>
+                    v == null || v.trim().isEmpty ? 'Address is required' : null,
+                maxLength: 500,
                 textCapitalization: TextCapitalization.sentences,
               ),
               const SizedBox(height: 16),
@@ -128,11 +126,7 @@ class _RiderRegistrationScreenState extends State<RiderRegistrationScreen> {
                   prefixIcon: Icon(Icons.email),
                   border: OutlineInputBorder(),
                 ),
-                validator: (v) {
-                  if (v == null || v.trim().isEmpty) return 'Email is required';
-                  if (!v.contains('@')) return 'Invalid email';
-                  return null;
-                },
+                validator: (v) => V.email(v),
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -143,11 +137,7 @@ class _RiderRegistrationScreenState extends State<RiderRegistrationScreen> {
                   prefixIcon: Icon(Icons.lock),
                   border: OutlineInputBorder(),
                 ),
-                validator: (v) {
-                  if (v == null || v.isEmpty) return 'Password is required';
-                  if (v.length < 6) return 'At least 6 characters';
-                  return null;
-                },
+                validator: (v) => V.password(v),
               ),
               const SizedBox(height: 16),
               TextFormField(
