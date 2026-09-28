@@ -1,6 +1,7 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../services/functions.dart';
 import '../services/session.dart';
 import '../services/cart_notifier.dart';
 import '../widgets/kiosk/kiosk_theme.dart';
@@ -210,14 +211,7 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
   Future<void> _triggerManualReport(BuildContext context) async {
     setState(() => _isGenerating = true);
     try {
-      final HttpsCallable callable = FirebaseFunctions.instanceFor(region: 'us-central1')
-          .httpsCallable(
-            'triggerManualReport',
-            options: HttpsCallableOptions(timeout: const Duration(seconds: 30)),
-          );
-
-      final HttpsCallableResult result = await callable.call({});
-      final data = result.data as Map<dynamic, dynamic>;
+      final data = await callFn('triggerManualReport', {}, 30);
       final bool isSuccess = data['success'] == true;
       final String msg = data['message'] ?? 'No message';
 

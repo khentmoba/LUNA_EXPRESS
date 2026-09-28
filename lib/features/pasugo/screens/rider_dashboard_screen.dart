@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/session_provider.dart';
-import '../providers/rider_provider.dart';
+import '../state/sessions.dart';
+import '../state/rider_auth.dart';
 
 /// Rider dashboard — shows active sessions and access to bulletin board.
 class RiderDashboardScreen extends StatefulWidget {
@@ -16,9 +16,9 @@ class _RiderDashboardScreenState extends State<RiderDashboardScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final riderProvider = context.read<RiderProvider>();
+      final riderProvider = context.read<RiderAuth>();
       if (riderProvider.currentUid != null) {
-        context.read<SessionProvider>().startListeningToActiveSessions(
+        context.read<Sessions>().startListeningToActiveSessions(
               riderProvider.currentUid!,
             );
       }
@@ -37,7 +37,7 @@ class _RiderDashboardScreenState extends State<RiderDashboardScreen> {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
-              await context.read<RiderProvider>().logout();
+              await context.read<RiderAuth>().logout();
               if (context.mounted) {
                 Navigator.pushReplacementNamed(context, '/pasugo');
               }
@@ -79,7 +79,7 @@ class _RiderDashboardScreenState extends State<RiderDashboardScreen> {
           ),
           // Active sessions list
           Expanded(
-            child: Consumer<SessionProvider>(
+            child: Consumer<Sessions>(
               builder: (context, provider, _) {
                 if (provider.isLoadingSessions) {
                   return const Center(child: CircularProgressIndicator());

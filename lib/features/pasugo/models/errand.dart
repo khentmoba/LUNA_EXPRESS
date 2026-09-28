@@ -51,36 +51,8 @@ class Errand {
     required this.expiresAt,
   });
 
-  Errand copyWith({
-    String? id,
-    String? customerName,
-    String? customerPhone,
-    String? phoneHash,
-    String? pinHash,
-    String? message,
-    GeoPoint? locationPin,
-    bool clearLocationPin = false,
-    ErrandStatus? status,
-    DateTime? createdAt,
-    DateTime? expiresAt,
-  }) {
-    return Errand(
-      id: id ?? this.id,
-      customerName: customerName ?? this.customerName,
-      customerPhone: customerPhone ?? this.customerPhone,
-      phoneHash: phoneHash ?? this.phoneHash,
-      pinHash: pinHash ?? this.pinHash,
-      message: message ?? this.message,
-      locationPin: clearLocationPin ? null : (locationPin ?? this.locationPin),
-      status: status ?? this.status,
-      createdAt: createdAt ?? this.createdAt,
-      expiresAt: expiresAt ?? this.expiresAt,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toFirestore() {
     return {
-      if (id != null) 'id': id,
       'customerName': customerName,
       'customerPhone': customerPhone,
       'phoneHash': phoneHash,
@@ -110,11 +82,5 @@ class Errand {
 
   factory Errand.fromFirestore(DocumentSnapshot doc) {
     return Errand.fromMap(doc.data() as Map<String, dynamic>, id: doc.id);
-  }
-
-  Map<String, dynamic> toFirestore() {
-    final data = toMap();
-    data.remove('id');
-    return data;
   }
 }

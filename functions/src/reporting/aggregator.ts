@@ -1,42 +1,40 @@
 import { getFirestore } from 'firebase-admin/firestore';
+import { itemKey } from '../util';
+import { escapeMd } from '../telegram_api';
 
-export async function aggregateDailySales(dateLabel: string) {
+export interface DailySales {
+  date: string;
+  totalSales: number;
+  kioskSales: number;
+  staffSales: number;
+  totalOrders: number;
+  topItems: { name: string; qty: number }[];
+}
+
+export async function aggregateDailySales(dateLabel: string): Promise<DailySales | null> {
   const db = getFirestore();
-  const ordersRef = db.collection('orders');
-  
-  const snapshot = await ordersRef
+  const snapshot = await db.collection('orders')
     .where('dateLabel', '==', dateLabel)
     .get();
 
-  if (snapshot.empty) {
-    return null;
-  }
+  if (snapshot.empty) return null;
 
   let totalSales = 0;
   let kioskSales = 0;
   let staffSales = 0;
-  let totalOrders = 0;
   const itemCounts: { [key: string]: number } = {};
 
   snapshot.forEach(doc => {
     const data = doc.data();
     const amount = data.totalAmount || 0;
-    
     totalSales += amount;
-    totalOrders++;
 
-    if (data.entryType === 'Staff') {
-      staffSales += amount;
-    } else {
-      kioskSales += amount;
-    }
+    if (data.entryType === 'Staff') staffSales += amount;
+    else kioskSales += amount;
 
-    // Aggregate items
-    if (data.items && Array.isArray(data.items)) {
-      data.items.forEach((item: any) => {
-        const key = `${item.name}${item.variant ? ` (${item.variant})` : ''}`;
-        itemCounts[key] = (itemCounts[key] || 0) + (item.quantity || 1);
-      });
+    for (const item of data.items || []) {
+      const key = itemKey(item.name, item.variant);
+      itemCounts[key] = (itemCounts[key] || 0) + (item.quantity || 1);
     }
   });
 
@@ -45,9 +43,36 @@ export async function aggregateDailySales(dateLabel: string) {
     totalSales,
     kioskSales,
     staffSales,
-    totalOrders,
+    totalOrders: snapshot.size,
     topItems: Object.entries(itemCounts)
       .map(([name, qty]) => ({ name, qty }))
       .sort((a, b) => b.qty - a.qty)
   };
+}
+
+/** Shared Telegram body for the daily and manual sales reports. */
+export function salesReportMessage(
+  report: DailySales,
+  opts: { title: string; subtitle?: string; footer?: string }
+): string {
+  const itemsList = report.topItems
+    .slice(0, 10)
+    .map(i => `  • ${escapeMd(i.name)}: *${i.qty}*`)
+    .join('\n');
+
+  return [
+    `📊 *${opts.title} — ${escapeMd(report.date)}*`,
+    ...(opts.subtitle ? [opts.subtitle] : []),
+    '',
+    `💰 *Total Sales:* ₱*${escapeMd(report.totalSales.toString())}*`,
+    `🛒 *Total Orders:* ${report.totalOrders}`,
+    '',
+    `🏷 *Breakdown:*`,
+    `  • Kiosk Orders: ₱${escapeMd(report.kioskSales.toString())}`,
+    `  • Walk\\-in/Staff: ₱${escapeMd(report.staffSales.toString())}`,
+    '',
+    `🔥 *Top Items:*`,
+    itemsList,
+    ...(opts.footer ? ['', opts.footer] : []),
+  ].join('\n');
 }

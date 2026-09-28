@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/errand.dart';
-import '../providers/errand_provider.dart';
-import '../widgets/errand_card.dart';
+import '../state/errands.dart';
 
 /// Shows a customer's errands with status and actions.
 class CustomerErrandStatusScreen extends StatelessWidget {
@@ -17,7 +16,7 @@ class CustomerErrandStatusScreen extends StatelessWidget {
         title: const Text('My Errands'),
         centerTitle: true,
       ),
-      body: Consumer<ErrandProvider>(
+      body: Consumer<Errands>(
         builder: (context, provider, _) {
           if (provider.isLookingUp) {
             return const Center(child: CircularProgressIndicator());
@@ -62,7 +61,7 @@ class CustomerErrandStatusScreen extends StatelessWidget {
   }
 
   Widget _buildErrandCard(
-      BuildContext context, Errand errand, ErrandProvider provider) {
+      BuildContext context, Errand errand, Errands provider) {
     final theme = Theme.of(context);
 
     IconData statusIcon;
@@ -176,7 +175,7 @@ class CustomerErrandStatusScreen extends StatelessWidget {
   }
 
   Future<void> _cancelErrand(
-      BuildContext context, Errand errand, ErrandProvider provider) async {
+      BuildContext context, Errand errand, Errands provider) async {
     if (errand.id == null) return;
 
     final confirmed = await showDialog<bool>(

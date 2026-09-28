@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../providers/errand_provider.dart';
+import '../state/errands.dart';
 import '../widgets/map_pin_picker.dart';
 import '../services/pasugo_constants.dart';
 
@@ -85,7 +85,7 @@ class _CreateErrandScreenState extends State<CreateErrandScreen> {
   Future<void> _handleSubmit() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final provider = context.read<ErrandProvider>();
+    final provider = context.read<Errands>();
     final success = await provider.createErrand(
       name: _nameController.text.trim(),
       phone: _phoneController.text.trim(),
@@ -242,7 +242,7 @@ class _CreateErrandScreenState extends State<CreateErrandScreen> {
               const SizedBox(height: 24),
 
               // Submit button
-              Consumer<ErrandProvider>(
+              Consumer<Errands>(
                 builder: (context, provider, _) {
                   return FilledButton.icon(
                     onPressed: provider.isCreating ? null : _handleSubmit,

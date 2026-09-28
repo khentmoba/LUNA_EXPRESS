@@ -1,22 +1,12 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:js' as js;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import '../services/geocoding.dart';
+import '../services/location.dart';
 import '../widgets/kiosk/kiosk_theme.dart';
-
-const _maptilerKey = 'WdrFoTJ8mK1mg0cZdDoM';
-const _tileUrl =
-    'https://api.maptiler.com/maps/streets-v2/256/{z}/{x}/{y}.png?key=$_maptilerKey';
-const _nominatimSearch =
-    'https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5';
-const _nominatimReverse =
-    'https://nominatim.openstreetmap.org/reverse?format=json&zoom=18&addressdetails=1';
 
 class MapPickerPage extends StatefulWidget {
   final String initialAddress;
@@ -66,128 +56,28 @@ class _MapPickerPageState extends State<MapPickerPage>
       vsync: this,
     )..repeat(reverse: true);
 
-    _getCurrentLocationAndInit();
+    _initLocation();
   }
 
-  // ─── Location ──────────────────────────────────────────────────
-
-  Future<void> _getCurrentLocationAndInit() async {
-    if (kIsWeb) {
-      _getWebLocation();
-      return;
-    }
-
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    try {
-      serviceEnabled = await Geolocator.isLocationServiceEnabled().timeout(
-        const Duration(seconds: 5),
-        onTimeout: () => false,
-      );
-      if (!serviceEnabled) {
-        _initMapWithLocation(_lat, _lng);
-        return;
-      }
-
-      permission = await Geolocator.checkPermission().timeout(
-        const Duration(seconds: 5),
-        onTimeout: () => LocationPermission.denied,
-      );
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission().timeout(
-          const Duration(seconds: 10),
-          onTimeout: () => LocationPermission.denied,
-        );
-        if (permission == LocationPermission.denied) {
-          _initMapWithLocation(_lat, _lng);
-          return;
-        }
-      }
-
-      if (permission == LocationPermission.deniedForever) {
-        _initMapWithLocation(_lat, _lng);
-        return;
-      }
-
-      final position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      ).timeout(
-        const Duration(seconds: 10),
-        onTimeout: () => throw Exception('Location timeout'),
-      );
+  Future<void> _initLocation() async {
+    final pos = await currentPosition();
+    if (pos != null && mounted) {
       setState(() {
-        _lat = position.latitude;
-        _lng = position.longitude;
+        _lat = pos.latitude;
+        _lng = pos.longitude;
       });
-      _initMapWithLocation(_lat, _lng);
-    } catch (e) {
-      _initMapWithLocation(_lat, _lng);
     }
-  }
-
-  void _getWebLocation() {
-    try {
-      final geolocation = js.context['navigator']['geolocation'];
-      if (geolocation == null) {
-        _initMapWithLocation(_lat, _lng);
-        return;
-      }
-
-      js.context['_geoSuccess'] = (pos) {
-        final coords = pos['coords'];
-        setState(() {
-          _lat = coords['latitude'];
-          _lng = coords['longitude'];
-        });
-        _initMapWithLocation(_lat, _lng);
-      };
-
-      js.context['_geoError'] = (_) {
-        _initMapWithLocation(_lat, _lng);
-      };
-
-      js.context.callMethod('eval', ['''
-        navigator.geolocation.getCurrentPosition(
-          function(pos) { window._geoSuccess(pos); },
-          function(err) { window._geoError(err); },
-          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-        );
-      ''']);
-    } catch (e) {
-      _initMapWithLocation(_lat, _lng);
-    }
+    _initMapWithLocation(_lat, _lng);
   }
 
   Future<void> _goToMyLocation() async {
+    final pos = await currentPosition();
+    if (pos == null) return;
     if (kIsWeb) {
-      try {
-        final completer = Completer<Map<String, double>>();
-        js.context['_myLocSuccess'] = (pos) {
-          final c = pos['coords'];
-          completer.complete({'lat': c['latitude'], 'lng': c['longitude']});
-        };
-        js.context['_myLocError'] = (_) => completer.completeError('error');
-        js.context.callMethod('eval', ['''
-          navigator.geolocation.getCurrentPosition(
-            function(p) { window._myLocSuccess(p); },
-            function(e) { window._myLocError(e); },
-            { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
-          );
-        ''']);
-        final pos = await completer.future;
-        _mapController.move(LatLng(pos['lat']!, pos['lng']!), 17);
-        _fetchAddress(pos['lat']!, pos['lng']!);
-      } catch (_) {}
+      _mapController.move(LatLng(pos.latitude, pos.longitude), 17);
+      _fetchAddress(pos.latitude, pos.longitude);
     } else {
-      try {
-        final pos = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high,
-        ).timeout(const Duration(seconds: 8), onTimeout: () => throw Exception());
-        if (_webCtrl != null) {
-          _webCtrl!.runJavaScript('moveMapTo(${pos.latitude}, ${pos.longitude});');
-        }
-      } catch (_) {}
+      _webCtrl?.runJavaScript('moveMapTo(${pos.latitude}, ${pos.longitude});');
     }
   }
 
@@ -195,18 +85,21 @@ class _MapPickerPageState extends State<MapPickerPage>
     if (!kIsWeb) {
       _webCtrl = WebViewController()
         ..setJavaScriptMode(JavaScriptMode.unrestricted)
-        ..addJavaScriptChannel('AddressChannel', onMessageReceived: (msg) {
-          final parts = msg.message.split('||');
-          if (parts.length >= 4) {
-            setState(() {
-              _address = parts[0];
-              _addressShort = parts[1];
-              _lat = double.tryParse(parts[2]) ?? _lat;
-              _lng = double.tryParse(parts[3]) ?? _lng;
-              _loading = false;
-            });
-          }
-        })
+        ..addJavaScriptChannel(
+          'AddressChannel',
+          onMessageReceived: (msg) {
+            final parts = msg.message.split('||');
+            if (parts.length >= 4) {
+              setState(() {
+                _address = parts[0];
+                _addressShort = parts[1];
+                _lat = double.tryParse(parts[2]) ?? _lat;
+                _lng = double.tryParse(parts[3]) ?? _lng;
+                _loading = false;
+              });
+            }
+          },
+        )
         ..loadHtmlString(_buildMapHtml(lat, lng));
     } else {
       setState(() => _loading = false);
@@ -217,45 +110,13 @@ class _MapPickerPageState extends State<MapPickerPage>
     }
   }
 
-  // ─── Address ───────────────────────────────────────────────────
-
   Future<void> _fetchAddress(double lat, double lng) async {
-    final url = '$_nominatimReverse&lat=$lat&lon=$lng';
-    try {
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {'Accept-Language': 'en'},
-      );
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body) as Map<String, dynamic>;
-        final displayName =
-            data['display_name'] as String? ?? '$lat, $lng';
-        final address = data['address'] as Map<String, dynamic>?;
-        final short = _parseAddressObject(address);
-        setState(() {
-          _address = displayName;
-          _addressShort = short;
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _addressShort = '';
-      });
-    }
-  }
-
-  String _parseAddressObject(Map<String, dynamic>? address) {
-    if (address == null) return '';
-    final parts = <String>[];
-    if (address['road'] != null) parts.add(address['road'] as String);
-    if (address['suburb'] != null) parts.add(address['suburb'] as String);
-    final city =
-        address['city'] ?? address['town'] ?? address['village'];
-    if (city != null) parts.add(city as String);
-    if (address['state'] != null && parts.length < 2) {
-      parts.add(address['state'] as String);
-    }
-    return parts.join(', ');
+    final addr = await reverseGeocode(lat, lng);
+    if (!mounted) return;
+    setState(() {
+      if (addr.full.isNotEmpty) _address = addr.full;
+      _addressShort = addr.short;
+    });
   }
 
   // ─── Search ────────────────────────────────────────────────────
@@ -271,46 +132,27 @@ class _MapPickerPageState extends State<MapPickerPage>
       return;
     }
     setState(() => _searching = true);
-    _searchDebounce = Timer(const Duration(milliseconds: 400), () {
-      _searchAddress(query.trim());
+    _searchDebounce = Timer(const Duration(milliseconds: 400), () async {
+      final results = await searchAddress(query.trim());
+      if (!mounted) return;
+      setState(() {
+        _searchResults = results;
+        _showResults = results.isNotEmpty;
+        _searching = false;
+      });
     });
-  }
-
-  Future<void> _searchAddress(String query) async {
-    final url = '$_nominatimSearch&q=${Uri.encodeComponent(query)}';
-    try {
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {'Accept-Language': 'en'},
-      );
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body) as List<dynamic>;
-        setState(() {
-          _searchResults =
-              data.map((e) => e as Map<String, dynamic>).toList();
-          _showResults = _searchResults.isNotEmpty;
-          _searching = false;
-        });
-      } else {
-        setState(() => _searching = false);
-      }
-    } catch (e) {
-      setState(() => _searching = false);
-    }
   }
 
   void _selectSearchResult(Map<String, dynamic> result) {
     final lat = double.tryParse(result['lat'].toString()) ?? _lat;
     final lng = double.tryParse(result['lon'].toString()) ?? _lng;
     final displayName = result['display_name'] as String? ?? '';
-    final address = result['address'] as Map<String, dynamic>?;
-    final short = _parseAddressObject(address);
 
     setState(() {
       _lat = lat;
       _lng = lng;
       _address = displayName;
-      _addressShort = short;
+      _addressShort = shortAddress(result['address'] as Map<String, dynamic>?);
       _showResults = false;
       _searchCtrl.clear();
       _searchFocus.unfocus();
@@ -335,7 +177,8 @@ class _MapPickerPageState extends State<MapPickerPage>
 
   // ─── Native Map HTML ───────────────────────────────────────────
 
-  String _buildMapHtml(double lat, double lng) => '''
+  String _buildMapHtml(double lat, double lng) =>
+      '''
 <!DOCTYPE html>
 <html>
 <head>
@@ -391,13 +234,13 @@ html, body { height:100%; width:100%; overflow:hidden; }
 </div>
 <script>
 var map = L.map('map', { zoomControl:true, attributionControl:false }).setView([$lat, $lng], 17);
-L.tileLayer('$_tileUrl', { maxZoom:19 }).addTo(map);
+L.tileLayer('$tileUrl', { maxZoom:19 }).addTo(map);
 
 var debounce;
 function fetchAddressAt(lat, lng) {
   clearTimeout(debounce);
   debounce = setTimeout(function() {
-    var url = '$_nominatimReverse&lat=' + lat + '&lon=' + lng;
+    var url = '$reverseUrl&lat=' + lat + '&lon=' + lng;
     fetch(url, { headers: { 'Accept-Language': 'en' } })
       .then(function(r){ return r.json(); })
       .then(function(d) {
@@ -448,18 +291,10 @@ fetchAddressAt($lat, $lng);
       await _fetchAddress(_lat, _lng);
       setState(() => _loading = false);
       if (mounted) {
-        Navigator.pop(context, {
-          'address': _address,
-          'lat': _lat,
-          'lng': _lng,
-        });
+        Navigator.pop(context, {'address': _address, 'lat': _lat, 'lng': _lng});
       }
     } else {
-      Navigator.pop(context, {
-        'address': _address,
-        'lat': _lat,
-        'lng': _lng,
-      });
+      Navigator.pop(context, {'address': _address, 'lat': _lat, 'lng': _lng});
     }
   }
 
@@ -508,8 +343,7 @@ fetchAddressAt($lat, $lng);
       body: Column(
         children: [
           _buildSearchBar(),
-          if (_showResults && _searchResults.isNotEmpty)
-            _buildSearchResults(),
+          if (_showResults && _searchResults.isNotEmpty) _buildSearchResults(),
           Expanded(child: _buildMapContent()),
         ],
       ),
@@ -561,16 +395,18 @@ fetchAddressAt($lat, $lng);
                   ),
                 )
               : _searchCtrl.text.isNotEmpty
-                  ? IconButton(
-                      icon: const Icon(Icons.clear, size: 18),
-                      color: KioskTheme.textMuted,
-                      onPressed: _clearSearch,
-                    )
-                  : null,
+              ? IconButton(
+                  icon: const Icon(Icons.clear, size: 18),
+                  color: KioskTheme.textMuted,
+                  onPressed: _clearSearch,
+                )
+              : null,
           filled: true,
           fillColor: KioskTheme.lunaCream,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 14,
+          ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
             borderSide: BorderSide.none,
@@ -605,8 +441,7 @@ fetchAddressAt($lat, $lng);
         shrinkWrap: true,
         padding: EdgeInsets.zero,
         itemCount: _searchResults.length,
-        separatorBuilder: (_, __) =>
-            KioskTheme.divider(opacity: 0.05),
+        separatorBuilder: (_, __) => KioskTheme.divider(opacity: 0.05),
         itemBuilder: (context, index) {
           final r = _searchResults[index];
           final name = r['display_name'] as String? ?? '';
@@ -660,7 +495,7 @@ fetchAddressAt($lat, $lng);
           ),
           children: [
             TileLayer(
-              urlTemplate: _tileUrl,
+              urlTemplate: tileUrl,
               userAgentPackageName: 'com.example.app',
               maxZoom: 19,
             ),
@@ -767,17 +602,14 @@ fetchAddressAt($lat, $lng);
         elevation: 4,
         shadowColor: Colors.black.withOpacity(0.2),
         child: InkWell(
-          borderRadius:
-              BorderRadius.circular(KioskTheme.radiusFull),
+          borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
           onTap: _goToMyLocation,
           child: Container(
             width: 44,
             height: 44,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(
-                color: KioskTheme.lunaBrown.withOpacity(0.1),
-              ),
+              border: Border.all(color: KioskTheme.lunaBrown.withOpacity(0.1)),
             ),
             child: const Icon(
               Icons.my_location,
@@ -797,12 +629,10 @@ fetchAddressAt($lat, $lng);
       left: 16,
       right: 16,
       child: Container(
-        padding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
           color: KioskTheme.lunaWhite,
-          borderRadius:
-              BorderRadius.circular(KioskTheme.radiusLg),
+          borderRadius: BorderRadius.circular(KioskTheme.radiusLg),
           boxShadow: KioskTheme.shadowLg,
         ),
         child: Column(
@@ -811,25 +641,28 @@ fetchAddressAt($lat, $lng);
           children: [
             Row(
               children: [
-                const Icon(Icons.location_on,
-                    color: KioskTheme.lunaBrown, size: 18),
+                const Icon(
+                  Icons.location_on,
+                  color: KioskTheme.lunaBrown,
+                  size: 18,
+                ),
                 const SizedBox(width: 6),
                 Text(
                   'PINNED LOCATION',
-                  style: KioskTheme.labelSmall
-                      .copyWith(fontSize: 11),
+                  style: KioskTheme.labelSmall.copyWith(fontSize: 11),
                 ),
                 const Spacer(),
                 if (hasAddress)
-                  const Icon(Icons.check_circle,
-                      color: KioskTheme.success, size: 18),
+                  const Icon(
+                    Icons.check_circle,
+                    color: KioskTheme.success,
+                    size: 18,
+                  ),
               ],
             ),
             const SizedBox(height: 6),
             Text(
-              hasAddress
-                  ? _addressShort
-                  : 'Move the map to pin your location',
+              hasAddress ? _addressShort : 'Move the map to pin your location',
               style: KioskTheme.bodyMedium.copyWith(
                 fontSize: 14,
                 color: hasAddress
@@ -850,9 +683,7 @@ fetchAddressAt($lat, $lng);
     return Container(
       color: KioskTheme.lunaWhite.withOpacity(0.85),
       child: const Center(
-        child: CircularProgressIndicator(
-          color: KioskTheme.lunaBrown,
-        ),
+        child: CircularProgressIndicator(color: KioskTheme.lunaBrown),
       ),
     );
   }

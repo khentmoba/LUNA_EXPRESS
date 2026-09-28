@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/session.dart';
 import '../services/cart_notifier.dart';
+import '../services/order_service.dart';
 import '../widgets/kiosk/kiosk_theme.dart';
 import '../widgets/kiosk/juicy_feedback.dart';
+import '../widgets/report/report_widgets.dart';
 import 'menu_page.dart';
 import 'analytics_page.dart';
 import 'lifetime_analytics_page.dart';
@@ -220,15 +222,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
   }
 
   Widget _statCard(String label, String value, IconData icon, Color color, double cardWidth) {
-    return Container(
+    return WhiteCard(
       width: cardWidth,
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
-        border: Border.all(color: KioskTheme.lunaBrown.withOpacity(0.06)),
-        boxShadow: KioskTheme.shadowSm,
-      ),
+      pad: 18,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -447,15 +443,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
   Widget _actionCard(_ActionItem item, double cardWidth) {
     return GestureDetector(
       onTap: item.onTap,
-      child: Container(
+      child: WhiteCard(
         width: cardWidth,
-        padding: const EdgeInsets.all(18),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
-          border: Border.all(color: KioskTheme.lunaBrown.withOpacity(0.06)),
-          boxShadow: KioskTheme.shadowSm,
-        ),
+        pad: 18,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -522,15 +512,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
         ? KioskTheme.success
         : (type == 'Pickup' ? const Color(0xFFFF8C00) : KioskTheme.info);
 
-    return Container(
+    return WhiteCard(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
-        border: Border.all(color: KioskTheme.lunaBrown.withOpacity(0.06)),
-        boxShadow: KioskTheme.shadowSm,
-      ),
+      pad: 16,
       child: Row(
         children: [
           Container(

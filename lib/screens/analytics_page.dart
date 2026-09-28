@@ -1,7 +1,7 @@
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../services/functions.dart';
 import '../widgets/kiosk/kiosk_theme.dart';
+import '../widgets/report/report_widgets.dart';
 
 class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({super.key});
@@ -26,25 +26,17 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
       _loading = true;
       _error = null;
     });
-
     try {
-      final HttpsCallable callable = FirebaseFunctions.instanceFor(region: 'us-central1')
-          .httpsCallable('getSalesAnalytics');
-      final result = await callable.call();
-      final responseData = result.data as Map<dynamic, dynamic>;
-
-      if (responseData['success'] == true) {
-        setState(() {
-          _data = Map<String, dynamic>.from(responseData);
-          _loading = false;
-        });
-      } else {
-        setState(() {
-          _error = responseData['message'] ?? 'Failed to load analytics.';
-          _loading = false;
-        });
-      }
-    } catch (e) {
+      final data = await callFn('getSalesAnalytics');
+      setState(() {
+        if (data['success'] == true) {
+          _data = data;
+        } else {
+          _error = data['message'] ?? 'Failed to load analytics.';
+        }
+        _loading = false;
+      });
+    } catch (_) {
       setState(() {
         _error = 'Error connecting to server. Please try again.';
         _loading = false;
@@ -56,188 +48,149 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 800;
 
-    return Scaffold(
-      backgroundColor: KioskTheme.lunaCream,
-      appBar: AppBar(
-        title: Text(
-          'SALES DASHBOARD',
-          style: KioskTheme.headerSmall.copyWith(color: KioskTheme.textOnPrimary, letterSpacing: 2),
-        ),
-        centerTitle: true,
-        backgroundColor: KioskTheme.lunaBrown,
-        foregroundColor: KioskTheme.textOnPrimary,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh_rounded),
-            tooltip: 'Refresh Metrics',
-            onPressed: _loading ? null : _fetchAnalytics,
-          ),
-          const SizedBox(width: 8),
-        ],
-      ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator(color: KioskTheme.lunaBrown))
-          : _error != null
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.error_outline_rounded, color: KioskTheme.error, size: 48),
-                      const SizedBox(height: 16),
-                      Text(
-                        _error!,
-                        style: KioskTheme.bodyLarge.copyWith(fontSize: 16),
-                      ),
-                      const SizedBox(height: 24),
-                      ElevatedButton(
-                        onPressed: _fetchAnalytics,
-                        style: KioskTheme.primaryButton,
-                        child: Text('Retry', style: GoogleFonts.outfit(color: Colors.white)),
-                      )
-                    ],
-                  ),
-                )
-              : SingleChildScrollView(
-                  padding: const EdgeInsets.all(32),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'TODAY\'S REVENUE METRICS',
-                                style: KioskTheme.labelMedium.copyWith(color: KioskTheme.textMuted, fontSize: 14),
-                              ),
-                              Text(
-                                _data['dateLabel'] ?? 'Date loading...',
-                                style: KioskTheme.headerMedium.copyWith(fontSize: 24),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            decoration: KioskTheme.badgeSuccess,
-                            child: Row(
-                              children: [
-                                const Icon(Icons.check_circle_rounded, color: KioskTheme.success, size: 16),
-                                const SizedBox(width: 8),
-                                Text(
-                                  'LIVE SYNCED',
-                                  style: KioskTheme.labelSmall.copyWith(color: KioskTheme.success, fontSize: 11),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: 32),
-                      isMobile
-                          ? Column(
-                              children: [
-                                _buildMetricCard('TOTAL REVENUE', '\u20B1${_data['totalRevenue'] ?? 0}', Icons.monetization_on_rounded, KioskTheme.success),
-                                const SizedBox(height: 16),
-                                _buildMetricCard('TICKET COUNT', '${_data['orderCount'] ?? 0}', Icons.receipt_long_rounded, KioskTheme.info),
-                                const SizedBox(height: 16),
-                                _buildMetricCard('AVG TICKET', '\u20B1${_data['averageOrderValue'] ?? 0}', Icons.analytics_rounded, Colors.purple),
-                              ],
-                            )
-                          : Row(
-                              children: [
-                                Expanded(child: _buildMetricCard('TOTAL REVENUE', '\u20B1${_data['totalRevenue'] ?? 0}', Icons.monetization_on_rounded, KioskTheme.success)),
-                                const SizedBox(width: 20),
-                                Expanded(child: _buildMetricCard('TICKET COUNT', '${_data['orderCount'] ?? 0}', Icons.receipt_long_rounded, KioskTheme.info)),
-                                const SizedBox(width: 20),
-                                Expanded(child: _buildMetricCard('AVG TICKET', '\u20B1${_data['averageOrderValue'] ?? 0}', Icons.analytics_rounded, Colors.purple)),
-                              ],
-                            ),
-                      const SizedBox(height: 32),
-                      isMobile
-                          ? Column(
-                              children: [
-                                _buildSplitCard(),
-                                const SizedBox(height: 32),
-                                _buildTopItemsCard(),
-                              ],
-                            )
-                          : Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(flex: 3, child: _buildSplitCard()),
-                                const SizedBox(width: 24),
-                                Expanded(flex: 2, child: _buildTopItemsCard()),
-                              ],
-                            ),
-                    ],
-                  ),
-                ),
-    );
-  }
-
-  Widget _buildMetricCard(String title, String value, IconData icon, Color color) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(KioskTheme.radiusLg),
-        border: Border.all(color: KioskTheme.lunaBrown.withOpacity(0.08)),
-        boxShadow: KioskTheme.shadowMd,
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: color, size: 28),
-          ),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return ReportScaffold(
+      title: 'SALES DASHBOARD',
+      loading: _loading,
+      error: _error,
+      onRetry: _fetchAnalytics,
+      onRefresh: _loading ? null : _fetchAnalytics,
+      refreshTooltip: 'Refresh Metrics',
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  title,
-                  style: KioskTheme.labelMedium.copyWith(color: KioskTheme.textMuted, fontSize: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'TODAY\'S REVENUE METRICS',
+                      style: KioskTheme.labelMedium.copyWith(
+                        color: KioskTheme.textMuted,
+                        fontSize: 14,
+                      ),
+                    ),
+                    Text(
+                      _data['dateLabel'] ?? 'Date loading...',
+                      style: KioskTheme.headerMedium.copyWith(fontSize: 24),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  value,
-                  style: KioskTheme.headerMedium.copyWith(fontSize: 28),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  decoration: KioskTheme.badgeSuccess,
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.check_circle_rounded,
+                        color: KioskTheme.success,
+                        size: 16,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'LIVE SYNCED',
+                        style: KioskTheme.labelSmall.copyWith(
+                          color: KioskTheme.success,
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-          )
-        ],
+            const SizedBox(height: 32),
+            _metrics(isMobile),
+            const SizedBox(height: 32),
+            isMobile
+                ? Column(
+                    children: [
+                      _buildSplitCard(),
+                      const SizedBox(height: 32),
+                      _buildTopItemsCard(),
+                    ],
+                  )
+                : Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(flex: 3, child: _buildSplitCard()),
+                      const SizedBox(width: 24),
+                      Expanded(flex: 2, child: _buildTopItemsCard()),
+                    ],
+                  ),
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget _metrics(bool isMobile) {
+    final cards = [
+      MetricCard(
+        title: 'TOTAL REVENUE',
+        value: '₱${_data['totalRevenue'] ?? 0}',
+        icon: Icons.monetization_on_rounded,
+        color: KioskTheme.success,
+      ),
+      MetricCard(
+        title: 'TICKET COUNT',
+        value: '${_data['orderCount'] ?? 0}',
+        icon: Icons.receipt_long_rounded,
+        color: KioskTheme.info,
+      ),
+      MetricCard(
+        title: 'AVG TICKET',
+        value: '₱${_data['averageOrderValue'] ?? 0}',
+        icon: Icons.analytics_rounded,
+        color: Colors.purple,
+      ),
+    ];
+    if (isMobile) {
+      return Column(
+        children: [
+          cards[0],
+          const SizedBox(height: 16),
+          cards[1],
+          const SizedBox(height: 16),
+          cards[2],
+        ],
+      );
+    }
+    return Row(
+      children: [
+        Expanded(child: cards[0]),
+        const SizedBox(width: 20),
+        Expanded(child: cards[1]),
+        const SizedBox(width: 20),
+        Expanded(child: cards[2]),
+      ],
     );
   }
 
   Widget _buildSplitCard() {
-    final breakdown = _data['breakdown'] as Map<dynamic, dynamic>? ?? {};
-    final walkIn = breakdown['walkIn'] as Map<dynamic, dynamic>? ?? {'revenue': 0, 'count': 0};
-    final delivery = breakdown['delivery'] as Map<dynamic, dynamic>? ?? {'revenue': 0, 'count': 0};
-    final pickup = breakdown['pickup'] as Map<dynamic, dynamic>? ?? {'revenue': 0, 'count': 0};
+    final breakdown = _data['breakdown'] as Map? ?? {};
+    int rev(String key) => (breakdown[key] as Map?)?['revenue'] as int? ?? 0;
 
-    final walkInRev = walkIn['revenue'] as int? ?? 0;
-    final deliveryRev = delivery['revenue'] as int? ?? 0;
-    final pickupRev = pickup['revenue'] as int? ?? 0;
+    final walkInRev = rev('walkIn');
+    final deliveryRev = rev('delivery');
+    final pickupRev = rev('pickup');
+    final maxRev = [
+      walkInRev,
+      deliveryRev,
+      pickupRev,
+    ].reduce((a, b) => a > b ? a : b);
 
-    final maxRev = [walkInRev, deliveryRev, pickupRev].reduce((curr, next) => curr > next ? curr : next);
-
-    return Container(
-      padding: const EdgeInsets.all(28),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(KioskTheme.radiusLg),
-        border: Border.all(color: KioskTheme.lunaBrown.withOpacity(0.08)),
-      ),
+    return WhiteCard(
+      pad: 28,
+      radius: KioskTheme.radiusLg,
+      borderOpacity: 0.08,
+      shadows: const [],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -268,45 +221,45 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
 
     return Column(
       children: [
-        Text(
-          '\u20B1$value',
-          style: KioskTheme.titleMedium.copyWith(fontSize: 13),
-        ),
+        Text('₱$value', style: KioskTheme.titleMedium.copyWith(fontSize: 13)),
         const SizedBox(height: 8),
         Container(
           width: 48,
           height: barHeight,
           decoration: BoxDecoration(
             color: barColor,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(KioskTheme.radiusSm)),
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(KioskTheme.radiusSm),
+            ),
             boxShadow: [
               BoxShadow(
                 color: barColor.withOpacity(0.2),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
-              )
+              ),
             ],
           ),
         ),
         const SizedBox(height: 12),
         Text(
           label,
-          style: KioskTheme.labelMedium.copyWith(color: KioskTheme.textMuted, fontSize: 12),
+          style: KioskTheme.labelMedium.copyWith(
+            color: KioskTheme.textMuted,
+            fontSize: 12,
+          ),
         ),
       ],
     );
   }
 
   Widget _buildTopItemsCard() {
-    final topItems = _data['topItems'] as List<dynamic>? ?? [];
+    final topItems = _data['topItems'] as List? ?? [];
 
-    return Container(
-      padding: const EdgeInsets.all(28),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(KioskTheme.radiusLg),
-        border: Border.all(color: KioskTheme.lunaBrown.withOpacity(0.08)),
-      ),
+    return WhiteCard(
+      pad: 28,
+      radius: KioskTheme.radiusLg,
+      borderOpacity: 0.08,
+      shadows: const [],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -321,7 +274,10 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                 padding: const EdgeInsets.symmetric(vertical: 40.0),
                 child: Text(
                   'No item sales recorded today',
-                  style: KioskTheme.bodySmall.copyWith(color: Colors.grey[400], fontSize: 13),
+                  style: KioskTheme.bodySmall.copyWith(
+                    color: Colors.grey[400],
+                    fontSize: 13,
+                  ),
                 ),
               ),
             )
@@ -329,9 +285,6 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
             ...topItems.asMap().entries.map((entry) {
               final idx = entry.key + 1;
               final item = entry.value;
-              final name = item['name'] as String;
-              final count = item['count'] as int;
-
               return Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: Row(
@@ -346,33 +299,44 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                       child: Center(
                         child: Text(
                           '$idx',
-                          style: KioskTheme.labelSmall.copyWith(color: KioskTheme.textPrimary, fontSize: 11),
+                          style: KioskTheme.labelSmall.copyWith(
+                            color: KioskTheme.textPrimary,
+                            fontSize: 11,
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        name,
+                        item['name'] as String,
                         style: KioskTheme.titleMedium.copyWith(fontSize: 13),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: KioskTheme.lunaBrown.withOpacity(0.08),
-                        borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
+                        borderRadius: BorderRadius.circular(
+                          KioskTheme.radiusSm,
+                        ),
                       ),
                       child: Text(
-                        '$count sold',
-                        style: KioskTheme.labelSmall.copyWith(color: KioskTheme.textPrimary, fontSize: 11),
+                        '${item['count']} sold',
+                        style: KioskTheme.labelSmall.copyWith(
+                          color: KioskTheme.textPrimary,
+                          fontSize: 11,
+                        ),
                       ),
                     ),
                   ],
                 ),
               );
-            }).toList(),
+            }),
         ],
       ),
     );

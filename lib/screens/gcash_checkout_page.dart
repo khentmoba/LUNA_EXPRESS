@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../services/functions.dart';
 import '../widgets/kiosk/kiosk_theme.dart';
 
 class GCashCheckoutPage extends StatefulWidget {
@@ -63,10 +63,7 @@ class _GCashCheckoutPageState extends State<GCashCheckoutPage> {
 
   Future<void> _startCheckout() async {
     try {
-      final callable = FirebaseFunctions.instanceFor(region: 'us-central1')
-          .httpsCallable('createCheckoutSession');
-
-      final result = await callable.call({
+      final data = await callFn('createCheckoutSession', {
         'orderId': widget.orderId,
         'amount': widget.amount,
         'items': widget.items,
@@ -74,7 +71,7 @@ class _GCashCheckoutPageState extends State<GCashCheckoutPage> {
         'customerPhone': widget.customerPhone,
       });
 
-      final checkoutUrl = result.data['checkoutUrl'] as String;
+      final checkoutUrl = data['checkoutUrl'] as String;
       await _controller.loadRequest(Uri.parse(checkoutUrl));
     } catch (e) {
       if (mounted) setState(() => _error = e.toString());
