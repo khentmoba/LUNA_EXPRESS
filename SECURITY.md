@@ -14,7 +14,7 @@ How each item is enforced, and the manual steps that can't live in code.
 | 8 | Block field tampering | Rules use `hasOnly()` allowlists + a status state-machine; `create_checkout.ts` re-prices every line from a server menu and rejects amount mismatches; webhook re-verifies PAID via PayMongo API. |
 | 10 | Hash passwords | Staff: scrypt + per-user salt (`security.ts`); legacy sha256 auto-upgrades on next login. Riders: Firebase Auth (bcrypt/scrypt managed). First-run seed uses random passwords logged once — rotate after first login. |
 | 11 | Rate limit login | `checkRateLimit()` — 5 failures → 15-min lockout (Firestore-backed). |
-| 12 | Bot protection | App Check wired in `lib/main.dart` (`--dart-define=RECAPTCHA_V3_KEY=…`); enable enforcement in console (below). |
+| 12 | Bot protection | App Check wired in `lib/main.dart` (`--dart-define=RECAPTCHA_SITE_KEY=…`, reCAPTCHA Enterprise key registered 2026-09-28). Enforcement stays OFF until clients roll out — then enable per-service in console. |
 | 13 | Parameterize queries | Firestore SDK (no string-built queries); doc IDs allowlisted `^[A-Za-z0-9_-]+$`; webhook/coordinate inputs type-checked. |
 | 14 | Validate all input | Server: `cleanStr/optStr/cleanInt/validDocId` on every callable. Client: `lib/utils/validate.dart` on auth forms. |
 | 15 | Escape user content | Flutter `Text` auto-escapes; Telegram uses `escapeMd()`; GCash WebView has a host allowlist; map HTML interpolates numbers only. |
@@ -27,7 +27,7 @@ How each item is enforced, and the manual steps that can't live in code.
 
 1. **Secrets**: `firebase functions:secrets:set TELEGRAM_TOKEN|TELEGRAM_CHAT_ID|PAYMONGO_SECRET_KEY`, then deploy functions.
 2. **Restrict the web API key** (#3): Google Cloud Console → APIs & Services → Credentials → Browser key → HTTP referrers: `lunaexpress.web.app/*`, `lunaexpress.firebaseapp.com/*`.
-3. **App Check** (#12): Firebase Console → App Check → register web app (reCAPTCHA v3) → build with `--dart-define=RECAPTCHA_V3_KEY=<site-key>` → switch Firestore/Functions enforcement ON.
+3. **App Check** (#12): DONE 2026-09-28 — Enterprise SCORE key created (domains: web.app, firebaseapp.com, localhost) and registered via API. Enforcement intentionally OFF (correct sequencing: ship App-Check-ready clients first, enforce later). When ready: Console → App Check → APIs → enforce Firestore + Functions.
 4. **Rotate**: seeded staff passwords (see function logs), plus any PayMongo/Telegram secret that ever appeared in chat or shell history.
 
 ## #2 Purge git secrets

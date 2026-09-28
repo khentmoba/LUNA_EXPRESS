@@ -29,13 +29,12 @@ import 'features/pasugo/screens/rider_dashboard_screen.dart';
 import 'features/pasugo/admin/rider_management_screen.dart';
 import 'features/pasugo/screens/customer_errand_status_screen.dart';
 
-/// #12 bot protection: Firebase App Check (reCAPTCHA v3 on web).
+/// #12 bot protection: Firebase App Check (reCAPTCHA Enterprise on web).
 /// Site key is injected at build time so it never lands in git:
-///   flutter build web --dart-define=RECAPTCHA_V3_KEY=<key>
-/// Key: Firebase Console → App Check → Apps → Web → reCAPTCHA v3.
+///   flutter build web --dart-define=RECAPTCHA_SITE_KEY=<key>
 /// Until the key is set, activation is skipped (requests still work).
 Future<void> _activateAppCheck() async {
-  const siteKey = String.fromEnvironment('RECAPTCHA_V3_KEY');
+  const siteKey = String.fromEnvironment('RECAPTCHA_SITE_KEY');
   try {
     if (kDebugMode) {
       await FirebaseAppCheck.instance.activate(
@@ -46,10 +45,10 @@ Future<void> _activateAppCheck() async {
       await FirebaseAppCheck.instance.activate(
         androidProvider: AndroidProvider.playIntegrity,
         appleProvider: AppleProvider.appAttest,
-        webProvider: ReCaptchaV3Provider(siteKey),
+        webProvider: ReCaptchaEnterpriseProvider(siteKey),
       );
     } else {
-      debugPrint('AppCheck skipped: no RECAPTCHA_V3_KEY defined');
+      debugPrint('AppCheck skipped: no RECAPTCHA_SITE_KEY defined');
     }
   } catch (e) {
     debugPrint('AppCheck activation failed: $e');
