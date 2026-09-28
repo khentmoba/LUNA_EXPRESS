@@ -165,15 +165,13 @@ class _RiderManagementCard extends StatelessWidget {
             const SizedBox(height: 2),
             Text('Address: ${rider.address}',
                 style: theme.textTheme.bodySmall),
-            if (rider.registeredAt != null) ...[
-              const SizedBox(height: 2),
-              Text(
-                'Registered: ${rider.registeredAt.toLocal().toString().substring(0, 16)}',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.5),
-                ),
+            const SizedBox(height: 2),
+            Text(
+              'Registered: ${rider.registeredAt.toLocal().toString().substring(0, 16)}',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurface.withOpacity(0.5),
               ),
-            ],
+            ),
             if (rider.status == RiderStatus.pending) ...[
               const SizedBox(height: 12),
               Row(

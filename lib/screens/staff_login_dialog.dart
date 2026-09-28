@@ -1,6 +1,7 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../services/functions.dart';
 import '../widgets/kiosk/kiosk_theme.dart';
 import '../widgets/kiosk/juicy_feedback.dart';
 import '../services/session.dart';
@@ -44,18 +45,10 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
     });
 
     try {
-      final HttpsCallable callable = FirebaseFunctions.instanceFor(region: 'us-central1')
-          .httpsCallable(
-            'verifyStaff',
-            options: HttpsCallableOptions(timeout: const Duration(seconds: 15)),
-          );
-
-      final result = await callable.call({
+      final data = await callFn('verifyStaff', {
         'username': user,
         'password': pass,
       });
-
-      final data = result.data as Map<dynamic, dynamic>;
       final bool isSuccess = data['success'] == true;
 
       if (!mounted) return;

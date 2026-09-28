@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/errand_provider.dart';
+import '../state/errands.dart';
 import 'create_errand_screen.dart';
 import 'customer_errand_status_screen.dart';
 
@@ -36,7 +36,7 @@ class _PasugoScreenState extends State<PasugoScreen> {
 
     setState(() => _isLookingUp = true);
 
-    final provider = context.read<ErrandProvider>();
+    final provider = context.read<Errands>();
     final verified = await provider.verifyPin(phone, pin);
 
     if (!mounted) return;

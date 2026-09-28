@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/rider_provider.dart';
+import '../state/rider_auth.dart';
 
 /// Rider registration screen — collects name, phone, address, email, password.
 class RiderRegistrationScreen extends StatefulWidget {
@@ -34,7 +34,7 @@ class _RiderRegistrationScreenState extends State<RiderRegistrationScreen> {
   Future<void> _handleRegister() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final provider = context.read<RiderProvider>();
+    final provider = context.read<RiderAuth>();
     final success = await provider.registerRider(
       email: _emailController.text.trim(),
       password: _passwordController.text,
@@ -166,7 +166,7 @@ class _RiderRegistrationScreenState extends State<RiderRegistrationScreen> {
                 },
               ),
               const SizedBox(height: 24),
-              Consumer<RiderProvider>(
+              Consumer<RiderAuth>(
                 builder: (context, provider, _) {
                   if (provider.authError != null) {
                     return Padding(
@@ -180,7 +180,7 @@ class _RiderRegistrationScreenState extends State<RiderRegistrationScreen> {
                   return const SizedBox.shrink();
                 },
               ),
-              Consumer<RiderProvider>(
+              Consumer<RiderAuth>(
                 builder: (context, provider, _) {
                   return FilledButton(
                     onPressed: provider.isRegistering ? null : _handleRegister,

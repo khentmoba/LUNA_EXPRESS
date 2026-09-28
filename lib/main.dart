@@ -13,10 +13,10 @@ import 'screens/checkout_page.dart';
 import 'screens/kds_page.dart';
 import 'screens/analytics_page.dart';
 import 'screens/lifetime_analytics_page.dart';
-import 'features/pasugo/providers/errand_provider.dart';
-import 'features/pasugo/providers/session_provider.dart';
-import 'features/pasugo/providers/chat_provider.dart';
-import 'features/pasugo/providers/rider_provider.dart';
+import 'features/pasugo/state/errands.dart';
+import 'features/pasugo/state/sessions.dart';
+import 'features/pasugo/state/chat.dart';
+import 'features/pasugo/state/rider_auth.dart';
 import 'features/pasugo/screens/pasugo_screen.dart';
 import 'features/pasugo/screens/bulletin_board_screen.dart';
 import 'features/pasugo/screens/create_errand_screen.dart';
@@ -43,10 +43,10 @@ void main() async {
       providers: [
         ChangeNotifierProvider.value(value: kioskSession),
         ChangeNotifierProvider.value(value: cartNotifier),
-        ChangeNotifierProvider(create: (_) => ErrandProvider()),
-        ChangeNotifierProvider(create: (_) => SessionProvider()),
-        ChangeNotifierProvider(create: (_) => ChatProvider()),
-        ChangeNotifierProvider(create: (_) => RiderProvider()),
+        ChangeNotifierProvider(create: (_) => Errands()),
+        ChangeNotifierProvider(create: (_) => Sessions()),
+        ChangeNotifierProvider(create: (_) => Chat()),
+        ChangeNotifierProvider(create: (_) => RiderAuth()),
       ],
       child: const LunaExpressApp(),
     ),

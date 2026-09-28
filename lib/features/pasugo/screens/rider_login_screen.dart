@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/rider_provider.dart';
+import '../state/rider_auth.dart';
 import '../models/rider.dart';
 
 /// Rider login screen — email/password login with status-based redirection.
@@ -26,7 +26,7 @@ class _RiderLoginScreenState extends State<RiderLoginScreen> {
   Future<void> _handleLogin() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final provider = context.read<RiderProvider>();
+    final provider = context.read<RiderAuth>();
     final result = await provider.loginRider(
       email: _emailController.text.trim(),
       password: _passwordController.text,
@@ -112,7 +112,7 @@ class _RiderLoginScreenState extends State<RiderLoginScreen> {
                     : null,
               ),
               const SizedBox(height: 24),
-              Consumer<RiderProvider>(
+              Consumer<RiderAuth>(
                 builder: (context, provider, _) {
                   if (provider.authError != null) {
                     return Padding(
@@ -127,7 +127,7 @@ class _RiderLoginScreenState extends State<RiderLoginScreen> {
                   return const SizedBox.shrink();
                 },
               ),
-              Consumer<RiderProvider>(
+              Consumer<RiderAuth>(
                 builder: (context, provider, _) {
                   return FilledButton(
                     onPressed: provider.isLoggingIn ? null : _handleLogin,
