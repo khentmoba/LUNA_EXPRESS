@@ -25,7 +25,7 @@ enum DiningMode { eatIn, takeOut }
 
 class KioskSession extends ChangeNotifier {
   DiningMode? _diningMode;
-  String _currentCategoryId = 'shawarma';
+  String _currentCategoryId = 'sulit_meals';
 
   DiningMode? get diningMode => _diningMode;
   String get currentCategoryId => _currentCategoryId;
@@ -42,7 +42,7 @@ class KioskSession extends ChangeNotifier {
 
   void reset() {
     _diningMode = null;
-    _currentCategoryId = 'shawarma';
+    _currentCategoryId = 'sulit_meals';
     notifyListeners();
   }
 }

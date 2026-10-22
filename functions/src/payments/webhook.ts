@@ -67,7 +67,7 @@ export const paymongoWebhook = onRequest(
                 `💰 *Amount:* \u20B1${escapeMd(String(data.totalAmount || 0))}`,
                 `💳 *Payment:* GCash via PayMongo`,
                 `📦 *Type:* ${escapeMd(String(data.type || ''))}`,
-                `🕐 *Paid at:* ${new Date().toLocaleString('en-PH')}`,
+                `🕐 *Paid at:* ${escapeMd(new Date().toLocaleString('en-PH'))}`,
               ].join('\n'));
             }
           } catch (notifErr) {

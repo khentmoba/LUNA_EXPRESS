@@ -7,13 +7,77 @@ import { cleanStr, optStr, cleanInt } from '../util/security';
 const ORDER_TYPES = ['Walk-In', 'Pickup', 'Delivery'];
 const MAX_ITEMS = 50;
 
-const itemLines = (items: any[]): string =>
+export const itemLines = (items: any[]): string =>
   items
     .map((i: any) => {
-      const variantText = i.variant?.length > 0 ? ` \(${escapeMd(i.variant)}\)` : '';
+      const variantText = i.variant?.length > 0 ? ` \\(${escapeMd(i.variant)}\\)` : '';
       return `  • ${i.quantity}x ${escapeMd(i.name)}${variantText} — ₱${escapeMd((i.price * i.quantity).toString())}`;
     })
     .join('\n');
+
+export interface OrderNotificationData {
+  orderNumber: string;
+  customerName: string;
+  customerAddress?: string;
+  customerPhone?: string;
+  items: Array<{ name: string; variant?: string; price: number; quantity: number }>;
+  total: number;
+  timeStr?: string;
+  orderType: string;
+  deliveryFee?: number;
+  paymentMethod?: string;
+  paymentStatus?: string;
+  lat?: number | null;
+  lng?: number | null;
+}
+
+export function formatOrderNotification(data: OrderNotificationData): string {
+  const isWalkIn = data.orderType === 'Walk-In';
+  const isPickup = data.orderType === 'Pickup';
+  const lines = itemLines(data.items);
+
+  return isWalkIn
+    ? [
+      `🔔 *WALK\\-IN ORDER — ${escapeMd(data.orderNumber)}*`,
+      `🏪 *Type:* Walk\\-In  \\[STAFF ENTRY\\]`,
+      '',
+      `👤 *Name:* ${escapeMd(data.customerName)}`,
+      `📞 *Phone:* ${escapeMd(data.customerPhone || '')}`,
+      '',
+      `🛒 *Items:*`,
+      lines,
+      '',
+      `💳 *Payment:* ${escapeMd(data.paymentMethod || 'Cash')}  \\-  ✅ *${escapeMd(data.paymentStatus || 'PAID')}*`,
+      '',
+      `💰 *TOTAL:* ₱*${escapeMd(data.total.toString())}*`,
+      `🕐 *Time:* ${escapeMd(data.timeStr || '')}`,
+      '',
+      `✅ _Walk\\-in complete — paid at POS\\._`
+    ].join('\n')
+    : [
+      `🔔 *NEW ORDER — ${escapeMd(data.orderNumber)}*`,
+      `${isPickup ? '🏪' : '🛵'} *Type:* ${escapeMd(data.orderType || '')}`,
+      '',
+      `👤 *Name:* ${escapeMd(data.customerName)}`,
+      ...(isPickup ? [] : [`📍 *Address:* ${escapeMd(data.customerAddress || '')}`]),
+      ...(!isPickup && data.lat != null && data.lng != null
+        ? [`🗺 [View on Google Maps](https://www.google.com/maps?q=${data.lat},${data.lng})`]
+        : []),
+      `📞 *Phone:* ${escapeMd(data.customerPhone || '')}`,
+      '',
+      `🛒 *Items:*`,
+      lines,
+      '',
+      `🚚 *Delivery Fee:* ₱${escapeMd((data.deliveryFee || 0).toString())}`,
+      `💳 *Payment Method:* ${escapeMd(data.paymentMethod || 'Cash')}`,
+      `📝 *Payment Status:* ${escapeMd(data.paymentStatus || 'NOT PAID')}${data.paymentStatus === 'AWAITING_PAYMENT' ? ' \\(GCash\\)' : ''}`,
+      '',
+      `💰 *TOTAL:* ₱*${escapeMd(data.total.toString())}*`,
+      `🕐 *Time:* ${escapeMd(data.timeStr || '')}`,
+      '',
+      `✅ _Please prepare this order\\!_`
+    ].join('\n');
+}
 
 // Public kiosk endpoint: strict validation + sanitization instead of auth (#14).
 export const sendOrderNotification = onCall(
@@ -45,51 +109,21 @@ export const sendOrderNotification = onCall(
     const lat = (typeof d.lat === 'number' && Math.abs(d.lat) <= 90) ? d.lat : null;
     const lng = (typeof d.lng === 'number' && Math.abs(d.lng) <= 180) ? d.lng : null;
 
-    const isWalkIn = orderType === 'Walk-In';
-    const isPickup = orderType === 'Pickup';
-    const lines = itemLines(items);
-
-    const message = isWalkIn
-      ? [
-        `🔔 *WALK\\-IN ORDER — ${escapeMd(orderNumber)}*`,
-        `🏪 *Type:* Walk\\-In  \\[STAFF ENTRY\\]`,
-        '',
-        `👤 *Name:* ${escapeMd(customerName)}`,
-        `📞 *Phone:* ${escapeMd(customerPhone || '')}`,
-        '',
-        `🛒 *Items:*`,
-        lines,
-        '',
-        `💳 *Payment:* ${escapeMd(paymentMethod || 'Cash')}  \\-  ✅ *${escapeMd(paymentStatus || 'PAID')}*`,
-        '',
-        `💰 *TOTAL:* ₱*${escapeMd(total.toString())}*`,
-        `🕐 *Time:* ${escapeMd(timeStr || '')}`,
-        '',
-        `✅ _Walk\\-in complete — paid at POS\\._`
-      ].join('\n')
-      : [
-        `🔔 *NEW ORDER — ${escapeMd(orderNumber)}*`,
-        `${isPickup ? '🏪' : '🛵'} *Type:* ${escapeMd(orderType || '')}`,
-        '',
-        `👤 *Name:* ${escapeMd(customerName)}`,
-        ...(isPickup ? [] : [`📍 *Address:* ${escapeMd(customerAddress || '')}`]),
-        ...(!isPickup && lat != null && lng != null
-          ? [`🗺 [View on Google Maps](https://www.google.com/maps?q=${lat},${lng})`]
-          : []),
-        `📞 *Phone:* ${escapeMd(customerPhone || '')}`,
-        '',
-        `🛒 *Items:*`,
-        lines,
-        '',
-        `🚚 *Delivery Fee:* ₱${escapeMd((deliveryFee || 0).toString())}`,
-        `💳 *Payment Method:* ${escapeMd(paymentMethod || 'Cash')}`,
-        `📝 *Payment Status:* ${escapeMd(paymentStatus || 'NOT PAID')}${paymentStatus === 'AWAITING_PAYMENT' ? ' \\(GCash\\)' : ''}`,
-        '',
-        `💰 *TOTAL:* ₱*${escapeMd(total.toString())}*`,
-        `🕐 *Time:* ${escapeMd(timeStr || '')}`,
-        '',
-        `✅ _Please prepare this order\\!_`
-      ].join('\n');
+    const message = formatOrderNotification({
+      orderNumber,
+      customerName,
+      customerAddress,
+      customerPhone,
+      items,
+      total,
+      timeStr,
+      orderType,
+      deliveryFee,
+      paymentMethod,
+      paymentStatus,
+      lat,
+      lng,
+    });
 
     logger.info(`Sending order notification for ${orderNumber} to Telegram`);
     try {

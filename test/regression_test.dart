@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:luna_express/services/delivery.dart';
 import 'package:luna_express/services/cart_notifier.dart';
@@ -5,6 +6,8 @@ import 'package:luna_express/models/cart.dart';
 import 'package:luna_express/utils/format.dart';
 import 'package:luna_express/models/order.dart';
 import 'package:luna_express/features/pasugo/models/errand.dart';
+import 'package:luna_express/data/menu_data.dart';
+import 'package:luna_express/services/telegram_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 CartItem item({
@@ -109,6 +112,11 @@ void main() {
   });
 
   group('order serialization', () {
+    test('generateOrderNumber generates valid LU-XXXXX pattern', () {
+      final orderNumber = TelegramService.generateOrderNumber();
+      expect(RegExp(r'^LU-\d{5}$').hasMatch(orderNumber), isTrue);
+    });
+
     test('OrderItem total = price * qty', () {
       final j = OrderItem(
         name: 'Fries',
@@ -185,5 +193,46 @@ void main() {
       expect(back.locationPin, const GeoPoint(9.0, 125.5));
       expect(back.createdAt, now);
     });
+  });
+
+  group('menu sections and new meals', () {
+    test('contains sulit_meals and chicken_poppers sections', () {
+      final sectionIds = kMenuSections.map((s) => s.id).toList();
+      expect(sectionIds, contains('sulit_meals'));
+      expect(sectionIds, contains('chicken_poppers'));
+    });
+
+    test('sulit_meals contains S1-S5 and Pork Sisig with valid assets', () {
+      final sulit = kMenuSections.firstWhere((s) => s.id == 'sulit_meals');
+      expect(sulit.items.length, 6);
+      for (final item in sulit.items) {
+        expect(item.displayPrice, 99);
+        expect(item.imageUrl, isNotEmpty);
+        expect(
+          File(item.imageUrl).existsSync(),
+          isTrue,
+          reason: 'Asset ${item.imageUrl} must exist on disk',
+        );
+      }
+    });
+
+    test(
+      'chicken_poppers contains all 6 signature flavors with valid assets',
+      () {
+        final poppers = kMenuSections.firstWhere(
+          (s) => s.id == 'chicken_poppers',
+        );
+        expect(poppers.items.length, 6);
+        for (final item in poppers.items) {
+          expect(item.displayPrice, 99);
+          expect(item.imageUrl, isNotEmpty);
+          expect(
+            File(item.imageUrl).existsSync(),
+            isTrue,
+            reason: 'Asset ${item.imageUrl} must exist on disk',
+          );
+        }
+      },
+    );
   });
 }

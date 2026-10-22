@@ -16,6 +16,7 @@
    - Do NOT run manual production deployments (`firebase deploy`) without explicit user instruction.
 
 2. **Always create a Pull Request (PR).**
+   - Always use the `$pr-first` skill when making PRs.
    - Create a feature or fix branch (e.g., `fix/descriptive-name` or `feature/descriptive-name`).
    - Push to that branch and open a PR against `main` using `gh pr create`.
    - Let the user review and merge the PR when ready.

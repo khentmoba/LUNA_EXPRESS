@@ -2,6 +2,142 @@ import '../models/menu.dart';
 
 final List<MenuSection> kMenuSections = [
   MenuSection(
+    id: 'sulit_meals',
+    title: 'Sulit Meals',
+    emoji: '🍱',
+    subtitle: 'COMPLETE RICE BOWLS WITH DRINK: ALL SELECTIONS ARE ₱99',
+    items: [
+      MenuItem(
+        id: 'sm1',
+        name: 'S1 – Hungarian Sausage',
+        emoji: '🌭🍚',
+        description:
+            'Grilled Hungarian sausage, savory siomai, ham, sunny-side-up fried egg, and steamed rice. Comes with a refreshing cold drink.',
+        price: 99,
+        imageUrl: 'images/sulit_hungarian_sausage.jpg',
+        promoLabel: '₱99 ONLY',
+      ),
+      MenuItem(
+        id: 'sm2',
+        name: 'S2 – Pork Tocino',
+        emoji: '🥓🍚',
+        description:
+            'Sweet cured glazed pork tocino, savory siomai, ham, sunny-side-up fried egg, and steamed rice. Comes with a refreshing cold drink.',
+        price: 99,
+        imageUrl: 'images/sulit_tocino.jpg',
+        promoLabel: '₱99 ONLY',
+      ),
+      MenuItem(
+        id: 'sm3',
+        name: 'S3 – Shawarma Rice',
+        emoji: '🌯🍚',
+        description:
+            'Tender marinated shawarma meat with cucumber-tomato salsa and garlic sauce, savory siomai, ham, sunny-side-up fried egg, and steamed rice. Comes with a refreshing cold drink.',
+        price: 99,
+        imageUrl: 'images/sulit_shawarma.jpg',
+        promoLabel: '₱99 ONLY',
+      ),
+      MenuItem(
+        id: 'sm4',
+        name: 'S4 – Jumbo Hotdog',
+        emoji: '🌭🍚',
+        description:
+            'Classic scored jumbo hotdog, savory siomai, ham, sunny-side-up fried egg, and steamed rice. Comes with a refreshing cold drink.',
+        price: 99,
+        imageUrl: 'images/sulit_jumbo_hotdog.jpg',
+        promoLabel: '₱99 ONLY',
+      ),
+      MenuItem(
+        id: 'sm5',
+        name: 'S5 – Luncheon Meat',
+        emoji: '🥪🍚',
+        description:
+            'Crispy golden-fried luncheon meat slices, savory siomai, ham, sunny-side-up fried egg, and steamed rice. Comes with a refreshing cold drink.',
+        price: 99,
+        imageUrl: 'images/sulit_spam.jpg',
+        promoLabel: '₱99 ONLY',
+      ),
+      MenuItem(
+        id: 'sm_sisig',
+        name: "Luna's Pork Sisig",
+        emoji: '🍳🌶️',
+        description:
+            'Savory minced pork sisig drizzled with creamy garlic sauce, fresh calamansi, chili, and sunny-side-up egg over warm rice.',
+        price: 99,
+        imageUrl: 'images/pork_sisig.jpg',
+        promoLabel: '₱99 ONLY',
+      ),
+    ],
+  ),
+  MenuSection(
+    id: 'chicken_poppers',
+    title: 'Chicken Poppers',
+    emoji: '🍗',
+    subtitle: 'CRISPY POPPERS RICE BOWL WITH EGG & DRINK: ₱99 EACH',
+    items: [
+      MenuItem(
+        id: 'cp_korean_bbq',
+        name: 'Korean Barbeque Poppers',
+        emoji: '🍗🥢',
+        description:
+            'Crispy bite-sized chicken poppers glazed in smoky-sweet Korean BBQ sauce, sprinkled with toasted sesame seeds. Served with egg, rice, and a drink.',
+        price: 99,
+        imageUrl: 'images/poppers_korean_bbq.jpg',
+        promoLabel: '₱99 ONLY',
+      ),
+      MenuItem(
+        id: 'cp_korean_yangnyeom',
+        name: 'Korean Yangnyeom Poppers',
+        emoji: '🍗🌶️',
+        description:
+            'Crispy chicken poppers tossed in authentic sweet and mildly spicy Korean yangnyeom sauce with sesame seeds. Served with egg, rice, and a drink.',
+        price: 99,
+        imageUrl: 'images/poppers_korean_yangnyeom.jpg',
+        promoLabel: '₱99 ONLY',
+      ),
+      MenuItem(
+        id: 'cp_lemon_glaze',
+        name: 'Lemon Glaze Poppers',
+        emoji: '🍗🍋',
+        description:
+            'Crispy chicken poppers coated in a refreshing sweet and tangy lemon glaze with fresh lemon zest. Served with egg, rice, and a drink.',
+        price: 99,
+        imageUrl: 'images/poppers_lemon_glaze.jpg',
+        promoLabel: '₱99 ONLY',
+      ),
+      MenuItem(
+        id: 'cp_teriyaki_gloss',
+        name: 'Teriyaki Gloss Poppers',
+        emoji: '🍗🍯',
+        description:
+            'Crispy chicken poppers coated in rich, savory-sweet Japanese teriyaki glaze and toasted sesame seeds. Served with egg, rice, and a drink.',
+        price: 99,
+        imageUrl: 'images/poppers_teriyaki_gloss.jpg',
+        promoLabel: '₱99 ONLY',
+      ),
+      MenuItem(
+        id: 'cp_creamy_cheese',
+        name: 'Creamy Cheese Poppers',
+        emoji: '🍗🧀',
+        description:
+            'Crispy chicken poppers smothered in rich creamy cheddar cheese sauce and herbs. Served with egg, cucumber, rice, and a drink.',
+        price: 99,
+        imageUrl: 'images/poppers_creamy_cheese.jpg',
+        promoLabel: '₱99 ONLY',
+      ),
+      MenuItem(
+        id: 'cp_mango_habanero',
+        name: 'Mango Habanero Poppers',
+        emoji: '🍗🥭',
+        description:
+            'Crispy chicken poppers tossed in sweet tropical mango glaze with a fiery habanero kick and sesame seeds. Served with egg, rice, and a drink.',
+        price: 99,
+        imageUrl: 'images/poppers_mango_habanero.jpg',
+        promoLabel: '₱99 ONLY',
+      ),
+    ],
+  ),
+  MenuSection(
     id: 'shawarma',
     title: 'Shawarma Favorites',
     emoji: '🌯',
