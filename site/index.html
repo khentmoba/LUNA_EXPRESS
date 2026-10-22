@@ -82,6 +82,7 @@
           <i style="--i:9"></i><i style="--i:10"></i><i style="--i:11"></i><i style="--i:12"></i>
           <b style="--i:1">39</b><b style="--i:3">117</b><b style="--i:6">234</b><b style="--i:9">351</b><b style="--i:12">468</b>
         </span>
+        <span class="rail__fares" aria-hidden="true" data-fares></span>
       </div>
 
       <p class="fare__read"><b data-peso>₱117</b><span>for delivery</span></p>
@@ -94,23 +95,7 @@
   </section>
 
   <section class="board" id="board" aria-labelledby="board-title">
-    <div class="board__head">
-      <h2 class="board__title paint" id="board-title">Price board</h2>
-      <p class="board__sub">Every price we charge, painted where you can read it. Same numbers in the app, nothing added at checkout.</p>
-    </div>
-
-    <div class="board__offers">
-      <article class="offer">
-        <p class="offer__tag">Sulit meals</p>
-        <p class="offer__price">₱99</p>
-        <p class="offer__line">A full rice bowl, a fried egg and a cold drink. Hungarian sausage · tocino · shawarma rice · jumbo hotdog · luncheon meat · pork sisig.</p>
-      </article>
-      <article class="offer">
-        <p class="offer__tag">Chicken poppers</p>
-        <p class="offer__price">₱99</p>
-        <p class="offer__line">Crispy poppers with rice, egg and a drink. Korean barbeque · yangnyeom · lemon glaze · teriyaki · creamy cheese · mango habanero.</p>
-      </article>
-    </div>
+    <h2 class="board__title paint" id="board-title">Price board</h2>
 
     <div class="board__cols">
       <div class="col">
@@ -150,8 +135,24 @@
       </div>
     </div>
 
+    <div class="board__offers">
+      <p class="offer">
+        <span class="offer__tag">Sulit meals</span>
+        <span class="offer__line">A full rice bowl, a fried egg and a cold drink. Hungarian sausage · tocino · shawarma rice · jumbo hotdog · luncheon meat · pork sisig.</span>
+        <span class="offer__dots" aria-hidden="true"></span>
+        <span class="offer__price">₱99</span>
+      </p>
+      <p class="offer">
+        <span class="offer__tag">Chicken poppers</span>
+        <span class="offer__line">Crispy poppers with rice, egg and a drink. Korean barbeque · yangnyeom · lemon glaze · teriyaki · creamy cheese · mango habanero.</span>
+        <span class="offer__dots" aria-hidden="true"></span>
+        <span class="offer__price">₱99</span>
+      </p>
+    </div>
+
     <p class="board__foot">
-      Flavours, add-ons and the full list live in the app.
+      Every price we charge is on this board. Same numbers in the app — the only thing added at checkout is the
+      delivery fare. Flavours and the full list live in the app.
       <a class="link-underline" href="/kiosk/#/menu">Open the menu</a>
     </p>
   </section>
@@ -181,7 +182,7 @@
   <section class="find" id="find" aria-labelledby="find-title">
     <div class="find__head">
       <h2 class="find__title paint" id="find-title">Find us</h2>
-      <p class="find__copy">Walk in and eat at the kiosk, or send us your pin and we ride it over. Same kitchen, same prices, whichever way you come.</p>
+      <p class="find__copy">Walk in and eat at the kiosk, or send us your pin and we ride it over. Whichever way you come, the fare is ₱39 a kilometre.</p>
     </div>
     <div class="find__board">
       <address class="find__addr">
@@ -189,6 +190,7 @@
         Magallanes, Agusan del Norte
       </address>
       <p class="find__land"><span>Unahan lang gamay sa</span> 7/11</p>
+      <p class="find__hours"><span>Oras · opening hours</span> <em>to follow</em></p>
     </div>
     <p class="actions actions--tight">
       <a class="plate plate--ghost" href="https://www.google.com/maps/search/?api=1&amp;query=Luna+Bites+%26+Delights+Poblacion+Magallanes+Agusan+del+Norte" target="_blank" rel="noopener">Open in Maps</a>

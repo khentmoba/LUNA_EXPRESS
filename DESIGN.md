@@ -7,6 +7,7 @@ colors:
   panel: "#2c2016"
   board: "#1b130d"
   line: "#4a3728"
+  line-soft: "rgba(203, 191, 168, 0.22)"
   tan: "#e0c9a6"
   tan-dim: "#b39c7c"
   cream: "#f7eedd"
@@ -115,6 +116,8 @@ give us: no hours, no phone number, no ratings.
 - **Cream** (`#f7eedd`): primary type, 14.8:1 on enamel.
 - **Ink** (`#0f0906`): type on cream plates only.
 
+Cream is the only light ink on a painted plate (`#a3301a`, 6.55:1); the brighter `#fff6e9` is retired.
+
 ### Named Rules
 
 **The One Vermilion Rule.** Bright vermilion is a state, not a surface. If a rectangle carries type, it is
@@ -152,11 +155,14 @@ or wider, minimum 0.72rem (11.5px) — the compact bar plate included.
 
 ## Layout
 
-- **Page width**: content `max-width: 1240px`, gutters `clamp(18px, 4.6vw, 60px)`, sections separated by
-  chrome rules (`border-image` from `--chrome`).
+- **Page width**: one content column, `max-width: 1120px`, inside gutters `clamp(18px, 4.6vw, 60px)`. Every
+  section holds the same left edge (160px at 1440, 18px at 390); no section may inset its content further.
+- **Section rules**: flat 1px cream at 28% alpha (`--hairline`); the top strip is a flat 2px tan line, not a
+  gradient imitation of chrome.
 - **Hero**: two columns `minmax(0,1fr) minmax(430px,1.04fr)` — wordmark and copy left, the fare instrument
   panel right. The panel's photo mount is 16:9, capped at 176px tall on desktop, 260px below 940px.
-- **Price board**: three columns of dish rows behind a two-card offer strip; offers stack at 940px.
+- **Price board**: the painted header, then the three columns of dish rows, then the two ₱99 offer lines.
+  Rows start at y≈790 on a 1440×900 first viewport, so prices are legible above the fold.
 - **Window wall**: 12-column grid of rotated photo mounts, spans a4/b2/c3/d3; 2×2 at 6 columns on tablet;
   full / pair-pair / full on phones.
 - **Find**: heading and intro in a two-column head, then one address board carrying the landmark callout.
@@ -169,27 +175,28 @@ or wider, minimum 0.72rem (11.5px) — the compact bar plate included.
 
 Depth is painted, never blurred into a glow.
 
-- **Plate lip**: `box-shadow: 0 .32em 0 var(--verm-deep), 0 1.4em 2.2em -1.2em rgba(0,0,0,.9)` at rest; the
-  lip deepens to `.44em` and the plate lifts `translateY(-2px)` on hover, presses to `.1em` on active.
+- **Plate**: `box-shadow: 0 .06em 0 var(--verm-deep), 0 .55em 1em -.55em rgba(0,0,0,.9)` at rest — a hairline
+  of the darker red under the edge plus a soft cast. Hover lifts `translateY(-2px)` and lengthens the cast;
+  active presses to `translateY(2px)` with a short one.
 - **Panel**: `inset 0 2px 0 rgba(255,255,255,.045), 0 34px 60px -46px #000` — a lit top edge and a long soft
   cast.
 - **Photo mount**: the image carries a 6px cream paper border and `0 22px 34px -22px #000`; the figure is
   rotated 1–2 degrees off-axis.
-- **Sticky bar**: acquires `0 14px 26px -22px #000` once scrolled past 6px.
+- **Sticky bar**: acquires `0 14px 26px -22px #000` once scrolled past 6px. Photo tags carry only a cast:
+  `0 6px 14px -8px rgba(0,0,0,.9)`.
 - **Focus**: `outline: 2px solid var(--tan); outline-offset: 3px` (5px on the rail).
 
 ### Named Rules
 
-**The Painted Lip Rule.** Every raised surface gets a hard lip in a darker red plus one soft black cast. No
-coloured glow, no zero-offset halo, no backdrop blur.
+**The Painted Cast Rule.** Depth is a short dark line under the edge plus one soft black cast. No hard
+zero-blur offset slabs, no coloured glow, no zero-offset halo, no backdrop blur.
 
 ## Shapes
 
-Square corners everywhere (`0px`) — this is a painted board, not a card UI. Form language comes from the
-`--chrome` gradient used as a 1–6px rule and as `border-image` on section edges, from `clip-path` slash
-shapes (the swash, the plate corners), and from rotation: tags at ~2°, photo mounts between 1° and 2° off
-true, so the wall reads as taped-up prints. Dotted leaders (`border-bottom: 1px dotted`) connect a dish to
-its price.
+Square corners everywhere (`0px`) — this is a painted board, not a card UI. Rules are flat: a 2px tan strip
+at the top, 1px cream at 28% under section edges, dotted leaders (`1px dotted`, cream at 22–26%) connecting a
+dish to its price. `clip-path` cuts the one swash under the wordmark. Rotation carries the print quality:
+tags at ~2.2°, photo mounts between 1° and 2° off true.
 
 ## Components
 
@@ -197,28 +204,31 @@ its price.
 
 - **Shape:** square, painted, uppercase Karla 700 at 0.16em tracking.
 - **Primary:** vermilion plate `#a3301a` with cream type; lip in `--verm-deep`; padding `1.1em 1.7em`.
-- **Cream:** `--plate--invert` — cream ground, ink type, lip in `rgba(15,9,6,.3)`; used for the one order
-  action on the closing band.
+- **Cream:** `--plate--invert` — cream ground, `--verm-deep` type, cast in black at 35%; used for the one
+  order action on the closing band.
 - **Ghost:** transparent with `inset 0 0 0 2px rgba(224,201,166,.5)`, tan type; hover fills the border to
   `--tan`.
 - **Compact:** `--plate--sm` at 0.72rem / 0.1em for the 320px bar; `--plate--xl` at 1.25em / 2.3em for the
   closing call to action.
-- **States:** hover lifts 2px and deepens the lip; active presses back; focus uses the tan ring.
+- **States:** hover lifts 2px and darkens to `#b8381e`; active presses 2px down; focus uses the tan ring.
 
 ### Fare rail (signature component)
 
-A real instrument, not a decoration. A 52px-tall `role="slider"` spans 1–12 km; ticks and five fare labels
-(₱39 / ₱117 / ₱234 / ₱351 / ₱468) live **outside** the slider in `.rail-wrap` so the control keeps its own
-hit area and `aria-describedby="rail-note"`. A red needle with a "3 KM" chip rides the track, `left` driven
-by `--v`, with a spring easing (`cubic-bezier(.3, 1.24, .42, 1)`) except while dragging (`.1s linear`). The
-fare readout and every `[data-km]` / `[data-peso]` node update together; `aria-valuenow` and
-`aria-valuetext` follow. Pointer capture for drag, arrows / Page / Home / End for keyboard, needle entrance
-from 1→3 km on load unless `prefers-reduced-motion`.
+A real instrument, not a decoration. A 52px-tall `role="slider"` spans 1–12 km; ticks, fare labels and the
+fare table live **outside** the slider in `.rail-wrap`, so the control keeps its own hit area and
+`aria-describedby="rail-note"`. Tall ticks sit on the labelled stops (1, 3, 6, 9, 12 km), never on an
+unlabelled one. Above 940px the rail prints all twelve fares (₱39…₱468, 11.2px) and bolds the active stop;
+below 940px the five majors remain. A red needle with a "3 KM" chip rides the track, `left` driven by
+`--v`, spring easing (`cubic-bezier(.3, 1.24, .42, 1)`) except while dragging (`.1s linear`). The fare
+readout, every `[data-km]` / `[data-peso]`, and `aria-valuenow` / `aria-valuetext` update together. Pointer
+capture for drag, arrows / Page / Home / End for keyboard, needle entrance from 1→3 km on load unless
+`prefers-reduced-motion`. The focus ring clears the labels by 9px.
 
-### Offer cards
+### Offer lines
 
-Panel ground, a painted ₱99 plate for the price, tag and dish list stacked beside it, `inset 0 1px 0
-rgba(255,255,255,.06)` for the lit edge. No side tabs, no accent border.
+The two ₱99 offers are board lines, not cards: tag in Big Shoulders, the flavour list in Karla at 0.82rem, a
+dotted leader, and the price on a painted plate at the right edge. Below 700px the tag and price take the
+first row and the flavour list spans the second. No panel, no equal-card row.
 
 ### Photo mounts
 
@@ -232,8 +242,10 @@ numerals on the right; promo rows tint the price `#ffb9a4`. The ₱ glyph appear
 
 ### Address board
 
-Board ground, chrome top rule, address in Big Shoulders at 1.3 leading, and the landmark callout — "Unahan
-lang gamay sa 7/11" with `7/11` in the lighter red `#e2603f` — set on the same baseline. Actions sit below.
+Board ground, 3px cream top rule, address in Big Shoulders at 1.3 leading, and the landmark callout — "Unahan
+lang gamay sa 7/11" with `7/11` in the lighter red `#e2603f` — set on the same baseline. A fourth line holds
+the hours slot the owner has not filled yet: `Oras · opening hours` with `to follow` on a dashed underline,
+so the hole is visible and marked instead of invented. Actions sit below.
 
 ## Do's and Don'ts
 
@@ -241,7 +253,7 @@ lang gamay sa 7/11" with `7/11` in the lighter red `#e2603f` — set on the same
 
 - **Do** paint every type-bearing surface in `--verm-plate` and check cream on it (6.55:1).
 - **Do** set functional labels at 11.5px or larger, uppercase Karla, 0.16em tracking or wider.
-- **Do** give raised surfaces a hard lip plus one soft black cast, and lift 2px on hover.
+- **Do** give raised surfaces a short dark edge plus one soft black cast, and lift 2px on hover.
 - **Do** keep the fare rail's ticks and labels outside the slider element.
 - **Do** rotate photo mounts 1–2° and pin a painted tag on them.
 - **Do** end with one full-bleed vermilion band and one cream plate.
@@ -250,7 +262,9 @@ lang gamay sa 7/11" with `7/11` in the lighter red `#e2603f` — set on the same
 
 - **Don't** put cream type on `#d8452a`; that brightness is a live state, not a background.
 - **Don't** add coloured glows, zero-offset halos, or radial background washes.
-- **Don't** use colored left-border tabs on cards, glyph icons, or a second accent hue.
-- **Don't** round corners, use backdrop-filter, or draw depth with blur alone.
+- **Don't** use colored left-border tabs on cards, equal-card rows for offers, glyph icons, or a second
+  accent hue.
+- **Don't** round corners, use backdrop-filter, fake chrome with gradients, or draw depth with blur alone.
+- **Don't** mark hours, phone or ratings as if they existed; use the `to follow` slot.
 - **Don't** invent business facts — hours, phone numbers, ratings, and testimonials do not exist yet.
 - **Don't** duplicate the ordering flow here; every order action links to `/kiosk/`.

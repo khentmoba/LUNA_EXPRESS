@@ -19,8 +19,20 @@
     var needle = rail.querySelector('.rail__needle');
     var tag = rail.querySelector('[data-km]');
     var pesos = document.querySelector('[data-peso]');
+    var fareRow = document.querySelector('[data-fares]');
+    var fares = [];
     var km = 3;
     var dragging = false;
+
+    if (fareRow) {
+      for (var i = MIN; i <= MAX; i += 1) {
+        var cell = document.createElement('em');
+        cell.style.setProperty('--i', String(i));
+        cell.textContent = String(i * FEE);
+        fareRow.appendChild(cell);
+        fares.push(cell);
+      }
+    }
 
     var money = function (n) {
       return '₱' + n.toLocaleString('en-PH');
@@ -41,6 +53,9 @@
           'translateX(' + (km <= 2 ? '-22%' : km >= 11 ? '-78%' : '-50%') + ')';
       }
       if (pesos) pesos.textContent = money(fee);
+      for (var i = 0; i < fares.length; i += 1) {
+        fares[i].classList.toggle('is-active', i + MIN === km);
+      }
     }
 
     function kmAt(event) {
