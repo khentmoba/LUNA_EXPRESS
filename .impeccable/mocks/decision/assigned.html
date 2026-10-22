@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Harap ng Jeepney — first viewport</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Karla:wght@400;500;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --enamel:#241a12; --panel:#1b130d; --board:#2e2116;
+  --cream:#f7eedd; --tan:#e0c9a6; --chrome:#cbbfa8; --verm:#d8452a;
+}
+html,body{background:#120c07}
+.frame{width:1440px;height:900px;position:relative;overflow:hidden;
+  background:radial-gradient(120% 90% at 18% 8%, #332418 0%, #241a12 45%, #17110b 100%);
+  font-family:Karla,system-ui,sans-serif;color:var(--cream);
+  -webkit-font-smoothing:antialiased}
+.rail{height:7px;background:linear-gradient(180deg,#fbf3e2 0%,#d9c9ab 38%,#8f7c60 56%,#efe3c9 100%)}
+.rail.thin{height:3px;opacity:.65}
+header{display:flex;align-items:center;justify-content:space-between;
+  padding:14px 56px 0}
+.place{font-size:12.5px;letter-spacing:.34em;text-transform:uppercase;color:var(--tan);opacity:.85}
+nav{display:flex;align-items:center;gap:30px}
+nav span{font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--tan)}
+.plate{background:var(--verm);color:#fff4e4;padding:13px 22px;font-weight:700;
+  font-size:13px;letter-spacing:.2em;text-transform:uppercase;
+  box-shadow:0 6px 0 #7d2416, inset 0 1px 0 rgba(255,255,255,.35)}
+main{display:grid;grid-template-columns:795px 1fr;gap:54px;padding:14px 56px 0;
+  align-items:start}
+h1{font-family:'Big Shoulders Display',Haettenschweiler,'Arial Narrow',sans-serif;
+  font-weight:900;font-size:128px;line-height:.8;letter-spacing:-.012em;color:#fdf6e8;
+  text-shadow:5px 6px 0 #120c07, 0 0 70px rgba(216,69,42,.22)}
+h1 em{font-style:normal;color:var(--tan)}
+.sub{font-family:'Big Shoulders Display',Haettenschweiler,'Arial Narrow',sans-serif;
+  font-weight:700;font-size:42px;letter-spacing:.085em;line-height:1;color:var(--tan);
+  margin-top:12px;text-transform:uppercase}
+.swash{width:330px;height:8px;background:var(--verm);margin:15px 0 15px;
+  clip-path:polygon(0 40%,100% 0,99% 78%,1% 100%)}
+.lede{font-size:21.5px;line-height:1.4;color:#efe2cd;max-width:34ch}
+.lede b{color:#fff;font-weight:700}
+.bar{height:8px;border-radius:2px;background:currentColor;opacity:.3;margin:9px 0}
+.bar.w80{width:80%}.bar.w62{width:62%}
+.cta{display:flex;align-items:center;gap:16px;margin-top:24px}
+.big{background:var(--verm);color:#fff6e9;padding:21px 36px;font-weight:700;font-size:22px;
+  letter-spacing:.09em;text-transform:uppercase;box-shadow:0 9px 0 #7d2416,inset 0 1px 0 rgba(255,255,255,.4)}
+.ghost{border:2px solid rgba(224,201,166,.55);color:var(--tan);padding:19px 26px;
+  font-size:15px;letter-spacing:.16em;text-transform:uppercase;font-weight:500}
+.pay{display:flex;gap:22px;margin-top:18px;font-size:13.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:#c8b291}
+/* fare board */
+.board{background:var(--panel);border:1px solid rgba(203,191,168,.28);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.05), 0 26px 60px -30px #000;padding:22px 24px 20px}
+.board h2{font-family:'Big Shoulders Display',Haettenschweiler,'Arial Narrow',sans-serif;
+  font-weight:800;font-size:38px;letter-spacing:.02em;color:#fdf6e8;text-transform:uppercase}
+.board .hint{font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;color:#a5906f;margin-top:4px}
+.railway{position:relative;margin:52px 0 4px;height:60px}
+.track{position:absolute;left:0;right:0;top:26px;height:2px;
+  background:linear-gradient(90deg,rgba(224,201,166,.85),rgba(224,201,166,.5))}
+.tick{position:absolute;top:20px;width:1.5px;height:13px;background:var(--chrome);opacity:.8}
+.fare{position:absolute;top:44px;transform:translateX(-50%);font-size:16.5px;
+  font-feature-settings:"tnum";color:#d9c6a4;letter-spacing:.02em}
+.fare.on{color:#fff3df;font-weight:700;font-size:19px}
+.needle{position:absolute;top:-6px;width:3px;height:60px;background:var(--verm);
+  box-shadow:0 0 16px rgba(216,69,42,.9)}
+.needle::before{content:"";position:absolute;top:-9px;left:-6px;border:7.5px solid transparent;
+  border-top-color:var(--verm)}
+.needle b{position:absolute;top:-30px;left:50%;transform:translateX(-50%);white-space:nowrap;
+  font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:#ffd9c9}
+.photo{margin-top:18px;position:relative;transform:rotate(-1.4deg)}
+.photo img{display:block;width:100%;height:214px;object-fit:cover;border:6px solid #fbf3e2;
+  box-shadow:12px 14px 0 rgba(0,0,0,.45)}
+.tag{position:absolute;right:-14px;bottom:18px;background:var(--verm);color:#fff4e6;
+  padding:9px 15px;font-weight:700;font-size:15px;letter-spacing:.11em;text-transform:uppercase;
+  transform:rotate(2.4deg);box-shadow:0 5px 0 #7d2416}
+/* price board */
+.priceband{margin-top:22px;background:var(--board);border-top:7px solid transparent;
+  border-image:linear-gradient(180deg,#fbf3e2,#8f7c60) 1;padding:18px 56px 22px;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:0 46px}
+.priceband h3{grid-column:1/-1;font-size:12px;letter-spacing:.34em;text-transform:uppercase;
+  color:#a5906f;margin-bottom:10px}
+.ledger{display:flex;align-items:baseline;gap:8px;padding:5px 0;
+  border-bottom:1px dotted rgba(224,201,166,.28)}
+.ledger .n{font-family:'Big Shoulders Display',Haettenschweiler,'Arial Narrow',sans-serif;
+  font-weight:700;font-size:25px;letter-spacing:.02em;color:#f6ecd9;white-space:nowrap}
+.ledger .p{margin-left:auto;font-size:23px;font-feature-settings:"tnum";color:var(--tan);font-weight:500}
+.ledger .p::before{content:"₱";font-size:.72em;margin-right:2px;opacity:.75}
+</style></head>
+<body><div class="frame">
+  <div class="rail"></div>
+  <header>
+    <div class="place">Magallanes · Agusan del Norte</div>
+    <nav><span>The kiosk</span><span>Price board</span><span>Facebook</span>
+      <div class="plate">Order</div></nav>
+  </header>
+  <main>
+    <div>
+      <h1>LUNA<br><em>BITES</em></h1>
+      <div class="sub">&amp; Delights</div>
+      <div class="swash"></div>
+      <p class="lede"><b>Delivered around Magallanes, ₱39 a kilometre.</b> Good food, sweet drinks, moonlit vibes — from Purok 5, unahan lang gamay sa 7/11.</p>
+      <div class="cta"><div class="big">Order for delivery</div><div class="ghost">See the board</div></div>
+      <div class="pay"><span>Cash</span><span>GCash</span><span>Bayad pag-abot</span></div>
+    </div>
+    <div>
+      <div class="board">
+        <h2>Saan ka?</h2>
+        <div class="railway">
+          <div class="track"></div>
+          <div class="tick" style="left:0"></div>
+          <div class="tick" style="left:12.5%"></div>
+          <div class="tick" style="left:25%"></div>
+          <div class="tick" style="left:37.5%"></div>
+          <div class="tick" style="left:50%"></div>
+          <div class="tick" style="left:62.5%"></div>
+          <div class="tick" style="left:75%"></div>
+          <div class="tick" style="left:87.5%"></div>
+          <div class="tick" style="left:100%"></div>
+          <div class="fare" style="left:0">39</div>
+          <div class="fare" style="left:12.5%">78</div>
+          <div class="fare on" style="left:25%">117</div>
+          <div class="fare" style="left:37.5%">156</div>
+          <div class="fare" style="left:50%">195</div>
+          <div class="fare" style="left:62.5%">234</div>
+          <div class="fare" style="left:75%">273</div>
+          <div class="fare" style="left:87.5%">312</div>
+          <div class="fare" style="left:100%">351</div>
+          <div class="needle" style="left:25%"><b>3 km · ₱117</b></div>
+        </div>
+        <div class="hint" style="margin-top:2px">Slide to your distance — ₱39 per km</div>
+        <div class="photo"><img src="../../../images/halo_halo.png" alt="">
+          <div class="tag">Halo-halo ₱49</div></div>
+      </div>
+    </div>
+  </main>
+  <div class="priceband">
+    <h3>Price board — painted every morning</h3>
+    <div>
+      <div class="ledger"><span class="n">Shawarma Wrap</span><span class="p">60</span></div>
+      <div class="ledger"><span class="n">Shawarma All Meat</span><span class="p">80</span></div>
+      <div class="ledger"><span class="n">Rice Bowl</span><span class="p">50</span></div>
+    </div>
+    <div>
+      <div class="ledger"><span class="n">Buy 1 Take 1 Fries</span><span class="p">50</span></div>
+      <div class="ledger"><span class="n">Bucket Fries</span><span class="p">99</span></div>
+      <div class="ledger"><span class="n">Couple Snack Combo</span><span class="p">169</span></div>
+    </div>
+    <div>
+      <div class="ledger"><span class="n">Ice Cream Halo-Halo</span><span class="p">49</span></div>
+      <div class="ledger"><span class="n">3 Coolers</span><span class="p">100</span></div>
+      <div class="ledger"><span class="n">Milo Dinosaur</span><span class="p">59</span></div>
+    </div>
+  </div>
+  <div class="rail thin" style="position:absolute;left:0;right:0;bottom:0"></div>
+</div></body></html>
+
+<!-- rendered after serve -->

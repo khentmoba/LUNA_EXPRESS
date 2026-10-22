@@ -50,7 +50,6 @@ dependencies:
   intl: ^0.20.0
   crypto: ^3.0.7
   firebase_app_check: ^0.4.8
-  url_launcher: ^6.3.3
 
 dev_dependencies:
   flutter_test:

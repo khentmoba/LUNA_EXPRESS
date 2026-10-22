@@ -4,28 +4,14 @@
   <base href="$FLUTTER_BASE_HREF">
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="Luna Bites &amp; Delights — good food, sweet drinks, moonlit vibes. Shawarma, burgers, fries, halo-halo and large coolers in Poblacion Magallanes, Agusan del Norte. Order online.">
-
-  <!-- Social preview -->
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Luna Bites &amp; Delights">
-  <meta property="og:title" content="Luna Bites &amp; Delights — Magallanes">
-  <meta property="og:description" content="Tambayan ng good food, sweet drinks, at moonlit vibes. Order shawarma, burgers, fries and large coolers.">
-  <meta property="og:url" content="https://lunaexpress.web.app/">
-  <meta property="og:image" content="https://lunaexpress.web.app/images/og-cover.jpg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Luna Bites &amp; Delights — Magallanes">
-  <meta name="twitter:description" content="Good food, sweet drinks, moonlit vibes. Order online.">
-  <meta name="twitter:image" content="https://lunaexpress.web.app/images/og-cover.jpg">
+  <meta name="description" content="Luna Bites & Delights — Fast food ordering app">
 
   <!-- iOS PWA -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Luna Express">
-  <meta name="theme-color" content="#2C1D11">
+  <meta name="apple-mobile-web-app-title" content="Luna Bites">
+  <meta name="theme-color" content="#241A12">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <!-- PWA manifest & icons -->
@@ -33,7 +19,7 @@
   <link rel="icon" type="image/png" href="favicon.png"/>
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
-  <title>Luna Bites &amp; Delights — Magallanes</title>
+  <title>Order · Luna Bites &amp; Delights</title>
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -51,7 +37,7 @@
       top: 0; left: 0; right: 0;
       z-index: 99999;
       background: #4A3728;
-      color: #DEC995;
+      color: #170F07;
       padding: 14px 20px;
       align-items: center;
       gap: 12px;
@@ -68,7 +54,7 @@
     #update-banner .title { font-weight: 900; font-size: 14px; }
     #update-banner .sub   { font-size: 11px; color: rgba(222, 201, 149, 0.65); margin-top: 2px; }
     #update-btn {
-      background: #DEC995;
+      background: #170F07;
       color: #4A3728; border: none; border-radius: 20px;
       padding: 9px 18px; font-size: 13px; font-weight: 900;
       cursor: pointer; white-space: nowrap;
@@ -88,10 +74,10 @@
     }
     #loading-screen.fade-out { opacity: 0; pointer-events: none; }
     .loading-logo  { width: 120px; height: 120px; margin-bottom: 24px; animation: float 3s ease-in-out infinite; }
-    .loading-title { color: #F7EBD9; font-size: 24px; font-weight: 900; letter-spacing: 4px; }
-    .loading-sub   { color: rgba(222, 201, 149, 0.75); font-size: 11px; letter-spacing: 3px; margin-top: 10px; }
+    .loading-title { color: #4A3728; font-size: 28px; font-weight: 900; letter-spacing: 5px; }
+    .loading-sub   { color: rgba(74, 55, 40, 0.6); font-size: 12px; letter-spacing: 3px; margin-top: 8px; }
     .loading-dots  { display: flex; gap: 8px; margin-top: 36px; }
-    .dot { width: 8px; height: 8px; background: #DEC995; border-radius: 50%; animation: bounce 1.2s ease-in-out infinite; }
+    .dot { width: 8px; height: 8px; background: #4A3728; border-radius: 50%; animation: bounce 1.2s ease-in-out infinite; }
     .dot:nth-child(2) { animation-delay: 0.2s; }
     .dot:nth-child(3) { animation-delay: 0.4s; }
     
@@ -106,9 +92,8 @@
 
   <!-- Loading screen (fades out once Flutter is ready) -->
   <div id="loading-screen">
-    <img class="loading-logo" src="images/luna_logo.png" alt="Luna Bites &amp; Delights">
-    <div class="loading-title">LUNA BITES &amp; DELIGHTS</div>
-    <div class="loading-sub">GOOD FOOD · SWEET DRINKS</div>
+    <div class="loading-title">LUNA EXPRESS</div>
+    <div class="loading-sub">FAST DELIVERY · FRESH DAILY</div>
     <div class="loading-dots">
       <div class="dot"></div>
       <div class="dot"></div>

@@ -24,7 +24,9 @@ jobs:
 
       - run: flutter pub get
 
-      - run: flutter build web --release --dart-define=RECAPTCHA_SITE_KEY=${{ secrets.RECAPTCHA_SITE_KEY }}
+      - run: flutter build web --release --base-href /kiosk/ --dart-define=RECAPTCHA_SITE_KEY=${{ secrets.RECAPTCHA_SITE_KEY }}
+
+      - run: dart run tool/assemble_site.dart
 
       - run: npm ci
         working-directory: functions
