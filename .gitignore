@@ -56,3 +56,7 @@ functions/.env
 # OS related
 .DS_Store
 Thumbs.db
+
+# Local screenshot scratch dirs
+.live/
+.preview/
