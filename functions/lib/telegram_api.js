@@ -4,8 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getBot = getBot;
+exports.setBot = setBot;
 exports.sendToAll = sendToAll;
 exports.escapeMd = escapeMd;
+exports.stripMarkdownV2 = stripMarkdownV2;
 const node_telegram_bot_api_1 = __importDefault(require("node-telegram-bot-api"));
 const index_1 = require("./index");
 const firebase_functions_1 = require("firebase-functions");
@@ -16,6 +18,9 @@ function getBot() {
     }
     return bot;
 }
+function setBot(customBot) {
+    bot = customBot;
+}
 async function sendToAll(message, options = {}) {
     const rawIds = index_1.telegramChatIds.value().split(',');
     const ids = rawIds
@@ -25,11 +30,29 @@ async function sendToAll(message, options = {}) {
         throw new Error('TELEGRAM_CHAT_ID is not configured — no recipients to notify');
     }
     const telegram = getBot();
-    const results = await Promise.allSettled(ids.map(id => {
-        return telegram.sendMessage(id, message, {
-            parse_mode: 'MarkdownV2',
-            ...options
-        });
+    const sendOpts = {
+        parse_mode: 'MarkdownV2',
+        ...options,
+    };
+    const results = await Promise.allSettled(ids.map(async (id) => {
+        try {
+            return await telegram.sendMessage(id, message, sendOpts);
+        }
+        catch (err) {
+            const isParseError = sendOpts.parse_mode &&
+                (err?.message?.includes("can't parse entities") ||
+                    err?.response?.body?.description?.includes("can't parse entities") ||
+                    err?.message?.includes('400'));
+            if (isParseError) {
+                firebase_functions_1.logger.warn(`sendToAll: MarkdownV2 parsing failed for chat ${id}; falling back to plain text`, {
+                    error: err?.message,
+                    chatId: id,
+                });
+                const { parse_mode: _, ...plainOpts } = sendOpts;
+                return await telegram.sendMessage(id, stripMarkdownV2(message), plainOpts);
+            }
+            throw err;
+        }
     }));
     const failures = results.filter(r => r.status === 'rejected');
     if (failures.length > 0) {
@@ -45,6 +68,10 @@ async function sendToAll(message, options = {}) {
 }
 // Utility to escape MarkdownV2 special characters
 function escapeMd(text) {
-    return text.replace(/([_*\[\]()~`>#+\-=|{}.!])/g, '\\$1');
+    return String(text ?? '').replace(/([_*\[\]()~`>#+\-=|{}.!\\])/g, '\\$1');
+}
+/** Strips backslash escapes for falling back to plain-text delivery. */
+function stripMarkdownV2(text) {
+    return text.replace(/\\([_*\[\]()~`>#+\-=|{}.!\\])/g, '$1');
 }
 //# sourceMappingURL=telegram_api.js.map
