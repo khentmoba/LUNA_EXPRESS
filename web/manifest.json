@@ -4,8 +4,8 @@
   "description": "Fast food ordering app — Shawarma, Burgers, Hotdog & more!",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#E8192C",
-  "theme_color": "#E8192C",
+  "background_color": "#170F07",
+  "theme_color": "#2C1D11",
   "orientation": "portrait",
   "icons": [
     {

@@ -160,7 +160,7 @@ class _InactivityWatcherState extends State<InactivityWatcher> {
   void _performReset() {
     cartNotifier.clear();
     kioskSession.reset();
-    Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil('/kiosk', (route) => false);
   }
 
   @override

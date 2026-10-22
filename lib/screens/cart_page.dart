@@ -46,7 +46,7 @@ class KioskCartPage extends StatelessWidget {
                     kioskSession.reset();
                     Navigator.of(
                       context,
-                    ).pushNamedAndRemoveUntil('/', (route) => false);
+                    ).pushNamedAndRemoveUntil('/kiosk', (route) => false);
                   },
                   child: Text(
                     'CANCEL ORDER',

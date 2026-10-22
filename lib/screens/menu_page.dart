@@ -168,7 +168,7 @@ class KioskMenuPage extends StatelessWidget {
                           cartNotifier.clear();
                           Navigator.of(
                             context,
-                          ).pushNamedAndRemoveUntil('/', (route) => false);
+                          ).pushNamedAndRemoveUntil('/kiosk', (route) => false);
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(
