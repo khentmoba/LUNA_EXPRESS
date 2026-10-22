@@ -210,18 +210,23 @@ void main() {
       }
     });
 
-    test('chicken_poppers contains all 6 signature flavors with valid assets', () {
-      final poppers = kMenuSections.firstWhere((s) => s.id == 'chicken_poppers');
-      expect(poppers.items.length, 6);
-      for (final item in poppers.items) {
-        expect(item.displayPrice, 99);
-        expect(item.imageUrl, isNotEmpty);
-        expect(
-          File(item.imageUrl).existsSync(),
-          isTrue,
-          reason: 'Asset ${item.imageUrl} must exist on disk',
+    test(
+      'chicken_poppers contains all 6 signature flavors with valid assets',
+      () {
+        final poppers = kMenuSections.firstWhere(
+          (s) => s.id == 'chicken_poppers',
         );
-      }
-    });
+        expect(poppers.items.length, 6);
+        for (final item in poppers.items) {
+          expect(item.displayPrice, 99);
+          expect(item.imageUrl, isNotEmpty);
+          expect(
+            File(item.imageUrl).existsSync(),
+            isTrue,
+            reason: 'Asset ${item.imageUrl} must exist on disk',
+          );
+        }
+      },
+    );
   });
 }
