@@ -1,21 +1,37 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import '../models/order.dart';
+import '../utils/format.dart';
 import 'functions.dart';
 
 class TelegramService {
-  static String generateOrderNumber() {
-    final n = 10000 + Random().nextInt(90000);
-    return 'LU-$n';
+  /// Display number in PHT: `LU-YYMMDD-HHMMSS`.
+  ///
+  /// Time-based rather than random: two kiosks cannot issue the same number in
+  /// the same second, and the sequence is readable to staff. Uniqueness of the
+  /// record itself comes from the Firestore document id, not from this string.
+  static String generateOrderNumber() => orderNumberFor(phtNow());
+
+  static String orderNumberFor(DateTime phtTime) {
+    String two(int n) => n.toString().padLeft(2, '0');
+    final yy = two(phtTime.year % 100);
+    final date = '$yy${two(phtTime.month)}${two(phtTime.day)}';
+    final clock =
+        '${two(phtTime.hour)}${two(phtTime.minute)}${two(phtTime.second)}';
+    return 'LU-$date-$clock';
   }
 
   /// Sends an order notification to Telegram. Returns true on success.
+  ///
+  /// [orderDocId] lets the function record whether the notification actually
+  /// went out, so staff can find orders that were saved but never announced.
   static Future<bool> sendOrder({
     required OrderModel order,
     required String timeStr,
+    required String orderDocId,
   }) async {
     try {
       final data = await callFn('sendOrderNotification', {
+        'orderDocId': orderDocId,
         'orderNumber': order.orderId,
         'customerName': order.customerName,
         'customerAddress': order.customerAddress,

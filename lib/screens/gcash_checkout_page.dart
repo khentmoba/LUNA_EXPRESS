@@ -5,6 +5,9 @@ import '../services/functions.dart';
 import '../widgets/kiosk/kiosk_theme.dart';
 
 class GCashCheckoutPage extends StatefulWidget {
+  /// Firestore document id of the saved order — the payment result is written
+  /// back to this document, so it must be the real one, not the display number.
+  final String orderDocId;
   final String orderId;
   final int amount;
   final List<Map<String, dynamic>> items;
@@ -13,6 +16,7 @@ class GCashCheckoutPage extends StatefulWidget {
 
   const GCashCheckoutPage({
     super.key,
+    required this.orderDocId,
     required this.orderId,
     required this.amount,
     required this.items,
@@ -77,6 +81,7 @@ class _GCashCheckoutPageState extends State<GCashCheckoutPage> {
   Future<void> _startCheckout() async {
     try {
       final data = await callFn('createCheckoutSession', {
+        'orderDocId': widget.orderDocId,
         'orderId': widget.orderId,
         'amount': widget.amount,
         'items': widget.items,

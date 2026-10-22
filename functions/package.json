@@ -9,7 +9,7 @@
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
-    "test": "npm run build && node --test test/telegram_notification.test.js",
+    "test": "npm run build && node --test test/telegram_notification.test.js test/payment_reconciliation.test.js",
     "test:rules": "npx --yes firebase-tools emulators:exec --only firestore \"node --test test/firestore-rules.test.js\""
   },
   "engines": {

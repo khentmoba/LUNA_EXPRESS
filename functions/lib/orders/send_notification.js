@@ -3,12 +3,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendOrderNotification = exports.itemLines = void 0;
 exports.formatOrderNotification = formatOrderNotification;
 const https_1 = require("firebase-functions/v2/https");
+const firestore_1 = require("firebase-admin/firestore");
 const telegram_api_1 = require("../telegram_api");
 const index_1 = require("../index");
 const firebase_functions_1 = require("firebase-functions");
 const security_1 = require("../util/security");
 const ORDER_TYPES = ['Walk-In', 'Pickup', 'Delivery'];
 const MAX_ITEMS = 50;
+const DOC_ID = /^[A-Za-z0-9]{1,64}$/;
+/** Records notification outcome on the order. Never fails the request. */
+async function markNotified(orderDocId, sent) {
+    if (!orderDocId)
+        return;
+    try {
+        await (0, firestore_1.getFirestore)().collection('orders').doc(orderDocId)
+            .set({ telegramSent: sent }, { merge: true });
+    }
+    catch (error) {
+        firebase_functions_1.logger.warn(`Could not record notification status for ${orderDocId}`, error);
+    }
+}
 const itemLines = (items) => items
     .map((i) => {
     const variantText = i.variant?.length > 0 ? ` \\(${(0, telegram_api_1.escapeMd)(i.variant)}\\)` : '';
@@ -66,6 +80,7 @@ function formatOrderNotification(data) {
 exports.sendOrderNotification = (0, https_1.onCall)({ secrets: [index_1.telegramToken, index_1.telegramChatIds] }, // #1: secrets server-side only
 async (request) => {
     const d = request.data || {};
+    const orderDocId = typeof d.orderDocId === 'string' && DOC_ID.test(d.orderDocId) ? d.orderDocId : null;
     const orderNumber = (0, security_1.cleanStr)(d.orderNumber, 32, 'orderNumber');
     const customerName = (0, security_1.cleanStr)(d.customerName, 100, 'customerName');
     const customerAddress = (0, security_1.optStr)(d.customerAddress);
@@ -106,9 +121,11 @@ async (request) => {
     firebase_functions_1.logger.info(`Sending order notification for ${orderNumber} to Telegram`);
     try {
         await (0, telegram_api_1.sendToAll)(message);
+        await markNotified(orderDocId, true);
         return { success: true };
     }
     catch (error) {
+        await markNotified(orderDocId, false);
         firebase_functions_1.logger.error(`Error sending Telegram notification for ${orderNumber}`, error);
         throw new https_1.HttpsError('internal', 'Failed to send Telegram notification');
     }

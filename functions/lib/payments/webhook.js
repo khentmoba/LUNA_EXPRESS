@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.paymongoWebhook = void 0;
+exports.resolveOrderDocId = resolveOrderDocId;
 const https_1 = require("firebase-functions/v2/https");
 const firestore_1 = require("firebase-admin/firestore");
 const firebase_functions_1 = require("firebase-functions");
@@ -17,6 +18,21 @@ async function isSessionPaid(sessionId, auth) {
     const json = await res.json();
     const payments = json?.data?.attributes?.payments || [];
     return payments.some((p) => p?.attributes?.status === 'paid');
+}
+/** Firestore doc ids are alphanumeric; the legacy display number may hold '-' too. */
+const DOC_ID = /^[A-Za-z0-9]{1,64}$/;
+const LEGACY_DOC_ID = /^[A-Za-z0-9_-]{1,64}$/;
+// The kiosk writes the payment result onto the order document it created, and
+// passes that document id through PayMongo metadata. reference_number stays the
+// human-facing order number, so it can no longer be used as the document key.
+function resolveOrderDocId(attrs) {
+    const fromMeta = attrs?.metadata?.order_doc_id;
+    if (typeof fromMeta === 'string' && DOC_ID.test(fromMeta))
+        return fromMeta;
+    const fromRef = attrs?.reference_number;
+    if (typeof fromRef === 'string' && LEGACY_DOC_ID.test(fromRef))
+        return fromRef;
+    return null;
 }
 exports.paymongoWebhook = (0, https_1.onRequest)({ secrets: [index_1.paymongoSecret, index_1.telegramToken, index_1.telegramChatIds] }, async (req, res) => {
     if (req.method !== 'POST') {
@@ -47,20 +63,22 @@ exports.paymongoWebhook = (0, https_1.onRequest)({ secrets: [index_1.paymongoSec
             const attrs = event.data.attributes || {};
             const refNumber = attrs.reference_number;
             const paymentId = attrs.payments?.[0]?.id || '';
-            if (refNumber && /^[A-Za-z0-9_-]+$/.test(String(refNumber))) {
+            const docId = resolveOrderDocId(attrs);
+            if (docId) {
                 const db = (0, firestore_1.getFirestore)();
-                await db.collection('orders').doc(refNumber).update({
+                const orderRef = db.collection('orders').doc(docId);
+                await orderRef.update({
                     paymentStatus: 'PAID',
                     paymongoPaymentId: String(paymentId).slice(0, 128),
                     paidAt: new Date().toISOString(),
                 });
                 try {
-                    const orderDoc = await db.collection('orders').doc(refNumber).get();
+                    const orderDoc = await orderRef.get();
                     if (orderDoc.exists) {
                         const data = orderDoc.data();
                         await (0, telegram_api_1.sendToAll)([
                             `✅ *PAYMENT CONFIRMED*`,
-                            `📄 *Order:* ${(0, telegram_api_1.escapeMd)(refNumber)}`,
+                            `📄 *Order:* ${(0, telegram_api_1.escapeMd)(String(data.orderId || refNumber || docId))}`,
                             `👤 *Customer:* ${(0, telegram_api_1.escapeMd)(String(data.customerName || ''))}`,
                             `💰 *Amount:* \u20B1${(0, telegram_api_1.escapeMd)(String(data.totalAmount || 0))}`,
                             `💳 *Payment:* GCash via PayMongo`,
@@ -72,15 +90,15 @@ exports.paymongoWebhook = (0, https_1.onRequest)({ secrets: [index_1.paymongoSec
                 catch (notifErr) {
                     firebase_functions_1.logger.error('Failed to send payment confirmation to Telegram:', notifErr);
                 }
-                firebase_functions_1.logger.info(`Order ${refNumber} marked as PAID via verified webhook`);
+                firebase_functions_1.logger.info(`Order ${docId} marked as PAID via verified webhook`);
             }
         }
         if (event.type === 'checkout_session.payment.failed') {
-            const refNumber = event.data?.attributes?.reference_number;
-            if (refNumber && /^[A-Za-z0-9_-]+$/.test(String(refNumber))) {
-                await (0, firestore_1.getFirestore)().collection('orders').doc(refNumber)
+            const docId = resolveOrderDocId(event.data?.attributes || {});
+            if (docId) {
+                await (0, firestore_1.getFirestore)().collection('orders').doc(docId)
                     .update({ paymentStatus: 'PAYMENT_FAILED' });
-                firebase_functions_1.logger.info(`Order ${refNumber} payment failed`);
+                firebase_functions_1.logger.info(`Order ${docId} payment failed`);
             }
         }
         res.status(200).send('OK');

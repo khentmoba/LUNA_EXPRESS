@@ -112,9 +112,9 @@ void main() {
   });
 
   group('order serialization', () {
-    test('generateOrderNumber generates valid LU-XXXXX pattern', () {
+    test('generateOrderNumber generates a PHT timestamp number', () {
       final orderNumber = TelegramService.generateOrderNumber();
-      expect(RegExp(r'^LU-\d{5}$').hasMatch(orderNumber), isTrue);
+      expect(RegExp(r'^LU-\d{6}-\d{6}$').hasMatch(orderNumber), isTrue);
     });
 
     test('OrderItem total = price * qty', () {
