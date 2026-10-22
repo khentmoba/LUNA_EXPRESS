@@ -37,7 +37,7 @@
       top: 0; left: 0; right: 0;
       z-index: 99999;
       background: #4A3728;
-      color: #170F07;
+      color: #F7EEDD;
       padding: 14px 20px;
       align-items: center;
       gap: 12px;
@@ -169,8 +169,9 @@
       setTimeout(function() {
         if (!_refreshing) {
           _refreshing = true;
-          var cleanUrl = window.location.href.split('?')[0];
-          window.location.replace(cleanUrl + '?v=' + new Date().getTime());
+          var next = new URL(window.location.href);
+          next.searchParams.set('v', new Date().getTime());
+          window.location.replace(next.toString());
         }
       }, 400);
     }
@@ -179,7 +180,7 @@
     //  iOS VERSION POLLING
     // ─────────────────────────────────────────
     function checkVersionUpdate() {
-      fetch('/version.json?t=' + Date.now(), {
+      fetch('version.json?t=' + Date.now(), {
         cache: 'no-store',
         headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' }
       })
@@ -246,7 +247,7 @@
     //  SERVICE WORKER (Android & iOS 11.3+)
     // ─────────────────────────────────────────
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').then(function(registration) {
+      navigator.serviceWorker.register('sw.js').then(function(registration) {
         console.log('[SW] Registered');
 
         document.addEventListener('visibilitychange', function() {
@@ -281,8 +282,9 @@
       navigator.serviceWorker.addEventListener('controllerchange', function() {
         if (!_refreshing) {
           _refreshing = true;
-          var cleanUrl = window.location.href.split('?')[0];
-          window.location.replace(cleanUrl + '?v=' + new Date().getTime());
+          var next = new URL(window.location.href);
+          next.searchParams.set('v', new Date().getTime());
+          window.location.replace(next.toString());
         }
       });
     }
