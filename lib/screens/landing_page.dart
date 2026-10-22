@@ -382,10 +382,10 @@ class _NavBar extends StatelessWidget {
         maxWidth: 1240,
         child: Row(
           children: [
-            Flexible(
+            Expanded(
               child: GestureDetector(
                 onTap: onMenu,
-                behavior: HitTestBehavior.opaque,
+                behavior: HitTestBehavior.deferToChild,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -438,7 +438,6 @@ class _NavBar extends StatelessWidget {
                 ),
               ),
             ),
-            const Spacer(),
             if (!compact) ...[
               _NavLink('MENU', onMenu, fg),
               _NavLink('WHY LUNA', onWhy, fg),
