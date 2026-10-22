@@ -1,35 +1,4 @@
 {
-  "indexes": [
-    {
-      "collectionGroup": "pasugo_errands",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "status", "order": "ASCENDING" },
-        { "fieldPath": "createdAt", "order": "DESCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "pasugo_errands",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "customerPhone", "order": "ASCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "pasugo_sessions",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "riderId", "order": "ASCENDING" },
-        { "fieldPath": "status", "order": "ASCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "pasugo_sessions",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "errandId", "order": "ASCENDING" }
-      ]
-    }
-  ],
+  "indexes": [],
   "fieldOverrides": []
 }

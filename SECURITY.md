@@ -8,17 +8,17 @@ How each item is enforced, and the manual steps that can't live in code.
 |---|------|-------|
 | 1 | Hide API keys | `functions/src/index.ts` — `TELEGRAM_*` + `PAYMONGO_SECRET_KEY` are Secret Manager secrets, never client-visible. Deploy: `firebase functions:secrets:set <NAME>` for each. |
 | 3 | Public DB key | Firebase web `apiKey` in `lib/firebase_options.dart` is public by design; access is enforced by rules + App Check, not by hiding it. Restrict it anyway (below). |
-| 4,7 | Row-level security / record access | `firestore.rules` — default deny, per-collection rules, participant-only chat reads. |
+| 4,7 | Row-level security / record access | `firestore.rules` — default deny, per-collection rules; order reads/updates only through staff callables. |
 | 5 | Encrypt sensitive data | At rest: Google-managed encryption (Firestore/Auth/Storage). In transit: TLS everywhere. PII stripped from logs; `login_attempts` keys are hashed. |
 | 6,9 | Server-side auth / sessions | Staff login returns a Firebase custom token w/ `role` claim (`verify_staff.ts`); KDS/analytics/report callables `requireStaff()`. No more forgeable `{success:true}` sessions. |
-| 8 | Block field tampering | Rules use `hasOnly()` allowlists + a status state-machine; `create_checkout.ts` re-prices every line from a server menu and rejects amount mismatches; webhook re-verifies PAID via PayMongo API. |
-| 10 | Hash passwords | Staff: scrypt + per-user salt (`security.ts`); legacy sha256 auto-upgrades on next login. Riders: Firebase Auth (bcrypt/scrypt managed). First-run seed uses random passwords logged once — rotate after first login. |
+| 8 | Block field tampering | Rules use `hasOnly()` allowlists on the `orders` create payload; `create_checkout.ts` re-prices every line from a server menu and rejects amount mismatches; webhook re-verifies PAID via PayMongo API. |
+| 10 | Hash passwords | Staff: scrypt + per-user salt (`security.ts`); legacy sha256 auto-upgrades on next login. First-run seed uses random passwords logged once — rotate after first login. |
 | 11 | Rate limit login | `checkRateLimit()` — 5 failures → 15-min lockout (Firestore-backed). |
 | 12 | Bot protection | App Check wired in `lib/main.dart` (`--dart-define=RECAPTCHA_SITE_KEY=…`, reCAPTCHA Enterprise key registered 2026-09-28). Enforcement stays OFF until clients roll out — then enable per-service in console. |
 | 13 | Parameterize queries | Firestore SDK (no string-built queries); doc IDs allowlisted `^[A-Za-z0-9_-]+$`; webhook/coordinate inputs type-checked. |
 | 14 | Validate all input | Server: `cleanStr/optStr/cleanInt/validDocId` on every callable. Client: `lib/utils/validate.dart` on auth forms. |
 | 15 | Escape user content | Flutter `Text` auto-escapes; Telegram uses `escapeMd()`; GCash WebView has a host allowlist; map HTML interpolates numbers only. |
-| 16 | Restrict uploads | `storage.rules` — owner-only `riders/{uid}/*`, images, <5MB, no delete. |
+| 16 | Restrict uploads | `storage.rules` — Storage is closed to all clients; nothing in the app uploads. |
 | 17 | Trim API responses | KDS returns a fixed projection (no `...data`); error messages generic; provider errors not leaked. |
 | 18,19 | Headers / HTTPS | `firebase.json` — HSTS, nosniff, DENY framing, Referrer/Permissions-Policy. Hosting is HTTPS-only by default. |
 | 20 | Scan dependencies | CI (`.github/workflows/pr-checks.yml`): `npm audit --audit-level=high`, `flutter pub outdated` + full test/build gate. Run locally: `cd functions && npm audit`, `flutter pub outdated`. |
