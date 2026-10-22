@@ -1,9 +1,16 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-const maptilerKey = 'WdrFoTJ8mK1mg0cZdDoM';
-const tileUrl =
-    'https://api.maptiler.com/maps/streets-v2/256/{z}/{x}/{y}.png?key=$maptilerKey';
+/// MapTiler key for the location picker, supplied at build time:
+/// `--dart-define=MAPTILER_KEY=...`. Empty when the build did not provide one;
+/// [tileUrl] is then empty and callers skip their tile layer instead of
+/// requesting tiles with a missing key.
+const maptilerKey = String.fromEnvironment('MAPTILER_KEY');
+
+/// Empty when no key was compiled in.
+final String tileUrl = maptilerKey.isEmpty
+    ? ''
+    : 'https://api.maptiler.com/maps/streets-v2/256/{z}/{x}/{y}.png?key=$maptilerKey';
 const _searchUrl =
     'https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5';
 const reverseUrl =
