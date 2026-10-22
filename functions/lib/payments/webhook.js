@@ -65,7 +65,7 @@ exports.paymongoWebhook = (0, https_1.onRequest)({ secrets: [index_1.paymongoSec
                             `💰 *Amount:* \u20B1${(0, telegram_api_1.escapeMd)(String(data.totalAmount || 0))}`,
                             `💳 *Payment:* GCash via PayMongo`,
                             `📦 *Type:* ${(0, telegram_api_1.escapeMd)(String(data.type || ''))}`,
-                            `🕐 *Paid at:* ${new Date().toLocaleString('en-PH')}`,
+                            `🕐 *Paid at:* ${(0, telegram_api_1.escapeMd)(new Date().toLocaleString('en-PH'))}`,
                         ].join('\n'));
                     }
                 }

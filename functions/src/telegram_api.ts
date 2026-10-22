@@ -11,6 +11,10 @@ export function getBot() {
   return bot;
 }
 
+export function setBot(customBot: any) {
+  bot = customBot;
+}
+
 export async function sendToAll(message: string, options: any = {}) {
   const rawIds = telegramChatIds.value().split(',');
   const ids = rawIds
@@ -22,13 +26,31 @@ export async function sendToAll(message: string, options: any = {}) {
   }
 
   const telegram = getBot();
+  const sendOpts = {
+    parse_mode: 'MarkdownV2',
+    ...options,
+  };
 
   const results = await Promise.allSettled(
-    ids.map(id => {
-      return telegram.sendMessage(id, message, {
-        parse_mode: 'MarkdownV2',
-        ...options
-      });
+    ids.map(async id => {
+      try {
+        return await telegram.sendMessage(id, message, sendOpts);
+      } catch (err: any) {
+        const isParseError =
+          sendOpts.parse_mode &&
+          (err?.message?.includes("can't parse entities") ||
+           err?.response?.body?.description?.includes("can't parse entities") ||
+           err?.message?.includes('400'));
+        if (isParseError) {
+          logger.warn(`sendToAll: MarkdownV2 parsing failed for chat ${id}; falling back to plain text`, {
+            error: err?.message,
+            chatId: id,
+          });
+          const { parse_mode: _, ...plainOpts } = sendOpts;
+          return await telegram.sendMessage(id, stripMarkdownV2(message), plainOpts);
+        }
+        throw err;
+      }
     })
   );
 
@@ -51,6 +73,11 @@ export async function sendToAll(message: string, options: any = {}) {
 }
 
 // Utility to escape MarkdownV2 special characters
-export function escapeMd(text: string): string {
-  return text.replace(/([_*\[\]()~`>#+\-=|{}.!])/g, '\\$1');
+export function escapeMd(text: string | number | null | undefined): string {
+  return String(text ?? '').replace(/([_*\[\]()~`>#+\-=|{}.!\\])/g, '\\$1');
+}
+
+/** Strips backslash escapes for falling back to plain-text delivery. */
+export function stripMarkdownV2(text: string): string {
+  return text.replace(/\\([_*\[\]()~`>#+\-=|{}.!\\])/g, '$1');
 }

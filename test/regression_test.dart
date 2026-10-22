@@ -7,6 +7,7 @@ import 'package:luna_express/utils/format.dart';
 import 'package:luna_express/models/order.dart';
 import 'package:luna_express/features/pasugo/models/errand.dart';
 import 'package:luna_express/data/menu_data.dart';
+import 'package:luna_express/services/telegram_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 CartItem item({
@@ -111,6 +112,11 @@ void main() {
   });
 
   group('order serialization', () {
+    test('generateOrderNumber generates valid LU-XXXXX pattern', () {
+      final orderNumber = TelegramService.generateOrderNumber();
+      expect(RegExp(r'^LU-\d{5}$').hasMatch(orderNumber), isTrue);
+    });
+
     test('OrderItem total = price * qty', () {
       final j = OrderItem(
         name: 'Fries',
