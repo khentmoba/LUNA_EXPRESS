@@ -868,7 +868,10 @@ class _HeroCollage extends StatelessWidget {
               angle: 0.07,
               child: _Framed(
                 radius: 20,
-                child: const _Photo('images/three_large_coolers.png', radius: 20),
+                child: const _Photo(
+                  'images/three_large_coolers.png',
+                  radius: 20,
+                ),
               ),
             ),
           ),
