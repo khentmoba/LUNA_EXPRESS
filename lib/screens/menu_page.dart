@@ -1,17 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/material.dart' hide MenuTheme;
 import 'package:provider/provider.dart';
 import '../data/menu_data.dart';
 import '../models/menu.dart';
 import '../services/session.dart';
 import '../services/cart_notifier.dart';
 import '../services/inactivity_timer.dart';
-import '../widgets/kiosk/kiosk_theme.dart';
+import '../widgets/kiosk/menu_theme.dart';
 import '../widgets/kiosk/sidebar.dart';
 import '../widgets/kiosk/category_bar.dart';
 import '../widgets/kiosk/product_card.dart';
 import '../widgets/kiosk/customization_modal.dart';
-import '../widgets/kiosk/juicy_feedback.dart';
 import 'staff_menu.dart';
 import 'staff_login_dialog.dart';
 
@@ -20,251 +18,172 @@ class KioskMenuPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < 700;
-
-    return InactivityWatcher(
-      child: Scaffold(
-        backgroundColor: KioskTheme.lunaCream,
-        body: isMobile
-            ? Column(
-                children: [
-                  _buildHeader(context, isMobile),
-                  const KioskCategoryBar(),
-                  Expanded(child: _buildProductGrid(context, isMobile)),
-                ],
-              )
-            : Row(
-                children: [
-                  const KioskSidebar(),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        _buildHeader(context, isMobile),
-                        Expanded(child: _buildProductGrid(context, isMobile)),
-                      ],
+    return Theme(
+      data: MenuTheme.data,
+      child: Builder(
+        builder: (context) {
+          final wide = MediaQuery.sizeOf(context).width >= 1000;
+          return InactivityWatcher(
+            child: Scaffold(
+              backgroundColor: MenuTheme.enamel,
+              body: SafeArea(
+                child: Row(
+                  children: [
+                    if (wide) const KioskSidebar(),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          _buildHeader(context, wide),
+                          if (!wide) const KioskCategoryBar(),
+                          Expanded(child: _buildProductGrid(context)),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-        floatingActionButton: _buildFAB(context, isMobile),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+              bottomNavigationBar: _buildOrderBar(context),
+            ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildHeader(BuildContext context, bool isMobile) {
-    return Consumer<KioskSession>(
-      builder: (context, kSession, child) {
-        final section = kMenuSections.firstWhere(
-          (s) => s.id == kSession.currentCategoryId,
-        );
-        return Container(
-          padding: EdgeInsets.fromLTRB(
-            isMobile ? 20 : 32,
-            isMobile ? 20 : 32,
-            isMobile ? 20 : 32,
-            isMobile ? 16 : 24,
+  Widget _buildHeader(BuildContext context, bool wide) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: wide ? 28 : 16, vertical: 12),
+      child: Row(
+        children: [
+          Image.asset(
+            'images/luna_logo.png',
+            width: 32,
+            height: 32,
+            excludeFromSemantics: true,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Image.asset(
-                    'images/luna_logo.png',
-                    width: isMobile ? 32 : 40,
-                    height: isMobile ? 32 : 40,
-                    errorBuilder: (context, error, stackTrace) => Icon(
-                      Icons.nightlight_round,
-                      color: KioskTheme.lunaBrown,
-                      size: isMobile ? 24 : 32,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    'LUNA BITES & DELIGHTS',
-                    style: GoogleFonts.outfit(
-                      fontSize: isMobile ? 13 : 18,
-                      fontWeight: FontWeight.w900,
-                      color: KioskTheme.textPrimary,
-                      letterSpacing: isMobile ? 0.5 : 2,
-                    ),
-                    overflow: TextOverflow.visible,
-                    softWrap: false,
-                  ),
-                  const Spacer(),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ListenableBuilder(
-                        listenable: session,
-                        builder: (context, _) {
-                          return JuicyFeedback(
-                            onPressed: () {
-                              if (session.isStaff) {
-                                _openStaffMenu(context);
-                              } else {
-                                showDialog(
-                                  context: context,
-                                  builder: (_) => const StaffLoginDialog(),
-                                );
-                              }
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: isMobile ? 10 : 14,
-                                vertical: isMobile ? 6 : 8,
-                              ),
-                              decoration: BoxDecoration(
-                                color: session.isStaff
-                                    ? Colors.green.withOpacity(0.1)
-                                    : KioskTheme.lunaBrown.withOpacity(0.08),
-                                borderRadius: BorderRadius.circular(
-                                  KioskTheme.radiusFull,
-                                ),
-                                border: Border.all(
-                                  color: session.isStaff
-                                      ? Colors.green.withOpacity(0.3)
-                                      : KioskTheme.lunaBrown.withOpacity(0.1),
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    session.isStaff
-                                        ? Icons.shield_rounded
-                                        : Icons.lock_outline_rounded,
-                                    color: session.isStaff
-                                        ? KioskTheme.success
-                                        : KioskTheme.lunaBrown,
-                                    size: isMobile ? 14 : 16,
-                                  ),
-                                  SizedBox(width: isMobile ? 4 : 6),
-                                  Text(
-                                    session.isStaff
-                                        ? 'STAFF CONSOLE'
-                                        : 'STAFF LOGIN',
-                                    style: GoogleFonts.outfit(
-                                      color: session.isStaff
-                                          ? KioskTheme.success
-                                          : KioskTheme.lunaBrown,
-                                      fontSize: isMobile ? 10 : 11,
-                                      fontWeight: FontWeight.w900,
-                                      letterSpacing: isMobile ? 0.5 : 1,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      SizedBox(height: isMobile ? 8 : 10),
-                      JuicyFeedback(
-                        onPressed: () {
-                          kioskSession.reset();
-                          cartNotifier.clear();
-                          Navigator.of(
-                            context,
-                          ).pushNamedAndRemoveUntil('/kiosk', (route) => false);
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: isMobile ? 10 : 14,
-                            vertical: isMobile ? 6 : 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color: KioskTheme.lunaBrown.withOpacity(0.08),
-                            borderRadius: BorderRadius.circular(
-                              KioskTheme.radiusFull,
-                            ),
-                            border: Border.all(
-                              color: KioskTheme.lunaBrown.withOpacity(0.1),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.refresh_rounded,
-                                color: KioskTheme.lunaBrown,
-                                size: isMobile ? 14 : 16,
-                              ),
-                              SizedBox(width: isMobile ? 4 : 6),
-                              Text(
-                                'START OVER',
-                                style: GoogleFonts.outfit(
-                                  color: KioskTheme.lunaBrown,
-                                  fontSize: isMobile ? 10 : 11,
-                                  fontWeight: FontWeight.w900,
-                                  letterSpacing: isMobile ? 0.5 : 1,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(height: isMobile ? 16 : 32),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          section.title.toUpperCase(),
-                          style: GoogleFonts.outfit(
-                            fontSize: isMobile ? 28 : 40,
-                            fontWeight: FontWeight.w900,
-                            color: KioskTheme.textPrimary,
-                            letterSpacing: 1,
-                          ),
-                        ),
-                        Text(
-                          section.subtitle.isNotEmpty
-                              ? section.subtitle
-                              : section.title,
-                          style: GoogleFonts.outfit(
-                            fontSize: isMobile ? 14 : 18,
-                            color: KioskTheme.textMuted,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  _buildCartBadge(context, isMobile),
-                ],
-              ),
-            ],
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              'LUNA BITES & DELIGHTS',
+              style: MenuTheme.heading(wide ? 28 : 23),
+              maxLines: 2,
+            ),
           ),
-        );
-      },
+          ListenableBuilder(
+            listenable: cartNotifier,
+            builder: (context, _) => IconButton(
+              tooltip: 'View order, ${cartNotifier.totalCount} items',
+              onPressed: () => Navigator.pushNamed(context, '/cart'),
+              icon: Badge(
+                label: Text('${cartNotifier.totalCount}'),
+                backgroundColor: MenuTheme.accent,
+                textColor: MenuTheme.cream,
+                child: const Icon(Icons.shopping_bag_outlined),
+              ),
+            ),
+          ),
+          _buildUtilities(context),
+        ],
+      ),
     );
   }
 
-  Widget _buildProductGrid(BuildContext context, bool isMobile) {
-    return Consumer<KioskSession>(
-      builder: (context, session, child) {
-        final section = kMenuSections.firstWhere(
-          (s) => s.id == session.currentCategoryId,
-        );
-        return AnimatedSwitcher(
-          duration: const Duration(milliseconds: 500),
-          child: CustomScrollView(
-            key: ValueKey(session.currentCategoryId),
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              ..._buildDynamicSlivers(section.items, isMobile, context),
-            ],
+  Widget _buildSectionHeader(MenuSection section, double gutter) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(gutter, 20, gutter, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Semantics(
+            header: true,
+            child: Text(
+              section.title.toUpperCase(),
+              style: MenuTheme.heading(36),
+            ),
           ),
+          if (section.subtitle.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(
+              section.subtitle,
+              style: MenuTheme.body(size: 14, color: MenuTheme.tan),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUtilities(BuildContext context) {
+    final appTheme = Theme.of(Navigator.of(context).context);
+    return ListenableBuilder(
+      listenable: session,
+      builder: (context, _) => PopupMenuButton<String>(
+        tooltip: 'Menu options',
+        icon: const Icon(Icons.more_horiz),
+        onSelected: (value) {
+          if (value == 'staff') {
+            if (session.isStaff) {
+              showModalBottomSheet(
+                context: context,
+                backgroundColor: Colors.transparent,
+                builder: (_) =>
+                    Theme(data: appTheme, child: const StaffMenuDialog()),
+              );
+            } else {
+              showDialog(
+                context: context,
+                builder: (_) =>
+                    Theme(data: appTheme, child: const StaffLoginDialog()),
+              );
+            }
+          } else if (value == 'reset') {
+            kioskSession.reset();
+            cartNotifier.clear();
+            Navigator.of(
+              context,
+            ).pushNamedAndRemoveUntil('/', (route) => false);
+          }
+        },
+        itemBuilder: (context) => [
+          PopupMenuItem(
+            value: 'staff',
+            child: Text(session.isStaff ? 'Staff console' : 'Staff login'),
+          ),
+          const PopupMenuItem(value: 'reset', child: Text('Start over')),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProductGrid(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final columns = (constraints.maxWidth / 260).floor().clamp(2, 4);
+        final gutter = constraints.maxWidth < 600 ? 16.0 : 28.0;
+        const gap = 16.0;
+        final cardWidth =
+            (constraints.maxWidth - gutter * 2 - gap * (columns - 1)) / columns;
+        final textScale = MediaQuery.textScalerOf(context).scale(16) / 16;
+        final cardHeight = cardWidth * .8 + 144 * textScale;
+        return Consumer<KioskSession>(
+          builder: (context, session, child) {
+            final section = kMenuSections.firstWhere(
+              (s) => s.id == session.currentCategoryId,
+            );
+            return CustomScrollView(
+              key: ValueKey(session.currentCategoryId),
+              slivers: [
+                SliverToBoxAdapter(child: _buildSectionHeader(section, gutter)),
+                ..._buildDynamicSlivers(
+                  section.items,
+                  context,
+                  columns,
+                  cardHeight,
+                  gutter,
+                ),
+              ],
+            );
+          },
         );
       },
     );
@@ -272,92 +191,56 @@ class KioskMenuPage extends StatelessWidget {
 
   List<Widget> _buildDynamicSlivers(
     List<MenuItem> items,
-    bool isMobile,
     BuildContext context,
+    int columns,
+    double cardHeight,
+    double gutter,
   ) {
     final slivers = <Widget>[];
     var currentGroup = <MenuItem>[];
 
     void addGrid() {
       if (currentGroup.isEmpty) return;
-      final groupToRender = List<MenuItem>.from(currentGroup);
+      final group = List<MenuItem>.from(currentGroup);
       slivers.add(
         SliverPadding(
-          padding: EdgeInsets.fromLTRB(
-            isMobile ? 16 : 32,
-            0,
-            isMobile ? 16 : 32,
-            isMobile ? 24 : 32,
-          ),
+          padding: EdgeInsets.fromLTRB(gutter, 12, gutter, 20),
           sliver: SliverGrid(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: isMobile ? 2 : 3,
-              childAspectRatio: 0.75,
-              crossAxisSpacing: isMobile ? 16 : 24,
-              mainAxisSpacing: isMobile ? 16 : 24,
+              crossAxisCount: columns,
+              mainAxisExtent: cardHeight,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
             ),
             delegate: SliverChildBuilderDelegate((context, index) {
-              final item = groupToRender[index];
+              final item = group[index];
               return KioskProductCard(
                 item: item,
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
-                    builder: (_) => KioskProductSheet(item: item),
-                  );
-                },
+                onTap: () => showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  useSafeArea: true,
+                  constraints: const BoxConstraints(maxWidth: 960),
+                  builder: (_) => KioskProductSheet(item: item),
+                ),
               );
-            }, childCount: groupToRender.length),
+            }, childCount: group.length),
           ),
         ),
       );
       currentGroup = [];
     }
 
-    for (var item in items) {
+    for (final item in items) {
       if (item.isHeader) {
         addGrid();
         slivers.add(
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.fromLTRB(
-                isMobile ? 16 : 32,
-                24,
-                isMobile ? 16 : 32,
-                16,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 4,
-                        height: 22,
-                        decoration: BoxDecoration(
-                          color: KioskTheme.lunaBrown,
-                          borderRadius: BorderRadius.circular(
-                            KioskTheme.radiusSm,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Text(
-                        item.name,
-                        style: GoogleFonts.outfit(
-                          fontSize: isMobile ? 18 : 22,
-                          fontWeight: FontWeight.w900,
-                          color: KioskTheme.textPrimary,
-                          letterSpacing: 2,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  KioskTheme.divider(),
-                ],
+              padding: EdgeInsets.fromLTRB(gutter, 24, gutter, 4),
+              child: Semantics(
+                header: true,
+                child: Text(item.name, style: MenuTheme.heading(28)),
               ),
             ),
           ),
@@ -367,101 +250,42 @@ class KioskMenuPage extends StatelessWidget {
       }
     }
     addGrid();
-
-    slivers.add(
-      SliverToBoxAdapter(child: SizedBox(height: isMobile ? 120 : 100)),
-    );
-
     return slivers;
   }
 
-  Widget _buildFAB(BuildContext context, bool isMobile) {
+  Widget _buildOrderBar(BuildContext context) {
     return ListenableBuilder(
       listenable: cartNotifier,
       builder: (context, _) {
         if (cartNotifier.totalCount == 0) return const SizedBox.shrink();
-        return JuicyFeedback(
-          onPressed: () => Navigator.pushNamed(context, '/cart'),
+        return SafeArea(
+          top: false,
           child: Container(
-            margin: EdgeInsets.only(bottom: isMobile ? 12 : 24),
-            padding: EdgeInsets.symmetric(
-              horizontal: isMobile ? 24 : 40,
-              vertical: isMobile ? 16 : 20,
+            decoration: const BoxDecoration(
+              color: MenuTheme.board,
+              border: Border(top: BorderSide(color: MenuTheme.line)),
             ),
-            decoration: BoxDecoration(
-              color: KioskTheme.lunaBrown,
-              borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
-              boxShadow: KioskTheme.shadowXl,
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.shopping_basket,
-                  color: KioskTheme.textOnPrimary,
-                ),
-                SizedBox(width: isMobile ? 12 : 16),
-                Text(
-                  'VIEW ORDER \u00B7 \u20B1${cartNotifier.totalPrice}',
-                  style: GoogleFonts.outfit(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w900,
-                    fontSize: isMobile ? 16 : 20,
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+            child: Center(
+              heightFactor: 1,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 700),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    onPressed: () => Navigator.pushNamed(context, '/cart'),
+                    icon: const Icon(Icons.shopping_bag_outlined),
+                    label: Text(
+                      'View order (${cartNotifier.totalCount}) · ₱${cartNotifier.totalPrice}',
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
-              ],
+              ),
             ),
           ),
         );
       },
-    );
-  }
-
-  Widget _buildCartBadge(BuildContext context, bool isMobile) {
-    return ListenableBuilder(
-      listenable: cartNotifier,
-      builder: (context, _) {
-        return GestureDetector(
-          onTap: () => Navigator.pushNamed(context, '/cart'),
-          child: Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: isMobile ? 14 : 20,
-              vertical: isMobile ? 8 : 12,
-            ),
-            decoration: BoxDecoration(
-              color: KioskTheme.lunaWarmWhite,
-              borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
-              boxShadow: KioskTheme.shadowSm,
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.shopping_cart_outlined,
-                  size: isMobile ? 18 : 20,
-                  color: KioskTheme.lunaBrown,
-                ),
-                SizedBox(width: isMobile ? 6 : 8),
-                Text(
-                  '${cartNotifier.totalCount}',
-                  style: GoogleFonts.outfit(
-                    fontWeight: FontWeight.w900,
-                    fontSize: isMobile ? 14 : 16,
-                    color: KioskTheme.textPrimary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void _openStaffMenu(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (_) => const StaffMenuDialog(),
     );
   }
 }

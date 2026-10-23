@@ -76,6 +76,16 @@ flutter:
   assets:
     - images/
     - images/terra_fries.jpg
+    - assets/fonts/OFL-BigShoulders.txt
+    - assets/fonts/OFL-Karla.txt
+
+  fonts:
+    - family: BigShoulders
+      fonts:
+        - asset: assets/fonts/BigShoulders.ttf
+    - family: Karla
+      fonts:
+        - asset: assets/fonts/Karla.ttf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

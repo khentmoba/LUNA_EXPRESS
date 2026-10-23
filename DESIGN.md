@@ -40,12 +40,45 @@ typography:
     fontWeight: 400
     lineHeight: 1.55
     letterSpacing: "normal"
+  menu-heading:
+    fontFamily: "BigShoulders"
+    fontSize: "36px"
+    fontWeight: 800
+    lineHeight: 1.08
+  menu-item-heading:
+    fontFamily: "BigShoulders"
+    fontSize: "32px"
+    fontWeight: 800
+    lineHeight: 1.08
+  menu-body:
+    fontFamily: "Karla"
+    fontSize: "16px"
+    lineHeight: 1.4
+  menu-product-name:
+    fontFamily: "Karla"
+    fontSize: "16px"
+    fontWeight: 700
+    lineHeight: 1.2
+  menu-price-control:
+    fontFamily: "Karla"
+    fontSize: "16px"
+    fontWeight: 700
+    lineHeight: 1.4
+  menu-label:
+    fontFamily: "Karla"
+    fontSize: "14px"
+    lineHeight: 1.4
 rounded:
   none: "0px"
 spacing:
   gutter: "clamp(18px, 4.6vw, 60px)"
   section: "clamp(38px, 5vw, 64px)"
   stack: "1.15rem"
+  menu-gap: "16px"
+  menu-gutter-compact: "16px"
+  menu-gutter-wide: "28px"
+  menu-card-inset: "12px"
+  menu-sheet-inset: "20px"
 components:
   plate-primary:
     backgroundColor: "{colors.vermilion-plate}"
@@ -72,6 +105,31 @@ components:
     textColor: "{colors.cream}"
     rounded: "{rounded.none}"
     padding: "clamp(18px, 2.4vw, 26px)"
+  menu-primary:
+    backgroundColor: "{colors.vermilion-plate}"
+    textColor: "{colors.cream}"
+    typography: "{typography.menu-price-control}"
+    rounded: "{rounded.none}"
+  menu-primary-disabled:
+    backgroundColor: "{colors.line}"
+    textColor: "{colors.tan-dim}"
+    typography: "{typography.menu-price-control}"
+    rounded: "{rounded.none}"
+  menu-product-card:
+    backgroundColor: "{colors.panel}"
+    textColor: "{colors.cream}"
+    rounded: "{rounded.none}"
+    padding: "{spacing.menu-card-inset}"
+  menu-option:
+    backgroundColor: "{colors.board}"
+    textColor: "{colors.cream}"
+    rounded: "{rounded.none}"
+    padding: "12px 4px"
+  menu-option-selected:
+    backgroundColor: "{colors.panel}"
+    textColor: "{colors.cream}"
+    rounded: "{rounded.none}"
+    padding: "12px 4px"
 ---
 
 # Design System: Luna Bites & Delights — Storefront
@@ -92,6 +150,16 @@ lettered wide like a sticker run along a windscreen.
 The build is static HTML, one stylesheet, and one small script. No framework, no icon font, two self-hosted
 variable fonts, photos the business already published. Nothing on the page is a fact the business did not
 give us: no hours, no phone number, no ratings.
+
+### Approved Flutter menu extension
+
+The existing storefront specification remains authoritative for `/`. The scoped additions below
+record the approved menu and item chooser at `/kiosk/#/menu`, implemented with local `MenuTheme`.
+They preserve the established world and do not extend to cart, checkout, staff screens or staff dialogs.
+This documents the implemented category navigation, product grid and details sheet. The surface brief's
+FORM and Quality bar establish refinement provenance; no seed run or new concept tournament is claimed.
+Existing rendered evidence and completed review are indexed in `docs/evidence/menu-continuity.md`
+and `docs/evidence/menu-*.png`; this documentation pass does not repeat their visual verification.
 
 ## Colors
 
@@ -126,6 +194,17 @@ Cream is the only light ink on a painted plate (`#a3301a`, 6.55:1); the brighter
 **The Enamel Ground Rule.** The page is one vertical gradient from `#2b1e14` to `#20160d`. Depth comes from
 panels and plates, never from coloured glows or radial halos.
 
+### Flutter menu color assignments
+
+Reuse the existing primitives: `MenuTheme.enamel` is enamel, `board` is board, `panel` is panel,
+`line` is line, `cream` is cream, `tan` is tan, `muted` is tan-dim, and `accent` is vermilion-plate.
+The menu ground is solid enamel; board carries the sidebar and chooser, panel carries product cards
+and the chooser footer. Primary actions and selected categories use vermilion-plate with cream type.
+Selected options use panel with a tan border; unselected options use board with a line border.
+Material's local dark color scheme uses tan for primary/secondary and board for their on-colors;
+surface/onSurface are board/cream and outline is muted. Focus uses tan at 22% alpha, hover at 8%.
+Disabled filled buttons use line/muted. Snackbars use cream with board text. No app-wide theme changes.
+
 ## Typography
 
 Two self-hosted variable faces, `font-display: swap`, preloaded:
@@ -153,6 +232,25 @@ either painted signage or spoken copy, and the face says which.
 **The Wide-Label Rule.** Functional labels (nav, plates, tags, footer) are uppercase Karla at 0.16em tracking
 or wider, minimum 0.72rem (11.5px) — the compact bar plate included.
 
+### Flutter menu families and hierarchy
+
+The bundled TTF families are registered in `pubspec.yaml` as `BigShoulders`
+(`assets/fonts/BigShoulders.ttf`) and `Karla` (`assets/fonts/Karla.ttf`), with their OFL licenses.
+`BigShoulders` is the intentional Flutter family alias for the Big Shoulders heading face; the
+storefront retains its CSS family `Big Shoulders Display` and fallback stack. Treat these family names
+as platform-specific declarations of the approved pairing, not a third font or a CSS stack to rename.
+
+Menu token sizes are Flutter logical pixels. `MenuTheme.heading(size)` uses BigShoulders 800 / 1.08:
+wordmark 23 (28 on desktop), category 36, subgroup 28, sidebar and item-details heading 32.
+`MenuTheme.body` uses Karla / 1.4, default size 16. Product card names use the menu-product-name
+role, limited to three lines with ellipsis; prices and filled-button labels use menu-price-control.
+Category choices use Karla 14/700, sidebar labels 15/700, option names/prices and descriptions 15,
+helper copy 14, and promotional labels 12/700 on cards and 13 in details.
+
+The preceding storefront signage and wide-label rules remain scoped to the storefront. In the menu,
+BigShoulders sets wordmark/category/item headings; Karla sets product-card names, prices, options,
+quantity and controls. Native task labels do not inherit storefront-wide uppercase tracking.
+
 ## Layout
 
 - **Page width**: one content column, `max-width: 1120px`, inside gutters `clamp(18px, 4.6vw, 60px)`. Every
@@ -178,6 +276,24 @@ or wider, minimum 0.72rem (11.5px) — the compact bar plate included.
   column).
 - **Phone-first budget**: no horizontal overflow at 320px (`overflow-x: clip` on `html` as a backstop).
 
+### Flutter menu and chooser layout
+
+At viewport widths of 1000 logical pixels and above, show the 216-wide category sidebar; below that,
+show the horizontally scrolling category bar. Its height follows text scale (44 × scale + 24), with
+16/10 horizontal/vertical inset and 8 between choices. Category heading and subtitle scroll with products.
+The grid uses floor(available width / 260), clamped to two through four columns; 16 gaps, 16 gutters
+below 600 available width and 28 otherwise. Card height is card width × 0.8 + 144 × text scale.
+Names reserve scaled three-line space; images occupy the remaining height. The header uses 16 or
+28 horizontal inset and 12 vertical inset. The populated order action spans its available width up
+to 700 inside a board rail; it opens the existing cart.
+
+The chooser is at most 960 wide and normally 90% of viewport height. Fixed-price items without variants
+at viewport widths of 700 or above cap height at 460. Its body scrolls with 20 inset while quantity and
+add action persist below. At 600 available body width, a 240-wide image and details share a row with
+28 gap; otherwise they stack with 20 gap. Image heights are 260/170 for row/stack layouts.
+Below 400 available footer width, quantity and action stack with 8 gap; otherwise they share a row.
+The footer inset is 20/12/20/16 (left/top/right/bottom), plus safe-area protection.
+
 ## Elevation & Depth
 
 Depth is painted, never blurred into a glow.
@@ -198,12 +314,22 @@ Depth is painted, never blurred into a glow.
 **The Painted Cast Rule.** Depth is a short dark line under the edge plus one soft black cast. No hard
 zero-blur offset slabs, no coloured glow, no zero-offset halo, no backdrop blur.
 
+### Flutter menu depth
+
+The menu extension uses flat tonal layering and line borders with native Material interaction feedback.
+The local bottom sheet has transparent surface tint. Storefront plate casts, photo rotation and hover
+translation are not prescribed for menu cards or controls; the existing item-image Hero connection remains.
+
 ## Shapes
 
 Square corners everywhere (`0px`) — this is a painted board, not a card UI. Rules are flat: a 2px tan strip
 at the top, 1px cream at 28% under section edges, dotted leaders (`1px dotted`, cream at 22–26%) connecting a
 dish to its price. `clip-path` cuts the one swash under the wordmark. Rotation carries the print quality:
 tags at ~2.2°, photo mounts between 1° and 2° off true.
+
+The Flutter menu carries the same square form through framed product images, category choices,
+buttons and bordered options. Product images have 3 logical pixels of inset; the chooser image has a
+3-pixel cream border. Native radios and checkboxes retain their standard control geometry.
 
 ## Components
 
@@ -258,6 +384,25 @@ Board ground, 3px cream top rule, address in Big Shoulders at 1.3 leading, and t
 lang gamay sa 7/11" with `7/11` in the lighter red `#e2603f` — set on the same baseline. A fourth line holds
 the hours slot the owner has not filled yet: `Oras · opening hours` with `to follow` on a dashed underline,
 so the hole is visible and marked instead of invented. Actions sit below.
+
+### Flutter menu primitives and item chooser
+
+- **Navigation:** square Material ChoiceChips below desktop width; labelled ListTiles with outlined
+  category icons on desktop. Selected categories use vermilion-plate/cream. These functional native
+  icons are scoped to the menu and do not change the storefront's icon restriction.
+- **Product card:** square panel with a line border, real cover-fit food image, Karla product name and
+  tan price. Variant items qualify the price with “From”. A square vermilion add affordance belongs to
+  the clickable card; promotional labels use the same painted accent. Image failure shows a panel
+  fallback with a tan restaurant outline.
+- **Primary action:** square filled button, minimum 48 × 52, Karla 16/700. Icon buttons have minimum
+  48 × 48 targets. Native focus/hover feedback uses the local theme; disabled actions use line/muted.
+- **Option row:** square border, 10 bottom gap, 12/4 horizontal/vertical content inset. A single choice
+  uses a native radio group; multiple choices use checkboxes. Selection changes the border to tan and
+  ground to panel, with tan radio state or vermilion/cream checkbox state.
+- **Chooser:** BigShoulders item heading above wrapping Karla description and required options.
+  Add remains disabled until the existing selection condition is met; helper text explains the state.
+  The persistent footer shows quantity and total. Closing details leaves the cart untouched; documented
+  styling does not alter pricing, selection limits, fixed bundles or existing add-to-cart behavior.
 
 ## Do's and Don'ts
 
