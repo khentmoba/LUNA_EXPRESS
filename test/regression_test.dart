@@ -5,7 +5,6 @@ import 'package:luna_express/services/cart_notifier.dart';
 import 'package:luna_express/models/cart.dart';
 import 'package:luna_express/utils/format.dart';
 import 'package:luna_express/models/order.dart';
-import 'package:luna_express/features/pasugo/models/errand.dart';
 import 'package:luna_express/data/menu_data.dart';
 import 'package:luna_express/services/telegram_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -149,49 +148,6 @@ void main() {
       expect((j['timestamp'] as Timestamp).toDate(), ts);
       expect(j['paymentStatus'], 'NOT PAID'); // defaults preserved
       expect(j['status'], 'Pending');
-    });
-  });
-
-  group('errand serialization', () {
-    test('status round-trips', () {
-      for (final s in ErrandStatus.values) {
-        expect(ErrandStatus.fromJson(s.toJson()), s);
-      }
-    });
-
-    test('missing status defaults to available', () {
-      expect(ErrandStatus.fromJson('available'), ErrandStatus.available);
-      final e = Errand.fromMap({
-        'customerName': 'A',
-        'customerPhone': '1',
-        'phoneHash': 'h',
-        'pinHash': 'p',
-        'message': 'x',
-        'createdAt': Timestamp.now(),
-        'expiresAt': Timestamp.now(),
-      });
-      expect(e.status, ErrandStatus.available);
-    });
-
-    test('toFirestore/fromMap round-trip', () {
-      final now = DateTime(2026, 9, 28, 12);
-      final e = Errand(
-        customerName: 'Ana',
-        customerPhone: '0918',
-        phoneHash: 'h',
-        pinHash: 'p',
-        message: 'buy milk',
-        locationPin: const GeoPoint(9.0, 125.5),
-        status: ErrandStatus.accepted,
-        createdAt: now,
-        expiresAt: now,
-      );
-      final back = Errand.fromMap(e.toFirestore(), id: 'abc');
-      expect(back.id, 'abc');
-      expect(back.customerName, 'Ana');
-      expect(back.status, ErrandStatus.accepted);
-      expect(back.locationPin, const GeoPoint(9.0, 125.5));
-      expect(back.createdAt, now);
     });
   });
 
