@@ -18,7 +18,7 @@ service cloud.firestore {
           'orderId', 'customerName', 'customerAddress', 'customerPhone',
           'items', 'totalAmount', 'type', 'entryType', 'paymentMethod',
           'paymentStatus', 'deliveryFee', 'totalDistance', 'lat', 'lng',
-          'timestamp', 'dateLabel', 'status',
+          'timestamp', 'dateLabel', 'status', 'telegramSent',
           'checkoutSessionId', 'paymongoPaymentId'
         ])
         && request.resource.data.customerName is string

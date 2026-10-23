@@ -1,4 +1,5 @@
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
+import { getFirestore } from 'firebase-admin/firestore';
 import { sendToAll, escapeMd } from '../telegram_api';
 import { telegramToken, telegramChatIds } from '../index';
 import { logger } from 'firebase-functions';
@@ -6,6 +7,18 @@ import { cleanStr, optStr, cleanInt } from '../util/security';
 
 const ORDER_TYPES = ['Walk-In', 'Pickup', 'Delivery'];
 const MAX_ITEMS = 50;
+const DOC_ID = /^[A-Za-z0-9]{1,64}$/;
+
+/** Records notification outcome on the order. Never fails the request. */
+async function markNotified(orderDocId: string | null, sent: boolean) {
+  if (!orderDocId) return;
+  try {
+    await getFirestore().collection('orders').doc(orderDocId)
+      .set({ telegramSent: sent }, { merge: true });
+  } catch (error: any) {
+    logger.warn(`Could not record notification status for ${orderDocId}`, error);
+  }
+}
 
 export const itemLines = (items: any[]): string =>
   items
@@ -84,6 +97,8 @@ export const sendOrderNotification = onCall(
   { secrets: [telegramToken, telegramChatIds] }, // #1: secrets server-side only
   async (request) => {
     const d = request.data || {};
+    const orderDocId =
+      typeof d.orderDocId === 'string' && DOC_ID.test(d.orderDocId) ? d.orderDocId : null;
     const orderNumber = cleanStr(d.orderNumber, 32, 'orderNumber');
     const customerName = cleanStr(d.customerName, 100, 'customerName');
     const customerAddress = optStr(d.customerAddress);
@@ -128,8 +143,10 @@ export const sendOrderNotification = onCall(
     logger.info(`Sending order notification for ${orderNumber} to Telegram`);
     try {
       await sendToAll(message);
+      await markNotified(orderDocId, true);
       return { success: true };
     } catch (error: any) {
+      await markNotified(orderDocId, false);
       logger.error(`Error sending Telegram notification for ${orderNumber}`, error);
       throw new HttpsError('internal', 'Failed to send Telegram notification');
     }

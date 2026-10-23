@@ -7,14 +7,28 @@ import 'telegram_service.dart';
 class OrderService {
   static final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  /// Full order pipeline: Telegram notify → Firestore save → in-memory
-  /// history for the admin dashboard. Returns whether Telegram succeeded.
-  static Future<bool> placeOrder(OrderModel order, String timeStr) async {
+  /// Full order pipeline: Firestore save → Telegram notify → in-memory
+  /// history for the admin dashboard.
+  ///
+  /// The order is persisted first so a failed notification can never lose a
+  /// paid-for order. [docId] is the Firestore document id and the only stable
+  /// handle for later payment/webhook updates; [orderId] is the display
+  /// number and is not guaranteed unique.
+  static Future<({String? docId, bool telegramSent})> placeOrder(
+    OrderModel order,
+    String timeStr,
+  ) async {
+    final docId = await saveOrder(order);
+    if (docId == null) {
+      return (docId: null, telegramSent: false);
+    }
+
     final telegramSent = await TelegramService.sendOrder(
       order: order,
       timeStr: timeStr,
+      orderDocId: docId,
     );
-    await saveOrder(order);
+
     orderHistory.add({
       'orderNumber': order.orderId,
       'customerName': order.customerName,
@@ -34,17 +48,19 @@ class OrderService {
       'type': order.type,
       'isWalkIn': order.entryType == 'Staff',
     });
-    return telegramSent;
+    return (docId: docId, telegramSent: telegramSent);
   }
 
-  static Future<bool> saveOrder(OrderModel order) async {
+  /// Writes the order and returns its document id, or null if the write failed.
+  static Future<String?> saveOrder(OrderModel order) async {
     try {
-      await _db.collection('orders').add(order.toJson());
-      debugPrint('Order ${order.orderId} saved to Firestore');
-      return true;
+      final ref = _db.collection('orders').doc();
+      await ref.set({...order.toJson(), 'telegramSent': false});
+      debugPrint('Order ${order.orderId} saved to Firestore as ${ref.id}');
+      return ref.id;
     } catch (e) {
-      debugPrint('Error saving order: $e');
-      return false;
+      debugPrint('Error saving order ${order.orderId}: $e');
+      return null;
     }
   }
 }

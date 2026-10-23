@@ -260,7 +260,7 @@ class _KdsPageState extends State<KdsPage> {
 
   Widget _buildOrderCard(dynamic order) {
     final orderId = order['id'] as String;
-    final orderNum = order['orderId'] as String;
+    final orderNum = order['orderNumber'] as String? ?? orderId;
     final customerName = order['customerName'] as String? ?? 'Walk-in Customer';
     final type = order['type'] as String? ?? 'Walk-In';
     final paymentStatus = order['paymentStatus'] as String? ?? 'NOT PAID';
