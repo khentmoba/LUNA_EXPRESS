@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2025-10-23T00:00:00.000Z",
+  "generatedAt": "2026-10-23T15:31:51.225Z",
   "title": "Design System: Luna Bites & Delights — Storefront",
   "extensions": {
     "colorMeta": {
@@ -78,6 +78,30 @@
       "body": {
         "displayName": "Spoken",
         "purpose": "Paragraphs and dish descriptions, 16–17px / 1.55."
+      },
+      "menu-heading": {
+        "displayName": "Flutter category heading",
+        "purpose": "Local MenuTheme BigShoulders alias: bundled heading face, distinct from storefront CSS family Big Shoulders Display. Wordmark/category/subgroup headings use size-specific variants."
+      },
+      "menu-item-heading": {
+        "displayName": "Flutter item heading",
+        "purpose": "BigShoulders item-details heading; bundled TTF alias in pubspec.yaml."
+      },
+      "menu-body": {
+        "displayName": "Flutter task copy",
+        "purpose": "Bundled Karla for menu descriptions and task text."
+      },
+      "menu-product-name": {
+        "displayName": "Flutter product name",
+        "purpose": "Karla product-card names, up to three lines with ellipsis."
+      },
+      "menu-price-control": {
+        "displayName": "Flutter prices and controls",
+        "purpose": "Karla prices, quantity and filled-button labels in the local menu and chooser only."
+      },
+      "menu-label": {
+        "displayName": "Flutter helper and category text",
+        "purpose": "Karla helper text and category choices; no storefront uppercase tracking requirement."
       }
     },
     "shadows": [
@@ -166,6 +190,26 @@
       {
         "name": "compact",
         "value": "460px"
+      },
+      {
+        "name": "menu-sidebar",
+        "value": "1000px"
+      },
+      {
+        "name": "menu-grid-gutter",
+        "value": "600px available grid width"
+      },
+      {
+        "name": "menu-chooser-columns",
+        "value": "600px available body width"
+      },
+      {
+        "name": "menu-chooser-footer",
+        "value": "400px available footer width"
+      },
+      {
+        "name": "menu-fixed-item-height-cap",
+        "value": "700px viewport width"
       }
     ]
   },
@@ -205,11 +249,34 @@
       "description": "Dish, dotted leader, tabular price — the menu board's unit.",
       "html": "<div class=\"row\"><span class=\"row__name\">Shawarma wrap</span><span class=\"row__dots\"></span><b class=\"row__price\">₱60</b></div>",
       "css": ".row { display:flex; align-items:baseline; gap:.5em; padding:.52em 0; border-bottom:1px dotted rgba(224,201,166,.22); } .row__name { font-family:var(--display); font-weight:700; font-size:clamp(1.18rem,1.7vw,1.45rem); line-height:1.1; letter-spacing:.012em; color:#f6ecd9; } .row__dots { flex:1; border-bottom:1px dotted rgba(224,201,166,.28); transform:translateY(-.2em); } .row__price { font-size:clamp(1.05rem,1.5vw,1.25rem); font-weight:500; font-variant-numeric:tabular-nums; color:#e0c9a6; } .row--promo .row__price { color:#ffb9a4; }"
+    },
+    {
+      "name": "Flutter menu primary action",
+      "kind": "button",
+      "refersTo": "menu-primary",
+      "description": "HTML illustration of the local Flutter filled action; native Material feedback and semantics remain authoritative in source.",
+      "html": "<button class=\"ds-menu-action\">Add to order · ₱99</button>",
+      "css": ".ds-menu-action { background:#a3301a; color:#f7eedd; border:0; border-radius:0; min-width:48px; min-height:52px; font-family:Karla,sans-serif; font-size:16px; font-weight:700; line-height:1.4; } .ds-menu-action:hover { box-shadow:inset 0 0 0 100px rgba(224,201,166,.08); } .ds-menu-action:focus-visible { outline:2px solid #e0c9a6; outline-offset:2px; } .ds-menu-action:active { box-shadow:inset 0 0 0 100px rgba(224,201,166,.22); } .ds-menu-action:disabled { background:#4a3728; color:#b39c7c; box-shadow:none; }"
+    },
+    {
+      "name": "Flutter menu category choice",
+      "kind": "chip",
+      "description": "Square category choice below the desktop sidebar threshold. HTML illustration of the Flutter ChoiceChip.",
+      "html": "<button class=\"ds-menu-category\" aria-pressed=\"true\">Shawarma Favorites</button>",
+      "css": ".ds-menu-category { background:#1b130d; color:#f7eedd; border:1px solid #4a3728; border-radius:0; padding:8px 10px; font-family:Karla,sans-serif; font-size:14px; font-weight:700; line-height:1.4; } .ds-menu-category[aria-pressed=\"true\"] { background:#a3301a; } .ds-menu-category:hover { box-shadow:inset 0 0 0 100px rgba(224,201,166,.08); } .ds-menu-category:focus-visible { outline:2px solid #e0c9a6; outline-offset:2px; }"
+    },
+    {
+      "name": "Flutter chooser option",
+      "kind": "input",
+      "refersTo": "menu-option",
+      "description": "Native single-choice option; the selected row uses panel and tan border. Multiple choices use native checkboxes in Flutter.",
+      "html": "<label class=\"ds-menu-option\"><input type=\"radio\" name=\"ds-menu-option\" checked><span>Overload</span><span class=\"ds-menu-option-price\">₱65</span></label>",
+      "css": ".ds-menu-option { display:flex; align-items:center; gap:8px; padding:4px 12px; margin-bottom:10px; background:#1b130d; color:#f7eedd; border:1px solid #4a3728; border-radius:0; font-family:Karla,sans-serif; font-size:15px; line-height:1.4; } .ds-menu-option:has(input:checked) { background:#2c2016; border-color:#e0c9a6; } .ds-menu-option input { accent-color:#e0c9a6; min-height:48px; } .ds-menu-option-price { margin-left:auto; color:#e0c9a6; } .ds-menu-option:hover { box-shadow:inset 0 0 0 100px rgba(224,201,166,.08); } .ds-menu-option:focus-within { outline:2px solid #e0c9a6; outline-offset:2px; }"
     }
   ],
   "narrative": {
     "northStar": "Harap ng Jeepney",
-    "overview": "The storefront is painted like the front of a jeepney. Dark enamel ground, flat painted rules, fares lettered where a passenger reads them. It is one page at / that hands you to a Flutter kiosk at /kiosk/ — the ordering flow is never re-drawn here. Bright vermilion is a state, not a surface; type-bearing surfaces are the deeper painted red so cream clears 6.5:1. Big Shoulders does the shouting, Karla does the talking. Depth is a short dark edge plus one soft cast: no hard offset slabs, no chrome gradients, no glow.",
+    "overview": "The storefront is painted like the front of a jeepney. Dark enamel ground, flat painted rules, fares lettered where a passenger reads them. It is one page at / that hands you to a Flutter kiosk at /kiosk/ — the ordering flow is never re-drawn here. Bright vermilion is a state, not a surface; type-bearing surfaces are the deeper painted red so cream clears 6.5:1. Big Shoulders does the shouting, Karla does the talking. Depth is a short dark edge plus one soft cast: no hard offset slabs, no chrome gradients, no glow.\n\nThe existing storefront specification remains authoritative for `/`. The scoped additions below\nrecord the approved menu and item chooser at `/kiosk/#/menu`, implemented with local `MenuTheme`.\nThey preserve the established world and do not extend to cart, checkout, staff screens or staff dialogs.\nThis documents the implemented category navigation, product grid and details sheet. The surface brief's\nFORM and Quality bar establish refinement provenance; no seed run or new concept tournament is claimed.\nExisting rendered evidence and completed review are indexed in `docs/evidence/menu-continuity.md`\nand `docs/evidence/menu-*.png`; this documentation pass does not repeat their visual verification.",
     "keyCharacteristics": [
       "Enamel ground with chrome rules; no glass, no blur, no glow",
       "One bright vermilion for live state only; painted plates carry the type",

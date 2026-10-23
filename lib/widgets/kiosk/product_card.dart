@@ -1,97 +1,79 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'kiosk_theme.dart';
-import 'juicy_feedback.dart';
+import 'package:flutter/material.dart' hide MenuTheme;
+import 'menu_theme.dart';
 import '../../models/menu.dart';
 
-class KioskProductCard extends StatefulWidget {
+class KioskProductCard extends StatelessWidget {
   final MenuItem item;
   final VoidCallback onTap;
 
   const KioskProductCard({super.key, required this.item, required this.onTap});
 
   @override
-  State<KioskProductCard> createState() => _KioskProductCardState();
-}
-
-class _KioskProductCardState extends State<KioskProductCard> {
-  @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < 700;
+    final promo = item.promoLabel ?? (item.isBuy1Take1 ? 'BUY 1 TAKE 1' : null);
+    Widget fallback(BuildContext context, Object error, StackTrace? trace) =>
+        const ColoredBox(
+          color: MenuTheme.panel,
+          child: Center(
+            child: Icon(
+              Icons.restaurant_outlined,
+              color: MenuTheme.tan,
+              size: 40,
+            ),
+          ),
+        );
 
-    return JuicyFeedback(
-      onPressed: widget.onTap,
-      child: Container(
-        decoration: KioskTheme.glassCard,
-        clipBehavior: Clip.antiAlias,
+    return Material(
+      color: MenuTheme.panel,
+      shape: const RoundedRectangleBorder(
+        side: BorderSide(color: MenuTheme.line),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
-              flex: isMobile ? 2 : 3,
               child: Hero(
-                tag: 'product_${widget.item.id}',
+                tag: 'product_${item.id}',
                 child: Stack(
+                  fit: StackFit.expand,
                   children: [
-                    Positioned.fill(
-                      child: widget.item.imageUrl.startsWith('http')
+                    Padding(
+                      padding: const EdgeInsets.all(3),
+                      child: item.imageUrl.startsWith('http')
                           ? Image.network(
-                              widget.item.imageUrl,
+                              item.imageUrl,
                               fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Container(
-                                    color: KioskTheme.lunaLightTan.withOpacity(
-                                      0.3,
-                                    ),
-                                    child: Icon(
-                                      Icons.fastfood,
-                                      size: isMobile ? 32 : 40,
-                                      color: KioskTheme.textMuted,
-                                    ),
-                                  ),
+                              errorBuilder: fallback,
                             )
                           : Image.asset(
-                              widget.item.imageUrl.isNotEmpty
-                                  ? widget.item.imageUrl
+                              item.imageUrl.isNotEmpty
+                                  ? item.imageUrl
                                   : 'images/placeholder.png',
                               fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Container(
-                                    color: KioskTheme.lunaLightTan.withOpacity(
-                                      0.3,
-                                    ),
-                                    child: Icon(
-                                      Icons.fastfood,
-                                      size: isMobile ? 32 : 40,
-                                      color: KioskTheme.textMuted,
-                                    ),
-                                  ),
+                              errorBuilder: fallback,
                             ),
                     ),
-                    if (widget.item.isBuy1Take1 ||
-                        widget.item.promoLabel != null)
+                    if (promo != null)
                       Positioned(
-                        top: isMobile ? 8 : 12,
-                        left: isMobile ? 8 : 12,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: isMobile ? 8 : 10,
-                            vertical: isMobile ? 4 : 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: KioskTheme.lunaBrown,
-                            borderRadius: BorderRadius.circular(
-                              isMobile ? 8 : 12,
+                        top: 10,
+                        left: 3,
+                        right: 12,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            color: MenuTheme.accent,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 5,
                             ),
-                            boxShadow: KioskTheme.shadowSm,
-                          ),
-                          child: Text(
-                            widget.item.promoLabel ?? 'BUY 1 TAKE 1',
-                            style: GoogleFonts.outfit(
-                              color: KioskTheme.textOnPrimary,
-                              fontWeight: FontWeight.w900,
-                              fontSize: isMobile ? 8 : 10,
-                              letterSpacing: 0.5,
+                            child: Text(
+                              promo,
+                              style: MenuTheme.body(
+                                size: 12,
+                              ).copyWith(fontWeight: FontWeight.w700),
                             ),
                           ),
                         ),
@@ -100,64 +82,48 @@ class _KioskProductCardState extends State<KioskProductCard> {
                 ),
               ),
             ),
-            Expanded(
-              flex: isMobile ? 2 : 2,
-              child: Padding(
-                padding: EdgeInsets.all(isMobile ? 10 : 12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      widget.item.name,
-                      maxLines: 2,
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: MediaQuery.textScalerOf(context).scale(16) * 3.6,
+                    child: Text(
+                      item.name,
+                      maxLines: 3,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.outfit(
-                        fontSize: isMobile ? 14 : 16,
-                        fontWeight: FontWeight.w800,
-                        color: KioskTheme.textPrimary,
-                        height: 1.1,
+                      style: MenuTheme.body().copyWith(
+                        fontWeight: FontWeight.w700,
+                        height: 1.2,
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: isMobile ? 8 : 10,
-                            vertical: isMobile ? 4 : 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: KioskTheme.lunaBrown.withOpacity(0.05),
-                            borderRadius: BorderRadius.circular(
-                              KioskTheme.radiusSm,
-                            ),
-                          ),
-                          child: Text(
-                            '\u20B1${widget.item.displayPrice}',
-                            style: GoogleFonts.outfit(
-                              color: KioskTheme.textPrimary,
-                              fontWeight: FontWeight.w900,
-                              fontSize: isMobile ? 16 : 18,
-                            ),
-                          ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '${item.hasVariants ? 'From ' : ''}₱${item.displayPrice}',
+                          style: MenuTheme.body(
+                            color: MenuTheme.tan,
+                          ).copyWith(fontWeight: FontWeight.w700),
                         ),
-                        Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: KioskTheme.lunaBrown.withOpacity(0.08),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.add_rounded,
-                            color: KioskTheme.lunaBrown,
-                            size: 24,
-                          ),
+                      ),
+                      Container(
+                        width: 32,
+                        height: 32,
+                        color: MenuTheme.accent,
+                        child: const Icon(
+                          Icons.add,
+                          color: MenuTheme.cream,
+                          size: 22,
+                          semanticLabel: 'Choose item',
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ],

@@ -9,6 +9,11 @@
   promotional posts. Copy and photos posted there are what the landing page should showcase.
 - **Location:** Purok 5, Poblacion Magallanes, Agusan Del Norte (near 7/11), Philippines.
 
+## UI Work
+
+- **Always use the `$impeccable` skill for UI work**, including design, implementation, review, and changes to layout, styling, copy, motion, accessibility, or responsive behavior in the storefront or Flutter app. Read its `SKILL.md` from the available skill catalog before starting.
+- Follow the applicable Impeccable workflow and the existing `PRODUCT.md`, `DESIGN.md`, and surface brief. Verify UI changes in the rendered app at the screen sizes they support before handing them off.
+
 ## Branching & Deployment Rules
 
 1. **Never push directly to `main`.**

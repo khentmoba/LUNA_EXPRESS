@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/material.dart' hide MenuTheme;
 import 'package:provider/provider.dart';
-import 'kiosk_theme.dart';
+import 'menu_theme.dart';
 import '../../services/session.dart';
 import '../../data/menu_data.dart';
 
@@ -10,64 +9,38 @@ class KioskCategoryBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scale = MediaQuery.textScalerOf(context).scale(14) / 14;
     return Consumer<KioskSession>(
       builder: (context, session, child) {
         return Container(
-          height: 80,
-          decoration: BoxDecoration(
-            color: KioskTheme.lunaCream,
-            border: Border(
-              bottom: BorderSide(
-                color: KioskTheme.lunaBrown.withOpacity(0.05),
-                width: 1,
-              ),
-            ),
+          height: 44 * scale + 24,
+          decoration: const BoxDecoration(
+            color: MenuTheme.enamel,
+            border: Border(bottom: BorderSide(color: MenuTheme.line)),
           ),
-          child: ListView.builder(
+          child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             itemCount: kMenuSections.length,
+            separatorBuilder: (_, _) => const SizedBox(width: 8),
             itemBuilder: (context, index) {
               final section = kMenuSections[index];
-              final isSelected = session.currentCategoryId == section.id;
-
-              return GestureDetector(
-                onTap: () => session.setCategory(section.id),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  margin: const EdgeInsets.symmetric(horizontal: 6),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? KioskTheme.lunaBrown
-                        : Colors.transparent,
-                    borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
-                    boxShadow: isSelected ? KioskTheme.shadowPrimary : null,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(section.emoji, style: const TextStyle(fontSize: 20)),
-                      const SizedBox(width: 8),
-                      Text(
-                        section.title.toUpperCase(),
-                        style: GoogleFonts.outfit(
-                          fontSize: 13,
-                          fontWeight: isSelected
-                              ? FontWeight.w900
-                              : FontWeight.w700,
-                          color: isSelected
-                              ? KioskTheme.textOnPrimary
-                              : KioskTheme.textMuted,
-                          letterSpacing: 1,
-                        ),
-                      ),
-                    ],
-                  ),
+              return ChoiceChip(
+                label: Text(section.title),
+                selected: session.currentCategoryId == section.id,
+                onSelected: (_) => session.setCategory(section.id),
+                selectedColor: MenuTheme.accent,
+                backgroundColor: MenuTheme.board,
+                checkmarkColor: MenuTheme.cream,
+                labelStyle: MenuTheme.body(
+                  size: 14,
+                ).copyWith(fontWeight: FontWeight.w700),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 8,
                 ),
+                shape: const RoundedRectangleBorder(),
+                side: const BorderSide(color: MenuTheme.line),
               );
             },
           ),

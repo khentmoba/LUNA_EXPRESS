@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/material.dart' hide MenuTheme;
 import 'package:provider/provider.dart';
-import 'kiosk_theme.dart';
+import 'menu_theme.dart';
 import '../../services/session.dart';
 import '../../data/menu_data.dart';
 
@@ -13,62 +12,50 @@ class KioskSidebar extends StatelessWidget {
     return Consumer<KioskSession>(
       builder: (context, session, child) {
         return Container(
-          width: 120,
-          decoration: BoxDecoration(
-            color: KioskTheme.lunaCream,
-            border: Border(
-              right: BorderSide(
-                color: KioskTheme.lunaBrown.withOpacity(0.05),
-                width: 1,
-              ),
-            ),
+          width: 216,
+          decoration: const BoxDecoration(
+            color: MenuTheme.board,
+            border: Border(right: BorderSide(color: MenuTheme.line)),
           ),
-          child: ListView.builder(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            itemCount: kMenuSections.length,
-            itemBuilder: (context, index) {
-              final section = kMenuSections[index];
-              final isSelected = session.currentCategoryId == section.id;
-
-              return GestureDetector(
-                onTap: () => session.setCategory(section.id),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  margin: const EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 12,
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? KioskTheme.lunaBrown
-                        : Colors.transparent,
-                    borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
-                    boxShadow: isSelected ? KioskTheme.shadowPrimary : null,
-                  ),
-                  child: Column(
-                    children: [
-                      Text(section.emoji, style: const TextStyle(fontSize: 32)),
-                      const SizedBox(height: 8),
-                      Text(
-                        section.title.toUpperCase(),
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.outfit(
-                          fontSize: 12,
-                          fontWeight: isSelected
-                              ? FontWeight.w900
-                              : FontWeight.w600,
-                          color: isSelected
-                              ? KioskTheme.textOnPrimary
-                              : KioskTheme.textMuted,
-                          letterSpacing: 1,
-                        ),
+          child: ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 24),
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 0, 12, 24),
+                child: Text('THE MENU', style: MenuTheme.heading(32)),
+              ),
+              for (final section in kMenuSections)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: ListTile(
+                      selected: session.currentCategoryId == section.id,
+                      selectedTileColor: MenuTheme.accent,
+                      selectedColor: MenuTheme.cream,
+                      textColor: MenuTheme.tan,
+                      iconColor: MenuTheme.tan,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 4,
                       ),
-                    ],
+                      leading: Icon(
+                        MenuTheme.categoryIcon(section.id),
+                        size: 22,
+                      ),
+                      minLeadingWidth: 22,
+                      title: Text(
+                        section.title.toUpperCase(),
+                        style: MenuTheme.body(
+                          size: 15,
+                        ).copyWith(fontWeight: FontWeight.w700),
+                      ),
+                      shape: const RoundedRectangleBorder(),
+                      onTap: () => session.setCategory(section.id),
+                    ),
                   ),
                 ),
-              );
-            },
+            ],
           ),
         );
       },
