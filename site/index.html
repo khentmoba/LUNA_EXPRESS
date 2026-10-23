@@ -48,7 +48,7 @@
         <span class="wordmark__two">Bites</span>
       </h1>
       <p class="amp">&amp; Delights</p>
-      <p class="lede">Delivered around Magallanes, <b>₱39 a kilometre</b>. Good food, sweet drinks, moonlit vibes — from Purok 5, unahan lang gamay sa 7/11.</p>
+      <p class="lede">Good food, sweet drinks, moonlit vibes. Delivered around Magallanes at <b>₱39 a kilometre</b>.</p>
       <p class="actions">
         <a class="plate" href="/kiosk/#/menu">Order for delivery</a>
         <a class="plate plate--ghost" href="#board">See the board</a>
@@ -57,41 +57,43 @@
     </div>
 
     <aside class="fare" aria-labelledby="fare-title">
-      <h2 class="fare__title" id="fare-title">Saan ka?</h2>
-      <p class="fare__hint">Slide to your distance — the fare moves with it.</p>
-
-      <div class="rail-wrap">
-        <div
-          class="rail"
-          id="rail"
-          role="slider"
-          tabindex="0"
-          aria-label="Distance to your pin, in kilometres"
-          aria-valuemin="1"
-          aria-valuemax="12"
-          aria-valuenow="3"
-          aria-valuetext="3 kilometres, 117 pesos delivery"
-          aria-describedby="rail-note"
-        >
-          <span class="rail__track"></span>
-          <span class="rail__needle"><b class="rail__tag" data-km>3 km</b></span>
-        </div>
-        <span class="rail__ticks" aria-hidden="true">
-          <i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i>
-          <i style="--i:5"></i><i style="--i:6"></i><i style="--i:7"></i><i style="--i:8"></i>
-          <i style="--i:9"></i><i style="--i:10"></i><i style="--i:11"></i><i style="--i:12"></i>
-          <b style="--i:1">39</b><b style="--i:3">117</b><b style="--i:6">234</b><b style="--i:9">351</b><b style="--i:12">468</b>
-        </span>
-        <span class="rail__fares" aria-hidden="true" data-fares></span>
-      </div>
-
-      <p class="fare__read"><b data-peso>₱117</b><span>for delivery</span></p>
-      <p class="fare__note" id="rail-note">₱39 a kilometre, priced from the nearer kitchen. The app works it out from your pin at checkout.</p>
-
       <figure class="mount mount--hero">
         <img src="/img/halo-halo.webp" width="800" height="800" alt="A glass of halo-halo with ube ice cream, fruit and crunchy toppings" fetchpriority="high" decoding="async">
         <figcaption class="tag">Halo-halo ₱49</figcaption>
-      </figure>    </aside>
+      </figure>
+      <div class="fare__estimate">
+        <h2 class="fare__title" id="fare-title">Delivery estimate</h2>
+        <p class="fare__hint">Try a distance at ₱39 a kilometre.</p>
+
+        <div class="rail-wrap">
+          <div
+            class="rail"
+            id="rail"
+            role="slider"
+            tabindex="0"
+            aria-label="Example delivery distance, in kilometres"
+            aria-valuemin="1"
+            aria-valuemax="12"
+            aria-valuenow="3"
+            aria-valuetext="3 kilometres, 117 pesos estimated delivery"
+            aria-describedby="rail-note"
+          >
+            <span class="rail__track"></span>
+            <span class="rail__needle"><b class="rail__tag" data-km>3 km</b></span>
+          </div>
+          <span class="rail__ticks" aria-hidden="true">
+            <i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i>
+            <i style="--i:5"></i><i style="--i:6"></i><i style="--i:7"></i><i style="--i:8"></i>
+            <i style="--i:9"></i><i style="--i:10"></i><i style="--i:11"></i><i style="--i:12"></i>
+            <b style="--i:1">39</b><b style="--i:3">117</b><b style="--i:6">234</b><b style="--i:9">351</b><b style="--i:12">468</b>
+          </span>
+          <span class="rail__fares" aria-hidden="true" data-fares></span>
+        </div>
+
+        <p class="fare__read"><b data-peso>₱117</b><span>estimated fare</span></p>
+        <p class="fare__note" id="rail-note">Try a distance. Your exact fare is calculated from your pin and the nearer kitchen at checkout.</p>
+      </div>
+    </aside>
   </section>
 
   <section class="board" id="board" aria-labelledby="board-title">
@@ -151,8 +153,7 @@
     </div>
 
     <p class="board__foot">
-      Every price we charge is on this board. Same numbers in the app — the only thing added at checkout is the
-      delivery fare. Flavours and the full list live in the app.
+      These prices match the app. Browse the full menu for more dishes and flavours; delivery is added at checkout.
       <a class="link-underline" href="/kiosk/#/menu">Open the menu</a>
     </p>
   </section>
@@ -182,7 +183,7 @@
   <section class="find" id="find" aria-labelledby="find-title">
     <div class="find__head">
       <h2 class="find__title paint" id="find-title">Find us</h2>
-      <p class="find__copy">Walk in and eat at the kiosk, or send us your pin and we ride it over. Whichever way you come, the fare is ₱39 a kilometre.</p>
+      <p class="find__copy">Walk in and eat at the kiosk, or order for delivery and we ride it over. Delivery is ₱39 a kilometre, calculated from your pin at checkout.</p>
     </div>
     <div class="find__board">
       <address class="find__addr">

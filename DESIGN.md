@@ -160,7 +160,10 @@ or wider, minimum 0.72rem (11.5px) — the compact bar plate included.
 - **Section rules**: flat 1px cream at 28% alpha (`--hairline`); the top strip is a flat 2px tan line, not a
   gradient imitation of chrome.
 - **Hero**: two columns `minmax(0,1fr) minmax(430px,1.04fr)` — wordmark and copy left, the fare instrument
-  panel right. The panel's photo mount is 16:9, capped at 176px tall on desktop, 260px below 940px.
+  panel right. The panel's photo mount is 16:9, capped at 152px tall on desktop. At 940px and below the
+  photo and its dish price lead the panel, capped at 176px, with the delivery estimator below. The short
+  opening copy keeps a food photograph and its price in the first phone viewport.
+- **Section links**: targets have `scroll-margin-top: 6rem`, leaving the heading below the sticky bar.
 - **Price board**: the painted header, then the three columns of dish rows, then the two ₱99 offer lines.
   Rows start at y≈790 on a 1440×900 first viewport, so prices are legible above the fold.
 - **Window wall**: 12-column grid of rotated photo mounts, spans a4/b2/c3/d3; 2×2 at 6 columns on tablet;
@@ -214,7 +217,9 @@ tags at ~2.2°, photo mounts between 1° and 2° off true.
 
 ### Fare rail (signature component)
 
-A real instrument, not a decoration. A 52px-tall `role="slider"` spans 1–12 km; ticks, fare labels and the
+A real instrument, not a decoration. Its heading is **Delivery estimate** and its readout says **estimated
+fare**: the whole-kilometre slider is an example, while checkout calculates the exact fare from the pin and
+nearer kitchen. A 52px-tall `role="slider"` spans 1–12 km; ticks, fare labels and the
 fare table live **outside** the slider in `.rail-wrap`, so the control keeps its own hit area and
 `aria-describedby="rail-note"`. Tall ticks sit on the labelled stops (1, 3, 6, 9, 12 km), never on an
 unlabelled one. Above 940px the rail prints all twelve fares (₱39…₱468, 11.2px) and bolds the active stop;
@@ -227,8 +232,8 @@ capture for drag, arrows / Page / Home / End for keyboard, needle entrance from 
 ### Offer lines
 
 The two ₱99 offers are board lines, not cards: tag in Big Shoulders, the flavour list in Karla at 0.82rem, a
-dotted leader, and the price on a painted plate at the right edge. Below 700px the tag and price take the
-first row and the flavour list spans the second. No panel, no equal-card row.
+dotted leader, and the price on a painted plate at the right edge. At 940px and below, explicit grid areas
+keep the tag and price on the first row, with the flavour list spanning the second. No panel, no equal-card row.
 
 ### Photo mounts
 

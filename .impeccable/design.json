@@ -181,14 +181,14 @@
     {
       "name": "Fare rail",
       "kind": "input",
-      "description": "Signature instrument: distance in km to the fare in pesos, driven by pointer or keyboard.",
+      "description": "Signature delivery estimate: a trial distance in km gives an example fare, driven by pointer or keyboard. Checkout uses the pin and nearer kitchen for the exact fare.",
       "html": "<div class=\"rail-wrap\"><div class=\"rail\" id=\"rail\" role=\"slider\" tabindex=\"0\" aria-valuemin=\"1\" aria-valuemax=\"12\" aria-valuenow=\"3\" aria-valuetext=\"3 kilometres, 117 pesos\" aria-describedby=\"rail-note\"><div class=\"rail__track\"></div><div class=\"rail__needle\" style=\"--v:3\"><b class=\"rail__tag\">3 KM</b></div></div><div class=\"rail__ticks\" aria-hidden=\"true\"></div></div>",
       "css": ".rail { position:relative; height:52px; cursor:ew-resize; touch-action:none; } .rail:focus-visible { outline:2px solid #e0c9a6; outline-offset:5px; } .rail__needle { position:absolute; top:0; left:calc((var(--v) - 1) / 11 * 100%); transform:translateX(-50%); background:#d8452a; box-shadow:0 3px 8px rgba(0,0,0,.55); transition:left .5s cubic-bezier(.3,1.24,.42,1); } .rail.is-dragging .rail__needle { transition:left .1s linear; } .rail__tag { background:#2c2016; color:#f7eedd; padding:.28em .42em; } .rail__ticks i:first-child, .rail__ticks i:nth-child(3n) { height:20px; opacity:.9; } .rail__fares { display:none; position:absolute; top:64px; left:0; right:0; } .rail__fares em { position:absolute; left:calc((var(--i) - 1) / 11 * 100%); transform:translateX(-50%); font-size:.7rem; font-variant-numeric:tabular-nums; color:#b39c7c; } .rail__fares em.is-active { color:#f7eedd; font-weight:700; } @media (min-width:940px) { .rail__fares { display:block; } }"
     },
     {
       "name": "Offer line",
       "kind": "custom",
-      "description": "A ₱99 bundle printed as a board line: tag, flavour list, leader, painted price plate.",
+      "description": "A ₱99 bundle printed as a board line. At 940px and below, the name and price share the first row and the flavour list spans the next.",
       "html": "<p class=\"offer\"><span class=\"offer__tag\">Sulit meals</span><span class=\"offer__line\">A full rice bowl…</span><span class=\"offer__dots\"></span><span class=\"offer__price\">₱99</span></p>",
       "css": ".offer { display:grid; grid-template-columns:auto minmax(0,1fr) minmax(20px,auto) auto; align-items:baseline; gap:.7em; padding:.8em 0; border-bottom:1px dotted rgba(224,201,166,.26); } .offer__tag { font-family:var(--display); font-weight:800; font-size:clamp(1.1rem,1.8vw,1.35rem); text-transform:uppercase; color:#f7eedd; white-space:nowrap; } .offer__line { font-size:.82rem; line-height:1.5; color:#b39c7c; } .offer__dots { border-bottom:1px dotted rgba(224,201,166,.22); } .offer__price { justify-self:end; padding:0 .3em .04em; background:#a3301a; color:#f7eedd; font-family:var(--display); font-weight:900; font-size:clamp(1.4rem,2.2vw,1.75rem); font-variant-numeric:tabular-nums; }"
     },

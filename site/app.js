@@ -45,7 +45,7 @@
       rail.setAttribute('aria-valuenow', String(km));
       rail.setAttribute(
         'aria-valuetext',
-        km + ' kilometre' + (km === 1 ? '' : 's') + ', ' + fee + ' pesos delivery'
+        km + ' kilometre' + (km === 1 ? '' : 's') + ', ' + fee + ' pesos estimated delivery'
       );
       if (tag) {
         tag.textContent = km + ' km';
