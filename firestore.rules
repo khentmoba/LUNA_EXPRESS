@@ -18,7 +18,7 @@ service cloud.firestore {
           'orderId', 'customerName', 'customerAddress', 'customerPhone',
           'items', 'totalAmount', 'type', 'entryType', 'paymentMethod',
           'paymentStatus', 'deliveryFee', 'totalDistance', 'lat', 'lng',
-          'timestamp', 'dateLabel', 'status',
+          'timestamp', 'dateLabel', 'status', 'telegramSent',
           'checkoutSessionId', 'paymongoPaymentId'
         ])
         && request.resource.data.customerName is string
@@ -47,113 +47,6 @@ service cloud.firestore {
     // Login rate-limit counters: server only.
     match /login_attempts/{key} {
       allow read, write: if false;
-    }
-
-    // ──── Pasugo errands: public bulletin board by design ────
-    // PII note: the board shows names/phones publicly (needed for riders to
-    // contact customers). Mitigation: clients display masked phones; full
-    // contact is revealed only inside an active session.
-    match /pasugo_errands/{errandId} {
-      allow get: if resource.data.status == 'available'
-        || resource.data.status == 'cancelled';
-      allow list: if true;
-      allow create: if request.resource.data.keys().hasOnly([
-          'customerName', 'customerPhone', 'phoneHash', 'pinHash',
-          'message', 'locationPin', 'status', 'createdAt', 'expiresAt'
-        ])
-        && request.resource.data.customerName is string
-        && request.resource.data.customerName.size() >= 1
-        && request.resource.data.customerName.size() <= 100
-        && request.resource.data.customerPhone is string
-        && request.resource.data.customerPhone.size() >= 7
-        && request.resource.data.customerPhone.size() <= 32
-        && request.resource.data.pinHash is string
-        && request.resource.data.pinHash.size() <= 128
-        && request.resource.data.message is string
-        && request.resource.data.message.size() >= 1
-        && request.resource.data.message.size() <= 1000
-        && request.resource.data.status == 'available';
-      // Status machine: only `status` may change, and only along legal edges.
-      // available→cancelled: customer (phone must still match);
-      // available→accepted: approved rider; accepted→completed: rider/staff.
-      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
-        && (
-          (resource.data.status == 'available'
-            && request.resource.data.status == 'cancelled'
-            && request.resource.data.customerPhone == resource.data.customerPhone)
-          || (resource.data.status == 'available'
-            && request.resource.data.status == 'accepted'
-            && request.auth != null
-            && request.auth.token.riderStatus == 'approved')
-          || (resource.data.status == 'accepted'
-            && request.resource.data.status == 'completed'
-            && request.auth != null
-            && (request.auth.token.riderStatus == 'approved' || isStaff()))
-        );
-      allow delete: if false;
-    }
-
-    // ──── Riders: self + staff; no privilege self-escalation (#8) ────
-    match /riders/{riderId} {
-      allow read: if request.auth != null
-        && (request.auth.uid == riderId || isStaff());
-      // New riders must start as pending/active — fixed values, no escalation.
-      allow create: if request.auth != null && request.auth.uid == riderId
-        && request.resource.data.status == 'pending'
-        && request.resource.data.isActive == true
-        && !('role' in request.resource.data)
-        && request.resource.data.name is string
-        && request.resource.data.phone is string;
-      allow update: if request.auth != null
-        && (request.auth.uid == riderId || isStaff())
-        && (
-          isAdmin()
-          // Non-admins can't touch privilege fields.
-          || (
-            (!('status' in request.resource.data) || request.resource.data.status == resource.data.status)
-            && (!('isActive' in request.resource.data) || request.resource.data.isActive == resource.data.isActive)
-            && !('role' in request.resource.data)
-          )
-        );
-      allow delete: if false;
-    }
-
-    // ──── Sessions + chat ────
-    match /pasugo_sessions/{sessionId} {
-      allow read: if request.auth != null
-        && (request.auth.uid == resource.data.riderId || isStaff());
-      allow create: if request.auth != null
-        && request.auth.token.riderStatus == 'approved'
-        && request.resource.data.keys().hasOnly([
-          'errandId', 'riderId', 'customerPhone', 'status', 'acceptedAt'
-        ])
-        && request.resource.data.riderId == request.auth.uid
-        && request.resource.data.status == 'active';
-      allow update: if request.auth != null
-        && (request.auth.uid == resource.data.riderId || isStaff())
-        && request.resource.data.diff(resource.data).affectedKeys()
-          .hasOnly(['status', 'completedAt']);
-      allow delete: if false;
-
-      match /messages/{messageId} {
-        // Only session participants read (was: any signed-in user).
-        allow read: if request.auth != null
-          && (
-            request.auth.uid == get(/databases/$(database)/documents/pasugo_sessions/$(sessionId)).data.riderId
-            || isStaff()
-          );
-        allow create: if request.auth != null
-          && request.resource.data.keys().hasOnly([
-            'sender', 'text', 'timestamp', 'type'
-          ])
-          && (request.resource.data.sender == 'rider'
-            || request.resource.data.sender == 'customer')
-          && request.resource.data.text is string
-          && request.resource.data.text.size() >= 1
-          && request.resource.data.text.size() <= 2000
-          && get(/databases/$(database)/documents/pasugo_sessions/$(sessionId)).data.status == 'active';
-        allow update, delete: if false;
-      }
     }
 
     // Default deny.

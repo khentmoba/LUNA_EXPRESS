@@ -51,7 +51,7 @@ const MAX_ATTEMPTS = 5;
 const LOCKOUT_MS = 15 * 60 * 1000;
 /**
  * Requires a signed-in staff/admin user (Firebase Auth custom claims set by
- * verifyStaff / manageRiderStatus). Throws unauthenticated/permission-denied.
+ * verifyStaff). Throws unauthenticated/permission-denied.
  * Covers checklist #6 (server-side auth) + #7 (lock record access).
  */
 function requireStaff(request) {

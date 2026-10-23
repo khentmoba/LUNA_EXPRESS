@@ -19,6 +19,7 @@ const projectOrder = (id: string, d: FirebaseFirestore.DocumentData) => ({
   total: Number(d.totalAmount) || 0,
   type: String(d.type || ''),
   status: String(d.status || 'Pending'),
+  paymentStatus: String(d.paymentStatus || 'NOT PAID'),
   timestamp: d.timestamp?.toDate?.()?.toISOString?.() || new Date().toISOString(),
 });
 

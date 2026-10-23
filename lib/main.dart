@@ -15,19 +15,6 @@ import 'screens/checkout_page.dart';
 import 'screens/kds_page.dart';
 import 'screens/analytics_page.dart';
 import 'screens/lifetime_analytics_page.dart';
-import 'features/pasugo/state/errands.dart';
-import 'features/pasugo/state/sessions.dart';
-import 'features/pasugo/state/chat.dart';
-import 'features/pasugo/state/rider_auth.dart';
-import 'features/pasugo/screens/pasugo_screen.dart';
-import 'features/pasugo/screens/bulletin_board_screen.dart';
-import 'features/pasugo/screens/create_errand_screen.dart';
-import 'features/pasugo/screens/chat_screen.dart';
-import 'features/pasugo/screens/rider_registration_screen.dart';
-import 'features/pasugo/screens/rider_login_screen.dart';
-import 'features/pasugo/screens/rider_dashboard_screen.dart';
-import 'features/pasugo/admin/rider_management_screen.dart';
-import 'features/pasugo/screens/customer_errand_status_screen.dart';
 
 /// #12 bot protection: Firebase App Check (reCAPTCHA Enterprise on web).
 /// Site key is injected at build time so it never lands in git:
@@ -72,10 +59,6 @@ void main() async {
       providers: [
         ChangeNotifierProvider.value(value: kioskSession),
         ChangeNotifierProvider.value(value: cartNotifier),
-        ChangeNotifierProvider(create: (_) => Errands()),
-        ChangeNotifierProvider(create: (_) => Sessions()),
-        ChangeNotifierProvider(create: (_) => Chat()),
-        ChangeNotifierProvider(create: (_) => RiderAuth()),
       ],
       child: const LunaExpressApp(),
     ),
@@ -128,16 +111,6 @@ class LunaExpressApp extends StatelessWidget {
         '/kds': (context) => const KdsPage(),
         '/analytics': (context) => const AnalyticsPage(),
         '/lifetime-analytics': (context) => const LifetimeAnalyticsPage(),
-        '/pasugo': (context) => const PasugoScreen(),
-        '/pasugo/bulletin': (context) => const BulletinBoardScreen(),
-        '/pasugo/create': (context) => const CreateErrandScreen(),
-        '/pasugo/chat': (context) => const ChatScreen(),
-        '/pasugo/rider-register': (context) => const RiderRegistrationScreen(),
-        '/pasugo/rider-login': (context) => const RiderLoginScreen(),
-        '/pasugo/rider-dashboard': (context) => const RiderDashboardScreen(),
-        '/pasugo/admin/riders': (context) => const RiderManagementScreen(),
-        '/pasugo/customer-status': (context) =>
-            const CustomerErrandStatusScreen(),
       },
     );
   }

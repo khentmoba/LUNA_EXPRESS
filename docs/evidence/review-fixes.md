@@ -27,8 +27,9 @@ The two independent reviewers used GPT-6.1-Sol with thinking set to medium. The 
 
 ## Validation
 
-- `flutter analyze --no-fatal-infos --no-fatal-warnings`: exit 0, 162 existing informational findings.
-- `flutter test`: 19 passed.
+- `flutter analyze --no-fatal-infos --no-fatal-warnings`: exit 0, 135 informational findings after syncing main.
+- `flutter test`: 22 passed after syncing main.
+- `npm --prefix functions test`: build and 10 notification/payment regression tests passed after syncing main.
 - `npm --prefix functions ci`: passed. The first local build lacked dependencies and could not find tsc; installing the lockfile dependencies resolved that environment failure.
 - `npm --prefix functions run build`: passed.
 - `npm --prefix functions audit --audit-level=high`: exit 0. It reports 15 moderate vulnerabilities; no high/critical finding fails the required gate.
@@ -40,6 +41,10 @@ The two independent reviewers used GPT-6.1-Sol with thinking set to medium. The 
 - Runtime page errors: none in the local static page.
 - Impeccable detector: three cramped-padding warnings, the same false positives already verified by computed section padding in the critique. No new finding.
 - Rules files are unchanged; the local rules emulator suite was not rerun for this static UI pass. The PR workflow runs it.
+
+## Base integration
+
+Main advanced while this follow-up was being prepared. It was merged into the PR branch after the UI commit. The two hosting-workflow conflicts were resolved by retaining both `/kiosk/` base href and site assembly from this PR, and the new `MAPTILER_KEY` build define from main. The static UI is identical to the captured `8ebb5af` implementation. The merge also retains main's payment fixes and Pasugo removal.
 
 ## Safety fact
 

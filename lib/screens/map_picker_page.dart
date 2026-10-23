@@ -188,7 +188,7 @@ class _MapPickerPageState extends State<MapPickerPage>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 html, body { height:100%; width:100%; overflow:hidden; }
-#map { height:100%; width:100%; }
+#map { height:100%; width:100%; background:#e9e3d9; }
 #crosshair {
   position:fixed; top:50%; left:50%;
   transform:translate(-50%,-100%);
@@ -234,7 +234,8 @@ html, body { height:100%; width:100%; overflow:hidden; }
 </div>
 <script>
 var map = L.map('map', { zoomControl:true, attributionControl:false }).setView([$lat, $lng], 17);
-L.tileLayer('$tileUrl', { maxZoom:19 }).addTo(map);
+var TILES = '$tileUrl';
+if (TILES) { L.tileLayer(TILES, { maxZoom:19 }).addTo(map); }
 
 var debounce;
 function fetchAddressAt(lat, lng) {
@@ -473,34 +474,39 @@ fetchAddressAt($lat, $lng);
   Widget _buildWebMap() {
     return Stack(
       children: [
-        FlutterMap(
-          mapController: _mapController,
-          options: MapOptions(
-            initialCenter: LatLng(_lat, _lng),
-            initialZoom: 17,
-            onMapEvent: (e) {
-              if (e is MapEventMoveEnd) {
-                final c = _mapController.camera.center;
-                setState(() {
-                  _lat = c.latitude;
-                  _lng = c.longitude;
-                });
-                _addressDebounce?.cancel();
-                _addressDebounce = Timer(
-                  const Duration(milliseconds: 600),
-                  () => _fetchAddress(c.latitude, c.longitude),
-                );
-              }
-            },
-          ),
-          children: [
-            TileLayer(
-              urlTemplate: tileUrl,
-              userAgentPackageName: 'com.example.app',
-              maxZoom: 19,
+        ColoredBox(
+          color: const Color(0xFFE9E3D9),
+          child: FlutterMap(
+            mapController: _mapController,
+            options: MapOptions(
+              initialCenter: LatLng(_lat, _lng),
+              initialZoom: 17,
+              onMapEvent: (e) {
+                if (e is MapEventMoveEnd) {
+                  final c = _mapController.camera.center;
+                  setState(() {
+                    _lat = c.latitude;
+                    _lng = c.longitude;
+                  });
+                  _addressDebounce?.cancel();
+                  _addressDebounce = Timer(
+                    const Duration(milliseconds: 600),
+                    () => _fetchAddress(c.latitude, c.longitude),
+                  );
+                }
+              },
             ),
-          ],
+            children: [
+              if (tileUrl.isNotEmpty)
+                TileLayer(
+                  urlTemplate: tileUrl,
+                  userAgentPackageName: 'com.example.app',
+                  maxZoom: 19,
+                ),
+            ],
+          ),
         ),
+        _buildTilesNotice(),
         _buildPinOverlay(),
         _buildMyLocationButton(),
         _buildAddressCard(),
@@ -513,10 +519,50 @@ fetchAddressAt($lat, $lng);
     return Stack(
       children: [
         if (_webCtrl != null) WebViewWidget(controller: _webCtrl!),
+        _buildTilesNotice(),
         _buildMyLocationButton(),
         _buildAddressCard(),
         if (_loading) _buildLoadingOverlay(),
       ],
+    );
+  }
+
+  /// Explained once on screen: without a compiled-in key the picker still works
+  /// through search and device location, it just has no basemap to drag around.
+  Widget _buildTilesNotice() {
+    if (tileUrl.isNotEmpty) return const SizedBox.shrink();
+    return Positioned(
+      top: 12,
+      left: 16,
+      right: 16,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: KioskTheme.lunaWhite,
+          borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
+          boxShadow: KioskTheme.shadowSm,
+        ),
+        child: Row(
+          children: [
+            const Icon(
+              Icons.map_outlined,
+              size: 18,
+              color: KioskTheme.lunaBrown,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                'Map preview is unavailable. Search your street or use your location.',
+                style: KioskTheme.bodyMedium.copyWith(
+                  fontSize: 12,
+                  height: 1.3,
+                  color: KioskTheme.textMuted,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

@@ -32,6 +32,13 @@ const MENU_PRICES: Record<string, number[]> = {
   'Ice Cappuccino': [39, 49], 'Chocolate Coffee': [39, 49],
   'Burger Patty': [55], 'Ham & Cheese': [55], 'Cheese Burger': [65],
   'Burger with Egg': [85], 'Egg & Cheese': [95], 'Hotdog Sandwich': [69],
+  // Sulit Meals + Chicken Poppers. A parity test in test/menu_price_parity_test.dart
+  // fails the build when this map drifts from lib/data/menu_data.dart.
+  'S1 – Hungarian Sausage': [99], 'S2 – Pork Tocino': [99], 'S3 – Shawarma Rice': [99],
+  'S4 – Jumbo Hotdog': [99], 'S5 – Luncheon Meat': [99], "Luna's Pork Sisig": [99],
+  'Korean Barbeque Poppers': [99], 'Korean Yangnyeom Poppers': [99],
+  'Lemon Glaze Poppers': [99], 'Teriyaki Gloss Poppers': [99],
+  'Creamy Cheese Poppers': [99], 'Mango Habanero Poppers': [99],
 };
 
 const MAX_DELIVERY_FEE = 500; // distance-based fee is client-computed; cap it.
@@ -40,10 +47,21 @@ export const createCheckoutSession = onCall(
   { secrets: [paymongoSecret] }, // #1
   async (request) => {
     const d = request.data || {};
+    const orderDocId = cleanStr(d.orderDocId, 64, 'orderDocId');
     const orderId = cleanStr(d.orderId, 64, 'orderId');
     const amount = cleanInt(d.amount, 1000000, 'amount');
     const customerName = optStr(d.customerName, 100);
     const customerPhone = optStr(d.customerPhone, 32);
+
+    // The payment result must land on the order document the kiosk wrote.
+    // Firestore auto-ids are alphanumeric; anything else is not a doc id.
+    if (!/^[A-Za-z0-9]{1,64}$/.test(orderDocId)) {
+      throw new HttpsError('invalid-argument', 'Invalid order reference');
+    }
+    const orderRef = getFirestore().collection('orders').doc(orderDocId);
+    if (!(await orderRef.get()).exists) {
+      throw new HttpsError('not-found', 'Order not found');
+    }
 
     if (!Array.isArray(d.items) || d.items.length === 0 || d.items.length > 50) {
       throw new HttpsError('invalid-argument', 'Invalid items');
@@ -86,7 +104,12 @@ export const createCheckoutSession = onCall(
               cancel_url: 'https://lunaexpress.web.app/payment/cancel',
               reference_number: orderId,
               description: `Luna Express Order #${orderId}`,
-              metadata: { order_id: orderId, customer_name: customerName, customer_phone: customerPhone },
+              metadata: {
+                order_id: orderId,
+                order_doc_id: orderDocId,
+                customer_name: customerName,
+                customer_phone: customerPhone,
+              },
             },
           },
         }),
@@ -99,7 +122,7 @@ export const createCheckoutSession = onCall(
       }
 
       const checkout = json.data;
-      await getFirestore().collection('orders').doc(orderId).set({
+      await orderRef.set({
         checkoutSessionId: checkout.id,
         checkoutUrl: checkout.attributes.checkout_url,
         paymentMethod: 'GCash',

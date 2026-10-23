@@ -112,7 +112,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         ? 'PAID'
         : (_paymentMethod == 'GCash' ? 'AWAITING_PAYMENT' : 'NOT PAID');
 
-    final telegramSent = await OrderService.placeOrder(
+    final result = await OrderService.placeOrder(
       OrderModel(
         orderId: orderNumber,
         items: items
@@ -144,17 +144,36 @@ class _CheckoutPageState extends State<CheckoutPage> {
       timeStr,
     );
 
-    cartNotifier.clear();
-    setState(() => _loading = false);
     if (!mounted) return;
+    setState(() => _loading = false);
 
-    TelegramService.showTelegramStatus(context, telegramSent, orderNumber);
+    // Nothing is confirmed until the order is actually persisted.
+    if (result.docId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'We could not save your order. Please check the connection and try again.',
+          ),
+          backgroundColor: KioskTheme.error,
+          duration: Duration(seconds: 6),
+        ),
+      );
+      return;
+    }
+
+    cartNotifier.clear();
+    TelegramService.showTelegramStatus(
+      context,
+      result.telegramSent,
+      orderNumber,
+    );
 
     if (_paymentMethod == 'GCash' && !session.isStaff) {
       final paid = await Navigator.push<bool>(
         context,
         MaterialPageRoute(
           builder: (_) => GCashCheckoutPage(
+            orderDocId: result.docId!,
             orderId: orderNumber,
             amount: total,
             items: items
