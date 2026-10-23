@@ -36,7 +36,7 @@ OWN-WORLD: Deep coffee enamel `#241A12` as ground, panels a shade darker `#1B130
 
 STORY: Understands in one look — food from Purok 5, delivered, ₱39 a kilometre, every price printed. Believes the prices and the fare are computed, not marketed. Does one of two things: taps the vermilion plate to order, or moves the fare rail to see what their own address costs before deciding.
 
-FIRST VIEWPORT: Left on enamel, the painted wordmark at display scale, the delivery sentence underneath, then the vermilion Order plate and the payment line. Right, the fare board panel: nine fares from ₱39 to ₱351 on a rail with a needle parked at three kilometres, the photo of the night's dish mounted under it with its tag. Under both, the price board runs full width — three columns of real dishes, leaders, and prices.
+FIRST VIEWPORT: The painted wordmark and delivery sentence lead into a large mounted shawarma photo tagged ₱60 each and the vermilion Order plate with the payment line. Desktop pairs the introduction and actions with the food photo; phones use introduction, food, then actions in DOM order, with a compact wordmark. The delivery fare rail sits behind a native Estimate delivery disclosure, initially closed, beneath the ordering actions. The rate remains visible before opening it. Persistent Prices, Photos and Find us shortcuts sit beside Order in the phone header. The price board follows without the expanded calculator delaying it.
 
 FORM: Harap ng Jeepney, fifth of seven on my resonance-ordered list; seed:06d2122ba9ef1f29
 

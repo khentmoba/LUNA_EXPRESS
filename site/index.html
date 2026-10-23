@@ -32,10 +32,10 @@
 <header class="bar">
   <p class="bar__place">Magallanes · Agusan del Norte</p>
   <nav class="bar__nav" aria-label="Sections">
-    <a href="#board">Price board</a>
-    <a href="#window">What's cooking</a>
+    <a href="#board">Prices</a>
+    <a href="#window">Photos</a>
     <a href="#find">Find us</a>
-    <a href="https://www.facebook.com/p/Luna-Bites-Delights-100090686762896/" target="_blank" rel="noopener">Facebook</a>
+    <a class="bar__social" href="https://www.facebook.com/p/Luna-Bites-Delights-100090686762896/" target="_blank" rel="noopener">Facebook</a>
   </nav>
   <a class="plate plate--sm" href="/kiosk/#/menu">Order</a>
 </header>
@@ -49,6 +49,14 @@
       </h1>
       <p class="amp">&amp; Delights</p>
       <p class="lede">Good food, sweet drinks, moonlit vibes. Delivered around Magallanes at <b>₱39 a kilometre</b>.</p>
+    </div>
+
+    <figure class="mount mount--hero">
+      <img src="/img/shawarma-wrap.webp" width="474" height="573" alt="Two shawarma wraps cut open, beef and sauce showing" fetchpriority="high" decoding="async">
+      <figcaption class="tag">Shawarma wrap · ₱60 each</figcaption>
+    </figure>
+
+    <div class="hero__order">
       <p class="actions">
         <a class="plate" href="/kiosk/#/menu">Order for delivery</a>
         <a class="plate plate--ghost" href="#board">See the board</a>
@@ -56,13 +64,10 @@
       <p class="pay">Cash · GCash · bayad pag-abot</p>
     </div>
 
-    <aside class="fare" aria-labelledby="fare-title">
-      <figure class="mount mount--hero">
-        <img src="/img/halo-halo.webp" width="800" height="800" alt="A glass of halo-halo with ube ice cream, fruit and crunchy toppings" fetchpriority="high" decoding="async">
-        <figcaption class="tag">Halo-halo ₱49</figcaption>
-      </figure>
+    <details class="fare">
+      <summary class="fare__summary"><span>Estimate delivery</span><span class="fare__rate">₱39 / km</span></summary>
       <div class="fare__estimate">
-        <h2 class="fare__title" id="fare-title">Delivery estimate</h2>
+        <h2 class="fare__title" id="fare-title">Delivery fee only</h2>
         <p class="fare__hint">Try a distance at ₱39 a kilometre.</p>
 
         <div class="rail-wrap">
@@ -91,9 +96,9 @@
         </div>
 
         <p class="fare__read"><b data-peso>₱117</b><span>estimated fare</span></p>
-        <p class="fare__note" id="rail-note">Try a distance. Your exact fare is calculated from your pin and the nearer kitchen at checkout.</p>
+        <p class="fare__note" id="rail-note">Food is priced separately. Your exact delivery fee is calculated from your pin and the nearer kitchen at checkout.</p>
       </div>
-    </aside>
+    </details>
   </section>
 
   <section class="board" id="board" aria-labelledby="board-title">
@@ -127,11 +132,11 @@
       <div class="col">
         <h3 class="col__title">Sweet · cold</h3>
         <ul class="rows">
-          <li class="row"><span class="row__name">Ice Cream Halo-Halo</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱49</span></li>
+          <li class="row"><span class="row__name">Ice Cream Halo-Halo · Solo</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱49</span></li>
           <li class="row"><span class="row__name">Coolers, any three</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱100</span></li>
           <li class="row"><span class="row__name">Leche Flan</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱20</span></li>
           <li class="row"><span class="row__name">Milo Dinosaur</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱59</span></li>
-          <li class="row"><span class="row__name">Caramel Macchiato</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱39</span></li>
+          <li class="row"><span class="row__name">Caramel Macchiato · Medium</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱39</span></li>
           <li class="row"><span class="row__name">Classic Lemonade</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱49</span></li>
         </ul>
       </div>
@@ -171,7 +176,7 @@
       </figure>
       <figure class="mount mount--c">
         <img src="/img/burger-egg.webp" width="760" height="760" loading="lazy" decoding="async" alt="A burger with a fried egg on a wooden board">
-        <figcaption class="tag">Burger with egg ₱85</figcaption>
+        <figcaption class="tag">Burger with egg · buy 1 take 1 ₱85</figcaption>
       </figure>
       <figure class="mount mount--d">
         <img src="/img/dark-chocolate.webp" width="600" height="800" loading="lazy" decoding="async" alt="A tall iced dark chocolate drink on a wooden table">
