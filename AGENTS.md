@@ -1,5 +1,14 @@
 # Agent Guidelines — Luna Express
 
+## Business Reference
+
+- **Business:** Luna Bites & Delights — food & drink kiosk (good food, sweet drinks, moonlit vibes).
+- **Facebook Page:** https://www.facebook.com/profile.php?id=100090686762896
+  (canonical: https://www.facebook.com/p/Luna-Bites-Delights-100090686762896/)
+  Use this page as the source of truth for brand copy, the intro/blurb, contact details, and
+  promotional posts. Copy and photos posted there are what the landing page should showcase.
+- **Location:** Purok 5, Poblacion Magallanes, Agusan Del Norte (near 7/11), Philippines.
+
 ## Branching & Deployment Rules
 
 1. **Never push directly to `main`.**

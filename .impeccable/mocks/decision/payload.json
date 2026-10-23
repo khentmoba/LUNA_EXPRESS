@@ -1,0 +1,241 @@
+{
+  "title": "Choose the visual world",
+  "question": "The roll assigned Harap ng Jeepney — Luna's storefront painted like the front of a jeepney, fares and all. Keep it, take an alternate, or re-roll.",
+  "options": [
+    {
+      "id": "assigned",
+      "kind": "assigned",
+      "label": "Harap ng Jeepney",
+      "kicker": "THE ROLL",
+      "lineage": "hand-painted jeepney signboards and fare boards, Magallanes",
+      "thesis": "The storefront painted like the front of a jeepney: destination, fares, and the price board in one enamel panel.",
+      "palette": [
+        "#241a12",
+        "#4a3728",
+        "#e0c9a6",
+        "#f7eedd",
+        "#d8452a"
+      ],
+      "materials": [
+        "enamel panel",
+        "chrome hairline",
+        "sign-painter bevel"
+      ],
+      "viewport": "Painted wordmark on enamel, the fare rail live on the right, the price board running underneath.",
+      "risk": "Sign-painter lettering collapses into generic poster type the moment the bevel goes soft.",
+      "raised": [
+        {
+          "from": "variety-telop-caption-field",
+          "raise": "Emphasis is scale, rotation and outline weight — never a colour change."
+        },
+        {
+          "from": "signals-instruments-vu-meter-bridge",
+          "raise": "The fare rail is a real instrument: a needle that leans, keyed to distance, never a decorative slider."
+        },
+        {
+          "from": "clay-ceramics-fracture-coiled-earth-tower",
+          "raise": "Content banded into painted courses, each line's measure matching its band."
+        }
+      ],
+      "html": ".impeccable/mocks/decision/assigned.html"
+    },
+    {
+      "id": "model-pick",
+      "kind": "pick",
+      "kicker": "IMPECCABLE’S PICK",
+      "label": "Resibo",
+      "lineage": "thermal delivery receipts and carbon-copy order pads",
+      "thesis": "The page is the receipt from your last delivery: itemised, priced, torn along the top.",
+      "palette": [
+        "#2a1c12",
+        "#f6f1e4",
+        "#9b8f7a",
+        "#d8452a"
+      ],
+      "materials": [
+        "thermal paper",
+        "dot-matrix rules",
+        "rubber stamp"
+      ],
+      "viewport": "One narrow strip of paper on a dark counter, the order already itemised.",
+      "risk": "The receipt is a known trick on café sites, and one narrow strip wastes a desktop viewport.",
+      "html": ".impeccable/mocks/decision/model-pick.html"
+    },
+    {
+      "id": "challenger-neon",
+      "kind": "challenger",
+      "catalogId": "magnetism-electricity-plasma-hand-bent-neon-circuit",
+      "label": "Hand-Bent Neon",
+      "verdict": "competitive",
+      "lineage": "hand-bent neon sign circuits, one continuous gas-discharge tube",
+      "thesis": "The shopfront as a lit sign: one continuous bent tube naming the place after dark.",
+      "palette": [
+        "#07070b",
+        "#6fb2ff",
+        "#ff5b3c",
+        "#0b1226"
+      ],
+      "materials": [
+        "clear glass tube",
+        "cobalt discharge",
+        "warm electrode ends"
+      ],
+      "viewport": "A dark street, the wordmark bent in cobalt tube, prices in lit strips beneath.",
+      "risk": "Neon is a loud world that flatters any brand; the tube can outshine the food.",
+      "case": "Fuses well on recognition — a lit sign is what a hungry customer looks for at night — but the tube cannot price a delivery, so the mechanism stays outside it.",
+      "html": ".impeccable/mocks/decision/challenger-neon.html"
+    },
+    {
+      "id": "challenger-cereal",
+      "kind": "challenger",
+      "catalogId": "pop-culture-shelf-cereal-box-aisle",
+      "label": "Cereal Aisle",
+      "verdict": "competitive",
+      "lineage": "supermarket planogram wall of cereal facings",
+      "thesis": "The menu as a shelf: every dish a facing at eye height with its price shouting.",
+      "palette": [
+        "#d94b2b",
+        "#ffd23f",
+        "#2f8f5b",
+        "#f7f2e6"
+      ],
+      "materials": [
+        "coated board",
+        "sunburst violator",
+        "shelf rail"
+      ],
+      "viewport": "Six facings on a shelf rail, burst violators on what is new, a torn price flag on the side.",
+      "risk": "Packaged-goods language promises a boxed product Luna does not sell.",
+      "case": "Fuses well on clarity — a facing with a price reads instantly — but the aisle belongs to supermarkets, not to a kiosk in Purok 5.",
+      "html": ".impeccable/mocks/decision/challenger-cereal.html"
+    },
+    {
+      "id": "challenger-telop",
+      "kind": "challenger",
+      "catalogId": "variety-telop-caption-field",
+      "label": "Telop Caption Field",
+      "verdict": "declined",
+      "lineage": "variety-show telop captions",
+      "thesis": "Every line lands as a hand-placed outlined caption sized to how much it matters.",
+      "palette": [
+        "#ffd23f",
+        "#d94b2b",
+        "#1b1b1b"
+      ],
+      "materials": [
+        "outlined type",
+        "free placement",
+        "drop shadow"
+      ],
+      "viewport": "Outlined captions scattered over the frame, the biggest one naming tonight's bestseller.",
+      "risk": "A caption field is a frame for someone talking; it prices nothing.",
+      "case": "Fuses poorly: the voice transfers, the surface does not.",
+      "kept": "Emphasis by scale, rotation and outline weight, never by colour.",
+      "hero": "https://impeccable.style/worlds/cards/variety-telop-caption-field-hero.webp"
+    },
+    {
+      "id": "challenger-riso",
+      "kind": "challenger",
+      "catalogId": "risograph-web-system",
+      "label": "Risograph Inks",
+      "verdict": "declined",
+      "lineage": "misregistered risograph spot-ink printing",
+      "thesis": "Warm paper ground, two fluorescent inks slightly out of register, grain over everything.",
+      "palette": [
+        "#ff4f8b",
+        "#2b4cd6",
+        "#ffd23f",
+        "#f4ecdb"
+      ],
+      "materials": [
+        "toothy paper",
+        "halftone grain",
+        "spot ink"
+      ],
+      "viewport": "Flat fluoro shapes over paper, the ink layers a hair off alignment.",
+      "risk": "Print-shop romance; a hungry customer reads it as a zine, not a menu.",
+      "case": "Fuses poorly: lovely craft, no identification for a delivery order.",
+      "kept": "Depth from a deliberately misregistered second layer, not from shadow.",
+      "hero": "https://impeccable.style/worlds/cards/risograph-web-system-hero.webp"
+    },
+    {
+      "id": "challenger-vu",
+      "kind": "challenger",
+      "catalogId": "signals-instruments-vu-meter-bridge",
+      "label": "VU Meter Bridge",
+      "verdict": "declined",
+      "lineage": "recording-desk VU meter bridges",
+      "thesis": "A row of ballistic needles behind glass that lean into the red together.",
+      "palette": [
+        "#f1e8d6",
+        "#1b1b1b",
+        "#b3202a",
+        "#6b4a2f"
+      ],
+      "materials": [
+        "ivory meter faces",
+        "glass",
+        "walnut"
+      ],
+      "viewport": "Twenty meter faces shoulder to shoulder, all needles asleep against the pins.",
+      "risk": "Studio equipment; the needles measure sound, not pesos.",
+      "case": "Fuses poorly: one brilliant instrument, wrong room.",
+      "kept": "A needle with real mass and damping — animation that obeys ballistics.",
+      "hero": "https://impeccable.style/worlds/cards/signals-instruments-vu-meter-bridge-hero.webp"
+    },
+    {
+      "id": "challenger-coil",
+      "kind": "challenger",
+      "catalogId": "clay-ceramics-fracture-coiled-earth-tower",
+      "label": "Coiled Earth Tower",
+      "verdict": "declined",
+      "lineage": "monumental coiled-clay towers",
+      "thesis": "A tower of clay courses where each band carries one part of the offer.",
+      "palette": [
+        "#b4643c",
+        "#8a4526",
+        "#efe3d4",
+        "#4a2a1c"
+      ],
+      "materials": [
+        "raw terracotta",
+        "slip-white seams",
+        "late light"
+      ],
+      "viewport": "Terracotta coils rising past the fold, thumb-smoothed seams catching the light.",
+      "risk": "Reads as craft pottery, not as a kitchen you can order from tonight.",
+      "case": "Fuses poorly: magnificent material, but the product disappears inside it.",
+      "kept": "Content banded into courses, each line's measure matching its band.",
+      "hero": "https://impeccable.style/worlds/cards/clay-ceramics-fracture-coiled-earth-tower-hero.webp"
+    }
+  ],
+  "reroll": {
+    "registers": [
+      "safer",
+      "bolder"
+    ]
+  },
+  "buildPath": {
+    "value": "code",
+    "toggle": false
+  },
+  "canon": true,
+  "canonCard": {
+    "kind": "canon",
+    "label": "The category standard",
+    "thesis": "What food brands ship: hero photo, three feature cards, a testimonial strip.",
+    "palette": [
+      "#ffffff",
+      "#111827",
+      "#2563eb"
+    ],
+    "materials": [
+      "clean grid",
+      "stock photography"
+    ],
+    "viewport": "Headline left, product photo right, three equal cards underneath.",
+    "risk": "Indistinguishable from every other kiosk page by design.",
+    "html": ".impeccable/mocks/decision/canon.html"
+  },
+  "steer": true
+}

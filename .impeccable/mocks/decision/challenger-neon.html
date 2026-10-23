@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Neon circuit — first viewport</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Yellowtail&family=Karla:wght@400;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#07070b}
+.frame{width:1440px;height:900px;position:relative;overflow:hidden;
+  background:radial-gradient(70% 55% at 50% 34%,#14161f 0%,#0b0c12 55%,#060609 100%);
+  font-family:Karla,sans-serif;color:#cfd6ea}
+.script{position:absolute;left:86px;top:150px;font-family:Yellowtail,cursive;font-size:222px;
+  line-height:1;color:#0b1226;
+  text-shadow:
+    0 0 2px #dff0ff, 0 0 6px #6fb2ff, 0 0 18px #2f6fe0, 0 0 46px #1f4ec2, 0 0 96px #16307a;
+  filter:saturate(1.1)}
+.script .small{font-size:96px;display:block;margin-left:412px;margin-top:-40px}
+.electrode{position:absolute;width:11px;height:11px;border-radius:50%;background:#ff5b3c;
+  box-shadow:0 0 14px #ff5b3c,0 0 34px rgba(255,91,60,.5)}
+.place{position:absolute;left:88px;top:70px;font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:#5b6a92}
+.open{position:absolute;right:88px;top:64px;border:1px solid rgba(111,178,255,.45);padding:11px 20px;
+  font-size:12px;letter-spacing:.24em;text-transform:uppercase;
+  text-shadow:0 0 12px rgba(111,178,255,.8);color:#cfe4ff}
+.board{position:absolute;left:88px;bottom:74px;width:600px}
+.board .lb{font-size:11.5px;letter-spacing:.34em;text-transform:uppercase;color:#54648c;margin-bottom:14px}
+.row{display:flex;align-items:baseline;padding:9px 0;border-bottom:1px solid rgba(111,178,255,.14)}
+.row .n{font-size:19px;letter-spacing:.02em;color:#e7eefc}
+.row .p{margin-left:auto;font-size:19px;font-feature-settings:"tnum";color:#8fc0ff;
+  text-shadow:0 0 16px rgba(111,178,255,.55)}
+.row .p::before{content:"₱";font-size:.7em;opacity:.7;margin-right:2px}
+.fare{position:absolute;right:88px;bottom:96px;width:330px;text-align:right}
+.fare .big{font-family:Yellowtail,cursive;font-size:74px;line-height:.9;color:#0b1226;
+  text-shadow:0 0 2px #ffe9d8,0 0 12px #ff8a6a,0 0 44px #d84b2a}
+.fare p{font-size:13.5px;letter-spacing:.2em;text-transform:uppercase;color:#7f8fb8;margin-top:12px}
+.wire{position:absolute;left:0;right:0;bottom:36px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(111,178,255,.35),transparent)}
+.tube{position:absolute;left:86px;bottom:120px;width:2px;height:60px;background:rgba(255,91,60,.5)}
+</style></head>
+<body><div class="frame">
+  <div class="place">Purok 5 · Magallanes</div>
+  <div class="open">Open tonight</div>
+  <div class="script">Luna<span class="small">bites &amp; delights</span></div>
+  <div class="electrode" style="left:76px;top:300px"></div>
+  <div class="electrode" style="left:700px;top:412px"></div>
+  <div class="board">
+    <div class="lb">Cobalt · 18 mm tube · hand-bent</div>
+    <div class="row"><span class="n">Shawarma Wrap</span><span class="p">60</span></div>
+    <div class="row"><span class="n">Buy 1 Take 1 Fries</span><span class="p">50</span></div>
+    <div class="row"><span class="n">Ice Cream Halo-Halo</span><span class="p">49</span></div>
+    <div class="row"><span class="n">3 Coolers</span><span class="p">100</span></div>
+    <div class="row"><span class="n">Couple Snack Combo</span><span class="p">169</span></div>
+  </div>
+  <div class="fare"><div class="big">₱39/km</div><p>Delivery, gas included</p></div>
+  <div class="wire"></div>
+</div></body></html>
+
+<!-- rendered after serve -->

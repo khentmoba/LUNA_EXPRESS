@@ -71,7 +71,7 @@ class LunaExpressApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Luna Express Kiosk',
+      title: 'Luna Bites & Delights',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,

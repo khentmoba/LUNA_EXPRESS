@@ -22,7 +22,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
   void _logout() {
     session.logout();
     cartNotifier.clear();
-    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+    Navigator.pushNamedAndRemoveUntil(context, '/kiosk', (route) => false);
   }
 
   void _goToWalkIn() {

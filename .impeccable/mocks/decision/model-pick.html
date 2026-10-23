@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Resibo — first viewport</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700&family=Karla:wght@400;700&family=Courier+Prime:wght@400;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#120c07}
+.frame{width:1440px;height:900px;position:relative;overflow:hidden;
+  background:radial-gradient(90% 80% at 30% 20%,#3a2718,#221610 55%,#150e08);
+  font-family:Karla,system-ui,sans-serif;display:flex;align-items:flex-start;justify-content:center;padding-top:34px}
+.lean{position:absolute;left:58px;top:120px;width:430px;transform:rotate(-4deg);
+  box-shadow:24px 26px 60px -10px #000}
+.lean img{display:block;width:100%;height:520px;object-fit:cover;border:10px solid #f4ecdb}
+.lean .cap{background:#f4ecdb;color:#2b1f14;padding:10px 12px;font-size:13px;letter-spacing:.2em;text-transform:uppercase}
+.strip{position:relative;width:486px;margin-left:150px;background:#f8f3e7;color:#241a12;
+  padding:0 34px 30px;box-shadow:0 40px 90px -30px #000;
+  clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}
+.tear{height:14px;margin:0 -34px 22px;
+  background:repeating-conic-gradient(from 135deg at 50% 0,#150e08 0 24%,transparent 0 50%) 0 0/18px 14px}
+h1{font-family:'Big Shoulders Display',sans-serif;font-weight:700;font-size:41px;letter-spacing:.02em;
+  line-height:1;text-align:center;text-transform:uppercase}
+.meta{text-align:center;font-family:'Courier Prime',monospace;font-size:11.5px;letter-spacing:.26em;
+  text-transform:uppercase;color:#7a6a53;margin:8px 0 20px}
+.rule{height:1px;background:repeating-linear-gradient(90deg,#241a12 0 5px,transparent 5px 9px);
+  margin:14px 0;opacity:.55}
+.row{display:flex;align-items:baseline;font-family:'Courier Prime',monospace;font-size:15px;padding:5px 0}
+.row .l{white-space:nowrap}
+.row .dots{flex:1;border-bottom:1px dotted #b3a48c;margin:0 8px 4px}
+.row .v{font-feature-settings:"tnum";white-space:nowrap}
+.row .v::before{content:"₱"}
+.sum{display:flex;align-items:baseline;font-family:'Courier Prime',monospace;font-size:15px;padding:4px 0;color:#4a3a29}
+.sum b{margin-left:auto;font-weight:700;color:#241a12}
+.total{display:flex;align-items:flex-end;margin-top:14px;padding-top:14px;border-top:2px solid #241a12}
+.total span{font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:#7a6a53;padding-bottom:8px}
+.total b{margin-left:auto;font-family:'Big Shoulders Display',sans-serif;font-weight:700;font-size:62px;line-height:.8}
+.total b::before{content:"₱";font-size:.44em;vertical-align:.42em;margin-right:3px}
+.stamp{position:absolute;right:26px;top:150px;transform:rotate(-9deg);border:3px solid #b8412c;
+  color:#b8412c;padding:5px 12px;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.2em;
+  text-transform:uppercase;opacity:.85}
+.cta{margin-top:24px;background:#c23f28;color:#fff6ea;text-align:center;padding:20px;
+  font-weight:700;font-size:19px;letter-spacing:.12em;text-transform:uppercase;
+  box-shadow:0 7px 0 #7d2416,inset 0 1px 0 rgba(255,255,255,.35)}
+.note{text-align:center;font-family:'Courier Prime',monospace;font-size:11.5px;color:#7a6a53;
+  letter-spacing:.08em;margin-top:14px}
+.bigword{position:absolute;left:50px;bottom:34px;font-family:'Big Shoulders Display',sans-serif;
+  font-size:13px;letter-spacing:.34em;text-transform:uppercase;color:#7a6247}
+</style></head>
+<body><div class="frame">
+  <div class="lean"><img src="../../../images/shawarma_wrap.png" alt=""><div class="cap">Shawarma wrap · ₱60</div></div>
+  <div class="strip">
+    <div class="tear"></div>
+    <h1>Luna Bites<br>&amp; Delights</h1>
+    <div class="meta">Purok 5 · Magallanes · Agusan del Norte</div>
+    <div class="rule"></div>
+    <div class="row"><span class="l">Shawarma Wrap</span><span class="dots"></span><span class="v">60.00</span></div>
+    <div class="row"><span class="l">Buy 1 Take 1 Fries</span><span class="dots"></span><span class="v">50.00</span></div>
+    <div class="row"><span class="l">Ice Cream Halo-Halo</span><span class="dots"></span><span class="v">49.00</span></div>
+    <div class="row"><span class="l">3 Coolers (any flavour)</span><span class="dots"></span><span class="v">100.00</span></div>
+    <div class="row"><span class="l">Milo Dinosaur</span><span class="dots"></span><span class="v">59.00</span></div>
+    <div class="rule"></div>
+    <div class="sum">Delivery · 3 km at ₱39<b>117.00</b></div>
+    <div class="sum">Sub-total<b>318.00</b></div>
+    <div class="total"><span>Total</span><b>435.00</b></div>
+    <div class="stamp">Customer copy</div>
+    <div class="cta">Order this again</div>
+    <div class="note">Cash o GCash · bayad pag-abot · ₱39 kada kilometro</div>
+  </div>
+  <div class="bigword">Resibo</div>
+</div></body></html>
+
+<!-- rendered after serve -->

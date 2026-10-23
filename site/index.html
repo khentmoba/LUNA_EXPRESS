@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Luna Bites &amp; Delights — delivery around Magallanes</title>
+<meta name="description" content="Good food, sweet drinks, moonlit vibes. Delivered around Magallanes, Agusan del Norte at ₱39 a kilometre. Shawarma ₱60, fries from ₱50, halo-halo ₱49.">
+<meta name="theme-color" content="#241a12">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Luna Bites &amp; Delights">
+<meta property="og:title" content="Luna Bites &amp; Delights — delivered around Magallanes">
+<meta property="og:description" content="Good food, sweet drinks, moonlit vibes. ₱39 a kilometre from Purok 5, unahan lang gamay sa 7/11.">
+<meta property="og:image" content="https://lunaexpress.web.app/images/og-cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Luna Bites and Delights, Purok 5, Poblacion Magallanes">
+<meta property="og:url" content="https://lunaexpress.web.app/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lunaexpress.web.app/images/og-cover.jpg">
+<link rel="canonical" href="https://lunaexpress.web.app/">
+<link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/big-shoulders-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/karla-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/styles.css">
+<script src="/app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#board">Skip to the price board</a>
+
+<div class="chrome"></div>
+
+<header class="bar">
+  <p class="bar__place">Magallanes · Agusan del Norte</p>
+  <nav class="bar__nav" aria-label="Sections">
+    <a href="#board">Price board</a>
+    <a href="#window">What's cooking</a>
+    <a href="#find">Find us</a>
+    <a href="https://www.facebook.com/p/Luna-Bites-Delights-100090686762896/" target="_blank" rel="noopener">Facebook</a>
+  </nav>
+  <a class="plate plate--sm" href="/kiosk/#/menu">Order</a>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero__type">
+      <h1 class="wordmark paint">
+        <span class="wordmark__one">Luna</span>
+        <span class="wordmark__two">Bites</span>
+      </h1>
+      <p class="amp">&amp; Delights</p>
+      <p class="lede">Good food, sweet drinks, moonlit vibes. Delivered around Magallanes at <b>₱39 a kilometre</b>.</p>
+      <p class="actions">
+        <a class="plate" href="/kiosk/#/menu">Order for delivery</a>
+        <a class="plate plate--ghost" href="#board">See the board</a>
+      </p>
+      <p class="pay">Cash · GCash · bayad pag-abot</p>
+    </div>
+
+    <aside class="fare" aria-labelledby="fare-title">
+      <figure class="mount mount--hero">
+        <img src="/img/halo-halo.webp" width="800" height="800" alt="A glass of halo-halo with ube ice cream, fruit and crunchy toppings" fetchpriority="high" decoding="async">
+        <figcaption class="tag">Halo-halo ₱49</figcaption>
+      </figure>
+      <div class="fare__estimate">
+        <h2 class="fare__title" id="fare-title">Delivery estimate</h2>
+        <p class="fare__hint">Try a distance at ₱39 a kilometre.</p>
+
+        <div class="rail-wrap">
+          <div
+            class="rail"
+            id="rail"
+            role="slider"
+            tabindex="0"
+            aria-label="Example delivery distance, in kilometres"
+            aria-valuemin="1"
+            aria-valuemax="12"
+            aria-valuenow="3"
+            aria-valuetext="3 kilometres, 117 pesos estimated delivery"
+            aria-describedby="rail-note"
+          >
+            <span class="rail__track"></span>
+            <span class="rail__needle"><b class="rail__tag" data-km>3 km</b></span>
+          </div>
+          <span class="rail__ticks" aria-hidden="true">
+            <i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i>
+            <i style="--i:5"></i><i style="--i:6"></i><i style="--i:7"></i><i style="--i:8"></i>
+            <i style="--i:9"></i><i style="--i:10"></i><i style="--i:11"></i><i style="--i:12"></i>
+            <b style="--i:1">39</b><b style="--i:3">117</b><b style="--i:6">234</b><b style="--i:9">351</b><b style="--i:12">468</b>
+          </span>
+          <span class="rail__fares" aria-hidden="true" data-fares></span>
+        </div>
+
+        <p class="fare__read"><b data-peso>₱117</b><span>estimated fare</span></p>
+        <p class="fare__note" id="rail-note">Try a distance. Your exact fare is calculated from your pin and the nearer kitchen at checkout.</p>
+      </div>
+    </aside>
+  </section>
+
+  <section class="board" id="board" aria-labelledby="board-title">
+    <h2 class="board__title paint" id="board-title">Price board</h2>
+
+    <div class="board__cols">
+      <div class="col">
+        <h3 class="col__title">Shawarma · rice</h3>
+        <ul class="rows">
+          <li class="row"><span class="row__name">Shawarma Wrap</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱60</span></li>
+          <li class="row"><span class="row__name">Shawarma All Meat</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱80</span></li>
+          <li class="row"><span class="row__name">Shawarma Rice Bowl</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱50</span></li>
+          <li class="row"><span class="row__name">Shawarma Quesadilla</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱99</span></li>
+          <li class="row"><span class="row__name">Shawarma Fries</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱75</span></li>
+          <li class="row row--promo"><span class="row__name">Wrap, buy 1 take 1</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱99</span></li>
+        </ul>
+      </div>
+
+      <div class="col">
+        <h3 class="col__title">Fries · combos</h3>
+        <ul class="rows">
+          <li class="row"><span class="row__name">Fries, buy 1 take 1</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱50</span></li>
+          <li class="row"><span class="row__name">Large Fries</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱75</span></li>
+          <li class="row"><span class="row__name">Bucket Fries</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱99</span></li>
+          <li class="row"><span class="row__name">Combo 1 · burger + fries</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱60</span></li>
+          <li class="row"><span class="row__name">Combo 2 · hotdog + fries</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱60</span></li>
+          <li class="row row--promo"><span class="row__name">Couple Snack Combo</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱169</span></li>
+        </ul>
+      </div>
+
+      <div class="col">
+        <h3 class="col__title">Sweet · cold</h3>
+        <ul class="rows">
+          <li class="row"><span class="row__name">Ice Cream Halo-Halo</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱49</span></li>
+          <li class="row"><span class="row__name">Coolers, any three</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱100</span></li>
+          <li class="row"><span class="row__name">Leche Flan</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱20</span></li>
+          <li class="row"><span class="row__name">Milo Dinosaur</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱59</span></li>
+          <li class="row"><span class="row__name">Caramel Macchiato</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱39</span></li>
+          <li class="row"><span class="row__name">Classic Lemonade</span><span class="row__dots" aria-hidden="true"></span><span class="row__price">₱49</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="board__offers">
+      <p class="offer">
+        <span class="offer__tag">Sulit meals</span>
+        <span class="offer__line">A full rice bowl, a fried egg and a cold drink. Hungarian sausage · tocino · shawarma rice · jumbo hotdog · luncheon meat · pork sisig.</span>
+        <span class="offer__dots" aria-hidden="true"></span>
+        <span class="offer__price">₱99</span>
+      </p>
+      <p class="offer">
+        <span class="offer__tag">Chicken poppers</span>
+        <span class="offer__line">Crispy poppers with rice, egg and a drink. Korean barbeque · yangnyeom · lemon glaze · teriyaki · creamy cheese · mango habanero.</span>
+        <span class="offer__dots" aria-hidden="true"></span>
+        <span class="offer__price">₱99</span>
+      </p>
+    </div>
+
+    <p class="board__foot">
+      These prices match the app. Browse the full menu for more dishes and flavours; delivery is added at checkout.
+      <a class="link-underline" href="/kiosk/#/menu">Open the menu</a>
+    </p>
+  </section>
+
+  <section class="window" id="window" aria-labelledby="window-title">
+    <h2 class="window__title paint" id="window-title">What comes out of the window</h2>
+    <div class="window__wall">
+      <figure class="mount mount--a">
+        <img src="/img/shawarma-wrap.webp" width="474" height="573" loading="lazy" decoding="async" alt="Two shawarma wraps cut open, beef and sauce showing">
+        <figcaption class="tag">Shawarma wrap ₱60</figcaption>
+      </figure>
+      <figure class="mount mount--b">
+        <img src="/img/fries-b1t1.webp" width="494" height="800" loading="lazy" decoding="async" alt="Two buckets of fries, buy one take one">
+        <figcaption class="tag">Fries 1+1 ₱50</figcaption>
+      </figure>
+      <figure class="mount mount--c">
+        <img src="/img/burger-egg.webp" width="760" height="760" loading="lazy" decoding="async" alt="A burger with a fried egg on a wooden board">
+        <figcaption class="tag">Burger with egg ₱85</figcaption>
+      </figure>
+      <figure class="mount mount--d">
+        <img src="/img/dark-chocolate.webp" width="600" height="800" loading="lazy" decoding="async" alt="A tall iced dark chocolate drink on a wooden table">
+        <figcaption class="tag">Dark chocolate ₱39</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="find" id="find" aria-labelledby="find-title">
+    <div class="find__head">
+      <h2 class="find__title paint" id="find-title">Find us</h2>
+      <p class="find__copy">Walk in and eat at the kiosk, or order for delivery and we ride it over. Delivery is ₱39 a kilometre, calculated from your pin at checkout.</p>
+    </div>
+    <div class="find__board">
+      <address class="find__addr">
+        Purok 5, Poblacion<br>
+        Magallanes, Agusan del Norte
+      </address>
+      <p class="find__land"><span>Unahan lang gamay sa</span> 7/11</p>
+      <p class="find__hours"><span>Oras · opening hours</span> <em>to follow</em></p>
+    </div>
+    <p class="actions actions--tight">
+      <a class="plate plate--ghost" href="https://www.google.com/maps/search/?api=1&amp;query=Luna+Bites+%26+Delights+Poblacion+Magallanes+Agusan+del+Norte" target="_blank" rel="noopener">Open in Maps</a>
+      <a class="plate plate--ghost" href="https://m.me/100090686762896" target="_blank" rel="noopener">Message the page</a>
+    </p>
+  </section>
+
+  <section class="close" aria-labelledby="close-title">
+    <p class="close__kicker" id="close-title">Gigutom na ka?</p>
+    <a class="plate plate--invert plate--xl" href="/kiosk/#/menu">Order for delivery</a>
+    <p class="close__note">₱39 a kilometre · cash o GCash · bayad pag-abot</p>
+  </section>
+</main>
+
+<footer class="foot">
+  <p class="foot__mark">
+    <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true" focusable="false">
+      <path d="M14.6 1.2A10.2 10.2 0 1 0 20.8 13 8 8 0 0 1 14.6 1.2Z" fill="currentColor"/>
+    </svg>
+    Luna Bites &amp; Delights
+  </p>
+  <p class="foot__meta">Purok 5, Poblacion, Magallanes · Agusan del Norte</p>
+  <p class="foot__links">
+    <a href="https://www.facebook.com/p/Luna-Bites-Delights-100090686762896/" target="_blank" rel="noopener">Facebook</a>
+    <a href="/kiosk/#/menu">Menu</a>
+    <a href="#board">Price board</a>
+  </p>
+</footer>
+
+<div class="chrome chrome--bottom"></div>
+</body>
+</html>

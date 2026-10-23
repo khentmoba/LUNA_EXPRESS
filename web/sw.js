@@ -11,13 +11,17 @@
 const SW_VERSION = 'v1.1.3';
 const CACHE_NAME = 'luna-express-' + SW_VERSION;
 
+// Everything resolves against the worker's own scope, so the same file works
+// at / and under /kiosk/.
+const BASE = new URL('./', self.location).pathname;
+
 const PRECACHE_URLS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icons/Icon-192.png',
-  '/icons/Icon-512.png',
-  '/favicon.png',
+  BASE,
+  BASE + 'index.html',
+  BASE + 'manifest.json',
+  BASE + 'icons/Icon-192.png',
+  BASE + 'icons/Icon-512.png',
+  BASE + 'favicon.png',
 ];
 
 // ── INSTALL ──────────────────────────────────────────
@@ -92,7 +96,7 @@ self.addEventListener('fetch', function(event) {
       .catch(function() {
         // Offline fallback
         return caches.match(event.request).then(function(cached) {
-          return cached || caches.match('/index.html');
+          return cached || caches.match(BASE + 'index.html');
         });
       })
   );

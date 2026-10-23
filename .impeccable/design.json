@@ -1,0 +1,271 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2025-10-23T00:00:00.000Z",
+  "title": "Design System: Luna Bites & Delights — Storefront",
+  "extensions": {
+    "colorMeta": {
+      "enamel": {
+        "role": "neutral",
+        "displayName": "Enamel",
+        "canonical": "#241a12",
+        "tonalRamp": [
+          "#170f07",
+          "#1b130d",
+          "#20160d",
+          "#241a12",
+          "#2b1e14",
+          "#2c2016"
+        ]
+      },
+      "panel": {
+        "role": "neutral",
+        "displayName": "Panel",
+        "canonical": "#2c2016",
+        "tonalRamp": [
+          "#1b130d",
+          "#241a12",
+          "#2c2016",
+          "#3a2a1c"
+        ]
+      },
+      "cream": {
+        "role": "neutral",
+        "displayName": "Cream",
+        "canonical": "#f7eedd",
+        "tonalRamp": [
+          "#b39c7c",
+          "#d9c9ab",
+          "#e0c9a6",
+          "#efe3c9",
+          "#f7eedd",
+          "#fffaf0"
+        ]
+      },
+      "vermilion": {
+        "role": "primary",
+        "displayName": "Live Vermilion",
+        "canonical": "#d8452a",
+        "tonalRamp": [
+          "#8a2a18",
+          "#a3301a",
+          "#b8381e",
+          "#d8452a",
+          "#e2603f",
+          "#ffb9a4"
+        ]
+      },
+      "vermilion-plate": {
+        "role": "primary",
+        "displayName": "Painted Plate",
+        "canonical": "#a3301a",
+        "tonalRamp": [
+          "#6d1f11",
+          "#8a2a18",
+          "#a3301a",
+          "#b8381e"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Signage",
+        "purpose": "Wordmark, section heads, prices, plate labels, tags."
+      },
+      "label": {
+        "displayName": "Sticker label",
+        "purpose": "Uppercase Karla with wide tracking for nav, plates, meta rows."
+      },
+      "body": {
+        "displayName": "Spoken",
+        "purpose": "Paragraphs and dish descriptions, 16–17px / 1.55."
+      }
+    },
+    "shadows": [
+      {
+        "name": "plate-lip",
+        "value": "0 .06em 0 #8a2a18, 0 .55em 1em -.55em rgba(0,0,0,.9)",
+        "purpose": "Plate at rest: a hairline of darker red plus a soft cast."
+      },
+      {
+        "name": "plate-lip-hover",
+        "value": "0 .06em 0 #8a2a18, 0 .95em 1.5em -.6em rgba(0,0,0,.95)",
+        "purpose": "Plate lifted 2px on hover."
+      },
+      {
+        "name": "plate-lip-press",
+        "value": "0 .04em 0 #8a2a18, 0 .25em .6em -.3em rgba(0,0,0,.8)",
+        "purpose": "Plate pressed 2px down on activate."
+      },
+      {
+        "name": "panel",
+        "value": "inset 0 2px 0 rgba(255,255,255,.045), 0 34px 60px -46px #000",
+        "purpose": "Raised panel: lit top edge, long cast."
+      },
+      {
+        "name": "mount",
+        "value": "0 22px 34px -22px #000, 0 2px 0 rgba(255,255,255,.05)",
+        "purpose": "Photo print resting on the wall."
+      },
+      {
+        "name": "bar-stuck",
+        "value": "0 14px 26px -22px #000",
+        "purpose": "Sticky chrome rail once scrolled."
+      },
+      {
+        "name": "needle",
+        "value": "0 3px 8px rgba(0,0,0,.55)",
+        "purpose": "Fare needle on the track — neutral, never chromatic."
+      },
+      {
+        "name": "tag",
+        "value": "0 6px 14px -8px rgba(0,0,0,.9)",
+        "purpose": "Painted price tag pinned to a print."
+      }
+    ],
+    "motion": [
+      {
+        "name": "lift",
+        "value": "transform .18s cubic-bezier(.2, .7, .3, 1)",
+        "purpose": "Plate hover lift."
+      },
+      {
+        "name": "needle-spring",
+        "value": "left .5s cubic-bezier(.3, 1.24, .42, 1)",
+        "purpose": "Fare needle settling on a fare."
+      },
+      {
+        "name": "needle-drag",
+        "value": "left .1s linear",
+        "purpose": "Needle following the pointer while dragging."
+      },
+      {
+        "name": "swash",
+        "value": "swash .5s cubic-bezier(.2, .8, .25, 1) both .1s",
+        "purpose": "The one authored entrance: the vermilion swash under the wordmark."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "prefers-reduced-motion: animation-duration 1e-06s, transition-duration 1e-06s",
+        "purpose": "Kill switch; needle starts at its resting fare."
+      },
+      {
+        "name": "needle-settle",
+        "value": "left .5s cubic-bezier(.3, 1.24, .42, 1)",
+        "purpose": "Fare needle settling after a pointer release."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "wall",
+        "value": "940px"
+      },
+      {
+        "name": "mid",
+        "value": "700px"
+      },
+      {
+        "name": "compact",
+        "value": "460px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Sale plate",
+      "kind": "button",
+      "refersTo": "plate-primary",
+      "description": "The painted button: every order action, map action and page message.",
+      "html": "<a class=\"plate\" href=\"/kiosk/#/menu\">Order for delivery</a>",
+      "css": ".plate { display:inline-flex; align-items:center; gap:.55em; background:#a3301a; color:#f7eedd; font-weight:700; font-size:clamp(.82rem,1.1vw,.95rem); letter-spacing:.16em; text-transform:uppercase; text-decoration:none; padding:1.2em 1.7em; box-shadow:0 .06em 0 #8a2a18, 0 .55em 1em -.55em rgba(0,0,0,.9); transition:transform .18s cubic-bezier(.2,.7,.3,1), box-shadow .18s ease; } .plate:hover { background:#b8381e; transform:translateY(-2px); box-shadow:0 .06em 0 #8a2a18, 0 .95em 1.5em -.6em rgba(0,0,0,.95); } .plate:active { transform:translateY(2px); box-shadow:0 .04em 0 #8a2a18, 0 .25em .6em -.3em rgba(0,0,0,.8); } .plate--invert { background:#f7eedd; color:#8a2a18; box-shadow:0 .05em 0 rgba(15,9,6,.35), 0 .55em 1.1em -.55em rgba(0,0,0,.5); }"
+    },
+    {
+      "name": "Fare rail",
+      "kind": "input",
+      "description": "Signature delivery estimate: a trial distance in km gives an example fare, driven by pointer or keyboard. Checkout uses the pin and nearer kitchen for the exact fare.",
+      "html": "<div class=\"rail-wrap\"><div class=\"rail\" id=\"rail\" role=\"slider\" tabindex=\"0\" aria-valuemin=\"1\" aria-valuemax=\"12\" aria-valuenow=\"3\" aria-valuetext=\"3 kilometres, 117 pesos\" aria-describedby=\"rail-note\"><div class=\"rail__track\"></div><div class=\"rail__needle\" style=\"--v:3\"><b class=\"rail__tag\">3 KM</b></div></div><div class=\"rail__ticks\" aria-hidden=\"true\"></div></div>",
+      "css": ".rail { position:relative; height:52px; cursor:ew-resize; touch-action:none; } .rail:focus-visible { outline:2px solid #e0c9a6; outline-offset:5px; } .rail__needle { position:absolute; top:0; left:calc((var(--v) - 1) / 11 * 100%); transform:translateX(-50%); background:#d8452a; box-shadow:0 3px 8px rgba(0,0,0,.55); transition:left .5s cubic-bezier(.3,1.24,.42,1); } .rail.is-dragging .rail__needle { transition:left .1s linear; } .rail__tag { background:#2c2016; color:#f7eedd; padding:.28em .42em; } .rail__ticks i:first-child, .rail__ticks i:nth-child(3n) { height:20px; opacity:.9; } .rail__fares { display:none; position:absolute; top:64px; left:0; right:0; } .rail__fares em { position:absolute; left:calc((var(--i) - 1) / 11 * 100%); transform:translateX(-50%); font-size:.7rem; font-variant-numeric:tabular-nums; color:#b39c7c; } .rail__fares em.is-active { color:#f7eedd; font-weight:700; } @media (min-width:940px) { .rail__fares { display:block; } }"
+    },
+    {
+      "name": "Offer line",
+      "kind": "custom",
+      "description": "A ₱99 bundle printed as a board line. At 940px and below, the name and price share the first row and the flavour list spans the next.",
+      "html": "<p class=\"offer\"><span class=\"offer__tag\">Sulit meals</span><span class=\"offer__line\">A full rice bowl…</span><span class=\"offer__dots\"></span><span class=\"offer__price\">₱99</span></p>",
+      "css": ".offer { display:grid; grid-template-columns:auto minmax(0,1fr) minmax(20px,auto) auto; align-items:baseline; gap:.7em; padding:.8em 0; border-bottom:1px dotted rgba(224,201,166,.26); } .offer__tag { font-family:var(--display); font-weight:800; font-size:clamp(1.1rem,1.8vw,1.35rem); text-transform:uppercase; color:#f7eedd; white-space:nowrap; } .offer__line { font-size:.82rem; line-height:1.5; color:#b39c7c; } .offer__dots { border-bottom:1px dotted rgba(224,201,166,.22); } .offer__price { justify-self:end; padding:0 .3em .04em; background:#a3301a; color:#f7eedd; font-family:var(--display); font-weight:900; font-size:clamp(1.4rem,2.2vw,1.75rem); font-variant-numeric:tabular-nums; }"
+    },
+    {
+      "name": "Photo mount",
+      "kind": "custom",
+      "description": "A print taped to the wall: paper border, slight rotation, painted price tag.",
+      "html": "<figure class=\"mount mount--a\"><img src=\"/img/shawarma-wrap.webp\" alt=\"…\" width=\"760\" height=\"760\"><figcaption class=\"tag\">Shawarma wrap ₱60</figcaption></figure>",
+      "css": ".mount { position:relative; transform:rotate(-1.2deg); } .mount img { display:block; width:100%; height:auto; border:6px solid #f7eedd; box-shadow:0 22px 34px -22px #000, 0 2px 0 rgba(255,255,255,.05); object-fit:cover; } .tag { position:absolute; right:-10px; bottom:12px; transform:rotate(2.2deg); background:#a3301a; color:#f7eedd; font-family:var(--display); font-weight:700; font-size:1.02rem; padding:.34em .55em; }"
+    },
+    {
+      "name": "Price row",
+      "kind": "custom",
+      "description": "Dish, dotted leader, tabular price — the menu board's unit.",
+      "html": "<div class=\"row\"><span class=\"row__name\">Shawarma wrap</span><span class=\"row__dots\"></span><b class=\"row__price\">₱60</b></div>",
+      "css": ".row { display:flex; align-items:baseline; gap:.5em; padding:.52em 0; border-bottom:1px dotted rgba(224,201,166,.22); } .row__name { font-family:var(--display); font-weight:700; font-size:clamp(1.18rem,1.7vw,1.45rem); line-height:1.1; letter-spacing:.012em; color:#f6ecd9; } .row__dots { flex:1; border-bottom:1px dotted rgba(224,201,166,.28); transform:translateY(-.2em); } .row__price { font-size:clamp(1.05rem,1.5vw,1.25rem); font-weight:500; font-variant-numeric:tabular-nums; color:#e0c9a6; } .row--promo .row__price { color:#ffb9a4; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Harap ng Jeepney",
+    "overview": "The storefront is painted like the front of a jeepney. Dark enamel ground, flat painted rules, fares lettered where a passenger reads them. It is one page at / that hands you to a Flutter kiosk at /kiosk/ — the ordering flow is never re-drawn here. Bright vermilion is a state, not a surface; type-bearing surfaces are the deeper painted red so cream clears 6.5:1. Big Shoulders does the shouting, Karla does the talking. Depth is a short dark edge plus one soft cast: no hard offset slabs, no chrome gradients, no glow.",
+    "keyCharacteristics": [
+      "Enamel ground with chrome rules; no glass, no blur, no glow",
+      "One bright vermilion for live state only; painted plates carry the type",
+      "Square corners, hard offset lips, painted depth",
+      "The fare rail is a working instrument (pointer + keyboard + ARIA), not a graphic",
+      "Real photos from the business, rotated like prints on a wall",
+      "Nothing invented: no hours, no phone number, no ratings"
+    ],
+    "rules": [
+      {
+        "name": "The One Vermilion Rule",
+        "body": "Bright vermilion #d8452a is a live state. Any rectangle carrying type is #a3301a, #8a2a18 or cream.",
+        "section": "colors"
+      },
+      {
+        "name": "The Enamel Ground Rule",
+        "body": "One vertical gradient from #2b1e14 to #20160d. Depth comes from panels and plates, never from coloured glows or radial halos.",
+        "section": "colors"
+      },
+      {
+        "name": "The Signage-and-Speech Rule",
+        "body": "Big Shoulders never sets a paragraph; Karla never sets a price.",
+        "section": "typography"
+      },
+      {
+        "name": "The Wide-Label Rule",
+        "body": "Functional labels are uppercase Karla at 0.16em tracking or wider, minimum 0.72rem.",
+        "section": "typography"
+      },
+      {
+        "name": "The Painted Cast Rule",
+        "body": "Depth is a short dark line under the edge plus one soft black cast. No hard zero-blur slabs, no coloured glow, no gradient chrome.",
+        "section": "elevation"
+      },
+      {
+        "name": "The One Column Rule",
+        "body": "Every section holds the same 1120px content column and the same left edge. No section insets its content further.",
+        "section": "layout"
+      }
+    ],
+    "dos": [
+      "Do paint every type-bearing surface in --verm-plate and keep cream on it (6.55:1).",
+      "Do set functional labels at 11.5px or larger, uppercase Karla, wide tracking.",
+      "Do give raised surfaces a short dark edge plus one soft black cast, lifting 2px on hover.",
+      "Do keep the fare rail's ticks, labels and fare table outside the slider element, with tall ticks only on labelled stops.",
+      "Do rotate photo mounts 1–2° and pin a painted tag on them.",
+      "Do end with one full-bleed vermilion band and one cream plate.",
+      "Do keep the hours hole visible as a marked ‘to follow’ slot."
+    ],
+    "donts": [
+      "Don't put cream type on #d8452a.",
+      "Don't add coloured glows, zero-offset halos, radial background washes, or hard zero-blur offset slabs.",
+      "Don't use coloured left-border tabs, equal-card rows for offers, glyph icons, or a second accent hue.",
+      "Don't round corners, use backdrop-filter, or fake chrome with gradients.",
+      "Don't invent business facts — hours, phone numbers, ratings, testimonials.",
+      "Don't duplicate the ordering flow; every order action links to /kiosk/."
+    ]
+  }
+}
