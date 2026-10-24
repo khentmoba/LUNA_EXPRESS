@@ -414,6 +414,23 @@ The menu extension uses flat tonal layering and line borders with native Materia
 The local bottom sheet has transparent surface tint. Storefront plate casts, photo rotation and hover
 translation are not prescribed for menu cards or controls; the existing item-image Hero connection remains.
 
+## Motion
+
+Motion is scroll-linked and limited to three moments, each taken from the painted-sign world. The price
+board prints as it rises into view: every row is covered in cream, and the cover draws back to the right, so
+names print first and prices land last. The 28 rows overlap in a wave, so a few lines are always mid-print.
+The two ₱99 offers paint in across the vermilion strip from the left, strip and text together. The window
+photographs pin to the wall as they enter, rising 48px and levelling from a 3° swing, and each painted tag
+drops 14px and turns 5° into its tilt as it lands. Load-time motion is limited to the hero swash under the
+wordmark.
+
+Every effect animates only `transform` (with its `translate` and `rotate` properties), `opacity` or
+`clip-path`, runs on a `view()` timeline with `entry` and `cover` ranges, and uses a linear print or an
+ease-out settle. Nothing loops. The layer sits inside
+`prefers-reduced-motion: no-preference` and `@supports (animation-timeline: view())`. Where either fails, the
+page stays static in its final state, with every line, offer and photograph in place. None of these effects
+confirms an action, so the reduced-motion path removes the movement rather than softening it.
+
 ## Shapes
 
 Square corners everywhere (`0px`) — this is a painted board, not a card UI. Rules are flat: a 2px tan strip
@@ -519,3 +536,5 @@ so the hole is visible and marked instead of invented. Actions sit below.
 - **Don't** mark hours, phone or ratings as if they existed; use the `to follow` slot.
 - **Don't** invent business facts — hours, phone numbers, ratings, and testimonials do not exist yet.
 - **Don't** duplicate the ordering flow here; every order action links to `/kiosk/`.
+- **Don't** add scroll motion to the hero, address board or closing band, or add any looping motion. The three
+  moments in Motion are the page's only scroll-linked effects.

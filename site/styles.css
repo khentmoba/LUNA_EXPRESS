@@ -767,6 +767,59 @@ a { color: var(--tan); text-decoration-thickness: 1px; text-underline-offset: 3p
   .tag { font-size: .92rem; right: -6px; }
 }
 
+/* ── Scroll motion ────────────────────────────────────────────── */
+
+/* Three scroll-linked moments in the painted-sign world: the price board prints as it rises into
+   view, the offer strip paints in, and the window photographs pin to the wall with their tags
+   dropped on. Scroll position sets every state; nothing loops. Without scroll timelines or with
+   reduced motion, the page stays static in its final state. */
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    /* Each row is covered in cream, stopping 1px above its rule; the cover draws back to the right,
+       so names print before prices. */
+    .row { position: relative; }
+    .row::after {
+      content: "";
+      position: absolute;
+      inset: 0 0 1px;
+      background: var(--cream);
+      transform-origin: right center;
+      animation: print-clear linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 35%;
+    }
+
+    .board__offers {
+      animation: paint-in cubic-bezier(.2, .7, .3, 1) both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 30%;
+    }
+
+    .window .mount {
+      animation: pin-in cubic-bezier(.16, 1, .3, 1) both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 40%;
+    }
+    .window .tag {
+      animation: tag-in cubic-bezier(.16, 1, .3, 1) both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 40%;
+    }
+  }
+}
+
+@keyframes print-clear { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+@keyframes paint-in { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes pin-in {
+  from { opacity: 0; translate: 0 48px; rotate: 3deg; }
+  to { opacity: 1; translate: 0 0; rotate: 0deg; }
+}
+@keyframes tag-in {
+  from { opacity: 0; translate: 0 -14px; rotate: -5deg; }
+  to { opacity: 1; translate: 0 0; rotate: 0deg; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
