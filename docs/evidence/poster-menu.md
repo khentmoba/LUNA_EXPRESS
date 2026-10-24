@@ -4,7 +4,7 @@ The owner-supplied burger, fries and shawarma poster is the source for this upda
 
 - Added the standalone Shawarma Rice Bowl at ₱50 alongside the separate ₱99 S3 meal.
 - Overload now requires a size: Buddy (1–2 pax) at ₱99 or Barkada (3–5 pax) at ₱150.
-- Corrected Cheese & Egg Burger naming. All 17 pictured items use 14 photo crops taken directly from the owner-provided poster. Shared photos follow the poster’s grouping: b1/b2, b3/b4 and s1/s2. All six poster burgers keep buy 1 take 1 pricing.
+- Corrected Cheese & Egg Burger naming. Fourteen pictured items use photo crops taken directly from the owner-provided poster. To avoid duplicate photos, Ham & Cheese (b2), Burger with Egg (b4), and Shawarma All Meat (s2) use their earlier distinct photos. All six poster burgers keep buy 1 take 1 pricing.
 - The storefront includes every poster item, retaining the existing additional meals and drinks. It keeps the established cream price board rather than copying the poster artwork.
 - Updated both checkout source and tracked compiled output; retained the old Egg & Cheese name as a ₱95 compatibility alias.
 

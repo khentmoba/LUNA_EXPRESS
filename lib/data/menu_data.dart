@@ -162,7 +162,7 @@ final List<MenuSection> kMenuSections = [
         description:
             'Extra-loaded shawarma wrap packed with all-meat goodness and special sauce.',
         price: 80,
-        imageUrl: 'images/poster_shawarma_wrap.jpg',
+        imageUrl: 'images/shawarma_all_meat.jpg',
       ),
       MenuItem(
         id: 's3',
@@ -851,7 +851,7 @@ final List<MenuSection> kMenuSections = [
         emoji: '🥪',
         description: 'Savory ham and melted cheese.',
         price: 55,
-        imageUrl: 'images/poster_burger_patty.jpg',
+        imageUrl: 'images/ham_cheese.png',
         isBuy1Take1: true,
       ),
       MenuItem(
@@ -869,7 +869,7 @@ final List<MenuSection> kMenuSections = [
         emoji: '🍳🍔',
         description: 'Hearty burger with a fresh egg.',
         price: 85,
-        imageUrl: 'images/poster_cheese_burger.jpg',
+        imageUrl: 'images/burger_with_egg.png',
         isBuy1Take1: true,
       ),
       MenuItem(
