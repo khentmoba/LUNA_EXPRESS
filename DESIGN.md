@@ -416,17 +416,19 @@ translation are not prescribed for menu cards or controls; the existing item-ima
 
 ## Motion
 
-Motion is limited to two rehearsed moments in the painted-sign world. Both play once, as each part arrives, and
-neither follows scroll position, so nothing stays half-hidden while someone reads. The price board prints down its
-three columns in turn, about 120ms apart, then the two ₱99 offers paint in across the vermilion strip from the left.
-The window photographs then pin on one after another, rising 24px and settling from a 2° swing. The hero swash on
-load, the hover states and the sticky bar's shadow are the only other motion.
+Motion is one rehearsed sequence for the price board, plus a quieter one for the window photographs. Both play once,
+as each part arrives, and nothing follows scroll position, so prices and names are never left half-hidden while
+someone reads. The board goes in this order: a vermilion swash draws under the heading, the column titles print, and
+then each line prints in bands across the columns. A vermilion print head crosses every line, and its price lands as
+the head passes. The two ₱99 offers paint in across the vermilion strip last, with their prices stamped on. The window
+photographs pin on in turn, and each painted tag drops on after its photograph. The hero swash on load, the hover
+states and the sticky bar's shadow are the only other motion.
 
-Every effect animates only `transform` (with its `translate` and `rotate` properties), `opacity` or `clip-path`, and
-nothing loops. The hidden states exist only after `app.js` has run, and the whole layer sits inside
-`prefers-reduced-motion: no-preference`. Without script, or with reduced motion, the page stays static in its final
-state, with every line, offer and photograph in place. None of these effects confirms an action, so the
-reduced-motion path removes the movement rather than softening it.
+Every effect animates only `transform` (with its `translate`, `rotate` and `scale` properties), `opacity`, `clip-path`
+or the colour of the print head, and nothing loops. The hidden states exist only after `app.js` has run, and the whole
+layer sits inside `prefers-reduced-motion: no-preference`. Without script, or with reduced motion, the page stays static
+in its final state, with every line, offer and photograph in place. In print, nothing stays hidden. None of these
+effects confirms an action, so the reduced-motion path removes the movement rather than softening it.
 
 ## Shapes
 
