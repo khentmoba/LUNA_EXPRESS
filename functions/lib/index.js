@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.paymongoWebhook = exports.createCheckoutSession = exports.getLifetimeSalesReport = exports.getSalesAnalytics = exports.updateOrderStatus = exports.getActiveOrders = exports.sendOrderNotification = exports.verifyStaff = exports.triggerManualReport = exports.dailySalesReport = exports.paymongoSecret = exports.telegramChatIds = exports.telegramToken = void 0;
+exports.paymongoWebhook = exports.createCheckoutSession = exports.getLifetimeSalesReport = exports.getSalesAnalytics = exports.updateOrderStatus = exports.getActiveOrders = exports.sendOrderNotification = exports.updateStaffPin = exports.verifyStaff = exports.triggerManualReport = exports.dailySalesReport = exports.paymongoSecret = exports.telegramChatIds = exports.telegramToken = void 0;
 const app_1 = require("firebase-admin/app");
 const params_1 = require("firebase-functions/params");
 (0, app_1.initializeApp)();
@@ -17,6 +17,7 @@ var manual_report_1 = require("./reporting/manual_report");
 Object.defineProperty(exports, "triggerManualReport", { enumerable: true, get: function () { return manual_report_1.triggerManualReport; } });
 var verify_staff_1 = require("./auth/verify_staff");
 Object.defineProperty(exports, "verifyStaff", { enumerable: true, get: function () { return verify_staff_1.verifyStaff; } });
+Object.defineProperty(exports, "updateStaffPin", { enumerable: true, get: function () { return verify_staff_1.updateStaffPin; } });
 var send_notification_1 = require("./orders/send_notification");
 Object.defineProperty(exports, "sendOrderNotification", { enumerable: true, get: function () { return send_notification_1.sendOrderNotification; } });
 var kds_1 = require("./orders/kds");

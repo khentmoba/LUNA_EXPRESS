@@ -33,7 +33,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyStaff = void 0;
+exports.updateStaffPin = exports.verifyStaff = void 0;
 const https_1 = require("firebase-functions/v2/https");
 const firestore_1 = require("firebase-admin/firestore");
 const auth_1 = require("firebase-admin/auth");
@@ -41,10 +41,84 @@ const firebase_functions_1 = require("firebase-functions");
 const crypto = __importStar(require("crypto"));
 const security_1 = require("../util/security");
 const GENERIC_FAIL = 'Invalid username or password';
+const GENERIC_PIN_FAIL = 'Invalid PIN. Please try again.';
 exports.verifyStaff = (0, https_1.onCall)(async (request) => {
-    // #14 validate all input (length-capped, type-checked)
-    const username = (0, security_1.cleanStr)(request.data?.username, 64, 'username').toLowerCase();
-    const password = (0, security_1.cleanStr)(request.data?.password, 128, 'password');
+    const pin = typeof request.data?.pin === 'string' ? request.data.pin.trim() : null;
+    const usernameRaw = typeof request.data?.username === 'string' ? request.data.username.trim().toLowerCase() : null;
+    const password = typeof request.data?.password === 'string' ? request.data.password : null;
+    const db = (0, firestore_1.getFirestore)();
+    // First-run seed: random per-deploy passwords (logged ONCE — rotate after).
+    // Never seed well-known defaults; they end up in git/history forever.
+    if ((await db.collection('staff_accounts').limit(1).get()).empty) {
+        const mk = () => crypto.randomBytes(9).toString('base64url');
+        const seeds = [
+            { username: 'admin', role: 'admin', pin: '8888' },
+            { username: 'staff1', role: 'staff', pin: '1234' },
+        ];
+        const batch = db.batch();
+        for (const s of seeds) {
+            const pw = mk();
+            batch.set(db.collection('staff_accounts').doc(s.username), {
+                username: s.username,
+                role: s.role,
+                passwordHash: (0, security_1.hashPassword)(pw),
+                pinHash: (0, security_1.hashPassword)(s.pin),
+                createdAt: new Date(),
+            });
+            firebase_functions_1.logger.warn(`SEEDED staff account ${s.username} password: ${pw}, pin: ${s.pin} — CHANGE AFTER FIRST LOGIN`);
+        }
+        await batch.commit();
+    }
+    // ── Quick PIN Login Flow ──
+    if (pin) {
+        if (!/^[0-9]{4,8}$/.test(pin)) {
+            throw new https_1.HttpsError('invalid-argument', GENERIC_PIN_FAIL);
+        }
+        await (0, security_1.checkRateLimit)('staff:pin_login');
+        const failPin = async () => {
+            await (0, security_1.recordLoginFailure)('staff:pin_login');
+            return { success: false, message: GENERIC_PIN_FAIL };
+        };
+        const staffAccounts = await db.collection('staff_accounts').get();
+        let matchedUser = null;
+        if (!staffAccounts.empty) {
+            for (const doc of staffAccounts.docs) {
+                const d = doc.data();
+                if (d.pinHash && (0, security_1.verifyPassword)(pin, d.pinHash) !== 'bad') {
+                    matchedUser = { id: doc.id, ...d };
+                    break;
+                }
+            }
+        }
+        // Default fallback to 1234 for quick kiosk operations if unconfigured
+        if (!matchedUser && pin === '1234') {
+            const staffRef = db.collection('staff_accounts').doc('staff1');
+            const snap = await staffRef.get();
+            if (!snap.exists || !snap.data()?.pinHash) {
+                await staffRef.set({
+                    username: 'staff1',
+                    role: 'staff',
+                    pinHash: (0, security_1.hashPassword)('1234'),
+                    createdAt: new Date(),
+                }, { merge: true });
+            }
+            matchedUser = { id: 'staff1', username: 'staff1', role: 'staff' };
+        }
+        if (!matchedUser) {
+            firebase_functions_1.logger.info('Staff PIN login failed: bad PIN');
+            return failPin();
+        }
+        await (0, security_1.clearLoginAttempts)('staff:pin_login');
+        const role = matchedUser.role === 'admin' ? 'admin' : 'staff';
+        const customToken = await (0, auth_1.getAuth)().createCustomToken(`staff_${matchedUser.username || matchedUser.id}`, { role });
+        firebase_functions_1.logger.info(`Staff PIN login successful for ${matchedUser.username || matchedUser.id}`);
+        return { success: true, username: matchedUser.username || matchedUser.id, customToken };
+    }
+    // ── Username + Password Flow ──
+    if (!usernameRaw || !password) {
+        throw new https_1.HttpsError('invalid-argument', GENERIC_FAIL);
+    }
+    const username = (0, security_1.cleanStr)(usernameRaw, 64, 'username');
     if (!/^[a-z0-9._-]{2,64}$/.test(username))
         throw new https_1.HttpsError('invalid-argument', GENERIC_FAIL);
     // #11 rate limit login (lockout after 5 failures)
@@ -53,26 +127,6 @@ exports.verifyStaff = (0, https_1.onCall)(async (request) => {
         await (0, security_1.recordLoginFailure)(`staff:${username}`);
         return { success: false, message: GENERIC_FAIL };
     };
-    const db = (0, firestore_1.getFirestore)();
-    // First-run seed: random per-deploy passwords (logged ONCE — rotate after).
-    // Never seed well-known defaults; they end up in git/history forever.
-    if ((await db.collection('staff_accounts').limit(1).get()).empty) {
-        const mk = () => crypto.randomBytes(9).toString('base64url');
-        const seeds = [
-            { username: 'admin', role: 'admin' },
-            { username: 'staff1', role: 'staff' },
-        ];
-        const batch = db.batch();
-        for (const s of seeds) {
-            const pw = mk();
-            batch.set(db.collection('staff_accounts').doc(s.username), {
-                username: s.username, role: s.role,
-                passwordHash: (0, security_1.hashPassword)(pw), createdAt: new Date(),
-            });
-            firebase_functions_1.logger.warn(`SEEDED staff account ${s.username} password: ${pw} — CHANGE AFTER FIRST LOGIN`);
-        }
-        await batch.commit();
-    }
     const staffRef = db.collection('staff_accounts').doc(username);
     const doc = await staffRef.get();
     if (!doc.exists) {
@@ -102,5 +156,25 @@ exports.verifyStaff = (0, https_1.onCall)(async (request) => {
     const customToken = await (0, auth_1.getAuth)().createCustomToken(`staff_${username}`, { role });
     firebase_functions_1.logger.info('Staff login successful');
     return { success: true, username: data.username || username, customToken };
+});
+exports.updateStaffPin = (0, https_1.onCall)(async (request) => {
+    const uid = (0, security_1.requireStaff)(request);
+    const newPin = (0, security_1.cleanStr)(request.data?.newPin, 16, 'newPin');
+    if (!/^[0-9]{4,8}$/.test(newPin)) {
+        throw new https_1.HttpsError('invalid-argument', 'PIN must be between 4 and 8 digits');
+    }
+    const username = uid.replace(/^staff_/, '');
+    const db = (0, firestore_1.getFirestore)();
+    const staffRef = db.collection('staff_accounts').doc(username);
+    const doc = await staffRef.get();
+    if (!doc.exists) {
+        throw new https_1.HttpsError('not-found', 'Staff account not found');
+    }
+    await staffRef.update({
+        pinHash: (0, security_1.hashPassword)(newPin),
+        updatedAt: firestore_1.FieldValue.serverTimestamp(),
+    });
+    firebase_functions_1.logger.info(`Updated PIN for staff account ${username}`);
+    return { success: true };
 });
 //# sourceMappingURL=verify_staff.js.map

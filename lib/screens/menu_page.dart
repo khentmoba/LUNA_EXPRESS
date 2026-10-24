@@ -70,6 +70,46 @@ class KioskMenuPage extends StatelessWidget {
             ),
           ),
           ListenableBuilder(
+            listenable: session,
+            builder: (context, _) {
+              if (!session.isStaff) return const SizedBox.shrink();
+              return Padding(
+                padding: const EdgeInsets.only(right: 6),
+                child: GestureDetector(
+                  onTap: () => Navigator.pushNamed(context, '/kds'),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: MenuTheme.accent,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.outdoor_grill_rounded,
+                          color: MenuTheme.cream,
+                          size: 14,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'ORDERS',
+                          style: MenuTheme.body(
+                            size: 11,
+                            color: MenuTheme.cream,
+                          ).copyWith(fontWeight: FontWeight.w800),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+          ListenableBuilder(
             listenable: cartNotifier,
             builder: (context, _) => IconButton(
               tooltip: 'View order, ${cartNotifier.totalCount} items',

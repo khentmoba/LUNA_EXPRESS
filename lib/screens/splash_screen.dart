@@ -127,27 +127,30 @@ class _KioskSplashScreenState extends State<KioskSplashScreen>
                   },
                   child: FadeTransition(
                     opacity: _scaleAnimation,
-                    child: Container(
-                      width: 250,
-                      height: 250,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: KioskTheme.lunaBrown.withOpacity(0.08),
-                            blurRadius: 40,
-                            spreadRadius: 5,
-                          ),
-                        ],
-                      ),
-                      child: Image.asset(
-                        'images/luna_logo.png',
-                        errorBuilder: (context, error, stackTrace) =>
-                            const Icon(
-                              Icons.nightlight_round,
-                              size: 100,
-                              color: KioskTheme.lunaBrown,
+                    child: GestureDetector(
+                      onLongPress: _enterStaffMode,
+                      child: Container(
+                        width: 250,
+                        height: 250,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: KioskTheme.lunaBrown.withValues(alpha: 0.08),
+                              blurRadius: 40,
+                              spreadRadius: 5,
                             ),
+                          ],
+                        ),
+                        child: Image.asset(
+                          'images/luna_logo.png',
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(
+                                Icons.nightlight_round,
+                                size: 100,
+                                color: KioskTheme.lunaBrown,
+                              ),
+                        ),
                       ),
                     ),
                   ),

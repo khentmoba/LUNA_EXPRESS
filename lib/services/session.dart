@@ -6,6 +6,40 @@ class Session extends ChangeNotifier {
   bool get isStaff => _username != null;
   String get username => _username ?? '';
 
+  Session() {
+    _initAuth();
+  }
+
+  void _initAuth() {
+    try {
+      // Restore session if user was already signed in with a staff custom token
+      final current = FirebaseAuth.instance.currentUser;
+      if (current != null) {
+        _extractUser(current);
+      }
+      FirebaseAuth.instance.authStateChanges().listen((user) {
+        if (user != null) {
+          _extractUser(user);
+        } else {
+          _username = null;
+          notifyListeners();
+        }
+      });
+    } catch (_) {
+      // In unit test environments where Firebase is not initialized, ignore gracefully.
+    }
+  }
+
+  void _extractUser(User user) {
+    final uid = user.uid;
+    if (uid.startsWith('staff_')) {
+      _username = uid.substring(6);
+    } else {
+      _username = user.displayName ?? 'Staff';
+    }
+    notifyListeners();
+  }
+
   void login(String username) {
     _username = username;
     notifyListeners();

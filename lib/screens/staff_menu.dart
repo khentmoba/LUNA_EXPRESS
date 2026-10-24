@@ -51,8 +51,8 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
               Expanded(
                 child: _buildConsoleButton(
                   context,
-                  icon: Icons.kitchen_rounded,
-                  title: 'KITCHEN KDS',
+                  icon: Icons.outdoor_grill_rounded,
+                  title: 'LIVE ORDERS',
                   color: Colors.orange,
                   onTap: () {
                     Navigator.pop(context);
