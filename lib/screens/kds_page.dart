@@ -101,12 +101,12 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
   }
 
   void _checkNewOrdersAndChime(List<dynamic> freshOrders) {
-    final pendingOrders =
-        freshOrders.where((o) => o['status'] == 'Pending').toList();
-    final freshPendingIds =
-        pendingOrders
-            .map((o) => (o['id'] ?? o['orderNumber']).toString())
-            .toSet();
+    final pendingOrders = freshOrders
+        .where((o) => o['status'] == 'Pending')
+        .toList();
+    final freshPendingIds = pendingOrders
+        .map((o) => (o['id'] ?? o['orderNumber']).toString())
+        .toSet();
 
     if (_hasInitialFetchDone) {
       final newArrivals = freshPendingIds.difference(_knownPendingOrderIds);
@@ -157,10 +157,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
       SnackBar(
         content: Text(
           msg,
-          style: GoogleFonts.outfit(
-            fontWeight: FontWeight.w800,
-            fontSize: 13,
-          ),
+          style: GoogleFonts.outfit(fontWeight: FontWeight.w800, fontSize: 13),
         ),
         backgroundColor: color,
         duration: const Duration(seconds: 3),
@@ -221,14 +218,13 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
     final filtered = _filterOrders(_orders);
 
     final pending = filtered.where((o) => o['status'] == 'Pending').toList();
-    final preparing = filtered.where((o) => o['status'] == 'Preparing').toList();
+    final preparing = filtered
+        .where((o) => o['status'] == 'Preparing')
+        .toList();
     final ready = filtered.where((o) => o['status'] == 'Ready').toList();
-    final completed =
-        filtered
-            .where(
-              (o) => o['status'] == 'Completed' || o['status'] == 'Cancelled',
-            )
-            .toList();
+    final completed = filtered
+        .where((o) => o['status'] == 'Completed' || o['status'] == 'Cancelled')
+        .toList();
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F3EE),
@@ -263,7 +259,11 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
   }
 
   // ── Top Navigation App Bar ──────────────────────────────────
-  PreferredSizeWidget _buildAppBar(int pendingCount, int prepCount, int readyCount) {
+  PreferredSizeWidget _buildAppBar(
+    int pendingCount,
+    int prepCount,
+    int readyCount,
+  ) {
     return AppBar(
       backgroundColor: const Color(0xFF241A12),
       foregroundColor: const Color(0xFFF7EEDD),
@@ -440,11 +440,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
         // Logout
         IconButton(
           tooltip: 'Exit Staff Portal',
-          icon: Icon(
-            Icons.logout_rounded,
-            color: Colors.red[300],
-            size: 20,
-          ),
+          icon: Icon(Icons.logout_rounded, color: Colors.red[300], size: 20),
           onPressed: () {
             session.logout();
             Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
@@ -893,13 +889,15 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
   Widget _buildOrderCard(dynamic order) {
     final orderId = order['id'] as String;
     final orderNum = order['orderNumber'] as String? ?? orderId;
-    final customerName = (order['customerName'] as String?)?.trim() ?? 'Customer';
+    final customerName =
+        (order['customerName'] as String?)?.trim() ?? 'Customer';
     final customerPhone = (order['customerPhone'] as String?)?.trim() ?? '';
     final customerAddress = (order['customerAddress'] as String?)?.trim() ?? '';
     final lat = order['lat'] as double?;
     final lng = order['lng'] as double?;
     final type = order['type'] as String? ?? 'Walk-In';
-    final paymentStatus = (order['paymentStatus'] as String? ?? 'NOT PAID').toUpperCase();
+    final paymentStatus = (order['paymentStatus'] as String? ?? 'NOT PAID')
+        .toUpperCase();
     final paymentMethod = order['paymentMethod'] as String? ?? 'Cash';
     final status = order['status'] as String? ?? 'Pending';
     final timestampStr = order['timestamp'] as String? ?? '';
@@ -1058,7 +1056,9 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                     borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
                   ),
                   child: Text(
-                    isPaid ? 'PAID ($paymentMethod)' : 'UNPAID · COLLECT ₱$total',
+                    isPaid
+                        ? 'PAID ($paymentMethod)'
+                        : 'UNPAID · COLLECT ₱$total',
                     style: GoogleFonts.outfit(
                       color: isPaid
                           ? const Color(0xFF15803D)
@@ -1395,7 +1395,10 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
               Navigator.pop(ctx);
               _updateStatus(orderId, 'Cancelled');
             },
-            child: const Text('Cancel Order', style: TextStyle(color: Colors.white)),
+            child: const Text(
+              'Cancel Order',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),

@@ -305,7 +305,9 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                             boxShadow: _mode == StaffLoginMode.pin
                                 ? [
                                     BoxShadow(
-                                      color: Colors.black.withValues(alpha: 0.06),
+                                      color: Colors.black.withValues(
+                                        alpha: 0.06,
+                                      ),
                                       blurRadius: 4,
                                       offset: const Offset(0, 2),
                                     ),
@@ -366,7 +368,9 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                             boxShadow: _mode == StaffLoginMode.password
                                 ? [
                                     BoxShadow(
-                                      color: Colors.black.withValues(alpha: 0.06),
+                                      color: Colors.black.withValues(
+                                        alpha: 0.06,
+                                      ),
                                       blurRadius: 4,
                                       offset: const Offset(0, 2),
                                     ),
@@ -527,21 +531,22 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                         color: KioskTheme.textPrimary,
                         fontSize: 14,
                       ),
-                      decoration: KioskTheme.inputDecoration(
-                        hint: '••••••••',
-                        icon: Icons.lock_open_rounded,
-                      ).copyWith(
-                        suffixIcon: GestureDetector(
-                          onTap: () => setState(() => _obscure = !_obscure),
-                          child: Icon(
-                            _obscure
-                                ? Icons.visibility_off_rounded
-                                : Icons.visibility_rounded,
-                            color: KioskTheme.lunaBrown,
-                            size: 20,
+                      decoration:
+                          KioskTheme.inputDecoration(
+                            hint: '••••••••',
+                            icon: Icons.lock_open_rounded,
+                          ).copyWith(
+                            suffixIcon: GestureDetector(
+                              onTap: () => setState(() => _obscure = !_obscure),
+                              child: Icon(
+                                _obscure
+                                    ? Icons.visibility_off_rounded
+                                    : Icons.visibility_rounded,
+                                color: KioskTheme.lunaBrown,
+                                size: 20,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
                     ),
                   ],
                 ),
@@ -550,7 +555,9 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                   children: [
                     Expanded(
                       child: JuicyFeedback(
-                        onPressed: _loading ? null : () => Navigator.pop(context),
+                        onPressed: _loading
+                            ? null
+                            : () => Navigator.pop(context),
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           decoration: BoxDecoration(

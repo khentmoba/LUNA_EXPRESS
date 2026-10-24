@@ -1,5 +1,6 @@
 import 'url_helper_stub.dart'
-    if (dart.library.js_interop) 'url_helper_web.dart' as helper_impl;
+    if (dart.library.js_interop) 'url_helper_web.dart'
+    as helper_impl;
 
 void openUrlInBrowser(String url) {
   try {

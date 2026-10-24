@@ -136,7 +136,9 @@ class _KioskSplashScreenState extends State<KioskSplashScreen>
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: KioskTheme.lunaBrown.withValues(alpha: 0.08),
+                              color: KioskTheme.lunaBrown.withValues(
+                                alpha: 0.08,
+                              ),
                               blurRadius: 40,
                               spreadRadius: 5,
                             ),

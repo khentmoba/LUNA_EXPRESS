@@ -41,11 +41,7 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
-            body: StaffLoginDialog(),
-          ),
-        ),
+        const MaterialApp(home: Scaffold(body: StaffLoginDialog())),
       );
       await tester.pumpAndSettle();
 
@@ -89,9 +85,7 @@ void main() {
             ChangeNotifierProvider.value(value: kioskSession),
             ChangeNotifierProvider.value(value: cartNotifier),
           ],
-          child: const MaterialApp(
-            home: KdsPage(),
-          ),
+          child: const MaterialApp(home: KdsPage()),
         ),
       );
       await tester.pump();
