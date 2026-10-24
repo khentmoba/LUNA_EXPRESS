@@ -217,8 +217,9 @@ The owner-supplied favorites poster adds the standalone ₱50 Shawarma Rice Bowl
 sizes (Buddy, 1–2 pax at ₱99; Barkada, 3–5 pax at ₱150), and the complete six-item burger
 favorites list to the storefront price board. Existing drinks and meal offers remain. The cream
 panel now contains 28 price rows; a 28px top margin separates a second category within a column.
-The kiosk uses its existing size chooser for overload and existing photography for the rice bowl
-and corrected Cheese & Egg Burger. This is a menu-content extension in the established world.
+The kiosk uses its existing size chooser for overload. All 17 items pictured on the favorites
+poster now use 14 direct food-photo crops from that owner-supplied image. Shared photos match the
+poster’s grouping; labels, prices and decorative hearts are excluded from the crops. This is a menu-content extension in the established world.
 
 ### Approved Flutter menu extension
 
