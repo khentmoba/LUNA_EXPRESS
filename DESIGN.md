@@ -211,6 +211,17 @@ Finish review verdict: **ship**, with no material findings in the scoped redesig
 against the HTML/CSS; it does not repeat browser verification or run tests. No new rasters ship in
 `site/`; existing assets are unchanged.
 
+### Favorites poster menu update
+
+The owner-supplied favorites poster adds the standalone ₱50 Shawarma Rice Bowl, both overload
+sizes (Buddy, 1–2 pax at ₱99; Barkada, 3–5 pax at ₱150), and the complete six-item burger
+favorites list to the storefront price board. Existing drinks and meal offers remain. The cream
+panel now contains 28 price rows; a 28px top margin separates a second category within a column.
+The kiosk uses its existing size chooser for overload. Fourteen items pictured on the favorites
+poster use direct food-photo crops from that owner-supplied image. Ham & Cheese, Burger with Egg
+and Shawarma All Meat use their earlier distinct photos to avoid repeating the poster’s shared
+images. Labels, prices and decorative hearts are excluded from the crops. This is a menu-content extension in the established world.
+
 ### Approved Flutter menu extension
 
 The existing storefront specification remains authoritative for `/`. The scoped additions below

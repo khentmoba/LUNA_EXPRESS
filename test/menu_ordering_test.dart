@@ -97,6 +97,30 @@ void main() {
     },
   );
 
+  testWidgets('Barkada overload size and quantity reach cart at poster price', (
+    tester,
+  ) async {
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await openItem(tester, 's8');
+    expect(
+      tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
+      isNull,
+    );
+    await tester.ensureVisible(find.text('Barkada (3–5 pax)'));
+    await tester.tap(find.text('Barkada (3–5 pax)'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Increase quantity'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Add to order · ₱300'));
+    await tester.pumpAndSettle();
+    expect(cartNotifier.items.single.variant, 'Barkada (3–5 pax)');
+    expect(cartNotifier.items.single.price, 150);
+    expect(cartNotifier.items.single.quantity, 2);
+    expect(cartNotifier.totalPrice, 300);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('closing item details does not add an order', (tester) async {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
