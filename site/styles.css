@@ -603,9 +603,7 @@ a { color: var(--tan); text-decoration-thickness: 1px; text-underline-offset: 3p
 }
 .find__hours em {
   font-style: normal;
-  color: var(--tan);
-  border-bottom: 1px dashed rgba(224, 201, 166, .55);
-  padding-bottom: .1em;
+  color: var(--cream);
 }
 .find__land span {
   font-family: var(--text);
@@ -615,6 +613,43 @@ a { color: var(--tan); text-decoration-thickness: 1px; text-underline-offset: 3p
   color: var(--tan-dim);
 }
 .find .actions { margin-top: clamp(20px, 2.6vw, 30px); }
+
+/* ── Location ─────────────────────────────────────────────────── */
+
+.locate { margin-top: clamp(20px, 2.6vw, 30px); }
+.locate__controls { display: none; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+.js-view .locate__controls { display: flex; }
+.locate__tab {
+  min-height: 44px;
+  padding: .9em 1.3em;
+  border: 0;
+  background: transparent;
+  color: var(--tan);
+  font-family: var(--text);
+  font-size: .76rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  box-shadow: inset 0 0 0 2px rgba(224, 201, 166, .5);
+  cursor: pointer;
+}
+.locate__tab:hover { color: var(--cream); }
+.locate__tab[aria-pressed="true"] {
+  background: var(--verm-plate);
+  color: var(--cream);
+  box-shadow: 0 .06em 0 var(--verm-deep);
+}
+.locate__frame {
+  position: relative;
+  border: 6px solid var(--cream);
+  background: var(--board);
+  box-shadow: 0 22px 34px -22px #000;
+}
+.locate__panel { height: 300px; }
+.locate__panel iframe { display: block; width: 100%; height: 100%; border: 0; }
+.js-view .locate__panel:not(.is-active) { display: none; }
+.locate__frame .tag { left: 14px; right: auto; bottom: 56px; }
+@media (min-width: 701px) { .locate__panel { height: 440px; } }
 
 /* ── Closing plate ────────────────────────────────────────────── */
 
