@@ -24,7 +24,7 @@
 - **Always capture and commit concrete proof / evidence before handing off work or opening a PR.** Never rely on claims alone.
 - **For UI / Visual changes:** Capture real rendered screenshots at supported viewports (e.g. mobile 320px/390px, tablet 768px, desktop 1440px) and save them to `docs/evidence/`.
 - **For Backend / API / Integration features:** Produce tangible evidence of end-to-end functionality (e.g. test payloads, actual API output artifacts, verified live responses, or simulated message captures) and document the validation in `docs/evidence/<feature-name>.md`.
-- **Include evidence in PR descriptions:** Every PR must link to or embed its proof artifacts in the Evidence section so human reviewers can immediately verify correctness without re-running everything from scratch.
+- **Embed visual proof in PR descriptions:** Every PR must embed visual proof and screenshots directly into the Evidence section using inline images (`![alt](url)` or `raw=true` URLs), not just text links, so reviewers see the proof immediately without clicking away.
 
 ## Branching & Deployment Rules
 
@@ -43,4 +43,4 @@
    - Flutter tests: `flutter test`
    - Functions build & audit: `cd functions && npm run build && npm audit --audit-level=high`
    - Rules emulator tests (if touching rules): `cd functions && npm run test:rules`
-   - Capture concrete proof artifacts in `docs/evidence/` and link them in the PR body.
+   - Capture concrete proof artifacts in `docs/evidence/` and embed visual proof (`![alt](url)`) directly in the PR body.
