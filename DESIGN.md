@@ -198,7 +198,7 @@ lettered wide like a sticker run along a windscreen.
 
 The build is static HTML, one stylesheet, and one small script. No framework, no icon font, two self-hosted
 variable fonts, photos the business already published. Nothing on the page is a fact the business did not
-give us: no hours, no phone number, no ratings.
+give us. Opening hours are 9am to 8pm; there is no phone number and no rating yet.
 
 ### Approved storefront price-board exception
 
@@ -473,9 +473,8 @@ wrap while the amount remains aligned right. The ₱ glyph appears once per pric
 ### Address board
 
 Board ground, 3px cream top rule, address in Big Shoulders at 1.3 leading, and the landmark callout — "Unahan
-lang gamay sa 7/11" with `7/11` in the lighter red `#e2603f` — set on the same baseline. A fourth line holds
-the hours slot the owner has not filled yet: `Oras · opening hours` with `to follow` on a dashed underline,
-so the hole is visible and marked instead of invented. Actions sit below.
+lang gamay sa 7/11" with `7/11` in the lighter red `#e2603f` — set on the same baseline. A fourth line gives
+the opening hours, 9am to 8pm, beside the `Oras · opening hours` label. Actions sit below.
 
 ### Flutter menu primitives and item chooser
 
@@ -516,6 +515,6 @@ so the hole is visible and marked instead of invented. Actions sit below.
 - **Don't** use colored left-border tabs on cards, equal-card rows for offers, glyph icons, or a second
   accent hue.
 - **Don't** round corners, use backdrop-filter, fake chrome with gradients, or draw depth with blur alone.
-- **Don't** mark hours, phone or ratings as if they existed; use the `to follow` slot.
-- **Don't** invent business facts — hours, phone numbers, ratings, and testimonials do not exist yet.
+- **Don't** show a phone number or ratings until the owner supplies them; leave no placeholder for them.
+- **Don't** invent business facts. Phone numbers, ratings and testimonials do not exist yet; the hours are 9am to 8pm.
 - **Don't** duplicate the ordering flow here; every order action links to `/kiosk/`.

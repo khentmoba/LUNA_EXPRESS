@@ -603,9 +603,7 @@ a { color: var(--tan); text-decoration-thickness: 1px; text-underline-offset: 3p
 }
 .find__hours em {
   font-style: normal;
-  color: var(--tan);
-  border-bottom: 1px dashed rgba(224, 201, 166, .55);
-  padding-bottom: .1em;
+  color: var(--cream);
 }
 .find__land span {
   font-family: var(--text);

@@ -43,7 +43,8 @@ A neighbourhood kiosk with the prices printed where you can see them: real per-i
 - Delivery fee: rider-confirmed and charged separately. The storefront, checkout and receipt show a delivery-fee notice without quoting an amount. Checkout totals and online payments cover food only.
 - Checkout supports cash and GCash; staff verify orders in the dashboard.
 - Routes in the kiosk app: `/menu`, `/cart`, `/checkout_process`, `/kds`, `/analytics`, `/pasugo/*`.
-- Undecided: opening hours and a contact phone number. The owner will supply them later. Do not invent either.
+- Opening hours are 9am to 8pm, supplied by the owner.
+- Undecided: a contact phone number. The owner will supply it later. Do not invent one.
 
 ## Brand Commitments
 
