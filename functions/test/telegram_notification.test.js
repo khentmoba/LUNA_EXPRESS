@@ -140,7 +140,7 @@ describe('Telegram MarkdownV2 escaping and order notifications', () => {
             { name: 'French Fries', variant: 'Cheese', price: 50, quantity: 1 },
             { name: 'Coolers', variant: 'Purple Taro', price: 39, quantity: 2 },
           ],
-          total: 178,
+          total: 128,
           timeStr: '2026-09-28  14:30',
           orderType: 'Delivery',
           deliveryFee: 50,
@@ -187,6 +187,13 @@ describe('Telegram MarkdownV2 escaping and order notifications', () => {
 
     for (const tc of testCases) {
       const msg = formatOrderNotification(tc.data);
+      if (tc.data.orderType === 'Delivery') {
+        assert.ok(msg.includes('Delivery Fee:* Confirmed by rider; charged separately'));
+        assert.ok(msg.includes('*FOOD TOTAL:*'));
+        assert.ok(!msg.includes('Delivery Fee:* ₱'));
+      } else {
+        assert.ok(!msg.includes('Delivery Fee:'));
+      }
       const errors = validateMarkdownV2(msg);
       assert.deepEqual(errors, [], `${tc.desc} failed MarkdownV2 validation:\n${errors.join('\n')}\n\nMessage:\n${msg}`);
     }

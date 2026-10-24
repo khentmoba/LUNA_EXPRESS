@@ -275,191 +275,25 @@ a { color: var(--tan); text-decoration-thickness: 1px; text-underline-offset: 3p
 
 .fare {
   grid-area: estimate;
+  padding: 20px 24px;
   background: var(--board);
   border: 1px solid var(--line-soft);
   box-shadow: inset 0 2px 0 rgba(255, 255, 255, .045), 0 34px 60px -46px #000;
 }
-
-.fare__summary {
-  padding: 18px 24px;
-  min-height: 60px;
-  cursor: pointer;
-  color: var(--cream);
-  font-weight: 700;
-}
-.fare__summary::marker { color: var(--tan); }
-.fare__summary:hover { background: var(--panel); }
-.fare__rate {
-  float: right;
-  margin-left: 12px;
-  color: var(--tan);
-  font-variant-numeric: tabular-nums;
-}
-.fare__estimate { padding: 12px 24px 24px; }
-.fare[open] .fare__summary { border-bottom: 1px solid var(--line-soft); }
 
 .fare__title {
   font-family: var(--display);
   font-weight: 800;
   font-size: clamp(1.7rem, 3.2vw, 2.3rem);
   line-height: 1;
-  letter-spacing: .01em;
   text-transform: uppercase;
   color: var(--cream);
 }
-.fare__hint {
-  margin-top: .5em;
-  font-size: .74rem;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: var(--tan-dim);
-}
-
-.rail-wrap {
-  position: relative;
-  margin-top: 2rem;
-  padding-bottom: 46px;
-}
-
-.rail {
-  position: relative;
-  height: 52px;
-  cursor: ew-resize;
-  touch-action: none;
-  user-select: none;
-  -webkit-user-select: none;
-  border-radius: 0;
-}
-.rail:focus-visible { outline-offset: 5px; }
-.rail__track {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 37px;
-  height: 2px;
-  background: linear-gradient(90deg, var(--tan) 0%, rgba(224, 201, 166, .3) 100%);
-  transition: filter .18s ease;
-}
-.rail:hover .rail__track, .rail:focus-visible .rail__track { filter: brightness(1.35); }
-
-.rail__ticks {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 100%;
-  pointer-events: none;
-}
-.rail__ticks i {
-  position: absolute;
-  top: 32px;
-  left: calc((var(--i) - 1) / 11 * 100%);
-  width: 1.5px;
-  height: 12px;
-  background: var(--tan);
-  opacity: .45;
-  transform: translateX(-50%);
-}
-.rail__ticks i:first-child,
-.rail__ticks i:nth-child(3n) { height: 20px; top: 28px; opacity: .9; }
-
-.rail__ticks b {
-  position: absolute;
-  top: 66px;
-  left: calc((var(--i) - 1) / 11 * 100%);
-  transform: translateX(-50%);
-  font-weight: 500;
-  font-size: .82rem;
-  font-variant-numeric: tabular-nums;
-  color: var(--tan-dim);
-  white-space: nowrap;
-}
-.rail__ticks b::before { content: "₱"; font-size: .8em; opacity: .65; margin-right: 1px; }
-
-/* the full fare table, printed along the track once there is room for it */
-.rail__fares { display: none; position: absolute; left: 0; right: 0; top: 64px; height: 16px; }
-.rail__fares em {
-  position: absolute;
-  left: calc((var(--i) - 1) / 11 * 100%);
-  transform: translateX(-50%);
-  font-style: normal;
-  font-size: .7rem;
-  font-variant-numeric: tabular-nums;
-  color: var(--tan-dim);
-  white-space: nowrap;
-  transition: color .2s ease;
-}
-.rail__fares em:first-child { transform: none; }
-.rail__fares em:last-child { transform: translateX(-100%); }
-.rail__fares em.is-active { color: var(--cream); font-weight: 700; }
-@media (min-width: 940px) {
-  .rail__fares { display: block; }
-  .rail__ticks b { display: none; }
-}
-
-.rail__needle {
-  position: absolute;
-  top: 2px;
-  left: calc((var(--v, 1) - 1) / 11 * 100%);
-  width: 3px;
-  height: 44px;
-  background: var(--verm);
-  transform: translateX(-50%);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, .55);
-  transition: left .5s cubic-bezier(.3, 1.24, .42, 1);
-}
-.rail__needle::before {
-  content: "";
-  position: absolute;
-  top: -8px;
-  left: -6px;
-  border: 7.5px solid transparent;
-  border-top-color: var(--verm);
-}
-.rail.is-dragging .rail__needle { transition: left .1s linear; }
-.rail.is-dragging { cursor: grabbing; }
-
-.rail__tag {
-  position: absolute;
-  top: -28px;
-  left: 50%;
-  display: block;
-  transform: translateX(-50%);
-  font-weight: 700;
-  font-size: .7rem;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  background: var(--panel);
-  color: var(--cream);
-  padding: .28em .42em;
-  white-space: nowrap;
-  transition: transform .2s ease;
-}
-
-.fare__read {
-  display: flex;
-  align-items: baseline;
-  gap: .55em;
-  margin-top: .1em;
-  color: var(--tan);
-  font-variant-numeric: tabular-nums;
-}
-.fare__read b {
-  font-family: var(--display);
-  font-weight: 800;
-  font-size: clamp(2.1rem, 4.4vw, 2.9rem);
-  line-height: .9;
-  color: var(--cream);
-  letter-spacing: .005em;
-}
-.fare__read span { font-size: .76rem; letter-spacing: .18em; text-transform: uppercase; }
-
 .fare__note {
   margin-top: .7em;
-  max-width: 40ch;
-  font-size: .82rem;
+  max-width: 65ch;
   line-height: 1.5;
-  color: var(--tan-dim);
+  color: var(--tan);
 }
 
 /* ── Mounted photographs + painted tags ───────────────────────── */
@@ -895,8 +729,7 @@ a { color: var(--tan); text-decoration-thickness: 1px; text-underline-offset: 3p
   .lede { font-size: 1rem; }
   .amp { margin-top: .25em; }
   .pay { margin-top: 12px; font-size: .72rem; letter-spacing: .12em; }
-  .fare__summary { padding: 16px; font-size: .9rem; }
-  .fare__estimate { padding: 16px; }
+  .fare { padding: 16px; }
   .bar { padding-inline: 14px; gap: 8px; }
   .bar__place { font-size: .7rem; letter-spacing: .1em; }
   .plate--sm { padding: .8em .95em; font-size: .72rem; letter-spacing: .1em; }

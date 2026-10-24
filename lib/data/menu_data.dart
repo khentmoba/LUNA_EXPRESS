@@ -49,10 +49,10 @@ final List<MenuSection> kMenuSections = [
       ),
       MenuItem(
         id: 'sm5',
-        name: 'S5 – Luncheon Meat',
+        name: 'S5 – Korean Spam Musubi',
         emoji: '🥪🍚',
         description:
-            'Crispy golden-fried luncheon meat slices, savory siomai, ham, sunny-side-up fried egg, and steamed rice. Comes with a refreshing cold drink.',
+            'Korean Spam Musubi with a fried egg and a refreshing cold drink.',
         price: 99,
         imageUrl: 'images/sulit_spam.jpg',
         promoLabel: '₱99 ONLY',
@@ -163,15 +163,6 @@ final List<MenuSection> kMenuSections = [
             'Extra-loaded shawarma wrap packed with all-meat goodness and special sauce.',
         price: 80,
         imageUrl: 'images/shawarma_all_meat.jpg',
-      ),
-      MenuItem(
-        id: 's3',
-        name: 'Shawarma Rice Bowl',
-        emoji: '🍚',
-        description:
-            'Fragrant rice topped with tender shawarma chicken, pickled vegetables, and garlic sauce.',
-        price: 50,
-        imageUrl: 'images/shawarma_rice_bowl.jpg',
       ),
       MenuItem(
         id: 's4',

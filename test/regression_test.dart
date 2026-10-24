@@ -40,25 +40,15 @@ void main() {
       );
     });
 
-    test('quote at store = zero fee', () {
-      final q = deliveryQuote(storeLat, storeLng);
-      expect(q.distance, closeTo(0, 1e-6));
-      expect(q.fee, 0);
-    });
-
-    test('quote uses nearer kitchen + ₱39/km', () {
-      final q = deliveryQuote(base2Lat, base2Lng);
-      expect(q.distance, closeTo(0, 1e-6));
-      expect(q.fee, 0);
-      final mid = deliveryQuote(
+    test('distance uses the nearer kitchen', () {
+      expect(deliveryDistance(storeLat, storeLng), closeTo(0, 1e-6));
+      expect(deliveryDistance(base2Lat, base2Lng), closeTo(0, 1e-6));
+      final mid = deliveryDistance(
         (storeLat + base2Lat) / 2,
         (storeLng + base2Lng) / 2,
       );
-      expect(mid.fee, (mid.distance * feePerKm).round());
-      expect(
-        mid.distance,
-        lessThan(haversine(storeLat, storeLng, base2Lat, base2Lng)),
-      );
+      expect(mid, greaterThan(0));
+      expect(mid, lessThan(haversine(storeLat, storeLng, base2Lat, base2Lng)));
     });
   });
 
@@ -152,6 +142,19 @@ void main() {
   });
 
   group('menu sections and new meals', () {
+    test(
+      'menu uses Korean Spam Musubi and removes the standalone rice bowl',
+      () {
+        final items = kMenuSections.expand((section) => section.items);
+        expect(
+          items.firstWhere((item) => item.id == 'sm5').name,
+          'S5 – Korean Spam Musubi',
+        );
+        expect(items.any((item) => item.id == 's3'), isFalse);
+        expect(items.any((item) => item.name == 'S3 – Shawarma Rice'), isTrue);
+      },
+    );
+
     test('contains sulit_meals and chicken_poppers sections', () {
       final sectionIds = kMenuSections.map((s) => s.id).toList();
       expect(sectionIds, contains('sulit_meals'));

@@ -25,12 +25,12 @@ Order Luna Bites & Delights for delivery or pick-up without talking to anyone. T
 
 ## Positioning
 
-A neighbourhood kiosk with the prices printed where you can see them: real per-item pricing, buy-1-take-1 burgers and hotdogs, and delivery charged by actual distance (₱39/km) instead of a flat guess. The ordering system is the business's own app, not a marketplace listing.
+A neighbourhood kiosk with the prices printed where you can see them: real per-item pricing, buy-1-take-1 burgers and hotdogs, and a separate delivery fee whose amount is confirmed by the rider. The ordering system is the business's own app, not a marketplace listing.
 
 ## Operating Context
 
 - Physical kiosk at Purok 5, Poblacion Magallanes, Agusan Del Norte; the landmark people actually use is "unahan lang gamay sa 7/11".
-- A second kitchen base exists northeast of the kiosk; the delivery fee is computed from whichever base is nearer to the customer.
+- A second kitchen base exists northeast of the kiosk; distance is recorded from the nearer base. The delivery rider confirms the delivery fee.
 - Payment is cash or GCash at the kiosk/on delivery.
 - Staff run the same app on a tablet in the store: dashboard, kitchen display, analytics.
 - Facebook is the business's main channel for announcements: https://www.facebook.com/profile.php?id=100090686762896
@@ -39,7 +39,7 @@ A neighbourhood kiosk with the prices printed where you can see them: real per-i
 
 - Menu sections: Shawarma Favorites, French Fries, Combo Meals, Extras, Refreshments (coolers), Burger & Hotdog Sandwich (buy 1 take 1).
 - Prices live in `lib/data/menu_data.dart`; the storefront must not drift from them.
-- Delivery fee: `fee = round(distance_km × 39)` from the nearest base (`lib/services/delivery.dart`).
+- Delivery fee: rider-confirmed and charged separately. The storefront, checkout and receipt show a delivery-fee notice without quoting an amount. Checkout totals and online payments cover food only.
 - Checkout supports cash and GCash; staff verify orders in the dashboard.
 - Routes in the kiosk app: `/menu`, `/cart`, `/checkout_process`, `/kds`, `/analytics`, `/pasugo/*`.
 - Undecided: opening hours and a contact phone number. The owner will supply them later. Do not invent either.

@@ -28,7 +28,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
   double _pinnedLat = storeLat;
   double _pinnedLng = storeLng;
   bool _locationPinned = false;
-  int _deliveryFee = 0;
   double _distance = 0.0;
   String _paymentMethod = 'Cash';
   String _orderType = 'Pickup';
@@ -65,7 +64,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       ),
     );
     if (result != null) {
-      final quote = deliveryQuote(
+      final distance = deliveryDistance(
         result['lat'] as double,
         result['lng'] as double,
       );
@@ -74,8 +73,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         _pinnedLat = result['lat'] as double;
         _pinnedLng = result['lng'] as double;
         _locationPinned = true;
-        _distance = quote.distance;
-        _deliveryFee = quote.fee;
+        _distance = distance;
       });
     }
   }
@@ -104,8 +102,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
     final orderNumber = TelegramService.generateOrderNumber();
     final items = List<CartItem>.from(cartNotifier.items);
-    final total =
-        cartNotifier.totalPrice + (_needsCoordinates ? _deliveryFee : 0);
+    final total = cartNotifier.totalPrice;
     final now = DateTime.now();
     final timeStr = localStamp(now);
     final paymentStatus = session.isStaff
@@ -135,7 +132,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
         customerAddress: address,
         lat: _needsCoordinates ? _pinnedLat : null,
         lng: _needsCoordinates ? _pinnedLng : null,
-        deliveryFee: _needsCoordinates ? _deliveryFee : 0,
         totalDistance: _needsCoordinates ? _distance : 0.0,
         paymentMethod: _paymentMethod,
         paymentStatus: paymentStatus,
@@ -257,7 +253,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
           timeStr: timeStr,
           isWalkIn: isWalkIn,
           orderType: _orderType,
-          deliveryFee: _needsCoordinates ? _deliveryFee : 0,
         ),
       ),
       (route) => route.isFirst,
@@ -324,19 +319,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   ),
                   KioskTheme.divider(),
                   const SizedBox(height: 16),
-                  if (_needsCoordinates && _locationPinned) ...[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'DELIVERY FEE (${_distance.toStringAsFixed(1)}km)',
-                          style: KioskTheme.bodyMedium.copyWith(fontSize: 14),
-                        ),
-                        Text(
-                          '₱$_deliveryFee',
-                          style: KioskTheme.titleMedium.copyWith(fontSize: 15),
-                        ),
-                      ],
+                  if (_needsCoordinates) ...[
+                    Text(
+                      'Delivery fee applies. Your rider will confirm the amount, charged separately from your food order.',
+                      style: KioskTheme.bodyMedium.copyWith(fontSize: 14),
                     ),
                     const SizedBox(height: 12),
                   ],
@@ -344,13 +330,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'TOTAL',
+                        _needsCoordinates ? 'FOOD TOTAL' : 'TOTAL',
                         style: KioskTheme.headerSmall.copyWith(
                           letterSpacing: 1.5,
                         ),
                       ),
                       Text(
-                        '₱${cartNotifier.totalPrice + (_needsCoordinates ? _deliveryFee : 0)}',
+                        '₱${cartNotifier.totalPrice}',
                         style: KioskTheme.headerLarge.copyWith(fontSize: 32),
                       ),
                     ],

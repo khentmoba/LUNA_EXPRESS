@@ -223,23 +223,10 @@ class ReceiptPage extends StatelessWidget {
                         ),
                         KioskTheme.divider(),
                         const SizedBox(height: 32),
-                        if (!_isPickup && deliveryFee > 0) ...[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'DELIVERY FEE',
-                                style: KioskTheme.bodyMedium.copyWith(
-                                  letterSpacing: 1,
-                                ),
-                              ),
-                              Text(
-                                '\u20B1$deliveryFee',
-                                style: KioskTheme.titleMedium.copyWith(
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
+                        if (orderType == 'Delivery') ...[
+                          Text(
+                            'Delivery fee applies. Your rider will confirm the amount, charged separately from your food order.',
+                            style: KioskTheme.bodyMedium,
                           ),
                           const SizedBox(height: 12),
                         ],
@@ -247,7 +234,9 @@ class ReceiptPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'GRAND TOTAL',
+                              orderType == 'Delivery'
+                                  ? 'FOOD TOTAL'
+                                  : 'GRAND TOTAL',
                               style: KioskTheme.headerSmall.copyWith(
                                 letterSpacing: 1,
                               ),
