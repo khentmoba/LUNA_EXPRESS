@@ -416,20 +416,17 @@ translation are not prescribed for menu cards or controls; the existing item-ima
 
 ## Motion
 
-Motion is scroll-linked and limited to three moments, each taken from the painted-sign world. The price
-board prints as it rises into view: every row is covered in cream, and the cover draws back to the right, so
-names print first and prices land last. The 28 rows overlap in a wave, so a few lines are always mid-print.
-The two ₱99 offers paint in across the vermilion strip from the left, strip and text together. The window
-photographs pin to the wall as they enter, rising 48px and levelling from a 3° swing, and each painted tag
-drops 14px and turns 5° into its tilt as it lands. Load-time motion is limited to the hero swash under the
-wordmark.
+Motion is limited to two rehearsed moments in the painted-sign world. Both play once, as each part arrives, and
+neither follows scroll position, so nothing stays half-hidden while someone reads. The price board prints down its
+three columns in turn, about 120ms apart, then the two ₱99 offers paint in across the vermilion strip from the left.
+The window photographs then pin on one after another, rising 24px and settling from a 2° swing. The hero swash on
+load, the hover states and the sticky bar's shadow are the only other motion.
 
-Every effect animates only `transform` (with its `translate` and `rotate` properties), `opacity` or
-`clip-path`, runs on a `view()` timeline with `entry` and `cover` ranges, and uses a linear print or an
-ease-out settle. Nothing loops. The layer sits inside
-`prefers-reduced-motion: no-preference` and `@supports (animation-timeline: view())`. Where either fails, the
-page stays static in its final state, with every line, offer and photograph in place. None of these effects
-confirms an action, so the reduced-motion path removes the movement rather than softening it.
+Every effect animates only `transform` (with its `translate` and `rotate` properties), `opacity` or `clip-path`, and
+nothing loops. The hidden states exist only after `app.js` has run, and the whole layer sits inside
+`prefers-reduced-motion: no-preference`. Without script, or with reduced motion, the page stays static in its final
+state, with every line, offer and photograph in place. None of these effects confirms an action, so the
+reduced-motion path removes the movement rather than softening it.
 
 ## Shapes
 
@@ -536,5 +533,7 @@ so the hole is visible and marked instead of invented. Actions sit below.
 - **Don't** mark hours, phone or ratings as if they existed; use the `to follow` slot.
 - **Don't** invent business facts — hours, phone numbers, ratings, and testimonials do not exist yet.
 - **Don't** duplicate the ordering flow here; every order action links to `/kiosk/`.
-- **Don't** add scroll motion to the hero, address board or closing band, or add any looping motion. The three
-  moments in Motion are the page's only scroll-linked effects.
+- **Don't** add motion to the hero, address board or closing band, or any looping motion. The two moments in
+  Motion are the only arrival effects on the page.
+- **Don't** hide a price or a name behind a motion state while someone is reading. Motion may reveal the board
+  once; it may not withhold it.
