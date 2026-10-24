@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getBot = getBot;
 exports.setBot = setBot;
 exports.sendToAll = sendToAll;
+exports.sendPhotoToAll = sendPhotoToAll;
 exports.escapeMd = escapeMd;
 exports.stripMarkdownV2 = stripMarkdownV2;
 const node_telegram_bot_api_1 = __importDefault(require("node-telegram-bot-api"));
@@ -63,6 +64,61 @@ async function sendToAll(message, options = {}) {
     }
     if (failures.length === ids.length) {
         throw new Error(`All ${ids.length} Telegram messages failed`);
+    }
+    return results;
+}
+async function sendPhotoToAll(photo, caption, options = {}) {
+    const rawIds = index_1.telegramChatIds.value().split(',');
+    const ids = rawIds
+        .map(id => id.trim())
+        .filter(id => id.length > 0);
+    if (ids.length === 0) {
+        throw new Error('TELEGRAM_CHAT_ID is not configured — no recipients to notify');
+    }
+    const telegram = getBot();
+    const sendOpts = {
+        parse_mode: 'MarkdownV2',
+        ...options,
+    };
+    const fileOpts = {
+        filename: 'delivery_map.png',
+        contentType: 'image/png',
+    };
+    const results = await Promise.allSettled(ids.map(async (id) => {
+        try {
+            return await telegram.sendPhoto(id, photo, {
+                caption,
+                ...sendOpts,
+            }, fileOpts);
+        }
+        catch (err) {
+            const isParseError = sendOpts.parse_mode &&
+                (err?.message?.includes("can't parse entities") ||
+                    err?.response?.body?.description?.includes("can't parse entities") ||
+                    err?.message?.includes('400'));
+            if (isParseError) {
+                firebase_functions_1.logger.warn(`sendPhotoToAll: MarkdownV2 parsing failed for chat ${id}; falling back to plain text caption`, {
+                    error: err?.message,
+                    chatId: id,
+                });
+                const { parse_mode: _, ...plainOpts } = sendOpts;
+                return await telegram.sendPhoto(id, photo, {
+                    caption: stripMarkdownV2(caption),
+                    ...plainOpts,
+                }, fileOpts);
+            }
+            throw err;
+        }
+    }));
+    const failures = results.filter(r => r.status === 'rejected');
+    if (failures.length > 0) {
+        firebase_functions_1.logger.error(`sendPhotoToAll: ${failures.length} of ${ids.length} messages failed`, failures.map((r, i) => ({
+            chatId: ids[i],
+            error: r.reason?.message || 'unknown',
+        })));
+    }
+    if (failures.length === ids.length) {
+        throw new Error(`All ${ids.length} Telegram photo messages failed`);
     }
     return results;
 }
