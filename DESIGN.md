@@ -40,6 +40,41 @@ typography:
     fontWeight: 400
     lineHeight: 1.55
     letterSpacing: "normal"
+  price-board-title:
+    fontFamily: "Big Shoulders Display, Haettenschweiler, Arial Narrow, sans-serif"
+    fontSize: "clamp(3.6rem, 7vw, 6rem)"
+    fontWeight: 900
+    lineHeight: 0.9
+  price-board-category:
+    fontFamily: "Big Shoulders Display, Haettenschweiler, Arial Narrow, sans-serif"
+    fontSize: "clamp(1.8rem, 2.7vw, 2.5rem)"
+    fontWeight: 800
+    lineHeight: 1
+  price-board-name:
+    fontFamily: "Karla, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "1rem"
+    fontWeight: 600
+    lineHeight: 1.35
+  price-board-price:
+    fontFamily: "Big Shoulders Display, Haettenschweiler, Arial Narrow, sans-serif"
+    fontSize: "2rem"
+    fontWeight: 800
+    lineHeight: 1
+  price-board-offer-name:
+    fontFamily: "Big Shoulders Display, Haettenschweiler, Arial Narrow, sans-serif"
+    fontSize: "clamp(1.65rem, 2.4vw, 2rem)"
+    fontWeight: 800
+    lineHeight: 1
+  price-board-offer-price:
+    fontFamily: "Big Shoulders Display, Haettenschweiler, Arial Narrow, sans-serif"
+    fontSize: "clamp(3.2rem, 5vw, 4rem)"
+    fontWeight: 900
+    lineHeight: 0.95
+  price-board-offer-body:
+    fontFamily: "Karla, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "0.95rem"
+    fontWeight: 400
+    lineHeight: 1.5
   menu-heading:
     fontFamily: "BigShoulders"
     fontSize: "36px"
@@ -101,10 +136,24 @@ components:
     rounded: "{rounded.none}"
     padding: "0.34em 0.55em"
   offer:
-    backgroundColor: "{colors.panel}"
+    backgroundColor: "{colors.vermilion-plate}"
     textColor: "{colors.cream}"
     rounded: "{rounded.none}"
-    padding: "clamp(18px, 2.4vw, 26px)"
+    padding: "22px 0"
+  price-board-panel:
+    backgroundColor: "{colors.cream}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.none}"
+    padding: "clamp(22px, 3vw, 36px) 0"
+  price-board-row:
+    textColor: "{colors.enamel}"
+    typography: "{typography.price-board-name}"
+    padding: "13px 0"
+  price-board-offer-strip:
+    backgroundColor: "{colors.vermilion-plate}"
+    textColor: "{colors.cream}"
+    rounded: "{rounded.none}"
+    padding: "8px clamp(20px, 3vw, 36px)"
   menu-primary:
     backgroundColor: "{colors.vermilion-plate}"
     textColor: "{colors.cream}"
@@ -151,6 +200,17 @@ The build is static HTML, one stylesheet, and one small script. No framework, no
 variable fonts, photos the business already published. Nothing on the page is a fact the business did not
 give us: no hours, no phone number, no ratings.
 
+### Approved storefront price-board exception
+
+Within the existing dark enamel storefront, the price board uses one continuous cream printed-menu
+panel and a continuous vermilion-plate offer strip. This local exception supersedes earlier dark-list,
+dotted-leader and Karla-price descriptions for this section only; it does not change the Flutter menu.
+Finish review verdict: **ship**, with no material findings in the scoped redesign. Rendered evidence:
+`docs/evidence/price-board-desktop.png`, `docs/evidence/price-board-mobile.png` and
+`docs/evidence/price-board-offers-mobile.png`. This documentation pass checks the supplied captures
+against the HTML/CSS; it does not repeat browser verification or run tests. No new rasters ship in
+`site/`; existing assets are unchanged.
+
 ### Approved Flutter menu extension
 
 The existing storefront specification remains authoritative for `/`. The scoped additions below
@@ -176,13 +236,16 @@ and `docs/evidence/menu-*.png`; this documentation pass does not repeat their vi
 - **Enamel** (`#241a12`): the page. A single vertical ground from `#2b1e14` through enamel to `#20160d`; no
   radial washes.
 - **Enamel Deep** (`#170f07`): document background and the bottom of the page.
-- **Panel** (`#2c2016`): raised panels — the fare instrument, offer cards, the "3 KM" chip.
-- **Board** (`#1b130d`): the price board and the address board, one step darker than the page.
+- **Panel** (`#2c2016`): raised panels — the fare instrument and the "3 KM" chip. The storefront
+  meal offers use the continuous vermilion-plate strip instead.
+- **Board** (`#1b130d`): the price-board section surround and the address board, one step darker than the
+  page. The price-board menu panel itself is cream.
 - **Line** (`#4a3728`): painted rules and borders; `--line-soft` (`rgba(203,191,168,.22)`) for hairlines over
-  photos and dotted price leaders.
+  photos. Price-board rows use solid line separators at 18% alpha rather than dotted price leaders.
 - **Tan** (`#e0c9a6`) and **Tan Dim** (`#b39c7c`): secondary type and labels, 10.6:1 and 6.5:1 on enamel.
 - **Cream** (`#f7eedd`): primary type, 14.8:1 on enamel.
-- **Ink** (`#0f0906`): type on cream plates only.
+- **Ink** (`#0f0906`): type on cream plates and the inherited base text of the cream price-board panel;
+  explicit row names and prices use enamel.
 
 Cream is the only light ink on a painted plate (`#a3301a`, 6.55:1); the brighter `#fff6e9` is retired.
 
@@ -193,6 +256,14 @@ Cream is the only light ink on a painted plate (`#a3301a`, 6.55:1); the brighter
 
 **The Enamel Ground Rule.** The page is one vertical gradient from `#2b1e14` to `#20160d`. Depth comes from
 panels and plates, never from coloured glows or radial halos.
+
+### Price-board color assignments
+
+The local menu panel uses cream with enamel names and prices; its inherited base text is ink.
+Vermilion-plate sets category headings, their solid underlines and promotional prices on cream.
+A tan top edge joins the panel to its dark surround. The two meal offers share one vermilion-plate
+strip with cream text and a cream separator at 35% alpha. Column separators use line at 25% alpha;
+row separators use line at 18%. These flat local surfaces introduce no new palette primitives.
 
 ### Flutter menu color assignments
 
@@ -219,8 +290,14 @@ Two self-hosted variable faces, `font-display: swap`, preloaded:
 - **Wordmark** — Big Shoulders 900, `clamp(3.7rem, 10.2vw, 6rem)`, leading 0.78, three stacked lines with the
   middle line in tan.
 - **Section head** — Big Shoulders 900, `clamp(1.7rem, 3.2vw, 2.3rem)`, uppercase, leading 1.02.
-- **Dish name** — Big Shoulders 700, 1.18–1.45rem; **price** — Karla 500, tabular numerals, tan, right-aligned
-  against a dotted leader.
+- **Price-board item** — Karla 600, 1rem (16px), leading 1.35; **price** — Big Shoulders 800,
+  2rem (32px), leading 1, tabular numerals, enamel, right-aligned. Promotional prices use vermilion-plate.
+- **Price-board title** — Big Shoulders 900, `clamp(3.6rem, 7vw, 6rem)`, leading 0.9, uppercase;
+  subtitle in Karla 400, 1rem / 1.5. Category headings use Big Shoulders 800,
+  `clamp(1.8rem, 2.7vw, 2.5rem)` / 1, uppercase, vermilion-plate.
+- **Price-board offer** — name in Big Shoulders 800, `clamp(1.65rem, 2.4vw, 2rem)` / 1;
+  price in Big Shoulders 900, `clamp(3.2rem, 5vw, 4rem)` / 0.95, tabular numerals;
+  description in Karla 400, 0.95rem / 1.5.
 - **Body** — Karla 400, 16–17px, 1.55, max ~58 characters.
 - **Label / kicker** — Karla 700, 0.74–0.95rem, uppercase, tracking 0.16em–0.3em, tan or tan-dim.
 
@@ -254,9 +331,10 @@ quantity and controls. Native task labels do not inherit storefront-wide upperca
 ## Layout
 
 - **Page width**: one content column, `max-width: 1120px`, inside gutters `clamp(18px, 4.6vw, 60px)`. Every
-  section holds the same left edge (160px at 1440, 18px at 390); no section may inset its content further.
+  section holds the same left edge (160px at 1440, 18px at 390). The price-board panel's local internal
+  column insets are the scoped exception; its outer edges retain the shared content alignment.
 - **Section rules**: flat 1px cream at 28% alpha (`--hairline`); the top strip is a flat 2px tan line, not a
-  gradient imitation of chrome.
+  gradient imitation of chrome. The price-board panel has its own column and row insets documented below.
 - **Hero**: two columns `minmax(0,1fr) minmax(430px,1.04fr)`: wordmark, copy and ordering actions left;
   a large mounted shawarma photograph and its `₱60 each` tag right. The delivery disclosure spans both
   columns beneath them. At 940px and below, the DOM and visual order are introduction, photograph,
@@ -265,15 +343,20 @@ quantity and controls. Native task labels do not inherit storefront-wide upperca
 - **Section links**: targets have `scroll-margin-top: 6rem`, leaving the heading below the sticky bar.
   Below 900px the location line and Facebook link yield to persistent Prices, Photos and Find us links,
   each with a 44px minimum hit height, beside the Order plate.
-- **Price board**: the painted header, then the three columns of dish rows, then the two ₱99 offer lines.
-  Starting prices name their variant: Solo halo-halo and Medium caramel macchiato. The burger-with-egg
-  photo tag spells out buy 1 take 1. At 390×844 with delivery collapsed, the board begins around y719.
+- **Price board**: a large painted header and full-menu link above one cream panel with a 6px tan top
+  edge. Above 940px, three equal columns use `minmax(0,1fr)` with solid vertical separators;
+  panel padding is `clamp(22px, 3vw, 36px) 0`, column inset `clamp(20px, 2.2vw, 30px)`.
+  At 940px and below, categories stack continuously with horizontal separators and 24px inset;
+  at 700px and below the horizontal inset is 20px and the full-menu link fills the header width.
+  Two ₱99 meal offers share a continuous red strip directly below the panel. All 17 item rows and both
+  offers retain their names, amounts and qualifications, including Solo halo-halo and Medium caramel
+  macchiato. The footer repeats the separate rider-confirmed delivery fee and links into the app.
 - **Window wall**: 12-column grid of rotated photo mounts, spans a4/b2/c3/d3; 2×2 at 6 columns on tablet;
   full / pair-pair / full on phones.
 - **Find**: heading and intro in a two-column head, then one address board carrying the landmark callout.
 - **Close**: full-bleed vermilion band, centered kicker, cream plate, painted note chip, then the footer.
-- **Breakpoints**: 940px (hero stacks, offers stack, wall pairs), 700px, 460px (compact bar plate, single
-  column).
+- **Breakpoints**: 940px (hero stacks, price-board categories stack, offers reflow, wall pairs), 700px,
+  460px (compact bar plate).
 - **Phone-first budget**: no horizontal overflow at 320px (`overflow-x: clip` on `html` as a backstop).
 
 ### Flutter menu and chooser layout
@@ -323,8 +406,9 @@ translation are not prescribed for menu cards or controls; the existing item-ima
 ## Shapes
 
 Square corners everywhere (`0px`) — this is a painted board, not a card UI. Rules are flat: a 2px tan strip
-at the top, 1px cream at 28% under section edges, dotted leaders (`1px dotted`, cream at 22–26%) connecting a
-dish to its price. `clip-path` cuts the one swash under the wordmark. Rotation carries the print quality:
+at the top and 1px cream at 28% under section edges. The price board is a local printed-menu exception:
+solid row and category rules replace dotted leaders; the spacer between name and price is unpainted.
+`clip-path` cuts the one swash under the wordmark. Rotation carries the print quality:
 tags at ~2.2°, photo mounts between 1° and 2° off true.
 
 The Flutter menu carries the same square form through framed product images, category choices,
@@ -355,9 +439,12 @@ the notice; online payments cover food only.
 
 ### Offer lines
 
-The two ₱99 offers are board lines, not cards: tag in Big Shoulders, the flavour list in Karla at 0.82rem, a
-dotted leader, and the price on a painted plate at the right edge. At 940px and below, explicit grid areas
-keep the tag and price on the first row, with the flavour list spanning the second. No panel, no equal-card row.
+The two ₱99 offers share one full-width vermilion-plate strip within the content column, with cream text,
+8px vertical strip inset and `clamp(20px, 3vw, 36px)` horizontal inset. Each offer has 22px vertical padding;
+a solid cream rule at 35% separates them. Above 940px the name, description and large price share a row
+with 24px gaps. At 940px and below, explicit grid areas keep name and price together above the description,
+with 12px row and 20px column gaps. Names and prices use the local Big Shoulders offer roles; descriptions
+use Karla 0.95rem / 1.5. No dotted leader or separate price badge; no new animation.
 
 ### Photo mounts
 
@@ -366,8 +453,11 @@ painted signage, not chips.
 
 ### Price rows
 
-Dish name in Big Shoulders 700 on the left, a dotted leader span between, price in Karla 500 tabular
-numerals on the right; promo rows tint the price `#ffb9a4`. The ₱ glyph appears once per price.
+On the cream menu panel, names use Karla 16px/600 and prices use Big Shoulders 32px/800 tabular
+numerals. Both are enamel; promotional prices use vermilion-plate. Rows align on the baseline with
+10px gaps, 13px vertical padding and solid line separators at 18% alpha; the final row drops its bottom
+rule and bottom padding. The flexible spacer has no dotted leader and prices do not shrink. Names may
+wrap while the amount remains aligned right. The ₱ glyph appears once per price.
 
 ### Address board
 
@@ -399,7 +489,9 @@ so the hole is visible and marked instead of invented. Actions sit below.
 
 ### Do:
 
-- **Do** paint every type-bearing surface in `--verm-plate` and check cream on it (6.55:1).
+- **Do** use cream for the local price-board menu panel, enamel for its names/prices and vermilion-plate
+  for category headings, promotional prices and the continuous cream-lettered offer strip.
+- **Do** use `--verm-plate` for type-bearing red surfaces and check cream on it (6.55:1).
 - **Do** set functional labels at 11.5px or larger, uppercase Karla, 0.16em tracking or wider.
 - **Do** give raised surfaces a short dark edge plus one soft black cast, and lift 2px on hover.
 - **Do** keep the delivery notice visible without requiring interaction.
