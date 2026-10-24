@@ -396,6 +396,7 @@ a { color: var(--tan); text-decoration-thickness: 1px; text-underline-offset: 3p
   text-transform: uppercase;
   color: var(--verm-plate);
 }
+.rows + .col__title { margin-top: 28px; }
 .row {
   display: flex;
   align-items: baseline;

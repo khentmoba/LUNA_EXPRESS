@@ -165,6 +165,14 @@ final List<MenuSection> kMenuSections = [
         imageUrl: 'images/shawarma_all_meat.jpg',
       ),
       MenuItem(
+        id: 's3',
+        name: 'Shawarma Rice Bowl',
+        emoji: '🍚',
+        description: 'Shawarma meat over rice with vegetables and sauce.',
+        price: 50,
+        imageUrl: 'images/shawarma_rice_bowl.jpg',
+      ),
+      MenuItem(
         id: 's4',
         name: 'Shawarma Burger',
         emoji: '🍔',
@@ -206,9 +214,13 @@ final List<MenuSection> kMenuSections = [
         name: 'Nachos & Fries Overload',
         emoji: '🧀',
         description:
-            'Massive plate of nachos and fries loaded with shawarma toppings.',
-        price: 99,
+            'Fries and nachos loaded with shawarma toppings. Buddy size serves 1–2; Barkada size serves 3–5.',
         imageUrl: 'images/nachos_fries_overload.png',
+        optionHeader: 'CHOOSE SIZE',
+        variants: [
+          MenuVariant(label: 'Buddy (1–2 pax)', price: 99),
+          MenuVariant(label: 'Barkada (3–5 pax)', price: 150),
+        ],
       ),
       MenuItem(
         id: 's9',
@@ -857,16 +869,16 @@ final List<MenuSection> kMenuSections = [
         emoji: '🍳🍔',
         description: 'Hearty burger with a fresh egg.',
         price: 85,
-        imageUrl: 'images/burger_egg_cheese.jpg',
+        imageUrl: 'images/burger_with_egg.png',
         isBuy1Take1: true,
       ),
       MenuItem(
         id: 'b5',
-        name: 'Egg & Cheese',
+        name: 'Cheese & Egg Burger',
         emoji: '🍳🧀',
-        description: 'Perfect breakfast combo.',
+        description: 'Burger topped with melted cheese and a fried egg.',
         price: 95,
-        imageUrl: 'images/burger_hotdog_combos.png',
+        imageUrl: 'images/burger_egg_cheese.jpg',
         isBuy1Take1: true,
       ),
       MenuItem(

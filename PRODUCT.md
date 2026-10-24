@@ -39,6 +39,7 @@ A neighbourhood kiosk with the prices printed where you can see them: real per-i
 
 - Menu sections: Shawarma Favorites, French Fries, Combo Meals, Extras, Refreshments (coolers), Burger & Hotdog Sandwich (buy 1 take 1).
 - Prices live in `lib/data/menu_data.dart`; the storefront must not drift from them.
+- The owner-supplied favorites poster includes a standalone Shawarma Rice Bowl at ₱50, separate from the ₱99 S3 meal. Fries & Nachos Overload has Buddy (1–2 pax, ₱99) and Barkada (3–5 pax, ₱150) sizes. Burger favorites retain buy 1 take 1 pricing.
 - Delivery fee: rider-confirmed and charged separately. The storefront, checkout and receipt show a delivery-fee notice without quoting an amount. Checkout totals and online payments cover food only.
 - Checkout supports cash and GCash; staff verify orders in the dashboard.
 - Routes in the kiosk app: `/menu`, `/cart`, `/checkout_process`, `/kds`, `/analytics`, `/pasugo/*`.

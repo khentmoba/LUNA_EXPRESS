@@ -143,14 +143,17 @@ void main() {
 
   group('menu sections and new meals', () {
     test(
-      'menu uses Korean Spam Musubi and removes the standalone rice bowl',
+      'menu keeps Korean Spam Musubi and offers both shawarma rice options',
       () {
         final items = kMenuSections.expand((section) => section.items);
         expect(
           items.firstWhere((item) => item.id == 'sm5').name,
           'S5 – Korean Spam Musubi',
         );
-        expect(items.any((item) => item.id == 's3'), isFalse);
+        final bowl = items.firstWhere((item) => item.id == 's3');
+        expect(bowl.name, 'Shawarma Rice Bowl');
+        expect(bowl.price, 50);
+        expect(File(bowl.imageUrl).existsSync(), isTrue);
         expect(items.any((item) => item.name == 'S3 – Shawarma Rice'), isTrue);
       },
     );

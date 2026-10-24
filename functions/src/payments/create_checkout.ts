@@ -10,9 +10,9 @@ const PAYMONGO_API = 'https://api.paymongo.com/v2/checkout_sessions';
 // MUST match lib/data/menu_data.dart. Name → allowed prices (variants/collisions).
 // #8: never trust client-supplied prices; they only pick name+variant+qty.
 const MENU_PRICES: Record<string, number[]> = {
-  'Shawarma Wrap': [99, 60], 'Shawarma All Meat': [80],
+  'Shawarma Wrap': [99, 60], 'Shawarma All Meat': [80], 'Shawarma Rice Bowl': [50],
   'Shawarma Burger': [95], 'Shawarma Fries': [75], 'Shawarma Nachos': [75],
-  'Shawarma Quesadilla': [99], 'Nachos & Fries Overload': [99],
+  'Shawarma Quesadilla': [99], 'Nachos & Fries Overload': [99, 150],
   'Shawarma Wrap + Fries + Drinks': [128], 'Shawarma Burger + Shawarma Wrap + Drinks': [149],
   'Buy 1 Take 1 French Fries': [50], 'Large Fries': [75], 'Bucket Fries': [99], 'Terra Fries': [150],
   'Combo 1 – Burger + Fries': [60], 'Combo 2 – Hotdog + Fries': [60],
@@ -31,7 +31,9 @@ const MENU_PRICES: Record<string, number[]> = {
   'Cafe Latte': [39, 49], 'Caramel Macchiato': [39, 49],
   'Ice Cappuccino': [39, 49], 'Chocolate Coffee': [39, 49],
   'Burger Patty': [55], 'Ham & Cheese': [55], 'Cheese Burger': [65],
-  'Burger with Egg': [85], 'Egg & Cheese': [95], 'Hotdog Sandwich': [69],
+  'Burger with Egg': [85], 'Cheese & Egg Burger': [95], 'Hotdog Sandwich': [69],
+  // Cached clients can still submit the previous name for this same ₱95 burger.
+  'Egg & Cheese': [95],
   // Sulit Meals + Chicken Poppers. A parity test in test/menu_price_parity_test.dart
   // fails the build when this map drifts from lib/data/menu_data.dart.
   'S1 – Hungarian Sausage': [99], 'S2 – Pork Tocino': [99], 'S3 – Shawarma Rice': [99],
