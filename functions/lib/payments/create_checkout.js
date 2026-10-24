@@ -11,7 +11,7 @@ const PAYMONGO_API = 'https://api.paymongo.com/v2/checkout_sessions';
 // MUST match lib/data/menu_data.dart. Name → allowed prices (variants/collisions).
 // #8: never trust client-supplied prices; they only pick name+variant+qty.
 const MENU_PRICES = {
-    'Shawarma Wrap': [99, 60], 'Shawarma All Meat': [80], 'Shawarma Rice Bowl': [50],
+    'Shawarma Wrap': [99, 60], 'Shawarma All Meat': [80],
     'Shawarma Burger': [95], 'Shawarma Fries': [75], 'Shawarma Nachos': [75],
     'Shawarma Quesadilla': [99], 'Nachos & Fries Overload': [99],
     'Shawarma Wrap + Fries + Drinks': [128], 'Shawarma Burger + Shawarma Wrap + Drinks': [149],
@@ -36,12 +36,11 @@ const MENU_PRICES = {
     // Sulit Meals + Chicken Poppers. A parity test in test/menu_price_parity_test.dart
     // fails the build when this map drifts from lib/data/menu_data.dart.
     'S1 – Hungarian Sausage': [99], 'S2 – Pork Tocino': [99], 'S3 – Shawarma Rice': [99],
-    'S4 – Jumbo Hotdog': [99], 'S5 – Luncheon Meat': [99], "Luna's Pork Sisig": [99],
+    'S4 – Jumbo Hotdog': [99], 'S5 – Korean Spam Musubi': [99], "Luna's Pork Sisig": [99],
     'Korean Barbeque Poppers': [99], 'Korean Yangnyeom Poppers': [99],
     'Lemon Glaze Poppers': [99], 'Teriyaki Gloss Poppers': [99],
     'Creamy Cheese Poppers': [99], 'Mango Habanero Poppers': [99],
 };
-const MAX_DELIVERY_FEE = 500; // distance-based fee is client-computed; cap it.
 exports.createCheckoutSession = (0, https_1.onCall)({ secrets: [index_1.paymongoSecret] }, // #1
 async (request) => {
     const d = request.data || {};
@@ -77,8 +76,8 @@ async (request) => {
         itemsTotal += price * qty;
         return { name, amount: price * 100, currency: 'PHP', quantity: qty };
     });
-    // Amount must cover items; anything above is delivery fee (capped).
-    if (amount < itemsTotal || amount > itemsTotal + MAX_DELIVERY_FEE) {
+    // The rider confirms delivery separately; online payment covers food only.
+    if (amount !== itemsTotal) {
         throw new https_1.HttpsError('invalid-argument', 'Amount does not match order total');
     }
     const paymongoKey = index_1.paymongoSecret.value();

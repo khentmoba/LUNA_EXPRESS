@@ -66,11 +66,11 @@ function formatOrderNotification(data) {
             `🛒 *Items:*`,
             lines,
             '',
-            `🚚 *Delivery Fee:* ₱${(0, telegram_api_1.escapeMd)((data.deliveryFee || 0).toString())}`,
+            ...(isPickup ? [] : ['🚚 *Delivery Fee:* Confirmed by rider; charged separately']),
             `💳 *Payment Method:* ${(0, telegram_api_1.escapeMd)(data.paymentMethod || 'Cash')}`,
             `📝 *Payment Status:* ${(0, telegram_api_1.escapeMd)(data.paymentStatus || 'NOT PAID')}${data.paymentStatus === 'AWAITING_PAYMENT' ? ' \\(GCash\\)' : ''}`,
             '',
-            `💰 *TOTAL:* ₱*${(0, telegram_api_1.escapeMd)(data.total.toString())}*`,
+            `💰 *${isPickup ? 'TOTAL' : 'FOOD TOTAL'}:* ₱*${(0, telegram_api_1.escapeMd)(data.total.toString())}*`,
             `🕐 *Time:* ${(0, telegram_api_1.escapeMd)(data.timeStr || '')}`,
             '',
             `✅ _Please prepare this order\\!_`

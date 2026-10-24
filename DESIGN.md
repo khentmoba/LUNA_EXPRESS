@@ -345,22 +345,13 @@ buttons and bordered options. Product images have 3 logical pixels of inset; the
   closing call to action.
 - **States:** hover lifts 2px and darkens to `#b8381e`; active presses 2px down; focus uses the tan ring.
 
-### Fare rail (signature component)
+### Delivery notice
 
-A native `<details>` starts closed, with an **Estimate delivery** summary and the visible **₱39 / km**
-rate. It sits after food and ordering actions so customers can browse before trying a distance. The
-summary works with keyboard and touch without JavaScript. Inside, the heading is **Delivery fee only**;
-the note explicitly separates food prices from delivery. The rail remains a real instrument: its readout
-says **estimated fare**, while checkout calculates the exact fee from the pin and nearer kitchen.
-A 52px-tall `role="slider"` spans 1–12 km; ticks, fare labels and the
-fare table live **outside** the slider in `.rail-wrap`, so the control keeps its own hit area and
-`aria-describedby="rail-note"`. Tall ticks sit on the labelled stops (1, 3, 6, 9, 12 km), never on an
-unlabelled one. Above 940px the rail prints all twelve fares (₱39…₱468, 11.2px) and bolds the active stop;
-below 940px the five majors remain. A red needle with a "3 KM" chip rides the track, `left` driven by
-`--v`, spring easing (`cubic-bezier(.3, 1.24, .42, 1)`) except while dragging (`.1s linear`). The fare
-readout, every `[data-km]` / `[data-peso]`, and `aria-valuenow` / `aria-valuetext` update together. Pointer
-capture for drag, arrows / Page / Home / End for keyboard, needle entrance from 1→3 km on load unless
-`prefers-reduced-motion`. The focus ring clears the labels by 9px.
+A static board below the ordering actions says **Delivery fee applies** and explains that
+the rider confirms the amount, charged separately from food. Use the existing board ground,
+tan border, Big Shoulders heading and Karla body. No calculator, numeric fare or per-kilometre
+rate is shown. Checkout and receipts label delivery-order totals **Food total** and repeat
+the notice; online payments cover food only.
 
 ### Offer lines
 
@@ -411,7 +402,7 @@ so the hole is visible and marked instead of invented. Actions sit below.
 - **Do** paint every type-bearing surface in `--verm-plate` and check cream on it (6.55:1).
 - **Do** set functional labels at 11.5px or larger, uppercase Karla, 0.16em tracking or wider.
 - **Do** give raised surfaces a short dark edge plus one soft black cast, and lift 2px on hover.
-- **Do** keep the fare rail's ticks and labels outside the slider element.
+- **Do** keep the delivery notice visible without requiring interaction.
 - **Do** rotate photo mounts 1–2° and pin a painted tag on them.
 - **Do** end with one full-bleed vermilion band and one cream plate.
 

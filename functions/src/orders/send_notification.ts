@@ -81,11 +81,11 @@ export function formatOrderNotification(data: OrderNotificationData): string {
       `🛒 *Items:*`,
       lines,
       '',
-      `🚚 *Delivery Fee:* ₱${escapeMd((data.deliveryFee || 0).toString())}`,
+      ...(isPickup ? [] : ['🚚 *Delivery Fee:* Confirmed by rider; charged separately']),
       `💳 *Payment Method:* ${escapeMd(data.paymentMethod || 'Cash')}`,
       `📝 *Payment Status:* ${escapeMd(data.paymentStatus || 'NOT PAID')}${data.paymentStatus === 'AWAITING_PAYMENT' ? ' \\(GCash\\)' : ''}`,
       '',
-      `💰 *TOTAL:* ₱*${escapeMd(data.total.toString())}*`,
+      `💰 *${isPickup ? 'TOTAL' : 'FOOD TOTAL'}:* ₱*${escapeMd(data.total.toString())}*`,
       `🕐 *Time:* ${escapeMd(data.timeStr || '')}`,
       '',
       `✅ _Please prepare this order\\!_`
