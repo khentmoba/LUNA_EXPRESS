@@ -1,7 +1,14 @@
 const { describe, test } = require('node:test');
 const assert = require('node:assert/strict');
-const { escapeMd } = require('../lib/telegram_api');
-const { itemLines, formatOrderNotification } = require('../lib/orders/send_notification');
+const { escapeMd, sendToAll, sendPhotoToAll, setBot, stripMarkdownV2 } = require('../lib/telegram_api');
+const {
+  itemLines,
+  formatOrderNotification,
+  formatDeliverySummaryCaption,
+  getGoogleStaticMapUrl,
+  getMapTilerStaticMapUrl,
+  getGoogleMapsNavigationUrl,
+} = require('../lib/orders/send_notification');
 
 // Comprehensive MarkdownV2 validator that simulates Telegram Bot API's entity parser
 function validateMarkdownV2(text) {
@@ -246,5 +253,98 @@ describe('Telegram MarkdownV2 escaping and order notifications', () => {
     assert.equal(mdCalls.length, 2);
     assert.equal(fallbackCalls.length, 2);
     assert.equal(fallbackCalls[0].text, '🔔 *NEW ORDER — LU-12345*\n  • 1x French Fries (Cheese) — ₱50');
+  });
+
+  test('map URL helpers generate valid Google and MapTiler URLs', () => {
+    const lat = 8.95;
+    const lng = 125.53;
+
+    // Google Maps navigation direction URL
+    const navUrl = getGoogleMapsNavigationUrl(lat, lng);
+    assert.equal(navUrl, 'https://www.google.com/maps/dir/?api=1&destination=8.95,125.53');
+
+    // Google Static Maps URL
+    const gmapUrl = getGoogleStaticMapUrl(lat, lng, 'AIzaSyFakeKey123');
+    assert.ok(gmapUrl.startsWith('https://maps.googleapis.com/maps/api/staticmap?'));
+    assert.ok(gmapUrl.includes('center=8.95%2C125.53'));
+    assert.ok(gmapUrl.includes('zoom=17'));
+    assert.ok(gmapUrl.includes('size=600x400'));
+    assert.ok(gmapUrl.includes('scale=2'));
+    assert.ok(gmapUrl.includes('maptype=hybrid'));
+    assert.ok(gmapUrl.includes('markers=color%3Ared%7C8.95%2C125.53'));
+    assert.ok(gmapUrl.includes('key=AIzaSyFakeKey123'));
+
+    // MapTiler Static Map URL
+    const maptilerUrl = getMapTilerStaticMapUrl(lat, lng, 'maptilerKeyXYZ');
+    assert.equal(
+      maptilerUrl,
+      'https://api.maptiler.com/maps/streets-v2/static/125.53,8.95,17/600x400@2x.png?key=maptilerKeyXYZ&markers=125.53,8.95'
+    );
+  });
+
+  test('formatDeliverySummaryCaption generates valid MarkdownV2 under 1024 chars', () => {
+    const summary = formatDeliverySummaryCaption({
+      orderNumber: 'LU-260928-120000',
+      customerName: 'Khent Dela Cruz',
+      customerAddress: 'Purok 5, Poblacion Magallanes, Agusan del Norte',
+      customerPhone: '09123456789',
+      items: [],
+      total: 540,
+      timeStr: '2026-09-28 12:00',
+      orderType: 'Delivery',
+      paymentMethod: 'GCash',
+      paymentStatus: 'PAID',
+      lat: 8.95,
+      lng: 125.53,
+    });
+
+    const errors = validateMarkdownV2(summary);
+    assert.deepEqual(errors, [], `formatDeliverySummaryCaption failed MarkdownV2 validation: ${errors.join(', ')}`);
+    assert.ok(summary.length <= 1024, `Summary caption length ${summary.length} exceeds 1024 char limit`);
+    assert.ok(summary.includes('NEW DELIVERY'));
+    assert.ok(summary.includes('Full itemized list sent below'));
+  });
+
+  test('sendPhotoToAll sends photo with caption and reply_markup, and falls back to plain text on entity parse error', async () => {
+    process.env.TELEGRAM_CHAT_ID = '333,444';
+    const sentPhotoCalls = [];
+    const mockBot = {
+      sendPhoto: async (chatId, photo, opts, fileOpts) => {
+        sentPhotoCalls.push({ chatId, photo, opts, fileOpts });
+        if (opts.parse_mode === 'MarkdownV2') {
+          const err = new Error("ETELEGRAM: 400 Bad Request: can't parse entities");
+          err.response = { body: { description: "Bad Request: can't parse entities" } };
+          throw err;
+        }
+        return { message_id: 2, chat: { id: chatId } };
+      },
+    };
+
+    setBot(mockBot);
+
+    const fakeBuffer = Buffer.from('fake-image-bytes');
+    const caption = '🔔 *NEW DELIVERY — LU\\-999*\n📍 Address: Purok 5';
+    const replyMarkup = {
+      inline_keyboard: [[{ text: '📍 Open in Google Maps 🧭', url: 'https://www.google.com/maps/dir/?api=1&destination=8.95,125.53' }]],
+    };
+
+    const results = await sendPhotoToAll(fakeBuffer, caption, { reply_markup: replyMarkup });
+
+    assert.equal(results.length, 2);
+    assert.equal(results[0].status, 'fulfilled');
+    assert.equal(results[1].status, 'fulfilled');
+
+    // Both chats had 1 failed MarkdownV2 call and 1 successful plain-text fallback call
+    assert.equal(sentPhotoCalls.length, 4);
+    const mdCalls = sentPhotoCalls.filter(c => c.opts.parse_mode === 'MarkdownV2');
+    const fallbackCalls = sentPhotoCalls.filter(c => c.opts.parse_mode === undefined);
+    assert.equal(mdCalls.length, 2);
+    assert.equal(fallbackCalls.length, 2);
+
+    // Verify photo buffer and reply_markup were preserved
+    assert.equal(fallbackCalls[0].photo, fakeBuffer);
+    assert.deepEqual(fallbackCalls[0].opts.reply_markup, replyMarkup);
+    assert.equal(fallbackCalls[0].fileOpts.filename, 'delivery_map.png');
+    assert.equal(fallbackCalls[0].opts.caption, '🔔 *NEW DELIVERY — LU-999*\n📍 Address: Purok 5');
   });
 });

@@ -2,6 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendOrderNotification = exports.itemLines = void 0;
 exports.formatOrderNotification = formatOrderNotification;
+exports.formatDeliverySummaryCaption = formatDeliverySummaryCaption;
+exports.getGoogleStaticMapUrl = getGoogleStaticMapUrl;
+exports.getMapTilerStaticMapUrl = getMapTilerStaticMapUrl;
+exports.getGoogleMapsNavigationUrl = getGoogleMapsNavigationUrl;
+exports.fetchMapImage = fetchMapImage;
 const https_1 = require("firebase-functions/v2/https");
 const firestore_1 = require("firebase-admin/firestore");
 const telegram_api_1 = require("../telegram_api");
@@ -59,7 +64,7 @@ function formatOrderNotification(data) {
             `👤 *Name:* ${(0, telegram_api_1.escapeMd)(data.customerName)}`,
             ...(isPickup ? [] : [`📍 *Address:* ${(0, telegram_api_1.escapeMd)(data.customerAddress || '')}`]),
             ...(!isPickup && data.lat != null && data.lng != null
-                ? [`🗺 [View on Google Maps](https://www.google.com/maps?q=${data.lat},${data.lng})`]
+                ? [`🗺 [Get Directions on Google Maps](${getGoogleMapsNavigationUrl(data.lat, data.lng)})`]
                 : []),
             `📞 *Phone:* ${(0, telegram_api_1.escapeMd)(data.customerPhone || '')}`,
             '',
@@ -76,8 +81,67 @@ function formatOrderNotification(data) {
             `✅ _Please prepare this order\\!_`
         ].join('\n');
 }
+/** Concise summary caption for photos when the full receipt exceeds Telegram's 1024-char caption limit. */
+function formatDeliverySummaryCaption(data) {
+    return [
+        `🔔 *NEW DELIVERY — ${(0, telegram_api_1.escapeMd)(data.orderNumber)}*`,
+        `🛵 *Type:* Delivery`,
+        '',
+        `👤 *Name:* ${(0, telegram_api_1.escapeMd)(data.customerName)}`,
+        `📍 *Address:* ${(0, telegram_api_1.escapeMd)(data.customerAddress || '')}`,
+        `📞 *Phone:* ${(0, telegram_api_1.escapeMd)(data.customerPhone || '')}`,
+        '',
+        `💰 *FOOD TOTAL:* ₱*${(0, telegram_api_1.escapeMd)(data.total.toString())}*`,
+        `💳 *Payment:* ${(0, telegram_api_1.escapeMd)(data.paymentMethod || 'Cash')}  \\-  *${(0, telegram_api_1.escapeMd)(data.paymentStatus || 'NOT PAID')}*`,
+        `🕐 *Time:* ${(0, telegram_api_1.escapeMd)(data.timeStr || '')}`,
+        '',
+        `📋 _Full itemized list sent below\\._`,
+    ].join('\n');
+}
+/** Generates Google Static Maps URL in hybrid mode (satellite imagery + road names). */
+function getGoogleStaticMapUrl(lat, lng, apiKey) {
+    const params = new URLSearchParams({
+        center: `${lat},${lng}`,
+        zoom: '17',
+        size: '600x400',
+        scale: '2',
+        maptype: 'hybrid',
+        markers: `color:red|${lat},${lng}`,
+        key: apiKey,
+    });
+    return `https://maps.googleapis.com/maps/api/staticmap?${params.toString()}`;
+}
+/** Fallback: Generates MapTiler Static Map URL. */
+function getMapTilerStaticMapUrl(lat, lng, apiKey) {
+    return `https://api.maptiler.com/maps/streets-v2/static/${lng},${lat},17/600x400@2x.png?key=${apiKey}&markers=${lng},${lat}`;
+}
+/** Universal Google Maps navigation URL for turn-by-turn directions. */
+function getGoogleMapsNavigationUrl(lat, lng) {
+    return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+}
+/** Safely fetches a static map image buffer with an abort timeout. Returns null on failure. */
+async function fetchMapImage(url, timeoutMs = 6000) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+        const res = await fetch(url, { signal: controller.signal });
+        if (!res.ok) {
+            firebase_functions_1.logger.warn(`Static map fetch failed: status ${res.status} (${res.statusText})`);
+            return null;
+        }
+        const arrayBuffer = await res.arrayBuffer();
+        return Buffer.from(arrayBuffer);
+    }
+    catch (err) {
+        firebase_functions_1.logger.warn('Error fetching static map image', err);
+        return null;
+    }
+    finally {
+        clearTimeout(timer);
+    }
+}
 // Public kiosk endpoint: strict validation + sanitization instead of auth (#14).
-exports.sendOrderNotification = (0, https_1.onCall)({ secrets: [index_1.telegramToken, index_1.telegramChatIds] }, // #1: secrets server-side only
+exports.sendOrderNotification = (0, https_1.onCall)({ secrets: [index_1.telegramToken, index_1.telegramChatIds, index_1.googleMapsApiKey] }, // #1: secrets server-side only
 async (request) => {
     const d = request.data || {};
     const orderDocId = typeof d.orderDocId === 'string' && DOC_ID.test(d.orderDocId) ? d.orderDocId : null;
@@ -103,7 +167,7 @@ async (request) => {
     // Coordinates must be real numbers or omitted (no string injection into map URL).
     const lat = (typeof d.lat === 'number' && Math.abs(d.lat) <= 90) ? d.lat : null;
     const lng = (typeof d.lng === 'number' && Math.abs(d.lng) <= 180) ? d.lng : null;
-    const message = formatOrderNotification({
+    const notificationData = {
         orderNumber,
         customerName,
         customerAddress,
@@ -117,10 +181,70 @@ async (request) => {
         paymentStatus,
         lat,
         lng,
-    });
+    };
+    const message = formatOrderNotification(notificationData);
     firebase_functions_1.logger.info(`Sending order notification for ${orderNumber} to Telegram`);
     try {
-        await (0, telegram_api_1.sendToAll)(message);
+        if (orderType === 'Delivery' && lat != null && lng != null) {
+            const navigationUrl = getGoogleMapsNavigationUrl(lat, lng);
+            const replyMarkup = {
+                inline_keyboard: [
+                    [
+                        {
+                            text: '📍 Open in Google Maps 🧭',
+                            url: navigationUrl,
+                        },
+                    ],
+                ],
+            };
+            // Determine static map key (Google Maps preferred, MapTiler fallback)
+            let gmapKey = '';
+            try {
+                gmapKey = index_1.googleMapsApiKey.value();
+            }
+            catch (_) {
+                gmapKey = process.env.GOOGLE_MAPS_API_KEY || '';
+            }
+            if (!gmapKey && process.env.GOOGLE_MAPS_API_KEY) {
+                gmapKey = process.env.GOOGLE_MAPS_API_KEY;
+            }
+            const maptilerKey = process.env.MAPTILER_KEY || '';
+            let mapUrl = null;
+            if (gmapKey) {
+                mapUrl = getGoogleStaticMapUrl(lat, lng, gmapKey);
+            }
+            else if (maptilerKey) {
+                mapUrl = getMapTilerStaticMapUrl(lat, lng, maptilerKey);
+            }
+            let photoSent = false;
+            if (mapUrl) {
+                try {
+                    const imageBuffer = await fetchMapImage(mapUrl);
+                    if (imageBuffer) {
+                        if (message.length <= 1024) {
+                            await (0, telegram_api_1.sendPhotoToAll)(imageBuffer, message, { reply_markup: replyMarkup });
+                            photoSent = true;
+                        }
+                        else {
+                            const summaryCaption = formatDeliverySummaryCaption(notificationData);
+                            await (0, telegram_api_1.sendPhotoToAll)(imageBuffer, summaryCaption, { reply_markup: replyMarkup });
+                            await (0, telegram_api_1.sendToAll)(message);
+                            photoSent = true;
+                        }
+                    }
+                }
+                catch (photoError) {
+                    firebase_functions_1.logger.warn(`Photo delivery failed for ${orderNumber}, falling back to text`, photoError);
+                }
+            }
+            if (!photoSent) {
+                // Fallback to text message, but keep the 1-tap navigation button!
+                await (0, telegram_api_1.sendToAll)(message, { reply_markup: replyMarkup });
+            }
+        }
+        else {
+            await (0, telegram_api_1.sendToAll)(message);
+        }
         await markNotified(orderDocId, true);
         return { success: true };
     }
