@@ -79,6 +79,34 @@
         "displayName": "Spoken",
         "purpose": "Paragraphs and dish descriptions, 16–17px / 1.55."
       },
+      "price-board-title": {
+        "displayName": "Price-board title",
+        "purpose": "Large uppercase heading above the cream menu panel."
+      },
+      "price-board-category": {
+        "displayName": "Price-board category",
+        "purpose": "Vermilion-plate Big Shoulders category heading and solid underline on cream."
+      },
+      "price-board-name": {
+        "displayName": "Price-board item name",
+        "purpose": "Karla 16px/600 names on the local cream panel; names may wrap."
+      },
+      "price-board-price": {
+        "displayName": "Price-board item price",
+        "purpose": "Big Shoulders 32px/800 right-aligned tabular figures; enamel, or vermilion-plate for promotions."
+      },
+      "price-board-offer-name": {
+        "displayName": "Price-board meal name",
+        "purpose": "Uppercase Big Shoulders offer name on the continuous red strip."
+      },
+      "price-board-offer-price": {
+        "displayName": "Price-board meal price",
+        "purpose": "Large tabular Big Shoulders ₱99 figures on the red strip."
+      },
+      "price-board-offer-body": {
+        "displayName": "Price-board meal description",
+        "purpose": "Karla description beneath the name and price at 940px and below."
+      },
       "menu-heading": {
         "displayName": "Flutter category heading",
         "purpose": "Local MenuTheme BigShoulders alias: bundled heading face, distinct from storefront CSS family Big Shoulders Display. Wordmark/category/subgroup headings use size-specific variants."
@@ -180,6 +208,10 @@
     ],
     "breakpoints": [
       {
+        "name": "price-board-stack",
+        "value": "940px"
+      },
+      {
         "name": "wall",
         "value": "940px"
       },
@@ -232,9 +264,9 @@
     {
       "name": "Offer line",
       "kind": "custom",
-      "description": "A ₱99 bundle printed as a board line. At 940px and below, the name and price share the first row and the flavour list spans the next.",
-      "html": "<p class=\"offer\"><span class=\"offer__tag\">Sulit meals</span><span class=\"offer__line\">A full rice bowl…</span><span class=\"offer__dots\"></span><span class=\"offer__price\">₱99</span></p>",
-      "css": ".offer { display:grid; grid-template-columns:auto minmax(0,1fr) minmax(20px,auto) auto; align-items:baseline; gap:.7em; padding:.8em 0; border-bottom:1px dotted rgba(224,201,166,.26); } .offer__tag { font-family:var(--display); font-weight:800; font-size:clamp(1.1rem,1.8vw,1.35rem); text-transform:uppercase; color:#f7eedd; white-space:nowrap; } .offer__line { font-size:.82rem; line-height:1.5; color:#b39c7c; } .offer__dots { border-bottom:1px dotted rgba(224,201,166,.22); } .offer__price { justify-self:end; padding:0 .3em .04em; background:#a3301a; color:#f7eedd; font-family:var(--display); font-weight:900; font-size:clamp(1.4rem,2.2vw,1.75rem); font-variant-numeric:tabular-nums; }"
+      "description": "Two ₱99 meals share one continuous vermilion-plate strip. Above 940px each name, description and price share a row; at 940px and below the name and price sit above the description.",
+      "html": "<div class=\"ds-offer-strip\"><p class=\"ds-offer\"><span class=\"ds-offer-name\">Sulit meals</span><span class=\"ds-offer-description\">A filling meal, a fried egg and a cold drink. Hungarian sausage · tocino · shawarma rice · jumbo hotdog · Korean Spam Musubi · pork sisig.</span><span class=\"ds-offer-price\">₱99</span></p><p class=\"ds-offer\"><span class=\"ds-offer-name\">Chicken poppers</span><span class=\"ds-offer-description\">Crispy poppers with rice, egg and a drink. Korean barbeque · yangnyeom · lemon glaze · teriyaki · creamy cheese · mango habanero.</span><span class=\"ds-offer-price\">₱99</span></p></div>",
+      "css": ".ds-offer-strip { background:var(--verm-plate,#a3301a); color:var(--cream,#f7eedd); padding:8px clamp(20px,3vw,36px); border-radius:0; } .ds-offer { display:grid; grid-template-columns:minmax(160px,.65fr) minmax(0,2fr) auto; grid-template-areas:\"name description price\"; align-items:center; gap:24px; margin:0; padding:22px 0; } .ds-offer + .ds-offer { border-top:1px solid rgba(247,238,221,.35); } .ds-offer-name { grid-area:name; font-family:var(--display,\"Big Shoulders Display\",\"Arial Narrow\",sans-serif); font-weight:800; font-size:clamp(1.65rem,2.4vw,2rem); line-height:1; text-transform:uppercase; } .ds-offer-description { grid-area:description; font-family:var(--text,Karla,sans-serif); font-size:.95rem; line-height:1.5; } .ds-offer-price { grid-area:price; justify-self:end; font-family:var(--display,\"Big Shoulders Display\",\"Arial Narrow\",sans-serif); font-weight:900; font-size:clamp(3.2rem,5vw,4rem); line-height:.95; font-variant-numeric:tabular-nums; } @media (max-width:940px) { .ds-offer { grid-template-columns:minmax(0,1fr) auto; grid-template-areas:\"name price\" \"description description\"; gap:12px 20px; } }"
     },
     {
       "name": "Photo mount",
@@ -244,11 +276,19 @@
       "css": ".mount { position:relative; transform:rotate(-1.2deg); } .mount img { display:block; width:100%; height:auto; border:6px solid #f7eedd; box-shadow:0 22px 34px -22px #000, 0 2px 0 rgba(255,255,255,.05); object-fit:cover; } .tag { position:absolute; right:-10px; bottom:12px; transform:rotate(2.2deg); background:#a3301a; color:#f7eedd; font-family:var(--display); font-weight:700; font-size:1.02rem; padding:.34em .55em; }"
     },
     {
+      "name": "Price-board panel",
+      "kind": "custom",
+      "refersTo": "price-board-panel",
+      "description": "Local cream printed-menu panel inside the dark storefront: three columns above 940px, continuous stacked categories at 940px and below. Flat solid rules, square edges and no added motion.",
+      "html": "<div class=\"ds-board-panel\"><section class=\"ds-board-col\"><h3 class=\"ds-board-category\">Shawarma</h3></section><section class=\"ds-board-col\"><h3 class=\"ds-board-category\">Fries · combos</h3></section><section class=\"ds-board-col\"><h3 class=\"ds-board-category\">Sweet · cold</h3></section></div>",
+      "css": ".ds-board-panel { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); background:var(--cream,#f7eedd); color:var(--ink,#0f0906); padding:clamp(22px,3vw,36px) 0; border-top:6px solid var(--tan,#e0c9a6); border-radius:0; } .ds-board-col { min-width:0; padding-inline:clamp(20px,2.2vw,30px); } .ds-board-col + .ds-board-col { border-left:1px solid rgba(74,55,40,.25); } .ds-board-category { margin:0 0 4px; padding-bottom:18px; border-bottom:2px solid var(--verm-plate,#a3301a); font-family:var(--display,\"Big Shoulders Display\",\"Arial Narrow\",sans-serif); font-size:clamp(1.8rem,2.7vw,2.5rem); font-weight:800; line-height:1; text-transform:uppercase; color:var(--verm-plate,#a3301a); } @media (max-width:940px) { .ds-board-panel { grid-template-columns:minmax(0,1fr); padding-block:0; } .ds-board-col { padding:24px; } .ds-board-col + .ds-board-col { border-left:0; border-top:1px solid rgba(74,55,40,.25); } } @media (max-width:700px) { .ds-board-col { padding:24px 20px; } }"
+    },
+    {
       "name": "Price row",
       "kind": "custom",
-      "description": "Dish, dotted leader, tabular price — the menu board's unit.",
-      "html": "<div class=\"row\"><span class=\"row__name\">Shawarma wrap</span><span class=\"row__dots\"></span><b class=\"row__price\">₱60</b></div>",
-      "css": ".row { display:flex; align-items:baseline; gap:.5em; padding:.52em 0; border-bottom:1px dotted rgba(224,201,166,.22); } .row__name { font-family:var(--display); font-weight:700; font-size:clamp(1.18rem,1.7vw,1.45rem); line-height:1.1; letter-spacing:.012em; color:#f6ecd9; } .row__dots { flex:1; border-bottom:1px dotted rgba(224,201,166,.28); transform:translateY(-.2em); } .row__price { font-size:clamp(1.05rem,1.5vw,1.25rem); font-weight:500; font-variant-numeric:tabular-nums; color:#e0c9a6; } .row--promo .row__price { color:#ffb9a4; }"
+      "description": "Cream-panel menu row: Karla name, unpainted flexible spacer and large Big Shoulders tabular price. Promotional prices use vermilion-plate.",
+      "html": "<div class=\"ds-price-row\"><span class=\"ds-price-row-name\">Shawarma Wrap</span><span class=\"ds-price-row-space\" aria-hidden=\"true\"></span><span class=\"ds-price-row-price\">₱60</span></div>",
+      "css": ".ds-price-row { display:flex; align-items:baseline; gap:10px; padding:13px 0; background:var(--cream,#f7eedd); color:var(--enamel,#241a12); border-bottom:1px solid rgba(74,55,40,.18); } .ds-price-row-name { font-family:var(--text,Karla,sans-serif); font-size:1rem; font-weight:600; line-height:1.35; } .ds-price-row-space { flex:1 0 8px; } .ds-price-row-price { flex-shrink:0; font-family:var(--display,\"Big Shoulders Display\",\"Arial Narrow\",sans-serif); font-size:2rem; font-weight:800; line-height:1; font-variant-numeric:tabular-nums; } .ds-price-row--promo .ds-price-row-price { color:var(--verm-plate,#a3301a); } .ds-price-row:last-child { border-bottom:0; padding-bottom:0; }"
     },
     {
       "name": "Flutter menu primary action",
@@ -276,7 +316,7 @@
   ],
   "narrative": {
     "northStar": "Harap ng Jeepney",
-    "overview": "The storefront is painted like the front of a jeepney. Dark enamel ground, flat painted rules, fares lettered where a passenger reads them. It is one page at / that hands you to a Flutter kiosk at /kiosk/ — the ordering flow is never re-drawn here. Bright vermilion is a state, not a surface; type-bearing surfaces are the deeper painted red so cream clears 6.5:1. Big Shoulders does the shouting, Karla does the talking. Depth is a short dark edge plus one soft cast: no hard offset slabs, no chrome gradients, no glow.\n\nThe existing storefront specification remains authoritative for `/`. The scoped additions below\nrecord the approved menu and item chooser at `/kiosk/#/menu`, implemented with local `MenuTheme`.\nThey preserve the established world and do not extend to cart, checkout, staff screens or staff dialogs.\nThis documents the implemented category navigation, product grid and details sheet. The surface brief's\nFORM and Quality bar establish refinement provenance; no seed run or new concept tournament is claimed.\nExisting rendered evidence and completed review are indexed in `docs/evidence/menu-continuity.md`\nand `docs/evidence/menu-*.png`; this documentation pass does not repeat their visual verification.",
+    "overview": "The storefront is painted like the front of a jeepney. Dark enamel ground, flat painted rules, fares lettered where a passenger reads them. It is one page at / that hands you to a Flutter kiosk at /kiosk/ — the ordering flow is never re-drawn here. Bright vermilion is a state, not a surface; type-bearing surfaces are the deeper painted red so cream clears 6.5:1. Big Shoulders does the shouting, Karla does the talking. Depth is a short dark edge plus one soft cast: no hard offset slabs, no chrome gradients, no glow.\n\nThe existing storefront specification remains authoritative for `/`. The scoped additions below\nrecord the approved menu and item chooser at `/kiosk/#/menu`, implemented with local `MenuTheme`.\nThey preserve the established world and do not extend to cart, checkout, staff screens or staff dialogs.\nThis documents the implemented category navigation, product grid and details sheet. The surface brief's\nFORM and Quality bar establish refinement provenance; no seed run or new concept tournament is claimed.\nExisting rendered evidence and completed review are indexed in `docs/evidence/menu-continuity.md`\nand `docs/evidence/menu-*.png`; this documentation pass does not repeat their visual verification.\n\nWithin the existing dark enamel storefront, the price board uses one continuous cream printed-menu panel and a continuous vermilion-plate offer strip. This local exception supersedes earlier dark-list, dotted-leader and Karla-price descriptions for this section only; it does not change the Flutter menu. Finish review verdict: ship, with no material findings in the scoped redesign. Evidence: docs/evidence/price-board-desktop.png, docs/evidence/price-board-mobile.png and docs/evidence/price-board-offers-mobile.png. This documentation pass checks supplied captures against HTML/CSS without repeating browser verification or running tests. No new rasters ship in site/; existing assets are unchanged.",
     "keyCharacteristics": [
       "Enamel ground with chrome rules; no glass, no blur, no glow",
       "One bright vermilion for live state only; painted plates carry the type",
@@ -313,12 +353,12 @@
       },
       {
         "name": "The One Column Rule",
-        "body": "Every section holds the same 1120px content column and the same left edge. No section insets its content further.",
+        "body": "Every section holds the same 1120px content column and the same left edge. The local cream price-board panel has internal column and row insets; its outer edge and offer strip stay aligned to that column.",
         "section": "layout"
       }
     ],
     "dos": [
-      "Do paint every type-bearing surface in --verm-plate and keep cream on it (6.55:1).",
+      "Do use cream for the local price-board menu panel, enamel for its names/prices and vermilion-plate for category headings, promotional prices and the continuous cream-lettered offer strip.",
       "Do set functional labels at 11.5px or larger, uppercase Karla, wide tracking.",
       "Do give raised surfaces a short dark edge plus one soft black cast, lifting 2px on hover.",
       "Do keep the fare rail's ticks, labels and fare table outside the slider element, with tall ticks only on labelled stops.",

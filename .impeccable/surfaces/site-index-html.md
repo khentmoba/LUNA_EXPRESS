@@ -42,6 +42,22 @@ FORM: Harap ng Jeepney, fifth of seven on my resonance-ordered list; seed:06d212
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
+## Price board redesign
+
+The price board is a scoped Persuade section redesign within the established storefront world. The user's request is a stronger price board; the surrounding storefront and ordering app keep their existing composition and behavior.
+
+THESIS: A printed kiosk menu with confident price hierarchy replaces the low-contrast, uniformly small list.
+
+OWN-WORLD: Existing cream, coffee enamel and vermilion plate; square edges, Big Shoulders signage and Karla speech. One continuous cream menu panel meets a full-width vermilion meal strip.
+
+STORY: Scan categories, compare food prices, see the two ₱99 meals, then open the ordering app. All 17 item rows and both meal offers retain their names, amounts and qualifications.
+
+FIRST VIEWPORT: Within this section, a large Price board heading and full-menu link lead into three cream columns at desktop widths. At 940px and below, the categories form one continuous vertical menu. Item names use readable Karla; larger condensed figures align right. The meal strip keeps each offer name and ₱99 together above its description on compact screens. No new animation or assets.
+
+FORM: A local printed-menu composition inherited from the established world; no new direction roll applies.
+
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+
 ## Unresolved
 
 Opening hours and a contact number are coming from the owner later; until then the page says nothing about either. The rider confirms delivery charges; the site does not publish a numeric rate.
