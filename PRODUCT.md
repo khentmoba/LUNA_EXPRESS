@@ -29,7 +29,7 @@ A neighbourhood kiosk with the prices printed where you can see them: real per-i
 
 ## Operating Context
 
-- Physical kiosk at Purok 5, Poblacion Magallanes, Agusan Del Norte; the landmark people actually use is "unahan lang gamay sa 7/11".
+- Physical kiosk at Purok 5, Poblacion Magallanes, Agusan Del Norte; the landmark people actually use is "unahan lang gamay sa 7/11". The exact spot is 9°01′13.9″N 125°31′03.5″E (9.0205278, 125.5176389), supplied by the owner.
 - A second kitchen base exists northeast of the kiosk; distance is recorded from the nearer base. The delivery rider confirms the delivery fee.
 - Payment is cash or GCash at the kiosk/on delivery.
 - Staff run the same app on a tablet in the store: dashboard, kitchen display, analytics.
