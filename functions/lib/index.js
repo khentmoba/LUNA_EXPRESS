@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.paymongoWebhook = exports.createCheckoutSession = exports.getLifetimeSalesReport = exports.getSalesAnalytics = exports.updateOrderStatus = exports.getActiveOrders = exports.sendOrderNotification = exports.verifyStaff = exports.triggerManualReport = exports.dailySalesReport = exports.paymongoSecret = exports.telegramChatIds = exports.telegramToken = void 0;
+exports.paymongoWebhook = exports.createCheckoutSession = exports.getLifetimeSalesReport = exports.getSalesAnalytics = exports.updateOrderStatus = exports.getActiveOrders = exports.sendOrderNotification = exports.verifyStaff = exports.triggerManualReport = exports.dailySalesReport = exports.googleMapsApiKey = exports.paymongoSecret = exports.telegramChatIds = exports.telegramToken = void 0;
 const app_1 = require("firebase-admin/app");
 const params_1 = require("firebase-functions/params");
 (0, app_1.initializeApp)();
@@ -8,9 +8,11 @@ const params_1 = require("firebase-functions/params");
 //   firebase functions:secrets:set TELEGRAM_TOKEN
 //   firebase functions:secrets:set TELEGRAM_CHAT_ID
 //   firebase functions:secrets:set PAYMONGO_SECRET_KEY
+//   firebase functions:secrets:set GOOGLE_MAPS_API_KEY
 exports.telegramToken = (0, params_1.defineSecret)('TELEGRAM_TOKEN');
 exports.telegramChatIds = (0, params_1.defineSecret)('TELEGRAM_CHAT_ID');
 exports.paymongoSecret = (0, params_1.defineSecret)('PAYMONGO_SECRET_KEY');
+exports.googleMapsApiKey = (0, params_1.defineSecret)('GOOGLE_MAPS_API_KEY');
 var daily_report_1 = require("./reporting/daily_report");
 Object.defineProperty(exports, "dailySalesReport", { enumerable: true, get: function () { return daily_report_1.dailySalesReport; } });
 var manual_report_1 = require("./reporting/manual_report");
