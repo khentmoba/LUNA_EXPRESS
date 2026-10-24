@@ -15,7 +15,7 @@ Hungry people inside delivery range of Purok 5, on phones, arriving from a Faceb
 
 ## Proof and content
 
-Real prices from `lib/data/menu_data.dart`, real photographs in `images/`, the rider-confirmed delivery-fee policy, the real address, the 7/11 landmark, the real Facebook page. Opening hours are 9am to 8pm. No phone number, no ratings, no testimonials — those holes stay open until the owner fills them.
+Real prices from `lib/data/menu_data.dart`, real photographs in `images/`, the rider-confirmed delivery-fee policy, the real address, the exact coordinates, the 7/11 landmark, the real Facebook page. Opening hours are 9am to 8pm. No phone number, no ratings, no testimonials — those holes stay open until the owner fills them.
 
 ## Constraints
 

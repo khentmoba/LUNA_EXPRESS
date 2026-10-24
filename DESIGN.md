@@ -476,6 +476,15 @@ Board ground, 3px cream top rule, address in Big Shoulders at 1.3 leading, and t
 lang gamay sa 7/11" with `7/11` in the lighter red `#e2603f` — set on the same baseline. A fourth line gives
 the opening hours, 9am to 8pm, beside the `Oras · opening hours` label. Actions sit below.
 
+### Location map
+
+The exact spot is 9°01′13.9″N 125°31′03.5″E. The map sits in a mounted frame like the window photographs: a 6px
+cream border, the same long soft cast, and a painted tag in the corner that carries the coordinates. Two tabs switch
+between the map and street view. The active tab is a vermilion plate and the other is a tan ghost. Both views are
+keyless Google Maps embeds, lazy-loaded and 300px tall on phones and 440px on desktop. Without script the tabs are
+hidden and both views stay on the page, one above the other. "Open in Maps" links the coordinates rather than a name
+search, because a name search finds a different listing.
+
 ### Flutter menu primitives and item chooser
 
 - **Navigation:** square Material ChoiceChips below desktop width; labelled ListTiles with outlined
