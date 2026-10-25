@@ -198,7 +198,7 @@ lettered wide like a sticker run along a windscreen.
 
 The build is static HTML, one stylesheet, and one small script. No framework, no icon font, two self-hosted
 variable fonts, photos the business already published. Nothing on the page is a fact the business did not
-give us: no hours, no phone number, no ratings.
+give us. Opening hours are 9am to 8pm; there is no phone number and no rating yet.
 
 ### Approved storefront price-board exception
 
@@ -414,6 +414,22 @@ The menu extension uses flat tonal layering and line borders with native Materia
 The local bottom sheet has transparent surface tint. Storefront plate casts, photo rotation and hover
 translation are not prescribed for menu cards or controls; the existing item-image Hero connection remains.
 
+## Motion
+
+Motion is one rehearsed sequence for the price board, plus a quieter one for the window photographs. Both play once,
+as each part arrives, and nothing follows scroll position, so prices and names are never left half-hidden while
+someone reads. The board goes in this order: a vermilion swash draws under the heading, the column titles print, and
+then each line prints in bands across the columns. A vermilion print head crosses every line, and its price lands as
+the head passes. The two ₱99 offers paint in across the vermilion strip last, with their prices stamped on. The window
+photographs pin on in turn, and each painted tag drops on after its photograph. The hero swash on load, the hover
+states and the sticky bar's shadow are the only other motion.
+
+Every effect animates only `transform` (with its `translate`, `rotate` and `scale` properties), `opacity`, `clip-path`
+or the colour of the print head, and nothing loops. The hidden states exist only after `app.js` has run, and the whole
+layer sits inside `prefers-reduced-motion: no-preference`. Without script, or with reduced motion, the page stays static
+in its final state, with every line, offer and photograph in place. In print, nothing stays hidden. None of these
+effects confirms an action, so the reduced-motion path removes the movement rather than softening it.
+
 ## Shapes
 
 Square corners everywhere (`0px`) — this is a painted board, not a card UI. Rules are flat: a 2px tan strip
@@ -473,9 +489,17 @@ wrap while the amount remains aligned right. The ₱ glyph appears once per pric
 ### Address board
 
 Board ground, 3px cream top rule, address in Big Shoulders at 1.3 leading, and the landmark callout — "Unahan
-lang gamay sa 7/11" with `7/11` in the lighter red `#e2603f` — set on the same baseline. A fourth line holds
-the hours slot the owner has not filled yet: `Oras · opening hours` with `to follow` on a dashed underline,
-so the hole is visible and marked instead of invented. Actions sit below.
+lang gamay sa 7/11" with `7/11` in the lighter red `#e2603f` — set on the same baseline. A fourth line gives
+the opening hours, 9am to 8pm, beside the `Oras · opening hours` label. Actions sit below.
+
+### Location map
+
+The exact spot is 9°01′13.9″N 125°31′03.5″E. The map sits in a mounted frame like the window photographs: a 6px
+cream border, the same long soft cast, and a painted tag in the corner that carries the coordinates. Two tabs switch
+between the map and street view. The active tab is a vermilion plate and the other is a tan ghost. Both views are
+keyless Google Maps embeds, lazy-loaded and 300px tall on phones and 440px on desktop. Without script the tabs are
+hidden and both views stay on the page, one above the other. "Open in Maps" links the coordinates rather than a name
+search, because a name search finds a different listing.
 
 ### Flutter menu primitives and item chooser
 
@@ -516,6 +540,10 @@ so the hole is visible and marked instead of invented. Actions sit below.
 - **Don't** use colored left-border tabs on cards, equal-card rows for offers, glyph icons, or a second
   accent hue.
 - **Don't** round corners, use backdrop-filter, fake chrome with gradients, or draw depth with blur alone.
-- **Don't** mark hours, phone or ratings as if they existed; use the `to follow` slot.
-- **Don't** invent business facts — hours, phone numbers, ratings, and testimonials do not exist yet.
+- **Don't** show a phone number or ratings until the owner supplies them; leave no placeholder for them.
+- **Don't** invent business facts. Phone numbers, ratings and testimonials do not exist yet; the hours are 9am to 8pm.
 - **Don't** duplicate the ordering flow here; every order action links to `/kiosk/`.
+- **Don't** add motion to the hero, address board or closing band, or any looping motion. The two moments in
+  Motion are the only arrival effects on the page.
+- **Don't** hide a price or a name behind a motion state while someone is reading. Motion may reveal the board
+  once; it may not withhold it.

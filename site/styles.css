@@ -603,9 +603,7 @@ a { color: var(--tan); text-decoration-thickness: 1px; text-underline-offset: 3p
 }
 .find__hours em {
   font-style: normal;
-  color: var(--tan);
-  border-bottom: 1px dashed rgba(224, 201, 166, .55);
-  padding-bottom: .1em;
+  color: var(--cream);
 }
 .find__land span {
   font-family: var(--text);
@@ -615,6 +613,43 @@ a { color: var(--tan); text-decoration-thickness: 1px; text-underline-offset: 3p
   color: var(--tan-dim);
 }
 .find .actions { margin-top: clamp(20px, 2.6vw, 30px); }
+
+/* ── Location ─────────────────────────────────────────────────── */
+
+.locate { margin-top: clamp(20px, 2.6vw, 30px); }
+.locate__controls { display: none; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+.js-view .locate__controls { display: flex; }
+.locate__tab {
+  min-height: 44px;
+  padding: .9em 1.3em;
+  border: 0;
+  background: transparent;
+  color: var(--tan);
+  font-family: var(--text);
+  font-size: .76rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  box-shadow: inset 0 0 0 2px rgba(224, 201, 166, .5);
+  cursor: pointer;
+}
+.locate__tab:hover { color: var(--cream); }
+.locate__tab[aria-pressed="true"] {
+  background: var(--verm-plate);
+  color: var(--cream);
+  box-shadow: 0 .06em 0 var(--verm-deep);
+}
+.locate__frame {
+  position: relative;
+  border: 6px solid var(--cream);
+  background: var(--board);
+  box-shadow: 0 22px 34px -22px #000;
+}
+.locate__panel { height: 300px; }
+.locate__panel iframe { display: block; width: 100%; height: 100%; border: 0; }
+.js-view .locate__panel:not(.is-active) { display: none; }
+.locate__frame .tag { left: 14px; right: auto; bottom: 56px; }
+@media (min-width: 701px) { .locate__panel { height: 440px; } }
 
 /* ── Closing plate ────────────────────────────────────────────── */
 
@@ -765,6 +800,82 @@ a { color: var(--tan); text-decoration-thickness: 1px; text-underline-offset: 3p
   .plate { padding: 1.15em 1.2em; letter-spacing: .12em; }
   .rail-wrap { margin-top: 2.4rem; }
   .tag { font-size: .92rem; right: -6px; }
+}
+
+/* ── Scroll motion ────────────────────────────────────────────── */
+
+/* Motion plays once as each part arrives and never follows scroll position, so prices and names
+   are not left half-hidden while someone reads. app.js adds js-print and the arrival classes and
+   numbers each price line; without it, or with reduced motion, the page stays static. */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Price board. The swash draws under the heading, the titles print, then each line prints in
+     bands across the columns: a vermilion print head crosses the line and its price lands as it
+     passes. The two offers paint in last, with their prices stamped on. */
+  .js-print .board__title { position: relative; }
+  .js-print .board__title::after {
+    content: ""; position: absolute; left: 0; bottom: -14px; width: min(320px, 64%); height: 8px;
+    background: var(--verm); clip-path: polygon(0 46%, 100% 0, 99% 74%, 1% 100%);
+    transform-origin: left center; opacity: 0;
+  }
+  .js-print .board.is-printing .board__title::after { animation: swash .6s cubic-bezier(.2, .8, .25, 1) both; }
+
+  .js-print .col__title, .js-print .row { position: relative; overflow: hidden; }
+  .js-print .col__title { --i: -2; }
+  .js-print .row { --i: 0; }
+  .js-print .col__title::after, .js-print .row::after {
+    content: ""; position: absolute; top: 0; left: 0; right: 0;
+    background: var(--cream); border-left: 2px solid transparent;
+  }
+  .js-print .col__title::after { bottom: 2px; }
+  .js-print .row::after { bottom: 1px; }
+  .js-print .board.is-printing .col__title::after,
+  .js-print .board.is-printing .row::after {
+    animation: print-head .3s linear both;
+    animation-delay: calc(var(--i) * 24ms + 120ms);
+  }
+  .js-print .row__price { opacity: 0; }
+  .js-print .board.is-printing .row__price {
+    animation: land .3s cubic-bezier(.2, .7, .3, 1) both;
+    animation-delay: calc(var(--i) * 24ms + 380ms);
+  }
+
+  .js-print .board__offers { clip-path: inset(0 100% 0 0); }
+  .js-print .offer__price { opacity: 0; }
+  .js-print .board.is-printing .board__offers { animation: paint-in .5s cubic-bezier(.2, .7, .3, 1) .9s both; }
+  .js-print .board.is-printing .offer__price { animation: stamp .3s cubic-bezier(.2, .7, .3, 1) 1.4s both; }
+
+  /* Window wall. Each photograph pins on in turn, and its painted tag drops on after it. */
+  .js-print .window .mount { --pin: 0s; opacity: 0; }
+  .js-print .window .mount--b { --pin: .12s; }
+  .js-print .window .mount--c { --pin: .24s; }
+  .js-print .window .mount--d { --pin: .36s; }
+  .js-print .window .tag { opacity: 0; }
+  .js-print .window.is-pinning .mount { animation: pin-in .7s cubic-bezier(.16, 1, .3, 1) both; animation-delay: var(--pin); }
+  .js-print .window.is-pinning .tag { animation: tag-in .45s cubic-bezier(.2, .7, .3, 1) both; animation-delay: calc(var(--pin) + .4s); }
+}
+
+@media print {
+  .js-print .col__title::after, .js-print .row::after, .js-print .board__title::after { display: none; }
+  .js-print .row__price, .js-print .offer__price, .js-print .window .mount, .js-print .window .tag { opacity: 1; }
+  .js-print .board__offers { clip-path: none; }
+}
+
+@keyframes print-head {
+  0% { translate: 0 0; border-left-color: transparent; }
+  2%, 98% { border-left-color: var(--verm); }
+  100% { translate: 100% 0; border-left-color: transparent; }
+}
+@keyframes land { from { opacity: 0; translate: 0 -8px; } to { opacity: 1; translate: 0 0; } }
+@keyframes stamp { from { opacity: 0; scale: 1.12; } to { opacity: 1; scale: 1; } }
+@keyframes paint-in { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes pin-in {
+  from { opacity: 0; translate: 0 24px; rotate: 2deg; }
+  to { opacity: 1; translate: 0 0; rotate: 0deg; }
+}
+@keyframes tag-in {
+  from { opacity: 0; translate: 0 -14px; rotate: -5deg; }
+  to { opacity: 1; translate: 0 0; rotate: 0deg; }
 }
 
 @media (prefers-reduced-motion: reduce) {
