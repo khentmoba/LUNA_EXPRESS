@@ -1,0 +1,22 @@
+{
+  "origin": "Fifteen owner uploads attached to this conversation. Originals are retained in docs/reference/menu-update/.",
+  "note": "Direct crops only, with no generated imagery or retouching. Combo crops focus on the food to exclude poster prices and headings; drink inclusion is stated in the menu description. Dessert names and prices come from the dessert poster; D1–D4 ingredients and prices come from the fries/drinks poster.",
+  "crops": [
+    {"source":"desserts-poster.png","file":"images/owner_ube_halo.jpg","rect":[10,190,305,415]},
+    {"source":"desserts-poster.png","file":"images/owner_mango_graham.jpg","rect":[315,190,285,415]},
+    {"source":"desserts-poster.png","file":"images/owner_leche_flan.jpg","rect":[455,790,440,280]},
+    {"source":"vanilla-cheese-photo.png","file":"images/owner_vanilla_cheese.jpg","rect":[0,120,960,960]},
+    {"source":"choco-oreo-photo.png","file":"images/owner_choco_oreo.jpg","rect":[0,120,960,960]},
+    {"source":"combo-1-poster.png","file":"images/owner_combo_1.jpg","rect":[30,550,800,570]},
+    {"source":"combo-2-poster.png","file":"images/owner_combo_2.jpg","rect":[25,460,800,640]},
+    {"source":"super-combo-1-poster.png","file":"images/owner_super_combo_1.jpg","rect":[30,590,800,530]},
+    {"source":"super-combo-2-poster.png","file":"images/owner_super_combo_2.jpg","rect":[20,560,790,540]},
+    {"source":"couple-combo-3-poster.png","file":"images/owner_combo_3.jpg","rect":[20,625,800,475]},
+    {"source":"combo-4-poster.png","file":"images/owner_combo_4.jpg","rect":[0,390,650,850]},
+    {"source":"combo-6-poster.png","file":"images/owner_combo_6.jpg","rect":[25,650,790,460]},
+    {"source":"d1-photo.png","file":"images/owner_d1.jpg","rect":[40,20,880,1160]},
+    {"source":"d2-photo.png","file":"images/owner_d2.jpg","rect":[40,20,880,1160]},
+    {"source":"d3-photo.png","file":"images/owner_d3.jpg","rect":[40,20,880,1160]},
+    {"source":"d4-photo.png","file":"images/owner_d4.jpg","rect":[40,20,880,1160]}
+  ]
+}

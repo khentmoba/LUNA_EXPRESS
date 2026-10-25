@@ -121,6 +121,32 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  for (final entry in [
+    ('fd4', 'D4 – Fries + Hotdog + Cheesestick + Fried Siomai + Drink', 89),
+    ('s10', 'Combo 6 – Shawarma Wrap + Shawarma Burger + Drink', 150),
+    ('e7', 'Vanilla Cheese Ice Cream', 65),
+  ]) {
+    testWidgets('${entry.$1} poster item reaches cart at 320px', (
+      tester,
+    ) async {
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      await openItem(tester, entry.$1);
+      // Full names must remain readable in the details sheet even when the
+      // product grid needs to truncate them. Fixed-price bundles need no options.
+      expect(find.text(entry.$2), findsOneWidget);
+      await tester.tap(find.byTooltip('Increase quantity'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Add to order · ₱${entry.$3 * 2}'));
+      await tester.pumpAndSettle();
+      expect(cartNotifier.items.single.name, entry.$2);
+      expect(cartNotifier.items.single.price, entry.$3);
+      expect(cartNotifier.items.single.quantity, 2);
+      expect(cartNotifier.totalPrice, entry.$3 * 2);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
   testWidgets('closing item details does not add an order', (tester) async {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
