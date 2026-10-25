@@ -222,6 +222,19 @@ poster use direct food-photo crops from that owner-supplied image. Ham & Cheese,
 and Shawarma All Meat use their earlier distinct photos to avoid repeating the poster’s shared
 images. Labels, prices and decorative hearts are excluded from the crops. This is a menu-content extension in the established world.
 
+### Dessert, combo and fries/drink photo update
+
+The owner uploads in `docs/reference/menu-update/` supply the latest dessert, combo and
+D1–D4 names, prices and photographs. `docs/owner-menu-crops.json` and
+`tool/crop_owner_menu.dart` reproduce sixteen food-photo crops without generated replacements.
+The existing Extras section holds the four ₱65 ice creams and ₱20 Luna Leche Flan;
+French Fries leads with the four drink bundles, with a factual inclusion subtitle.
+Combo meals group both shawarma bundles with the burger combos. The storefront keeps
+its existing cream panel: shawarma and combos share the first column, fries use the second,
+and burgers plus desserts/drinks use the third. All columns stack through the existing
+responsive rules. No palette, type, navigation or checkout interaction redesign is introduced.
+Rendered proof at 320, 390, 768 and 1440px is indexed in `docs/evidence/owner-menu-update.md`.
+
 ### Approved Flutter menu extension
 
 The existing storefront specification remains authoritative for `/`. The scoped additions below

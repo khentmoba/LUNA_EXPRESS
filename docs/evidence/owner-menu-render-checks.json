@@ -1,0 +1,46 @@
+[
+  {
+    "surface": "kiosk",
+    "width": 1440,
+    "errors": []
+  },
+  {
+    "surface": "storefront",
+    "width": 1440,
+    "viewport": 1440,
+    "scroll": 1440
+  },
+  {
+    "surface": "kiosk",
+    "width": 768,
+    "errors": []
+  },
+  {
+    "surface": "storefront",
+    "width": 768,
+    "viewport": 768,
+    "scroll": 768
+  },
+  {
+    "surface": "kiosk",
+    "width": 390,
+    "errors": []
+  },
+  {
+    "surface": "storefront",
+    "width": 390,
+    "viewport": 390,
+    "scroll": 390
+  },
+  {
+    "surface": "kiosk",
+    "width": 320,
+    "errors": []
+  },
+  {
+    "surface": "storefront",
+    "width": 320,
+    "viewport": 320,
+    "scroll": 320
+  }
+]
