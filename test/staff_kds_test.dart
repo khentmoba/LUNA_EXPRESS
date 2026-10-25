@@ -23,6 +23,23 @@ void main() {
       expect(testSession.username, isEmpty);
     });
 
+    test('Session tracks staff vs admin role properly', () {
+      final testSession = Session();
+      testSession.login('staff1', role: 'staff');
+      expect(testSession.isStaff, isTrue);
+      expect(testSession.isAdmin, isFalse);
+      expect(testSession.role, 'staff');
+
+      testSession.login('admin', role: 'admin');
+      expect(testSession.isStaff, isTrue);
+      expect(testSession.isAdmin, isTrue);
+      expect(testSession.role, 'admin');
+
+      testSession.logout();
+      expect(testSession.isStaff, isFalse);
+      expect(testSession.isAdmin, isFalse);
+    });
+
     test('AudioAlertService toggles sound state reliably', () {
       AudioAlertService.soundEnabled = true;
       expect(AudioAlertService.soundEnabled, isTrue);

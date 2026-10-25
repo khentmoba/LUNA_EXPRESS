@@ -4,11 +4,16 @@ const { hashPassword, verifyPassword } = require('../lib/util/security');
 
 describe('staff auth: scrypt PIN and password verification', () => {
   test('hashes and verifies a 4-digit PIN', () => {
-    const pin = '1234';
-    const hash = hashPassword(pin);
-    assert.ok(hash.startsWith('scrypt$'), 'Hash should be formatted as scrypt');
-    assert.equal(verifyPassword(pin, hash), 'ok');
-    assert.equal(verifyPassword('0000', hash), 'bad');
+    const staffPin = '8888';
+    const staffHash = hashPassword(staffPin);
+    assert.ok(staffHash.startsWith('scrypt$'), 'Hash should be formatted as scrypt');
+    assert.equal(verifyPassword(staffPin, staffHash), 'ok');
+    assert.equal(verifyPassword('0000', staffHash), 'bad');
+
+    const adminPin = '0524';
+    const adminHash = hashPassword(adminPin);
+    assert.equal(verifyPassword(adminPin, adminHash), 'ok');
+    assert.equal(verifyPassword('1234', adminHash), 'bad');
   });
 
   test('hashes and verifies a staff password', () => {

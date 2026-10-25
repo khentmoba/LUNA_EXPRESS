@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../services/functions.dart';
@@ -29,6 +30,8 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
   int _secondsUntilSync = 10;
   String _typeFilter = 'ALL'; // ALL, Delivery, Pickup, Walk-In
   bool _showCompleted = false;
+  String _searchQuery = '';
+  final _searchCtrl = TextEditingController();
 
   Set<String> _knownPendingOrderIds = {};
   bool _hasInitialFetchDone = false;
@@ -64,6 +67,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
     _refreshTimer?.cancel();
     _clockTimer?.cancel();
     _tabController?.dispose();
+    _searchCtrl.dispose();
     super.dispose();
   }
 
@@ -282,17 +286,282 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
   }
 
   List<dynamic> _filterOrders(List<dynamic> list) {
-    if (_typeFilter == 'ALL') return list;
-    return list.where((o) {
-      final type = (o['type'] as String? ?? '').toLowerCase();
-      if (_typeFilter == 'Delivery') return type.contains('delivery');
-      if (_typeFilter == 'Pickup') return type.contains('pickup');
-      if (_typeFilter == 'Walk-In') {
-        final entryType = (o['entryType'] as String? ?? '').toLowerCase();
-        return type.contains('walk-in') || entryType.contains('staff');
-      }
-      return true;
-    }).toList();
+    var res = list;
+    if (_typeFilter != 'ALL') {
+      res = res.where((o) {
+        final type = (o['type'] as String? ?? '').toLowerCase();
+        if (_typeFilter == 'Delivery') return type.contains('delivery');
+        if (_typeFilter == 'Pickup') return type.contains('pickup');
+        if (_typeFilter == 'Walk-In') {
+          final entryType = (o['entryType'] as String? ?? '').toLowerCase();
+          return type.contains('walk-in') || entryType.contains('staff');
+        }
+        return true;
+      }).toList();
+    }
+    if (_searchQuery.trim().isNotEmpty) {
+      final q = _searchQuery.trim().toLowerCase();
+      res = res.where((o) {
+        final num = (o['orderNumber'] as String? ?? '').toLowerCase();
+        final name = (o['customerName'] as String? ?? '').toLowerCase();
+        final phone = (o['customerPhone'] as String? ?? '').toLowerCase();
+        final addr = (o['customerAddress'] as String? ?? '').toLowerCase();
+        final items = (o['items'] as List<dynamic>? ?? [])
+            .map((i) => (i['name'] as String? ?? '').toLowerCase())
+            .join(' ');
+        return num.contains(q) ||
+            name.contains(q) ||
+            phone.contains(q) ||
+            addr.contains(q) ||
+            items.contains(q);
+      }).toList();
+    }
+    return res;
+  }
+
+  void _copyRiderDispatchNote(dynamic order) {
+    final orderNum = order['orderNumber'] ?? order['id'];
+    final name = order['customerName'] ?? 'Customer';
+    final phone = (order['customerPhone'] as String?)?.trim() ?? '';
+    final addr = (order['customerAddress'] as String?)?.trim() ?? '';
+    final lat = order['lat'];
+    final lng = order['lng'];
+    final total = order['total'] ?? 0;
+    final paymentMethod = order['paymentMethod'] ?? 'Cash';
+    final isPaid =
+        (order['paymentStatus'] as String? ?? '').toUpperCase() == 'PAID';
+    final items = (order['items'] as List<dynamic>? ?? [])
+        .map(
+          (i) =>
+              '  • ${(i['quantity'] ?? i['qty'] ?? 1)}x ${i['name']}${i['variant'] != null && (i['variant'] as String).isNotEmpty ? ' (${i['variant']})' : ''}',
+        )
+        .join('\n');
+
+    final mapsLink = (lat != null && lng != null)
+        ? 'https://www.google.com/maps/dir/?api=1&destination=$lat,$lng'
+        : '';
+
+    final note = [
+      '🛵 *LUNA EXPRESS DELIVERY — #$orderNum*',
+      '👤 Customer: $name',
+      if (phone.isNotEmpty) '📞 Phone: $phone',
+      if (addr.isNotEmpty) '📍 Address: $addr',
+      if (mapsLink.isNotEmpty) '🗺 Navigation: $mapsLink',
+      '',
+      '🛒 *Items:*',
+      items,
+      '',
+      '💰 Food Total: ₱$total (${isPaid ? 'PAID ($paymentMethod)' : 'COLLECT ₱$total'})',
+      '🚚 Delivery fee: Confirmed by rider upon delivery',
+    ].join('\n');
+
+    Clipboard.setData(ClipboardData(text: note));
+    _snack(
+      '📋 Delivery dispatch note copied to clipboard!',
+      KioskTheme.success,
+    );
+  }
+
+  void _showPrintTicketDialog(dynamic order) {
+    final orderNum = order['orderNumber'] ?? order['id'];
+    final name = order['customerName'] ?? 'Customer';
+    final phone = (order['customerPhone'] as String?)?.trim() ?? '';
+    final addr = (order['customerAddress'] as String?)?.trim() ?? '';
+    final type = (order['type'] as String? ?? 'Walk-In').toUpperCase();
+    final total = order['total'] ?? 0;
+    final paymentStatus = (order['paymentStatus'] as String? ?? 'NOT PAID')
+        .toUpperCase();
+    final paymentMethod = order['paymentMethod'] ?? 'Cash';
+    final items = order['items'] as List<dynamic>? ?? [];
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
+        ),
+        title: Row(
+          children: [
+            const Icon(Icons.receipt_long_rounded, color: KioskTheme.lunaBrown),
+            const SizedBox(width: 8),
+            Text(
+              'Kitchen Slip Ticket',
+              style: GoogleFonts.outfit(
+                fontWeight: FontWeight.w800,
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
+        content: Container(
+          width: 320,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.grey[50],
+            borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
+            border: Border.all(color: Colors.grey[300]!),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Column(
+                  children: [
+                    Text(
+                      'LUNA BITES & DELIGHTS',
+                      style: GoogleFonts.outfit(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 14,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                    Text(
+                      'Purok 5, Magallanes · KITCHEN SLIP',
+                      style: GoogleFonts.outfit(
+                        fontSize: 10,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      '#$orderNum',
+                      style: GoogleFonts.outfit(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 20,
+                      ),
+                    ),
+                    Text(
+                      type,
+                      style: GoogleFonts.outfit(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 11,
+                        color: Colors.purple[800],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                '--------------------------------',
+                textAlign: TextAlign.center,
+              ),
+              Text(
+                'Customer: $name',
+                style: GoogleFonts.outfit(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 12,
+                ),
+              ),
+              if (phone.isNotEmpty)
+                Text('Phone: $phone', style: GoogleFonts.outfit(fontSize: 11)),
+              if (addr.isNotEmpty)
+                Text('Address: $addr', style: GoogleFonts.outfit(fontSize: 11)),
+              const Text(
+                '--------------------------------',
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 6),
+              ...items.map(
+                (i) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${i['quantity'] ?? i['qty'] ?? 1}x ',
+                        style: GoogleFonts.outfit(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 13,
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              i['name'] ?? '',
+                              style: GoogleFonts.outfit(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 12,
+                              ),
+                            ),
+                            if (i['variant'] != null &&
+                                (i['variant'] as String).isNotEmpty)
+                              Text(
+                                i['variant'],
+                                style: GoogleFonts.outfit(
+                                  fontSize: 10,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 6),
+              const Text(
+                '--------------------------------',
+                textAlign: TextAlign.center,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'TOTAL:',
+                    style: GoogleFonts.outfit(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 13,
+                    ),
+                  ),
+                  Text(
+                    '₱$total ($paymentStatus)',
+                    style: GoogleFonts.outfit(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
+              ),
+              Text(
+                'Payment: $paymentMethod',
+                style: GoogleFonts.outfit(
+                  fontSize: 10,
+                  color: Colors.grey[600],
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Close'),
+          ),
+          ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: KioskTheme.lunaBrown,
+            ),
+            onPressed: () {
+              Navigator.pop(ctx);
+              openUrlInBrowser('javascript:window.print()');
+              _snack('Print dialog opened', KioskTheme.success);
+            },
+            icon: const Icon(
+              Icons.print_rounded,
+              color: Colors.white,
+              size: 16,
+            ),
+            label: const Text('Print', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -318,7 +587,12 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F3EE),
-      appBar: _buildAppBar(pending.length, preparing.length, ready.length),
+      appBar: _buildAppBar(
+        context,
+        pending.length,
+        preparing.length,
+        ready.length,
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -350,10 +624,12 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
 
   // ── Top Navigation App Bar ──────────────────────────────────
   PreferredSizeWidget _buildAppBar(
+    BuildContext context,
     int pendingCount,
     int prepCount,
     int readyCount,
   ) {
+    final sessionWatcher = context.watch<Session>();
     return AppBar(
       backgroundColor: const Color(0xFF241A12),
       foregroundColor: const Color(0xFFF7EEDD),
@@ -406,6 +682,38 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                           fontSize: 11,
                           color: const Color(0xFFDEC995).withValues(alpha: 0.8),
                           fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 1.5,
+                      ),
+                      decoration: BoxDecoration(
+                        color: sessionWatcher.isAdmin
+                            ? const Color(0xFFEAB308).withValues(alpha: 0.2)
+                            : const Color(0xFF22C55E).withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(
+                          KioskTheme.radiusSm,
+                        ),
+                        border: Border.all(
+                          color: sessionWatcher.isAdmin
+                              ? const Color(0xFFEAB308)
+                              : const Color(0xFF22C55E),
+                          width: 1,
+                        ),
+                      ),
+                      child: Text(
+                        sessionWatcher.isAdmin ? '👑 ADMIN' : 'STAFF',
+                        style: GoogleFonts.outfit(
+                          fontSize: 9,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 0.5,
+                          color: sessionWatcher.isAdmin
+                              ? const Color(0xFFFDE047)
+                              : const Color(0xFF86EFAC),
                         ),
                       ),
                     ),
@@ -571,6 +879,49 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
             ),
           ),
           const SizedBox(width: 12),
+
+          // Search box
+          Container(
+            width: 160,
+            height: 34,
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
+            ),
+            child: TextField(
+              controller: _searchCtrl,
+              onChanged: (v) => setState(() => _searchQuery = v),
+              style: GoogleFonts.outfit(fontSize: 12),
+              decoration: InputDecoration(
+                hintText: 'Search orders...',
+                hintStyle: GoogleFonts.outfit(
+                  fontSize: 11,
+                  color: Colors.grey[500],
+                ),
+                prefixIcon: const Icon(
+                  Icons.search_rounded,
+                  size: 16,
+                  color: Colors.grey,
+                ),
+                suffixIcon: _searchQuery.isNotEmpty
+                    ? GestureDetector(
+                        onTap: () {
+                          _searchCtrl.clear();
+                          setState(() => _searchQuery = '');
+                        },
+                        child: const Icon(
+                          Icons.clear_rounded,
+                          size: 14,
+                          color: Colors.grey,
+                        ),
+                      )
+                    : null,
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(vertical: 8),
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
 
           // Completed toggle
           InkWell(
@@ -1001,6 +1352,10 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
     final elapsedColor = _getElapsedColor(timestampStr);
 
     final isPaid = paymentStatus == 'PAID';
+    final isDelayed =
+        status == 'Pending' &&
+        _now.difference(DateTime.tryParse(timestampStr) ?? _now).inMinutes >=
+            10;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -1008,10 +1363,16 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
         color: Colors.white,
         borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
         border: Border.all(
-          color: status == 'Pending'
+          color: isDelayed
+              ? const Color(0xFFD8452A)
+              : status == 'Pending'
               ? const Color(0xFFEA580C).withValues(alpha: 0.3)
               : Colors.black.withValues(alpha: 0.08),
-          width: status == 'Pending' ? 1.5 : 1,
+          width: isDelayed
+              ? 2.0
+              : status == 'Pending'
+              ? 1.5
+              : 1.0,
         ),
         boxShadow: [
           BoxShadow(
@@ -1030,24 +1391,61 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF241A12),
-                    borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
-                  ),
-                  child: Text(
-                    '#$orderNum',
-                    style: GoogleFonts.outfit(
-                      color: const Color(0xFFF7EEDD),
-                      fontWeight: FontWeight.w900,
-                      fontSize: 13,
-                      letterSpacing: 1,
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF241A12),
+                        borderRadius: BorderRadius.circular(
+                          KioskTheme.radiusSm,
+                        ),
+                      ),
+                      child: Text(
+                        '#$orderNum',
+                        style: GoogleFonts.outfit(
+                          color: const Color(0xFFF7EEDD),
+                          fontWeight: FontWeight.w900,
+                          fontSize: 13,
+                          letterSpacing: 1,
+                        ),
+                      ),
                     ),
-                  ),
+                    const SizedBox(width: 4),
+                    IconButton(
+                      tooltip: 'Kitchen Slip Ticket',
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(
+                        minWidth: 26,
+                        minHeight: 26,
+                      ),
+                      icon: const Icon(
+                        Icons.receipt_long_outlined,
+                        size: 16,
+                        color: Colors.grey,
+                      ),
+                      onPressed: () => _showPrintTicketDialog(order),
+                    ),
+                    if (isDelivery)
+                      IconButton(
+                        tooltip: 'Copy Delivery Dispatch Note',
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(
+                          minWidth: 26,
+                          minHeight: 26,
+                        ),
+                        icon: const Icon(
+                          Icons.copy_rounded,
+                          size: 14,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () => _copyRiderDispatchNote(order),
+                      ),
+                  ],
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(
@@ -1055,22 +1453,31 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                     vertical: 3,
                   ),
                   decoration: BoxDecoration(
-                    color: elapsedColor.withValues(alpha: 0.1),
+                    color: isDelayed
+                        ? KioskTheme.error.withValues(alpha: 0.15)
+                        : elapsedColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
+                    border: isDelayed
+                        ? Border.all(
+                            color: KioskTheme.error.withValues(alpha: 0.4),
+                          )
+                        : null,
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        Icons.access_time_rounded,
+                        isDelayed
+                            ? Icons.warning_amber_rounded
+                            : Icons.access_time_rounded,
                         size: 13,
-                        color: elapsedColor,
+                        color: isDelayed ? KioskTheme.error : elapsedColor,
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        elapsedText,
+                        isDelayed ? 'DELAYED ($elapsedText)' : elapsedText,
                         style: GoogleFonts.outfit(
-                          color: elapsedColor,
+                          color: isDelayed ? KioskTheme.error : elapsedColor,
                           fontWeight: FontWeight.w800,
                           fontSize: 11,
                         ),
@@ -1463,34 +1870,68 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
   }
 
   void _confirmCancelOrder(String orderId, String orderNum) {
+    String selectedReason = 'Item Out of Stock';
+    final reasons = [
+      'Item Out of Stock',
+      'Customer Requested Cancellation',
+      'Duplicate / Test Order',
+      'Store Closing / Capacity',
+    ];
+
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(
-          'Cancel Order #$orderNum?',
-          style: GoogleFonts.outfit(fontWeight: FontWeight.w800),
-        ),
-        content: Text(
-          'Are you sure you want to cancel this order? This cannot be undone.',
-          style: GoogleFonts.outfit(),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Back'),
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
+          title: Text(
+            'Cancel Order #$orderNum?',
+            style: GoogleFonts.outfit(fontWeight: FontWeight.w800),
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: KioskTheme.error),
-            onPressed: () {
-              Navigator.pop(ctx);
-              _updateStatus(orderId, 'Cancelled');
-            },
-            child: const Text(
-              'Cancel Order',
-              style: TextStyle(color: Colors.white),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Select cancellation reason:',
+                style: GoogleFonts.outfit(
+                  fontSize: 13,
+                  color: Colors.grey[700],
+                ),
+              ),
+              const SizedBox(height: 10),
+              ...reasons.map(
+                (r) => RadioListTile<String>(
+                  title: Text(r, style: GoogleFonts.outfit(fontSize: 13)),
+                  value: r,
+                  groupValue: selectedReason,
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  onChanged: (v) {
+                    if (v != null) setDialogState(() => selectedReason = v);
+                  },
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Back'),
             ),
-          ),
-        ],
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: KioskTheme.error,
+              ),
+              onPressed: () {
+                Navigator.pop(ctx);
+                _updateStatus(orderId, 'Cancelled');
+              },
+              child: const Text(
+                'Confirm Cancel',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

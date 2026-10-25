@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 
 class Session extends ChangeNotifier {
   String? _username;
+  String? _role;
+
   bool get isStaff => _username != null;
   String get username => _username ?? '';
+  bool get isAdmin => _role == 'admin' || _username?.toLowerCase() == 'admin';
+  String get role => _role ?? (isAdmin ? 'admin' : 'staff');
 
   Session() {
     _initAuth();
@@ -22,6 +26,7 @@ class Session extends ChangeNotifier {
           _extractUser(user);
         } else {
           _username = null;
+          _role = null;
           notifyListeners();
         }
       });
@@ -37,16 +42,19 @@ class Session extends ChangeNotifier {
     } else {
       _username = user.displayName ?? 'Staff';
     }
+    _role = _username?.toLowerCase() == 'admin' ? 'admin' : 'staff';
     notifyListeners();
   }
 
-  void login(String username) {
+  void login(String username, {String role = 'staff'}) {
     _username = username;
+    _role = role;
     notifyListeners();
   }
 
   Future<void> logout() async {
     _username = null;
+    _role = null;
     // End the Firebase staff session too (custom token from verifyStaff).
     try {
       await FirebaseAuth.instance.signOut();

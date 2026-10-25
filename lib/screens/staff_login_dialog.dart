@@ -79,11 +79,14 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
 
       if (isSuccess) {
         final actualUser = data['username'] ?? 'Staff';
+        final actualRole =
+            data['role'] as String? ??
+            (actualUser.toLowerCase() == 'admin' ? 'admin' : 'staff');
         final token = data['customToken'] as String?;
         if (token != null && token.isNotEmpty) {
           await FirebaseAuth.instance.signInWithCustomToken(token);
         }
-        session.login(actualUser);
+        session.login(actualUser, role: actualRole);
 
         if (!mounted) return;
         Navigator.pop(context);
@@ -122,9 +125,20 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
       }
     } catch (e) {
       if (!mounted) return;
-      // Offline fallback for default staff PIN 1234
-      if (_pin == '1234') {
-        session.login('staff1');
+      // Offline fallback for Admin PIN 0524 and Staff PIN 8888
+      if (_pin == '0524') {
+        session.login('admin', role: 'admin');
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => widget.destinationPage ?? const KdsPage(),
+          ),
+        );
+        return;
+      }
+      if (_pin == '8888') {
+        session.login('staff1', role: 'staff');
         Navigator.pop(context);
         Navigator.push(
           context,

@@ -52,8 +52,8 @@ exports.verifyStaff = (0, https_1.onCall)(async (request) => {
     if ((await db.collection('staff_accounts').limit(1).get()).empty) {
         const mk = () => crypto.randomBytes(9).toString('base64url');
         const seeds = [
-            { username: 'admin', role: 'admin', pin: '8888' },
-            { username: 'staff1', role: 'staff', pin: '1234' },
+            { username: 'admin', role: 'admin', pin: '0524' },
+            { username: 'staff1', role: 'staff', pin: '8888' },
         ];
         const batch = db.batch();
         for (const s of seeds) {
@@ -90,19 +90,34 @@ exports.verifyStaff = (0, https_1.onCall)(async (request) => {
                 }
             }
         }
-        // Default fallback to 1234 for quick kiosk operations if unconfigured
-        if (!matchedUser && pin === '1234') {
-            const staffRef = db.collection('staff_accounts').doc('staff1');
-            const snap = await staffRef.get();
-            if (!snap.exists || !snap.data()?.pinHash) {
-                await staffRef.set({
-                    username: 'staff1',
-                    role: 'staff',
-                    pinHash: (0, security_1.hashPassword)('1234'),
-                    createdAt: new Date(),
-                }, { merge: true });
+        // Default fallbacks for kiosk PINs: 0524 (Admin) and 8888 (Staff)
+        if (!matchedUser) {
+            if (pin === '0524') {
+                const adminRef = db.collection('staff_accounts').doc('admin');
+                const snap = await adminRef.get();
+                if (!snap.exists || !snap.data()?.pinHash) {
+                    await adminRef.set({
+                        username: 'admin',
+                        role: 'admin',
+                        pinHash: (0, security_1.hashPassword)('0524'),
+                        createdAt: new Date(),
+                    }, { merge: true });
+                }
+                matchedUser = { id: 'admin', username: 'admin', role: 'admin' };
             }
-            matchedUser = { id: 'staff1', username: 'staff1', role: 'staff' };
+            else if (pin === '8888') {
+                const staffRef = db.collection('staff_accounts').doc('staff1');
+                const snap = await staffRef.get();
+                if (!snap.exists || !snap.data()?.pinHash) {
+                    await staffRef.set({
+                        username: 'staff1',
+                        role: 'staff',
+                        pinHash: (0, security_1.hashPassword)('8888'),
+                        createdAt: new Date(),
+                    }, { merge: true });
+                }
+                matchedUser = { id: 'staff1', username: 'staff1', role: 'staff' };
+            }
         }
         if (!matchedUser) {
             firebase_functions_1.logger.info('Staff PIN login failed: bad PIN');
@@ -111,8 +126,8 @@ exports.verifyStaff = (0, https_1.onCall)(async (request) => {
         await (0, security_1.clearLoginAttempts)('staff:pin_login');
         const role = matchedUser.role === 'admin' ? 'admin' : 'staff';
         const customToken = await (0, auth_1.getAuth)().createCustomToken(`staff_${matchedUser.username || matchedUser.id}`, { role });
-        firebase_functions_1.logger.info(`Staff PIN login successful for ${matchedUser.username || matchedUser.id}`);
-        return { success: true, username: matchedUser.username || matchedUser.id, customToken };
+        firebase_functions_1.logger.info(`Staff PIN login successful for ${matchedUser.username || matchedUser.id} as ${role}`);
+        return { success: true, username: matchedUser.username || matchedUser.id, role, customToken };
     }
     // ── Username + Password Flow ──
     if (!usernameRaw || !password) {
