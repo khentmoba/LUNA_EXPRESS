@@ -15,7 +15,7 @@ export const googleMapsApiKey = defineSecret('GOOGLE_MAPS_API_KEY');
 
 export { dailySalesReport } from './reporting/daily_report';
 export { triggerManualReport } from './reporting/manual_report';
-export { verifyStaff } from './auth/verify_staff';
+export { verifyStaff, updateStaffPin } from './auth/verify_staff';
 export { sendOrderNotification } from './orders/send_notification';
 export { getActiveOrders, updateOrderStatus } from './orders/kds';
 export { getSalesAnalytics } from './reporting/analytics';

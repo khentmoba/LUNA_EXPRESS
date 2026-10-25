@@ -10,34 +10,49 @@ const projectOrder = (id: string, d: FirebaseFirestore.DocumentData) => ({
   id,
   orderNumber: d.orderId || d.orderNumber || id,
   customerName: d.customerName || '',
+  customerPhone: d.customerPhone || '',
+  customerAddress: d.customerAddress || '',
+  lat: typeof d.lat === 'number' ? d.lat : null,
+  lng: typeof d.lng === 'number' ? d.lng : null,
+  deliveryFee: Number(d.deliveryFee) || 0,
+  paymentMethod: String(d.paymentMethod || 'Cash'),
+  paymentStatus: String(d.paymentStatus || 'NOT PAID'),
+  entryType: String(d.entryType || ''),
   items: (Array.isArray(d.items) ? d.items : []).map((i: any) => ({
     name: String(i.name || ''),
     variant: String(i.variant || ''),
-    qty: Number(i.quantity) || 0,
+    qty: Number(i.quantity) || Number(i.qty) || 0,
+    quantity: Number(i.quantity) || Number(i.qty) || 0,
+    price: Number(i.price) || 0,
   })),
-  itemsCount: Array.isArray(d.items) ? d.items.reduce((s: number, i: any) => s + (Number(i.quantity) || 0), 0) : 0,
+  itemsCount: Array.isArray(d.items)
+    ? d.items.reduce((s: number, i: any) => s + (Number(i.quantity) || Number(i.qty) || 0), 0)
+    : 0,
   total: Number(d.totalAmount) || 0,
   type: String(d.type || ''),
   status: String(d.status || 'Pending'),
-  paymentStatus: String(d.paymentStatus || 'NOT PAID'),
-  timestamp: d.timestamp?.toDate?.()?.toISOString?.() || new Date().toISOString(),
+  timestamp: d.timestamp?.toDate?.()?.toISOString?.() || (typeof d.timestamp === 'string' ? d.timestamp : new Date().toISOString()),
 });
 
 export const getActiveOrders = onCall(async (request) => {
   requireStaff(request); // #6 + #7
   const db = getFirestore();
+  const includeCompleted = request.data?.includeCompleted === true;
   try {
     const activeThreshold = new Date(Date.now() - 24 * 60 * 60 * 1000);
     const snapshot = await db.collection('orders')
       .where('timestamp', '>=', activeThreshold)
-      .orderBy('timestamp', 'asc')
+      .orderBy('timestamp', 'desc')
       .limit(200)
       .get();
 
     const orders = [];
     for (const doc of snapshot.docs) {
       const data = doc.data();
-      if ((data.status || 'Pending') !== 'Completed') orders.push(projectOrder(doc.id, data));
+      const status = data.status || 'Pending';
+      if (includeCompleted || (status !== 'Completed' && status !== 'Cancelled')) {
+        orders.push(projectOrder(doc.id, data));
+      }
     }
     return { success: true, orders };
   } catch (error: any) {

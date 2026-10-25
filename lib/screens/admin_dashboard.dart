@@ -51,6 +51,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
               const SizedBox(height: 16),
               _buildStatsGrid(),
               const SizedBox(height: 32),
+              _buildLiveKdsButton(),
+              const SizedBox(height: 16),
               _buildWalkInButton(),
               const SizedBox(height: 32),
               _buildSectionTitle('QUICK ACTIONS'),
@@ -267,6 +269,87 @@ class _AdminDashboardState extends State<AdminDashboard> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  // ── Live KDS Button ───────────────────────────────────────
+  Widget _buildLiveKdsButton() {
+    return JuicyFeedback(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const KdsPage()),
+        );
+      },
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFF241A12), Color(0xFF1B130D)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(KioskTheme.radiusLg),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.2),
+              blurRadius: 16,
+              offset: const Offset(0, 6),
+            ),
+          ],
+          border: Border.all(
+            color: const Color(0xFFDEC995).withValues(alpha: 0.3),
+            width: 1.5,
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFFDEC995).withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
+              ),
+              child: const Icon(
+                Icons.outdoor_grill_rounded,
+                color: Color(0xFFDEC995),
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'LIVE ORDERS KANBAN (KDS)',
+                    style: GoogleFonts.outfit(
+                      color: const Color(0xFFF7EEDD),
+                      fontWeight: FontWeight.w900,
+                      fontSize: 15,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                  Text(
+                    'Kitchen display, audio alerts & dispatch queue',
+                    style: GoogleFonts.outfit(
+                      color: const Color(0xFFDEC995).withValues(alpha: 0.8),
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(
+              Icons.arrow_forward_rounded,
+              color: Color(0xFFDEC995),
+              size: 22,
+            ),
+          ],
+        ),
       ),
     );
   }

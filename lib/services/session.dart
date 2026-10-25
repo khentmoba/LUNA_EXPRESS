@@ -3,16 +3,58 @@ import 'package:flutter/material.dart';
 
 class Session extends ChangeNotifier {
   String? _username;
+  String? _role;
+
   bool get isStaff => _username != null;
   String get username => _username ?? '';
+  bool get isAdmin => _role == 'admin' || _username?.toLowerCase() == 'admin';
+  String get role => _role ?? (isAdmin ? 'admin' : 'staff');
 
-  void login(String username) {
+  Session() {
+    _initAuth();
+  }
+
+  void _initAuth() {
+    try {
+      // Restore session if user was already signed in with a staff custom token
+      final current = FirebaseAuth.instance.currentUser;
+      if (current != null) {
+        _extractUser(current);
+      }
+      FirebaseAuth.instance.authStateChanges().listen((user) {
+        if (user != null) {
+          _extractUser(user);
+        } else {
+          _username = null;
+          _role = null;
+          notifyListeners();
+        }
+      });
+    } catch (_) {
+      // In unit test environments where Firebase is not initialized, ignore gracefully.
+    }
+  }
+
+  void _extractUser(User user) {
+    final uid = user.uid;
+    if (uid.startsWith('staff_')) {
+      _username = uid.substring(6);
+    } else {
+      _username = user.displayName ?? 'Staff';
+    }
+    _role = _username?.toLowerCase() == 'admin' ? 'admin' : 'staff';
+    notifyListeners();
+  }
+
+  void login(String username, {String role = 'staff'}) {
     _username = username;
+    _role = role;
     notifyListeners();
   }
 
   Future<void> logout() async {
     _username = null;
+    _role = null;
     // End the Firebase staff session too (custom token from verifyStaff).
     try {
       await FirebaseAuth.instance.signOut();

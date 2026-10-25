@@ -15,6 +15,7 @@ import 'screens/checkout_page.dart';
 import 'screens/kds_page.dart';
 import 'screens/analytics_page.dart';
 import 'screens/lifetime_analytics_page.dart';
+import 'screens/admin_dashboard.dart';
 
 /// #12 bot protection: Firebase App Check (reCAPTCHA Enterprise on web).
 /// Site key is injected at build time so it never lands in git:
@@ -57,6 +58,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider.value(value: session),
         ChangeNotifierProvider.value(value: kioskSession),
         ChangeNotifierProvider.value(value: cartNotifier),
       ],
@@ -109,6 +111,9 @@ class LunaExpressApp extends StatelessWidget {
         '/cart': (context) => const KioskCartPage(),
         '/checkout_process': (context) => const CheckoutPage(),
         '/kds': (context) => const KdsPage(),
+        '/staff': (context) => const KdsPage(),
+        '/orders': (context) => const KdsPage(),
+        '/dashboard': (context) => const AdminDashboard(),
         '/analytics': (context) => const AnalyticsPage(),
         '/lifetime-analytics': (context) => const LifetimeAnalyticsPage(),
       },
