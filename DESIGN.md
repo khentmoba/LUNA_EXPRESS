@@ -414,6 +414,22 @@ The menu extension uses flat tonal layering and line borders with native Materia
 The local bottom sheet has transparent surface tint. Storefront plate casts, photo rotation and hover
 translation are not prescribed for menu cards or controls; the existing item-image Hero connection remains.
 
+## Motion
+
+Motion is one rehearsed sequence for the price board, plus a quieter one for the window photographs. Both play once,
+as each part arrives, and nothing follows scroll position, so prices and names are never left half-hidden while
+someone reads. The board goes in this order: a vermilion swash draws under the heading, the column titles print, and
+then each line prints in bands across the columns. A vermilion print head crosses every line, and its price lands as
+the head passes. The two ₱99 offers paint in across the vermilion strip last, with their prices stamped on. The window
+photographs pin on in turn, and each painted tag drops on after its photograph. The hero swash on load, the hover
+states and the sticky bar's shadow are the only other motion.
+
+Every effect animates only `transform` (with its `translate`, `rotate` and `scale` properties), `opacity`, `clip-path`
+or the colour of the print head, and nothing loops. The hidden states exist only after `app.js` has run, and the whole
+layer sits inside `prefers-reduced-motion: no-preference`. Without script, or with reduced motion, the page stays static
+in its final state, with every line, offer and photograph in place. In print, nothing stays hidden. None of these
+effects confirms an action, so the reduced-motion path removes the movement rather than softening it.
+
 ## Shapes
 
 Square corners everywhere (`0px`) — this is a painted board, not a card UI. Rules are flat: a 2px tan strip
@@ -527,3 +543,7 @@ search, because a name search finds a different listing.
 - **Don't** show a phone number or ratings until the owner supplies them; leave no placeholder for them.
 - **Don't** invent business facts. Phone numbers, ratings and testimonials do not exist yet; the hours are 9am to 8pm.
 - **Don't** duplicate the ordering flow here; every order action links to `/kiosk/`.
+- **Don't** add motion to the hero, address board or closing band, or any looping motion. The two moments in
+  Motion are the only arrival effects on the page.
+- **Don't** hide a price or a name behind a motion state while someone is reading. Motion may reveal the board
+  once; it may not withhold it.
