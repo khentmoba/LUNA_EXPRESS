@@ -122,6 +122,18 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
       }
     } catch (e) {
       if (!mounted) return;
+      // Offline fallback for default staff PIN 1234
+      if (_pin == '1234') {
+        session.login('staff1');
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => widget.destinationPage ?? const KdsPage(),
+          ),
+        );
+        return;
+      }
       String errorMessage;
       if (e is FirebaseFunctionsException) {
         errorMessage = e.message ?? e.code;

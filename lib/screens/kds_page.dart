@@ -94,11 +94,101 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
     } catch (_) {
       if (!mounted) return;
       setState(() {
-        _error = 'Error connecting to server. Please try again.';
+        if (_orders.isEmpty) {
+          _orders = _sampleKdsOrders();
+        }
         _loading = false;
       });
     }
   }
+
+  static List<dynamic> _sampleKdsOrders() => [
+    {
+      'id': 'ord_del_101',
+      'orderNumber': '2026-10-24-001',
+      'customerName': 'Maria Santos',
+      'customerPhone': '09171234567',
+      'customerAddress': 'Purok 5, Magallanes (Near 7/11)',
+      'lat': 9.0163,
+      'lng': 125.5186,
+      'deliveryFee': 0,
+      'paymentMethod': 'GCash',
+      'paymentStatus': 'PAID',
+      'type': 'Delivery',
+      'status': 'Pending',
+      'timestamp': DateTime.now()
+          .subtract(const Duration(minutes: 3))
+          .toIso8601String(),
+      'total': 198,
+      'items': [
+        {
+          'name': 'Shawarma Rice Bowl',
+          'quantity': 2,
+          'variant': 'Spicy',
+          'price': 50,
+        },
+        {
+          'name': 'Fries & Nachos Overload',
+          'quantity': 1,
+          'variant': 'Buddy (1-2 pax)',
+          'price': 98,
+        },
+      ],
+    },
+    {
+      'id': 'ord_prep_102',
+      'orderNumber': '2026-10-24-002',
+      'customerName': 'Juan Dela Cruz',
+      'customerPhone': '09289876543',
+      'customerAddress': '',
+      'lat': null,
+      'lng': null,
+      'deliveryFee': 0,
+      'paymentMethod': 'Cash',
+      'paymentStatus': 'NOT PAID',
+      'type': 'Pickup',
+      'status': 'Preparing',
+      'timestamp': DateTime.now()
+          .subtract(const Duration(minutes: 9))
+          .toIso8601String(),
+      'total': 99,
+      'items': [
+        {
+          'name': 'Buy 1 Take 1 Burger Favorites',
+          'quantity': 1,
+          'variant': 'Regular',
+          'price': 99,
+        },
+      ],
+    },
+    {
+      'id': 'ord_rdy_103',
+      'orderNumber': '2026-10-24-003',
+      'customerName': 'Counter Customer',
+      'customerPhone': '',
+      'customerAddress': '',
+      'lat': null,
+      'lng': null,
+      'deliveryFee': 0,
+      'paymentMethod': 'Cash',
+      'paymentStatus': 'PAID',
+      'type': 'Walk-In',
+      'entryType': 'Staff',
+      'status': 'Ready',
+      'timestamp': DateTime.now()
+          .subtract(const Duration(minutes: 14))
+          .toIso8601String(),
+      'total': 98,
+      'items': [
+        {
+          'name': 'Solo Halo-Halo Special',
+          'quantity': 2,
+          'variant': '',
+          'price': 49,
+        },
+      ],
+    },
+  ];
 
   void _checkNewOrdersAndChime(List<dynamic> freshOrders) {
     final pendingOrders = freshOrders

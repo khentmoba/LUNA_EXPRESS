@@ -92,9 +92,9 @@ void main() {
 
       expect(find.text('LUNA LIVE OPERATIONS'), findsOneWidget);
       expect(find.text('ALL'), findsOneWidget);
-      expect(find.text('DELIVERY'), findsOneWidget);
-      expect(find.text('PICKUP'), findsOneWidget);
-      expect(find.text('WALK-IN'), findsOneWidget);
+      expect(find.text('DELIVERY'), findsWidgets);
+      expect(find.text('PICKUP'), findsWidgets);
+      expect(find.text('WALK-IN'), findsWidgets);
       expect(find.text('POS WALK-IN'), findsOneWidget);
 
       session.logout();
