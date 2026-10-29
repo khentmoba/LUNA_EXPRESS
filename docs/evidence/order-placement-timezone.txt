@@ -1,0 +1,26 @@
+Before: explicit UTC assertion against old serializer
+00:00 +0: loading C:/Users/Admin/.t3/worktrees/luna_express/t3-8fb4d0a3/test/order_service_test.dart
+00:00 +0: initial order write leaves notification status to the server
+Order LU-261029-120000 saved to Firestore as testOrderReference
+00:00 +0 -1: initial order write leaves notification status to the server [E]
+  Expected: '2026-10-29T04:00:00.000Z'
+    Actual: '2026-10-29T12:00:00.000'
+     Which: is different.
+            Expected: ... 026-10-29T04:00:00.0 ...
+              Actual: ... 026-10-29T12:00:00.0 ...
+                                    ^
+             Differ at offset 11
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\order_service_test.dart 71:7                   main.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  C:/Users/Admin/.t3/worktrees/luna_express/t3-8fb4d0a3/test/order_service_test.dart: initial order write leaves notification status to the server
+
+After: UTC serializer and regenerated fixture
+00:01 +6: C:/Users/Admin/.t3/worktrees/luna_express/t3-8fb4d0a3/test/order_service_test.dart: initial order write leaves notification status to the server
+Order LU-261029-120000 saved to Firestore as testOrderReference
+00:03 +36: All tests passed!

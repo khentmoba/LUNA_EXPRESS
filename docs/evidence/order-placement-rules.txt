@@ -1,0 +1,61 @@
+
+> test:rules
+> npx --yes firebase-tools emulators:exec --only firestore "node --test test/firestore-rules.test.js"
+
+i  emulators: Starting emulators: firestore
+i  firestore: Firestore Emulator logging to firestore-debug.log
++  firestore: Firestore Emulator was started in standard edition.
++  firestore: Firestore Emulator UI websocket is running on 9150.
+i  Running script: node --test test/firestore-rules.test.js
+▶ orders: kiosk can only create (validated)
+  ✔ anon can create a valid order (387.4308ms)
+  ✔ anon can create the complete checkout payload (66.6981ms)
+[2026-10-29T07:30:21.268Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x4c5b02e3 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L5
+  ✔ checkout payload also satisfies the deployed order-create rules (152.6947ms)
+[2026-10-29T07:30:21.336Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x4c5b02e4 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+Property customerName is undefined on object. for 'create' @ L17, false for 'create' @ L54, Property customerName is undefined on object. for 'create' @ L17, false for 'create' @ L54
+[2026-10-29T07:30:21.365Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x4c5b02e5 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L17, false for 'create' @ L54
+[2026-10-29T07:30:21.400Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x4c5b02e6 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L17, false for 'create' @ L54
+[2026-10-29T07:30:21.426Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x4c5b02e7 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L17, false for 'create' @ L54
+  ✔ create rejects missing/junk/oversized fields (156.6286ms)
+[2026-10-29T07:30:21.522Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x4c5b02ea error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'update' @ L33, false for 'update' @ L54
+[2026-10-29T07:30:21.531Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x4c5b02eb error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'delete' @ L33, false for 'delete' @ L54
+  ✔ nobody can read/update/delete via client (131.5011ms)
+✔ orders: kiosk can only create (validated) (1521.6628ms)
+[2026-10-29T07:30:21.659Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x4c5b02ef error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L39, false for 'create' @ L54, false for 'update' @ L39, false for 'update' @ L54
+[2026-10-29T07:30:21.687Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x4c5b02f0 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'update' @ L39, false for 'update' @ L54
+▶ config: public read-only
+  ✔ anon can read, cannot write (129.299ms)
+✔ config: public read-only (129.562ms)
+[2026-10-29T07:30:21.815Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x4c5b02f4 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L49, false for 'create' @ L54, false for 'update' @ L49, false for 'update' @ L54
+▶ staff_accounts + login_attempts: server only
+  ✔ everyone denied, even staff (152.0262ms)
+✔ staff_accounts + login_attempts: server only (152.2863ms)
+[2026-10-29T07:30:21.924Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x4c5b02f7 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L54, false for 'update' @ L54
+▶ default deny
+  ✔ unknown collections denied (84.0241ms)
+✔ default deny (84.238ms)
+ℹ tests 8
+ℹ suites 4
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2158.5142
++  Script exited successfully (code 0)
+i  emulators: Shutting down emulators.
+i  firestore: Stopping Firestore Emulator
+!  Firestore Emulator has exited upon receiving signal: SIGINT
+i  hub: Stopping emulator hub
+i  logging: Stopping Logging Emulator
