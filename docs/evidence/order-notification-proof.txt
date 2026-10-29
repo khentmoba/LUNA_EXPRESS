@@ -1,0 +1,17 @@
+i  emulators: Starting emulators: firestore
+i  firestore: Firestore Emulator logging to firestore-debug.log
++  firestore: Firestore Emulator was started in standard edition.
++  firestore: Firestore Emulator UI websocket is running on 9150.
+i  Running script: node C:/Users/Admin/AppData/Local/Temp/luna-notification-proof.cjs
+{"severity":"INFO","message":"Sending order notification for LU-261029-120000 to Telegram"}
+PASS: notification function adds telegramSent=true to an order created without that field
+{"severity":"INFO","message":"Sending order notification for LU-261029-120000 to Telegram"}
+{"severity":"ERROR","message":"Error: sendToAll: 1 of 1 messages failed [\n  { chatId: 'fixture-recipient', error: 'Simulated transport failure' }\n]\n    at entryFromArgs (C:\\Users\\Admin\\.t3\\worktrees\\luna_express\\t3-8fb4d0a3\\functions\\node_modules\\firebase-functions\\lib\\logger\\index.js:144:19)\n    at Object.error (C:\\Users\\Admin\\.t3\\worktrees\\luna_express\\t3-8fb4d0a3\\functions\\node_modules\\firebase-functions\\lib\\logger\\index.js:131:11)\n    at sendToAll (C:\\Users\\Admin\\.t3\\worktrees\\luna_express\\t3-8fb4d0a3\\functions\\lib\\telegram_api.js:60:37)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async C:\\Users\\Admin\\.t3\\worktrees\\luna_express\\t3-8fb4d0a3\\functions\\lib\\orders\\send_notification.js:246:13\n    at async waitForActual (node:assert:646:5)\n    at async strict.rejects (node:assert:769:25)\n    at async C:\\Users\\Admin\\AppData\\Local\\Temp\\luna-notification-proof.cjs:24:2"}
+{"severity":"ERROR","message":"Error sending Telegram notification for LU-261029-120000 Error: All 1 Telegram messages failed\n    at sendToAll (C:\\Users\\Admin\\.t3\\worktrees\\luna_express\\t3-8fb4d0a3\\functions\\lib\\telegram_api.js:66:15)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async C:\\Users\\Admin\\.t3\\worktrees\\luna_express\\t3-8fb4d0a3\\functions\\lib\\orders\\send_notification.js:246:13\n    at async waitForActual (node:assert:646:5)\n    at async strict.rejects (node:assert:769:25)\n    at async C:\\Users\\Admin\\AppData\\Local\\Temp\\luna-notification-proof.cjs:24:2"}
+PASS: notification failure adds telegramSent=false and preserves the order
++  Script exited successfully (code 0)
+i  emulators: Shutting down emulators.
+i  firestore: Stopping Firestore Emulator
+!  Firestore Emulator has exited upon receiving signal: SIGINT
+i  hub: Stopping emulator hub
+i  logging: Stopping Logging Emulator

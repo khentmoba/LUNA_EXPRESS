@@ -52,10 +52,13 @@ class OrderService {
   }
 
   /// Writes the order and returns its document id, or null if the write failed.
-  static Future<String?> saveOrder(OrderModel order) async {
+  static Future<String?> saveOrder(
+    OrderModel order, {
+    FirebaseFirestore? firestore,
+  }) async {
     try {
-      final ref = _db.collection('orders').doc();
-      await ref.set({...order.toJson(), 'telegramSent': false});
+      final ref = (firestore ?? _db).collection('orders').doc();
+      await ref.set(order.toJson());
       debugPrint('Order ${order.orderId} saved to Firestore as ${ref.id}');
       return ref.id;
     } catch (e) {

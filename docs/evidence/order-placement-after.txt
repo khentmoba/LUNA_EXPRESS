@@ -1,0 +1,54 @@
+i  emulators: Starting emulators: firestore
+i  firestore: Firestore Emulator logging to firestore-debug.log
++  firestore: Firestore Emulator was started in standard edition.
++  firestore: Firestore Emulator UI websocket is running on 9150.
+i  Running script: node --test functions/test/firestore-rules.test.js
+▶ orders: kiosk can only create (validated)
+  ✔ anon can create a valid order (392.2545ms)
+  ✔ anon can create the complete checkout payload (71.2775ms)
+[2026-10-29T07:26:32.276Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x144b51b8 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+Property customerName is undefined on object. for 'create' @ L17, false for 'create' @ L161, Property customerName is undefined on object. for 'create' @ L17, false for 'create' @ L161
+[2026-10-29T07:26:32.309Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x144b51b9 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L17, false for 'create' @ L161
+[2026-10-29T07:26:32.357Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x144b51ba error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L17, false for 'create' @ L161
+[2026-10-29T07:26:32.390Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x144b51bb error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L17, false for 'create' @ L161
+  ✔ create rejects missing/junk/oversized fields (186.5802ms)
+[2026-10-29T07:26:32.490Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x144b51be error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'update' @ L33, false for 'update' @ L161
+[2026-10-29T07:26:32.512Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x144b51bf error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'delete' @ L33, false for 'delete' @ L161
+  ✔ nobody can read/update/delete via client (146.6745ms)
+✔ orders: kiosk can only create (validated) (1734.1052ms)
+[2026-10-29T07:26:32.627Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x144b51c3 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L39, false for 'create' @ L161, false for 'update' @ L39, false for 'update' @ L161
+[2026-10-29T07:26:32.652Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x144b51c4 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'update' @ L39, false for 'update' @ L161
+▶ config: public read-only
+  ✔ anon can read, cannot write (114.1948ms)
+✔ config: public read-only (114.4203ms)
+[2026-10-29T07:26:32.777Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x144b51c8 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L49, false for 'create' @ L161, false for 'update' @ L49, false for 'update' @ L161
+▶ staff_accounts + login_attempts: server only
+  ✔ everyone denied, even staff (164.0212ms)
+✔ staff_accounts + login_attempts: server only (164.4198ms)
+[2026-10-29T07:26:32.913Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Write' stream 0x144b51cb error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L161, false for 'update' @ L161
+▶ default deny
+  ✔ unknown collections denied (96.4958ms)
+✔ default deny (96.8654ms)
+ℹ tests 7
+ℹ suites 4
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2454.1033
++  Script exited successfully (code 0)
+i  emulators: Shutting down emulators.
+i  firestore: Stopping Firestore Emulator
+!  Firestore Emulator has exited upon receiving signal: SIGINT
+i  hub: Stopping emulator hub
+i  logging: Stopping Logging Emulator
