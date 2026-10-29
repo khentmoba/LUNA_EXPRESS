@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:luna_express/data/menu_data.dart';
+import 'package:luna_express/models/cart.dart';
 import 'package:luna_express/models/menu.dart';
+import 'package:luna_express/screens/cart_page.dart';
 import 'package:luna_express/screens/menu_page.dart';
 import 'package:luna_express/services/cart_notifier.dart';
 import 'package:luna_express/services/session.dart';
@@ -179,13 +181,60 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text('SULIT MEALS'), findsOneWidget);
+    expect(find.text('Sulit Meals'), findsWidgets);
     expect(tester.takeException(), isNull);
     kioskSession.setCategory('drinks');
     await tester.pumpAndSettle();
-    expect(find.text('REFRESHMENTS'), findsOneWidget);
+    expect(find.text('Refreshments'), findsWidgets);
     expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pumpAndSettle();
+  });
+
+  testWidgets('cart order slip updates quantities and cancels back to /', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    cartNotifier.clear();
+    cartNotifier.add(
+      CartItem(
+        id: 'line-1',
+        name: 'Shawarma Wrap',
+        emoji: '',
+        imageUrl: 'images/shawarma_wrap.png',
+        variant: '',
+        price: 60,
+        quantity: 1,
+      ),
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        initialRoute: '/cart',
+        routes: {
+          '/': (_) => const Scaffold(body: Text('Splash Home')),
+          '/cart': (_) => const KioskCartPage(),
+        },
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Order slip'), findsOneWidget);
+    expect(find.text('1 item'), findsOneWidget);
+    expect(find.text('₱60'), findsWidgets);
+
+    await tester.tap(find.byTooltip('One more Shawarma Wrap'));
+    await tester.pumpAndSettle();
+    expect(find.text('2 items'), findsOneWidget);
+    expect(find.text('₱120'), findsWidgets);
+
+    await tester.tap(find.text('Cancel order'));
+    await tester.pumpAndSettle();
+    expect(cartNotifier.items, isEmpty);
+    expect(find.text('Splash Home'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 }

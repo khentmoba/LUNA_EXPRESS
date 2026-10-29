@@ -93,7 +93,7 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
     return Theme(
       data: MenuTheme.data,
       child: Material(
-        color: MenuTheme.board,
+        color: MenuTheme.paper,
         child: SizedBox(
           height: height,
           child: SafeArea(
@@ -105,10 +105,7 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: Text(
-                          'Item details',
-                          style: MenuTheme.body(size: 14, color: MenuTheme.tan),
-                        ),
+                        child: Text('Item details', style: MenuTheme.label()),
                       ),
                       IconButton(
                         tooltip: 'Close item details',
@@ -118,7 +115,7 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
                     ],
                   ),
                 ),
-                const Divider(height: 1),
+                const Divider(height: 2, thickness: 2, color: MenuTheme.pink),
                 Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.all(20),
@@ -160,12 +157,12 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
   Widget _buildImage(bool wide) {
     Widget fallback(BuildContext context, Object error, StackTrace? trace) =>
         const ColoredBox(
-          color: MenuTheme.panel,
+          color: MenuTheme.blushPaper,
           child: Center(
             child: Icon(
               Icons.restaurant_outlined,
               size: 64,
-              color: MenuTheme.tan,
+              color: MenuTheme.pinkInk,
             ),
           ),
         );
@@ -173,8 +170,17 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
       tag: 'product_${widget.item.id}',
       child: Container(
         height: wide ? 260 : 170,
+        padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(
-          border: Border.all(color: MenuTheme.cream, width: 3),
+          color: MenuTheme.card,
+          boxShadow: [
+            BoxShadow(
+              color: MenuTheme.pinkInk.withValues(alpha: .22),
+              blurRadius: 22,
+              spreadRadius: -8,
+              offset: const Offset(0, 12),
+            ),
+          ],
         ),
         child: widget.item.imageUrl.startsWith('http')
             ? Image.network(
@@ -209,9 +215,14 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
           Align(
             alignment: Alignment.centerLeft,
             child: Container(
-              color: MenuTheme.accent,
+              color: MenuTheme.butter,
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              child: Text(promo, style: MenuTheme.body(size: 13)),
+              child: Text(
+                promo,
+                style: MenuTheme.body(
+                  size: 13,
+                ).copyWith(fontWeight: FontWeight.w800),
+              ),
             ),
           ),
         ],
@@ -219,22 +230,20 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
           const SizedBox(height: 12),
           Text(
             widget.item.description,
-            style: MenuTheme.body(size: 15, color: MenuTheme.tan),
+            style: MenuTheme.body(size: 15, color: MenuTheme.inkSoft),
           ),
         ],
         if (widget.item.hasVariants) ...[
           const SizedBox(height: 24),
           Text(
-            widget.item.optionHeader,
-            style: MenuTheme.body(
-              size: 14,
-            ).copyWith(fontWeight: FontWeight.w700),
+            widget.item.optionHeader.toUpperCase(),
+            style: MenuTheme.label(),
           ),
           if (widget.item.allowMultiSelect) ...[
             const SizedBox(height: 6),
             Text(
               'Choose up to ${widget.item.maxSelect} · ${_selectedIndices.length} selected',
-              style: MenuTheme.body(size: 14, color: MenuTheme.tan),
+              style: MenuTheme.body(size: 14, color: MenuTheme.inkSoft),
             ),
           ],
           const SizedBox(height: 12),
@@ -269,18 +278,19 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
         Expanded(child: Text(variant.label, style: MenuTheme.body(size: 15))),
         if (variant.price > 0) ...[
           const SizedBox(width: 8),
-          Text(
-            '₱${variant.price}',
-            style: MenuTheme.body(size: 15, color: MenuTheme.tan),
-          ),
+          Text('₱${variant.price}', style: MenuTheme.price(size: 17)),
         ],
       ],
     );
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        color: selected ? MenuTheme.panel : MenuTheme.board,
-        border: Border.all(color: selected ? MenuTheme.tan : MenuTheme.line),
+        color: selected ? MenuTheme.blushPaper : MenuTheme.card,
+        borderRadius: MenuTheme.radius,
+        border: Border.all(
+          color: selected ? MenuTheme.plate : MenuTheme.rule,
+          width: selected ? 2 : 1,
+        ),
       ),
       child: Material(
         color: Colors.transparent,
@@ -288,8 +298,8 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
             ? CheckboxListTile(
                 value: selected,
                 onChanged: (_) => _selectVariant(index),
-                activeColor: MenuTheme.accent,
-                checkColor: MenuTheme.cream,
+                activeColor: MenuTheme.plate,
+                checkColor: MenuTheme.onPlate,
                 controlAffinity: ListTileControlAffinity.leading,
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 12,
@@ -299,7 +309,7 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
               )
             : RadioListTile<int>(
                 value: index,
-                activeColor: MenuTheme.tan,
+                activeColor: MenuTheme.plate,
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 12,
                   vertical: 4,
@@ -347,8 +357,8 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
     );
     return Container(
       decoration: const BoxDecoration(
-        color: MenuTheme.panel,
-        border: Border(top: BorderSide(color: MenuTheme.line)),
+        color: MenuTheme.card,
+        border: Border(top: BorderSide(color: MenuTheme.rule)),
       ),
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
       child: Column(
@@ -358,7 +368,7 @@ class _KioskProductSheetState extends State<KioskProductSheet> {
           if (!_canAdd) ...[
             Text(
               'Choose an option to continue.',
-              style: MenuTheme.body(size: 14, color: MenuTheme.tan),
+              style: MenuTheme.hand(size: 21, color: MenuTheme.pinkInk),
             ),
             const SizedBox(height: 8),
           ],

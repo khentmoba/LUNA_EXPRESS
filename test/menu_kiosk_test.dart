@@ -25,8 +25,8 @@ void main() {
       await tester.pumpAndSettle();
 
       // Verify Sulit Meals category is selected and items are shown
-      expect(find.text('SULIT MEALS'), findsWidgets);
-      expect(find.text('CHICKEN POPPERS'), findsWidgets);
+      expect(find.text('Sulit Meals'), findsWidgets);
+      expect(find.text('Chicken Poppers'), findsWidgets);
 
       expect(find.text('S1 – Hungarian Sausage'), findsOneWidget);
       expect(find.text('S2 – Pork Tocino'), findsOneWidget);

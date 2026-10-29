@@ -43,7 +43,6 @@ dependencies:
   latlong2: ^0.9.0
   geolocator: ^13.0.2
   geolocator_android: ^4.6.1
-  google_fonts: ^8.0.2
   provider: ^6.1.5+1
   cloud_functions: ^6.2.0
   intl: ^0.20.0
@@ -76,16 +75,28 @@ flutter:
   assets:
     - images/
     - images/terra_fries.jpg
-    - assets/fonts/OFL-BigShoulders.txt
-    - assets/fonts/OFL-Karla.txt
+    - assets/fonts/OFL-Bricolage.txt
+    - assets/fonts/OFL-Caveat.txt
 
   fonts:
-    - family: BigShoulders
+    - family: Bricolage
       fonts:
-        - asset: assets/fonts/BigShoulders.ttf
-    - family: Karla
+        - asset: assets/fonts/Bricolage-400.ttf
+          weight: 400
+        - asset: assets/fonts/Bricolage-500.ttf
+          weight: 500
+        - asset: assets/fonts/Bricolage-600.ttf
+          weight: 600
+        - asset: assets/fonts/Bricolage-700.ttf
+          weight: 700
+        - asset: assets/fonts/Bricolage-800.ttf
+          weight: 800
+    - family: Caveat
       fonts:
-        - asset: assets/fonts/Karla.ttf
+        - asset: assets/fonts/Caveat-600.ttf
+          weight: 600
+        - asset: assets/fonts/Caveat-700.ttf
+          weight: 700
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

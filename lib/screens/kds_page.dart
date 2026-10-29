@@ -206,8 +206,8 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
         AudioAlertService.playOrderChime();
         if (mounted) {
           _snack(
-            '🔔 NEW ORDER RECEIVED (${newArrivals.length} incoming)!',
-            MenuTheme.accent,
+            'New order received (${newArrivals.length} incoming)',
+            MenuTheme.plate,
           );
         }
       }
@@ -229,12 +229,12 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
       if (data['success'] == true) {
         await _fetchActiveOrders(silent: true);
         if (mounted) {
-          _snack('Order updated: $newStatus', const Color(0xFF16A34A));
+          _snack('Order updated: $newStatus', const Color(0xFF1E7A3C));
         }
       } else {
         setState(() => _loading = false);
         if (mounted) {
-          _snack('Error: ${data['message']}', const Color(0xFFD8452A));
+          _snack('Error: ${data['message']}', const Color(0xFFB3261E));
         }
       }
     } catch (_) {
@@ -242,7 +242,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
       setState(() => _loading = false);
       _snack(
         'Failed to update status. Connection error.',
-        const Color(0xFFD8452A),
+        const Color(0xFFB3261E),
       );
     }
   }
@@ -282,11 +282,11 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
     try {
       final orderTime = DateTime.parse(timestampStr).toLocal();
       final diff = _now.difference(orderTime);
-      if (diff.inMinutes >= 15) return const Color(0xFFD8452A);
-      if (diff.inMinutes >= 8) return const Color(0xFFEA580C);
-      return MenuTheme.tan;
+      if (diff.inMinutes >= 15) return const Color(0xFFB3261E);
+      if (diff.inMinutes >= 8) return const Color(0xFFB45309);
+      return MenuTheme.pinkInk;
     } catch (_) {
-      return MenuTheme.tan;
+      return MenuTheme.pinkInk;
     }
   }
 
@@ -362,8 +362,8 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
 
     Clipboard.setData(ClipboardData(text: note));
     _snack(
-      '📋 Delivery dispatch note copied to clipboard!',
-      const Color(0xFF16A34A),
+      'Delivery dispatch note copied to clipboard',
+      const Color(0xFF1E7A3C),
     );
   }
 
@@ -382,13 +382,13 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: MenuTheme.panel,
+        backgroundColor: MenuTheme.card,
         shape: RoundedRectangleBorder(
-          side: BorderSide(color: MenuTheme.line, width: 1.5),
+          side: BorderSide(color: MenuTheme.rule, width: 1.5),
         ),
         title: Row(
           children: [
-            const Icon(Icons.receipt_long_rounded, color: MenuTheme.tan),
+            const Icon(Icons.receipt_long_rounded, color: MenuTheme.pinkInk),
             const SizedBox(width: 10),
             Text('KITCHEN TICKET', style: MenuTheme.heading(20)),
           ],
@@ -397,8 +397,8 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
           width: 320,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: MenuTheme.board,
-            border: Border.all(color: MenuTheme.line),
+            color: MenuTheme.paper,
+            border: Border.all(color: MenuTheme.rule),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -410,7 +410,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                     Text('LUNA BITES & DELIGHTS', style: MenuTheme.heading(18)),
                     Text(
                       'Purok 5, Magallanes · KITCHEN SLIP',
-                      style: MenuTheme.body(size: 11, color: MenuTheme.muted),
+                      style: MenuTheme.body(size: 11, color: MenuTheme.inkSoft),
                     ),
                     const SizedBox(height: 8),
                     Text('#$orderNum', style: MenuTheme.heading(28)),
@@ -418,7 +418,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                       type,
                       style: MenuTheme.body(
                         size: 12,
-                        color: MenuTheme.tan,
+                        color: MenuTheme.pinkInk,
                       ).copyWith(fontWeight: FontWeight.w800, letterSpacing: 1),
                     ),
                   ],
@@ -428,29 +428,29 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
               const Text(
                 '--------------------------------',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: MenuTheme.line),
+                style: TextStyle(color: MenuTheme.rule),
               ),
               Text(
                 'Customer: $name',
                 style: MenuTheme.body(
                   size: 13,
-                  color: MenuTheme.cream,
+                  color: MenuTheme.ink,
                 ).copyWith(fontWeight: FontWeight.w700),
               ),
               if (phone.isNotEmpty)
                 Text(
                   'Phone: $phone',
-                  style: MenuTheme.body(size: 12, color: MenuTheme.tan),
+                  style: MenuTheme.body(size: 12, color: MenuTheme.pinkInk),
                 ),
               if (addr.isNotEmpty)
                 Text(
                   'Address: $addr',
-                  style: MenuTheme.body(size: 12, color: MenuTheme.muted),
+                  style: MenuTheme.body(size: 12, color: MenuTheme.inkSoft),
                 ),
               const Text(
                 '--------------------------------',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: MenuTheme.line),
+                style: TextStyle(color: MenuTheme.rule),
               ),
               const SizedBox(height: 6),
               ...items.map(
@@ -463,7 +463,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                         '${i['quantity'] ?? i['qty'] ?? 1}x ',
                         style: MenuTheme.heading(
                           16,
-                        ).copyWith(color: MenuTheme.cream),
+                        ).copyWith(color: MenuTheme.ink),
                       ),
                       Expanded(
                         child: Column(
@@ -473,7 +473,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                               i['name'] ?? '',
                               style: MenuTheme.body(
                                 size: 13,
-                                color: MenuTheme.cream,
+                                color: MenuTheme.ink,
                               ).copyWith(fontWeight: FontWeight.w700),
                             ),
                             if (i['variant'] != null &&
@@ -482,7 +482,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                                 i['variant'],
                                 style: MenuTheme.body(
                                   size: 11,
-                                  color: MenuTheme.muted,
+                                  color: MenuTheme.inkSoft,
                                 ),
                               ),
                           ],
@@ -496,7 +496,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
               const Text(
                 '--------------------------------',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: MenuTheme.line),
+                style: TextStyle(color: MenuTheme.rule),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -504,13 +504,15 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                   Text('TOTAL:', style: MenuTheme.heading(18)),
                   Text(
                     '₱$total ($paymentStatus)',
-                    style: MenuTheme.heading(18).copyWith(color: MenuTheme.tan),
+                    style: MenuTheme.heading(
+                      18,
+                    ).copyWith(color: MenuTheme.pinkInk),
                   ),
                 ],
               ),
               Text(
                 'Payment: $paymentMethod',
-                style: MenuTheme.body(size: 11, color: MenuTheme.muted),
+                style: MenuTheme.body(size: 11, color: MenuTheme.inkSoft),
               ),
             ],
           ),
@@ -520,26 +522,26 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
             onPressed: () => Navigator.pop(ctx),
             child: Text(
               'CLOSE',
-              style: MenuTheme.body(size: 12, color: MenuTheme.muted),
+              style: MenuTheme.body(size: 12, color: MenuTheme.inkSoft),
             ),
           ),
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-              backgroundColor: MenuTheme.accent,
-              foregroundColor: MenuTheme.cream,
+              backgroundColor: MenuTheme.plate,
+              foregroundColor: MenuTheme.onPlate,
               shape: const RoundedRectangleBorder(),
             ),
             onPressed: () {
               Navigator.pop(ctx);
               openUrlInBrowser('javascript:window.print()');
-              _snack('Print dialog opened', const Color(0xFF16A34A));
+              _snack('Print dialog opened', const Color(0xFF1E7A3C));
             },
             icon: const Icon(Icons.print_rounded, size: 16),
             label: Text(
               'PRINT SLIP',
               style: MenuTheme.body(
                 size: 12,
-                color: MenuTheme.cream,
+                color: MenuTheme.onPlate,
               ).copyWith(fontWeight: FontWeight.w800, letterSpacing: 1),
             ),
           ),
@@ -570,7 +572,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
         .toList();
 
     return Scaffold(
-      backgroundColor: MenuTheme.enamel,
+      backgroundColor: MenuTheme.ground,
       appBar: _buildAppBar(
         context,
         pending.length,
@@ -593,10 +595,9 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
     );
   }
 
-  // ── Staff Auth Gate ─────────────────────────────────────────
   Widget _buildStaffAuthGate() {
     return const Scaffold(
-      backgroundColor: MenuTheme.enamel,
+      backgroundColor: MenuTheme.ground,
       body: Center(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(vertical: 24),
@@ -606,7 +607,6 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
     );
   }
 
-  // ── Top Navigation App Bar ──────────────────────────────────
   PreferredSizeWidget _buildAppBar(
     BuildContext context,
     int pendingCount,
@@ -615,13 +615,13 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
   ) {
     final sessionWatcher = context.watch<Session>();
     return AppBar(
-      backgroundColor: MenuTheme.board,
-      foregroundColor: MenuTheme.cream,
+      backgroundColor: MenuTheme.paper,
+      foregroundColor: MenuTheme.ink,
       elevation: 0,
       titleSpacing: 16,
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(2),
-        child: Container(color: MenuTheme.tan, height: 2),
+        child: Container(color: MenuTheme.pinkInk, height: 2),
       ),
       title: Row(
         children: [
@@ -629,11 +629,15 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
             width: 32,
             height: 32,
             decoration: BoxDecoration(
-              color: MenuTheme.panel,
-              border: Border.all(color: MenuTheme.line),
+              color: MenuTheme.card,
+              border: Border.all(color: MenuTheme.rule),
             ),
-            child: const Center(
-              child: Text('🌙', style: TextStyle(fontSize: 16)),
+            child: Center(
+              child: Image.asset(
+                'images/luna_logo.png',
+                height: 28,
+                excludeFromSemantics: true,
+              ),
             ),
           ),
           const SizedBox(width: 12),
@@ -653,7 +657,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                     Container(
                       width: 6,
                       height: 6,
-                      color: const Color(0xFF22C55E),
+                      color: const Color(0xFF1E7A3C),
                     ),
                     const SizedBox(width: 6),
                     Expanded(
@@ -661,7 +665,10 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                         'Purok 5 Kiosk · Sync in ${_secondsUntilSync}s',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: MenuTheme.body(size: 11, color: MenuTheme.muted),
+                        style: MenuTheme.body(
+                          size: 11,
+                          color: MenuTheme.inkSoft,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 6),
@@ -672,19 +679,24 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                       ),
                       decoration: BoxDecoration(
                         color: sessionWatcher.isAdmin
-                            ? MenuTheme.accent
-                            : MenuTheme.panel,
+                            ? MenuTheme.plate
+                            : MenuTheme.card,
                         border: Border.all(
                           color: sessionWatcher.isAdmin
-                              ? MenuTheme.tan
-                              : MenuTheme.line,
+                              ? MenuTheme.pinkInk
+                              : MenuTheme.rule,
                         ),
                       ),
                       child: Text(
-                        sessionWatcher.isAdmin ? '👑 ADMIN' : 'STAFF',
-                        style: MenuTheme.body(size: 9, color: MenuTheme.cream)
-                            .copyWith(
-                              fontWeight: FontWeight.w900,
+                        sessionWatcher.isAdmin ? 'ADMIN' : 'STAFF',
+                        style:
+                            MenuTheme.body(
+                              size: 9,
+                              color: sessionWatcher.isAdmin
+                                  ? MenuTheme.onPlate
+                                  : MenuTheme.ink,
+                            ).copyWith(
+                              fontWeight: FontWeight.w800,
                               letterSpacing: 0.5,
                             ),
                       ),
@@ -707,8 +719,8 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                 ? Icons.volume_up_rounded
                 : Icons.volume_off_rounded,
             color: AudioAlertService.soundEnabled
-                ? MenuTheme.tan
-                : MenuTheme.muted,
+                ? MenuTheme.pinkInk
+                : MenuTheme.inkSoft,
             size: 20,
           ),
           onPressed: () {
@@ -719,10 +731,10 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
               AudioAlertService.playOrderChime();
               _snack(
                 'Audio Alert Enabled (Chime tested)',
-                const Color(0xFF16A34A),
+                const Color(0xFF1E7A3C),
               );
             } else {
-              _snack('Audio Alert Muted', MenuTheme.muted);
+              _snack('Audio Alert Muted', MenuTheme.inkSoft);
             }
           },
         ),
@@ -736,10 +748,14 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                   height: 16,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    color: MenuTheme.tan,
+                    color: MenuTheme.pinkInk,
                   ),
                 )
-              : const Icon(Icons.sync_rounded, color: MenuTheme.tan, size: 20),
+              : const Icon(
+                  Icons.sync_rounded,
+                  color: MenuTheme.pinkInk,
+                  size: 20,
+                ),
           onPressed: _loading
               ? null
               : () {
@@ -762,15 +778,17 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
             margin: const EdgeInsets.symmetric(vertical: 10),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: MenuTheme.accent,
-              border: Border.all(color: MenuTheme.tan.withValues(alpha: 0.4)),
+              color: MenuTheme.plate,
+              border: Border.all(
+                color: MenuTheme.pinkInk.withValues(alpha: 0.4),
+              ),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Icon(
                   Icons.point_of_sale_outlined,
-                  color: MenuTheme.cream,
+                  color: MenuTheme.onPlate,
                   size: 15,
                 ),
                 const SizedBox(width: 6),
@@ -778,7 +796,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                   'POS WALK-IN',
                   style: MenuTheme.body(
                     size: 11,
-                    color: MenuTheme.cream,
+                    color: MenuTheme.onPlate,
                   ).copyWith(fontWeight: FontWeight.w800, letterSpacing: 1),
                 ),
               ],
@@ -793,7 +811,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
           tooltip: 'Sales Analytics & Admin',
           icon: const Icon(
             Icons.bar_chart_outlined,
-            color: MenuTheme.tan,
+            color: MenuTheme.pinkInk,
             size: 20,
           ),
           onPressed: () {
@@ -809,7 +827,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
           tooltip: 'Exit Staff Portal',
           icon: const Icon(
             Icons.logout_rounded,
-            color: Color(0xFFD8452A),
+            color: Color(0xFFB3261E),
             size: 19,
           ),
           onPressed: () {
@@ -822,13 +840,12 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
     );
   }
 
-  // ── Filter and Summary Control Bar ──────────────────────────
   Widget _buildControlBar(int pendingCount, int prepCount, int readyCount) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: const BoxDecoration(
-        color: MenuTheme.board,
-        border: Border(bottom: BorderSide(color: MenuTheme.line)),
+        color: MenuTheme.paper,
+        border: Border(bottom: BorderSide(color: MenuTheme.rule)),
       ),
       child: Row(
         children: [
@@ -859,8 +876,8 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
             width: 170,
             height: 32,
             decoration: BoxDecoration(
-              color: MenuTheme.panel,
-              border: Border.all(color: MenuTheme.line),
+              color: MenuTheme.card,
+              border: Border.all(color: MenuTheme.rule),
             ),
             child: TextField(
               controller: _searchCtrl,
@@ -868,11 +885,11 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
               style: MenuTheme.body(size: 12),
               decoration: InputDecoration(
                 hintText: 'Search orders...',
-                hintStyle: MenuTheme.body(size: 11, color: MenuTheme.muted),
+                hintStyle: MenuTheme.body(size: 11, color: MenuTheme.inkSoft),
                 prefixIcon: const Icon(
                   Icons.search_rounded,
                   size: 15,
-                  color: MenuTheme.muted,
+                  color: MenuTheme.inkSoft,
                 ),
                 suffixIcon: _searchQuery.isNotEmpty
                     ? GestureDetector(
@@ -883,7 +900,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                         child: const Icon(
                           Icons.clear_rounded,
                           size: 14,
-                          color: MenuTheme.muted,
+                          color: MenuTheme.inkSoft,
                         ),
                       )
                     : null,
@@ -905,9 +922,9 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
-                color: _showCompleted ? MenuTheme.panel : MenuTheme.board,
+                color: _showCompleted ? MenuTheme.card : MenuTheme.paper,
                 border: Border.all(
-                  color: _showCompleted ? MenuTheme.tan : MenuTheme.line,
+                  color: _showCompleted ? MenuTheme.pinkInk : MenuTheme.rule,
                 ),
               ),
               child: Row(
@@ -917,14 +934,16 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                         ? Icons.check_box_outlined
                         : Icons.check_box_outline_blank_outlined,
                     size: 15,
-                    color: _showCompleted ? MenuTheme.tan : MenuTheme.muted,
+                    color: _showCompleted
+                        ? MenuTheme.pinkInk
+                        : MenuTheme.inkSoft,
                   ),
                   const SizedBox(width: 6),
                   Text(
                     'HISTORY',
                     style: MenuTheme.body(
                       size: 11,
-                      color: _showCompleted ? MenuTheme.cream : MenuTheme.muted,
+                      color: _showCompleted ? MenuTheme.ink : MenuTheme.inkSoft,
                     ).copyWith(fontWeight: FontWeight.w700, letterSpacing: 1),
                   ),
                 ],
@@ -943,9 +962,9 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected ? MenuTheme.accent : MenuTheme.panel,
+          color: isSelected ? MenuTheme.plate : MenuTheme.card,
           border: Border.all(
-            color: isSelected ? MenuTheme.tan : MenuTheme.line,
+            color: isSelected ? MenuTheme.pinkInk : MenuTheme.rule,
           ),
         ),
         child: Row(
@@ -954,7 +973,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
               Icon(
                 icon,
                 size: 14,
-                color: isSelected ? MenuTheme.cream : MenuTheme.tan,
+                color: isSelected ? MenuTheme.onPlate : MenuTheme.pinkInk,
               ),
               const SizedBox(width: 6),
             ],
@@ -962,7 +981,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
               label.toUpperCase(),
               style: MenuTheme.body(
                 size: 11,
-                color: isSelected ? MenuTheme.cream : MenuTheme.tan,
+                color: isSelected ? MenuTheme.onPlate : MenuTheme.pinkInk,
               ).copyWith(fontWeight: FontWeight.w800, letterSpacing: 1),
             ),
           ],
@@ -976,14 +995,14 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
-        color: const Color(0xFF8A2A18).withValues(alpha: 0.35),
-        border: const Border(bottom: BorderSide(color: Color(0xFFD8452A))),
+        color: const Color(0xFFFCE4E4),
+        border: const Border(bottom: BorderSide(color: Color(0xFFB3261E))),
       ),
       child: Row(
         children: [
           const Icon(
             Icons.warning_amber_rounded,
-            color: Color(0xFFD8452A),
+            color: Color(0xFFB3261E),
             size: 18,
           ),
           const SizedBox(width: 10),
@@ -992,7 +1011,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
               _error!,
               style: MenuTheme.body(
                 size: 12,
-                color: MenuTheme.cream,
+                color: MenuTheme.ink,
               ).copyWith(fontWeight: FontWeight.w600),
             ),
           ),
@@ -1002,8 +1021,8 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
               'RETRY',
               style: MenuTheme.body(
                 size: 12,
-                color: MenuTheme.cream,
-              ).copyWith(fontWeight: FontWeight.w900, letterSpacing: 1),
+                color: MenuTheme.ink,
+              ).copyWith(fontWeight: FontWeight.w800, letterSpacing: 1),
             ),
           ),
         ],
@@ -1011,7 +1030,6 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
     );
   }
 
-  // ── Desktop 3-Column Kanban Board Layout ────────────────────
   Widget _buildDesktopKanbanBoard(
     List<dynamic> pending,
     List<dynamic> preparing,
@@ -1028,8 +1046,8 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
               title: '1. PENDING QUEUE',
               orders: pending,
               columnStatus: 'Pending',
-              headerBg: MenuTheme.accent,
-              titleColor: MenuTheme.cream,
+              headerBg: MenuTheme.plate,
+              titleColor: MenuTheme.onPlate,
               icon: Icons.hourglass_top_outlined,
             ),
           ),
@@ -1041,8 +1059,8 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
               title: '2. PREPARING NOW',
               orders: preparing,
               columnStatus: 'Preparing',
-              headerBg: MenuTheme.panel,
-              titleColor: MenuTheme.tan,
+              headerBg: MenuTheme.card,
+              titleColor: MenuTheme.pinkInk,
               icon: Icons.outdoor_grill_outlined,
             ),
           ),
@@ -1054,8 +1072,8 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
               title: '3. READY FOR PICKUP / RIDER',
               orders: ready,
               columnStatus: 'Ready',
-              headerBg: const Color(0xFF1B2F1F),
-              titleColor: const Color(0xFF86EFAC),
+              headerBg: const Color(0xFFE3F3E6),
+              titleColor: const Color(0xFF1E6B35),
               icon: Icons.done_all_rounded,
             ),
           ),
@@ -1064,7 +1082,6 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
     );
   }
 
-  // ── Mobile / Tablet Segmented Tab Views ─────────────────────
   Widget _buildMobileTabViews(
     List<dynamic> pending,
     List<dynamic> preparing,
@@ -1074,12 +1091,12 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
     return Column(
       children: [
         Container(
-          color: MenuTheme.board,
+          color: MenuTheme.paper,
           child: TabBar(
             controller: _tabController,
-            labelColor: MenuTheme.cream,
-            unselectedLabelColor: MenuTheme.muted,
-            indicatorColor: MenuTheme.accent,
+            labelColor: MenuTheme.ink,
+            unselectedLabelColor: MenuTheme.inkSoft,
+            indicatorColor: MenuTheme.plate,
             indicatorWeight: 3,
             labelStyle: MenuTheme.body(
               size: 12,
@@ -1091,7 +1108,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                   children: [
                     const Text('PENDING'),
                     const SizedBox(width: 6),
-                    _buildCountBadge(pending.length, MenuTheme.accent),
+                    _buildCountBadge(pending.length, MenuTheme.plate),
                   ],
                 ),
               ),
@@ -1101,7 +1118,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                   children: [
                     const Text('COOKING'),
                     const SizedBox(width: 6),
-                    _buildCountBadge(preparing.length, MenuTheme.panel),
+                    _buildCountBadge(preparing.length, MenuTheme.card),
                   ],
                 ),
               ),
@@ -1111,7 +1128,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                   children: [
                     const Text('READY'),
                     const SizedBox(width: 6),
-                    _buildCountBadge(ready.length, const Color(0xFF16A34A)),
+                    _buildCountBadge(ready.length, const Color(0xFF1E7A3C)),
                   ],
                 ),
               ),
@@ -1121,7 +1138,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                   children: [
                     const Text('DONE'),
                     const SizedBox(width: 6),
-                    _buildCountBadge(completed.length, MenuTheme.line),
+                    _buildCountBadge(completed.length, MenuTheme.rule),
                   ],
                 ),
               ),
@@ -1148,16 +1165,19 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
         color: color,
-        border: Border.all(color: MenuTheme.line),
+        border: Border.all(color: MenuTheme.rule),
       ),
       child: Text(
         '$count',
-        style: MenuTheme.heading(12).copyWith(color: MenuTheme.cream),
+        style: MenuTheme.heading(12).copyWith(
+          color: color == MenuTheme.plate || color == const Color(0xFF1E7A3C)
+              ? MenuTheme.onPlate
+              : MenuTheme.ink,
+        ),
       ),
     );
   }
 
-  // ── Column Container ────────────────────────────────────────
   Widget _buildColumnContainer({
     required String title,
     required List<dynamic> orders,
@@ -1168,8 +1188,8 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: MenuTheme.board,
-        border: Border.all(color: MenuTheme.line, width: 1.5),
+        color: MenuTheme.paper,
+        border: Border.all(color: MenuTheme.rule, width: 1.5),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1179,7 +1199,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
               color: headerBg,
-              border: const Border(bottom: BorderSide(color: MenuTheme.line)),
+              border: const Border(bottom: BorderSide(color: MenuTheme.rule)),
             ),
             child: Row(
               children: [
@@ -1199,14 +1219,12 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                     vertical: 2,
                   ),
                   decoration: BoxDecoration(
-                    color: MenuTheme.board,
-                    border: Border.all(color: MenuTheme.line),
+                    color: MenuTheme.paper,
+                    border: Border.all(color: MenuTheme.rule),
                   ),
                   child: Text(
                     '${orders.length}',
-                    style: MenuTheme.heading(
-                      16,
-                    ).copyWith(color: MenuTheme.cream),
+                    style: MenuTheme.heading(16).copyWith(color: MenuTheme.ink),
                   ),
                 ),
               ],
@@ -1233,7 +1251,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                     : columnStatus == 'Preparing'
                     ? Icons.outdoor_grill_outlined
                     : Icons.check_circle_outline_rounded,
-                color: MenuTheme.muted.withValues(alpha: 0.5),
+                color: MenuTheme.inkSoft.withValues(alpha: 0.5),
                 size: 40,
               ),
               const SizedBox(height: 12),
@@ -1244,7 +1262,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                     ? 'Grill & fryer are clear.'
                     : 'No orders ready for pickup.',
                 textAlign: TextAlign.center,
-                style: MenuTheme.body(size: 13, color: MenuTheme.muted),
+                style: MenuTheme.body(size: 13, color: MenuTheme.inkSoft),
               ),
             ],
           ),
@@ -1259,7 +1277,6 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
     );
   }
 
-  // ── Order Card Component (Square Painted Panel) ─────────────
   Widget _buildOrderCard(dynamic order) {
     final orderId = order['id'] as String;
     final orderNum = order['orderNumber'] as String? ?? orderId;
@@ -1293,9 +1310,9 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: MenuTheme.panel,
+        color: MenuTheme.card,
         border: Border.all(
-          color: isDelayed ? const Color(0xFFD8452A) : MenuTheme.line,
+          color: isDelayed ? const Color(0xFFB3261E) : MenuTheme.rule,
           width: isDelayed ? 2.0 : 1.0,
         ),
         boxShadow: const [
@@ -1320,8 +1337,8 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                         vertical: 3,
                       ),
                       decoration: BoxDecoration(
-                        color: MenuTheme.board,
-                        border: Border.all(color: MenuTheme.line),
+                        color: MenuTheme.paper,
+                        border: Border.all(color: MenuTheme.rule),
                       ),
                       child: Text(
                         '#$orderNum',
@@ -1339,7 +1356,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                       icon: const Icon(
                         Icons.receipt_long_outlined,
                         size: 16,
-                        color: MenuTheme.tan,
+                        color: MenuTheme.pinkInk,
                       ),
                       onPressed: () => _showPrintTicketDialog(order),
                     ),
@@ -1354,7 +1371,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                         icon: const Icon(
                           Icons.copy_rounded,
                           size: 14,
-                          color: MenuTheme.tan,
+                          color: MenuTheme.pinkInk,
                         ),
                         onPressed: () => _copyRiderDispatchNote(order),
                       ),
@@ -1367,12 +1384,12 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                   ),
                   decoration: BoxDecoration(
                     color: isDelayed
-                        ? const Color(0xFF8A2A18)
-                        : MenuTheme.board,
+                        ? const Color(0xFFFCE4E4)
+                        : MenuTheme.paper,
                     border: Border.all(
                       color: isDelayed
-                          ? const Color(0xFFD8452A)
-                          : MenuTheme.line,
+                          ? const Color(0xFFB3261E)
+                          : MenuTheme.rule,
                     ),
                   ),
                   child: Row(
@@ -1383,14 +1400,14 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                             ? Icons.warning_amber_rounded
                             : Icons.access_time_rounded,
                         size: 12,
-                        color: isDelayed ? MenuTheme.cream : elapsedColor,
+                        color: isDelayed ? MenuTheme.ink : elapsedColor,
                       ),
                       const SizedBox(width: 4),
                       Text(
                         isDelayed ? 'DELAYED ($elapsedText)' : elapsedText,
                         style: MenuTheme.body(
                           size: 11,
-                          color: isDelayed ? MenuTheme.cream : elapsedColor,
+                          color: isDelayed ? MenuTheme.ink : elapsedColor,
                         ).copyWith(fontWeight: FontWeight.w800),
                       ),
                     ],
@@ -1411,11 +1428,11 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                   ),
                   decoration: BoxDecoration(
                     color: isDelivery
-                        ? const Color(0xFF3B1E4A)
+                        ? const Color(0xFFFFF1C2)
                         : isPickup
-                        ? const Color(0xFF1E3A5F)
-                        : MenuTheme.board,
-                    border: Border.all(color: MenuTheme.line),
+                        ? const Color(0xFFE6F0FB)
+                        : MenuTheme.paper,
+                    border: Border.all(color: MenuTheme.rule),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -1427,12 +1444,12 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                             ? Icons.storefront_outlined
                             : Icons.shopping_bag_outlined,
                         size: 13,
-                        color: MenuTheme.cream,
+                        color: MenuTheme.ink,
                       ),
                       const SizedBox(width: 4),
                       Text(
                         type.toUpperCase(),
-                        style: MenuTheme.body(size: 10, color: MenuTheme.cream)
+                        style: MenuTheme.body(size: 10, color: MenuTheme.ink)
                             .copyWith(
                               fontWeight: FontWeight.w800,
                               letterSpacing: 1,
@@ -1451,19 +1468,19 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                   ),
                   decoration: BoxDecoration(
                     color: isPaid
-                        ? const Color(0xFF1E3A24)
-                        : const Color(0xFF8A2A18),
+                        ? const Color(0xFFE3F3E6)
+                        : const Color(0xFFFCE4E4),
                     border: Border.all(
                       color: isPaid
-                          ? const Color(0xFF16A34A)
-                          : const Color(0xFFD8452A),
+                          ? const Color(0xFF1E7A3C)
+                          : const Color(0xFFB3261E),
                     ),
                   ),
                   child: Text(
                     isPaid ? 'PAID ($paymentMethod)' : 'COLLECT ₱$total',
                     style: MenuTheme.body(
                       size: 10,
-                      color: MenuTheme.cream,
+                      color: MenuTheme.ink,
                     ).copyWith(fontWeight: FontWeight.w800, letterSpacing: 0.5),
                   ),
                 ),
@@ -1479,7 +1496,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                     customerName,
                     style: MenuTheme.body(
                       size: 15,
-                      color: MenuTheme.cream,
+                      color: MenuTheme.ink,
                     ).copyWith(fontWeight: FontWeight.w700),
                   ),
                 ),
@@ -1493,14 +1510,14 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                           const Icon(
                             Icons.phone_outlined,
                             size: 13,
-                            color: MenuTheme.tan,
+                            color: MenuTheme.pinkInk,
                           ),
                           const SizedBox(width: 4),
                           Text(
                             customerPhone,
                             style: MenuTheme.body(
                               size: 12,
-                              color: MenuTheme.tan,
+                              color: MenuTheme.pinkInk,
                             ).copyWith(fontWeight: FontWeight.w700),
                           ),
                         ],
@@ -1516,8 +1533,8 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: MenuTheme.board,
-                  border: Border.all(color: MenuTheme.line),
+                  color: MenuTheme.paper,
+                  border: Border.all(color: MenuTheme.rule),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1525,13 +1542,13 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                     const Icon(
                       Icons.place_outlined,
                       size: 14,
-                      color: MenuTheme.tan,
+                      color: MenuTheme.pinkInk,
                     ),
                     const SizedBox(width: 6),
                     Expanded(
                       child: Text(
                         customerAddress,
-                        style: MenuTheme.body(size: 11, color: MenuTheme.cream),
+                        style: MenuTheme.body(size: 11, color: MenuTheme.ink),
                       ),
                     ),
                     if (lat != null && lng != null)
@@ -1545,13 +1562,13 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                             vertical: 3,
                           ),
                           decoration: const BoxDecoration(
-                            color: MenuTheme.accent,
+                            color: MenuTheme.plate,
                           ),
                           child: Text(
-                            'MAP 🧭',
+                            'MAP',
                             style: MenuTheme.body(
                               size: 10,
-                              color: MenuTheme.cream,
+                              color: MenuTheme.onPlate,
                             ).copyWith(fontWeight: FontWeight.w800),
                           ),
                         ),
@@ -1562,7 +1579,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
             ],
 
             const SizedBox(height: 10),
-            const Divider(height: 1, thickness: 1, color: MenuTheme.line),
+            const Divider(height: 1, thickness: 1, color: MenuTheme.rule),
             const SizedBox(height: 8),
 
             // Item Checklist (Square Checkbox)
@@ -1595,9 +1612,11 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                         height: 16,
                         margin: const EdgeInsets.only(top: 2),
                         decoration: BoxDecoration(
-                          color: isChecked ? MenuTheme.accent : MenuTheme.board,
+                          color: isChecked ? MenuTheme.plate : MenuTheme.paper,
                           border: Border.all(
-                            color: isChecked ? MenuTheme.tan : MenuTheme.line,
+                            color: isChecked
+                                ? MenuTheme.pinkInk
+                                : MenuTheme.rule,
                           ),
                         ),
                         child: isChecked
@@ -1605,7 +1624,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                                 child: Icon(
                                   Icons.check,
                                   size: 12,
-                                  color: MenuTheme.cream,
+                                  color: MenuTheme.onPlate,
                                 ),
                               )
                             : null,
@@ -1614,7 +1633,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                       Text(
                         '${qty}x',
                         style: MenuTheme.heading(15).copyWith(
-                          color: isChecked ? MenuTheme.muted : MenuTheme.cream,
+                          color: isChecked ? MenuTheme.inkSoft : MenuTheme.ink,
                         ),
                       ),
                       const SizedBox(width: 6),
@@ -1628,8 +1647,8 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                                   MenuTheme.body(
                                     size: 13,
                                     color: isChecked
-                                        ? MenuTheme.muted
-                                        : MenuTheme.cream,
+                                        ? MenuTheme.inkSoft
+                                        : MenuTheme.ink,
                                   ).copyWith(
                                     fontWeight: FontWeight.w600,
                                     decoration: isChecked
@@ -1642,7 +1661,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                                 variant,
                                 style: MenuTheme.body(
                                   size: 11,
-                                  color: MenuTheme.muted,
+                                  color: MenuTheme.inkSoft,
                                 ),
                               ),
                           ],
@@ -1666,14 +1685,14 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                       isDelivery ? 'FOOD TOTAL: ' : 'TOTAL: ',
                       style: MenuTheme.body(
                         size: 11,
-                        color: MenuTheme.tan,
+                        color: MenuTheme.pinkInk,
                       ).copyWith(fontWeight: FontWeight.w700, letterSpacing: 1),
                     ),
                     Text(
                       '₱$total',
                       style: MenuTheme.heading(
                         20,
-                      ).copyWith(color: MenuTheme.cream),
+                      ).copyWith(color: MenuTheme.ink),
                     ),
                   ],
                 ),
@@ -1684,7 +1703,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                       'Cancel',
                       style: MenuTheme.body(
                         size: 11,
-                        color: const Color(0xFFD8452A),
+                        color: const Color(0xFFB3261E),
                       ).copyWith(fontWeight: FontWeight.w700),
                     ),
                   ),
@@ -1703,23 +1722,23 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
   Widget _buildStatusActionButton(String orderId, String currentStatus) {
     String label = '';
     String nextStatus = '';
-    Color buttonColor = MenuTheme.accent;
+    Color buttonColor = MenuTheme.plate;
     IconData icon = Icons.arrow_forward_rounded;
 
     if (currentStatus == 'Pending') {
       label = 'START PREPARING';
       nextStatus = 'Preparing';
-      buttonColor = MenuTheme.accent; // Vermilion plate
+      buttonColor = MenuTheme.plate; // Pink plate
       icon = Icons.outdoor_grill_outlined;
     } else if (currentStatus == 'Preparing') {
       label = 'MARK AS READY';
       nextStatus = 'Ready';
-      buttonColor = const Color(0xFF1B3A23); // Deep olive green plate
+      buttonColor = const Color(0xFF1E7A3C); // Green plate
       icon = Icons.done_all_rounded;
     } else if (currentStatus == 'Ready') {
       label = 'COMPLETE & DISPATCH';
       nextStatus = 'Completed';
-      buttonColor = MenuTheme.board;
+      buttonColor = MenuTheme.paper;
       icon = Icons.task_alt_rounded;
     } else {
       return Container(
@@ -1730,7 +1749,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
           'ORDER $currentStatus',
           style: MenuTheme.body(
             size: 11,
-            color: MenuTheme.muted,
+            color: MenuTheme.inkSoft,
           ).copyWith(fontWeight: FontWeight.w800, letterSpacing: 1),
         ),
       );
@@ -1743,19 +1762,27 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: buttonColor,
-          border: Border.all(color: MenuTheme.tan.withValues(alpha: 0.4)),
+          border: Border.all(color: MenuTheme.pinkInk.withValues(alpha: 0.4)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: MenuTheme.cream, size: 16),
+            Icon(
+              icon,
+              color: buttonColor == MenuTheme.paper
+                  ? MenuTheme.ink
+                  : MenuTheme.onPlate,
+              size: 16,
+            ),
             const SizedBox(width: 8),
             Text(
               label,
               style: MenuTheme.body(
                 size: 12,
-                color: MenuTheme.cream,
-              ).copyWith(fontWeight: FontWeight.w900, letterSpacing: 1.5),
+                color: buttonColor == MenuTheme.paper
+                    ? MenuTheme.ink
+                    : MenuTheme.onPlate,
+              ).copyWith(fontWeight: FontWeight.w800, letterSpacing: 1.5),
             ),
           ],
         ),
@@ -1776,9 +1803,9 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setDialogState) => AlertDialog(
-          backgroundColor: MenuTheme.panel,
+          backgroundColor: MenuTheme.card,
           shape: RoundedRectangleBorder(
-            side: BorderSide(color: MenuTheme.line, width: 1.5),
+            side: BorderSide(color: MenuTheme.rule, width: 1.5),
           ),
           title: Text('CANCEL ORDER #$orderNum?', style: MenuTheme.heading(20)),
           content: Column(
@@ -1787,7 +1814,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
             children: [
               Text(
                 'Select cancellation reason:',
-                style: MenuTheme.body(size: 13, color: MenuTheme.muted),
+                style: MenuTheme.body(size: 13, color: MenuTheme.inkSoft),
               ),
               const SizedBox(height: 10),
               ...reasons.map(
@@ -1802,12 +1829,12 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                           height: 16,
                           decoration: BoxDecoration(
                             color: selectedReason == r
-                                ? MenuTheme.accent
-                                : MenuTheme.board,
+                                ? MenuTheme.plate
+                                : MenuTheme.paper,
                             border: Border.all(
                               color: selectedReason == r
-                                  ? MenuTheme.tan
-                                  : MenuTheme.line,
+                                  ? MenuTheme.pinkInk
+                                  : MenuTheme.rule,
                             ),
                           ),
                           child: selectedReason == r
@@ -1815,7 +1842,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                                   child: Icon(
                                     Icons.square,
                                     size: 8,
-                                    color: MenuTheme.cream,
+                                    color: MenuTheme.onPlate,
                                   ),
                                 )
                               : null,
@@ -1826,8 +1853,8 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                           style: MenuTheme.body(
                             size: 13,
                             color: selectedReason == r
-                                ? MenuTheme.cream
-                                : MenuTheme.tan,
+                                ? MenuTheme.ink
+                                : MenuTheme.pinkInk,
                           ),
                         ),
                       ],
@@ -1842,12 +1869,12 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
               onPressed: () => Navigator.pop(ctx),
               child: Text(
                 'BACK',
-                style: MenuTheme.body(size: 12, color: MenuTheme.muted),
+                style: MenuTheme.body(size: 12, color: MenuTheme.inkSoft),
               ),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF8A2A18),
+                backgroundColor: const Color(0xFFB3261E),
                 shape: const RoundedRectangleBorder(),
               ),
               onPressed: () {
@@ -1858,7 +1885,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
                 'CONFIRM CANCEL',
                 style: MenuTheme.body(
                   size: 12,
-                  color: MenuTheme.cream,
+                  color: MenuTheme.onPlate,
                 ).copyWith(fontWeight: FontWeight.w800, letterSpacing: 1),
               ),
             ),

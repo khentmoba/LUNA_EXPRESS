@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../widgets/kiosk/kiosk_theme.dart';
 import '../widgets/kiosk/juicy_feedback.dart';
 import '../models/cart.dart';
@@ -93,7 +92,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please fill in all required fields!'),
-          backgroundColor: KioskTheme.lunaBrown,
+          backgroundColor: KioskTheme.lunaPink,
         ),
       );
       return;
@@ -262,7 +261,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KioskTheme.lunaCream,
+      backgroundColor: KioskTheme.lunaBlushPaper,
       appBar: AppBar(
         title: Text(
           session.isStaff ? 'POS CHECKOUT' : 'CHECKOUT',
@@ -272,7 +271,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: KioskTheme.lunaBrown,
+        backgroundColor: KioskTheme.lunaPink,
         foregroundColor: KioskTheme.textOnPrimary,
         elevation: 0,
       ),
@@ -522,14 +521,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             ),
                             decoration: BoxDecoration(
                               color: _locationPinned
-                                  ? KioskTheme.lunaBrown.withOpacity(0.05)
+                                  ? KioskTheme.lunaPink.withOpacity(0.05)
                                   : Colors.white,
                               borderRadius: BorderRadius.circular(
                                 KioskTheme.radiusMd,
                               ),
                               border: Border.all(
                                 color: _locationPinned
-                                    ? KioskTheme.lunaBrown
+                                    ? KioskTheme.lunaPink
                                     : Colors.grey[200]!,
                                 width: 2,
                               ),
@@ -540,7 +539,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   _locationPinned
                                       ? Icons.location_on
                                       : Icons.add_location_alt_outlined,
-                                  color: KioskTheme.lunaBrown,
+                                  color: KioskTheme.lunaPink,
                                   size: 24,
                                 ),
                                 const SizedBox(width: 16),
@@ -549,18 +548,18 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                     _locationPinned
                                         ? 'Location pinned on map'
                                         : 'Tap to pin your location on map',
-                                    style: GoogleFonts.outfit(
-                                      color: KioskTheme.lunaBrown,
+                                    style: KioskTheme.font(
+                                      color: KioskTheme.lunaPink,
                                       fontSize: 15,
                                       fontWeight: _locationPinned
-                                          ? FontWeight.w900
+                                          ? FontWeight.w800
                                           : FontWeight.w600,
                                     ),
                                   ),
                                 ),
                                 const Icon(
                                   Icons.chevron_right,
-                                  color: KioskTheme.lunaBrown,
+                                  color: KioskTheme.lunaPink,
                                   size: 20,
                                 ),
                               ],
@@ -571,7 +570,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         TextField(
                           controller: _addressCtrl,
                           maxLines: 2,
-                          style: GoogleFonts.outfit(
+                          style: KioskTheme.font(
                             fontWeight: FontWeight.w600,
                             color: KioskTheme.textPrimary,
                           ),
@@ -582,7 +581,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               ).copyWith(
                                 prefixIcon: const Icon(
                                   Icons.edit_location_alt,
-                                  color: KioskTheme.lunaBrown,
+                                  color: KioskTheme.lunaPink,
                                   size: 20,
                                 ),
                               ),
@@ -618,7 +617,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     decoration: BoxDecoration(
                       color: (_loading || isBlocked)
                           ? Colors.grey[400]
-                          : KioskTheme.lunaBrown,
+                          : KioskTheme.lunaPink,
                       borderRadius: BorderRadius.circular(
                         KioskTheme.radiusFull,
                       ),
@@ -686,10 +685,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
-          color: selected ? KioskTheme.lunaBrown : Colors.white,
+          color: selected ? KioskTheme.lunaPink : Colors.white,
           borderRadius: BorderRadius.circular(KioskTheme.radiusLg),
           border: Border.all(
-            color: selected ? KioskTheme.lunaBrown : Colors.grey[200]!,
+            color: selected ? KioskTheme.lunaPink : Colors.grey[200]!,
             width: 2,
           ),
         ),
@@ -698,14 +697,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
             Icon(
               icon,
               size: 32,
-              color: selected ? Colors.white : KioskTheme.lunaBrown,
+              color: selected ? Colors.white : KioskTheme.lunaPink,
             ),
             const SizedBox(height: 8),
             Text(
               label.toUpperCase(),
-              style: GoogleFonts.outfit(
-                color: selected ? Colors.white : KioskTheme.lunaBrown,
-                fontWeight: FontWeight.w900,
+              style: KioskTheme.font(
+                color: selected ? Colors.white : KioskTheme.lunaPink,
+                fontWeight: FontWeight.w800,
                 fontSize: 14,
                 letterSpacing: 2,
               ),
@@ -731,7 +730,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         TextField(
           controller: ctrl,
           keyboardType: keyboard,
-          style: GoogleFonts.outfit(
+          style: KioskTheme.font(
             fontWeight: FontWeight.w600,
             color: KioskTheme.textPrimary,
           ),

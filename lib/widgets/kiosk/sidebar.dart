@@ -14,15 +14,15 @@ class KioskSidebar extends StatelessWidget {
         return Container(
           width: 216,
           decoration: const BoxDecoration(
-            color: MenuTheme.board,
-            border: Border(right: BorderSide(color: MenuTheme.line)),
+            color: MenuTheme.paper,
+            border: Border(right: BorderSide(color: MenuTheme.pink, width: 2)),
           ),
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 24),
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(12, 0, 12, 24),
-                child: Text('THE MENU', style: MenuTheme.heading(32)),
+                child: Text('Menu', style: MenuTheme.heading(34)),
               ),
               for (final section in kMenuSections)
                 Padding(
@@ -31,10 +31,10 @@ class KioskSidebar extends StatelessWidget {
                     color: Colors.transparent,
                     child: ListTile(
                       selected: session.currentCategoryId == section.id,
-                      selectedTileColor: MenuTheme.accent,
-                      selectedColor: MenuTheme.cream,
-                      textColor: MenuTheme.tan,
-                      iconColor: MenuTheme.tan,
+                      selectedTileColor: MenuTheme.plate,
+                      selectedColor: MenuTheme.onPlate,
+                      textColor: MenuTheme.ink,
+                      iconColor: MenuTheme.pinkInk,
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 12,
                         vertical: 4,
@@ -45,12 +45,16 @@ class KioskSidebar extends StatelessWidget {
                       ),
                       minLeadingWidth: 22,
                       title: Text(
-                        section.title.toUpperCase(),
-                        style: MenuTheme.body(
-                          size: 15,
-                        ).copyWith(fontWeight: FontWeight.w700),
+                        section.title,
+                        style: const TextStyle(
+                          fontFamily: MenuTheme.printFamily,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                      shape: const RoundedRectangleBorder(),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: MenuTheme.radius,
+                      ),
                       onTap: () => session.setCategory(section.id),
                     ),
                   ),

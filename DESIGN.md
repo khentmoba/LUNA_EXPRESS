@@ -1,562 +1,344 @@
 ---
-name: Luna Bites & Delights — Storefront
-description: A jeepney-fare-board storefront for a Magallanes food kiosk, painted in enamel and chrome.
+name: Luna Bites & Delights — Pink Order Pad
+description: The storefront and ordering app printed as Luna's own duplicate order booklet, on the owner's pink wash.
 colors:
-  enamel: "#241a12"
-  enamel-deep: "#170f07"
-  panel: "#2c2016"
-  board: "#1b130d"
-  line: "#4a3728"
-  line-soft: "rgba(203, 191, 168, 0.22)"
-  tan: "#e0c9a6"
-  tan-dim: "#b39c7c"
-  cream: "#f7eedd"
-  vermilion: "#d8452a"
-  vermilion-plate: "#a3301a"
-  vermilion-deep: "#8a2a18"
-  ink: "#0f0906"
+  logo-pink: "#ec1c72"
+  plate-pink: "#d91566"
+  pink-press: "#b30e52"
+  pink-ink: "#b30e52"
+  pink-rule: "#f4afc8"
+  blush: "#feb7c9"
+  blush-paper: "#fff0f4"
+  blush-light: "#ffe3ec"
+  wash-base: "#f97cb3"
+  paper: "#fffafb"
+  card-white: "#ffffff"
+  butter: "#fcd04e"
+  ink: "#2a0f1e"
+  ink-soft: "#6b3a52"
+  ink-muted: "#7d4d64"
+  on-plate: "#ffffff"
+  success: "#1e7a3c"
+  warning: "#b45309"
+  error: "#b3261e"
+  info: "#1f5fad"
 typography:
   display:
-    fontFamily: "Big Shoulders Display, Haettenschweiler, Arial Narrow, sans-serif"
-    fontSize: "clamp(3.7rem, 10.2vw, 6rem)"
-    fontWeight: 900
-    lineHeight: 0.78
-    letterSpacing: "0.002em"
-  display-md:
-    fontFamily: "Big Shoulders Display, Haettenschweiler, Arial Narrow, sans-serif"
-    fontSize: "clamp(1.7rem, 3.2vw, 2.3rem)"
+    fontFamily: "Bricolage Grotesque, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(2.5rem, 6.2vw, 4.75rem)"
     fontWeight: 800
-    lineHeight: 1.02
-    letterSpacing: "0.01em"
-  label:
-    fontFamily: "Karla, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "clamp(0.74rem, 1vw, 0.86rem)"
-    fontWeight: 700
-    lineHeight: 1.2
-    letterSpacing: "0.16em"
+    lineHeight: 0.96
+    letterSpacing: "-0.025em"
+  headline:
+    fontFamily: "Bricolage Grotesque, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(2.4rem, 6vw, 4.4rem)"
+    fontWeight: 800
+    lineHeight: 0.95
+    letterSpacing: "-0.025em"
+  title:
+    fontFamily: "Bricolage Grotesque, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(1.15rem, 1.8vw, 1.35rem)"
+    fontWeight: 800
+    lineHeight: 1.15
   body:
-    fontFamily: "Karla, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Bricolage Grotesque, ui-sans-serif, system-ui, sans-serif"
     fontSize: "clamp(16px, 1.05vw, 17px)"
     fontWeight: 400
     lineHeight: 1.55
-    letterSpacing: "normal"
-  price-board-title:
-    fontFamily: "Big Shoulders Display, Haettenschweiler, Arial Narrow, sans-serif"
-    fontSize: "clamp(3.6rem, 7vw, 6rem)"
-    fontWeight: 900
-    lineHeight: 0.9
-  price-board-category:
-    fontFamily: "Big Shoulders Display, Haettenschweiler, Arial Narrow, sans-serif"
-    fontSize: "clamp(1.8rem, 2.7vw, 2.5rem)"
-    fontWeight: 800
-    lineHeight: 1
-  price-board-name:
-    fontFamily: "Karla, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "1rem"
-    fontWeight: 600
-    lineHeight: 1.35
-  price-board-price:
-    fontFamily: "Big Shoulders Display, Haettenschweiler, Arial Narrow, sans-serif"
-    fontSize: "2rem"
-    fontWeight: 800
-    lineHeight: 1
-  price-board-offer-name:
-    fontFamily: "Big Shoulders Display, Haettenschweiler, Arial Narrow, sans-serif"
-    fontSize: "clamp(1.65rem, 2.4vw, 2rem)"
-    fontWeight: 800
-    lineHeight: 1
-  price-board-offer-price:
-    fontFamily: "Big Shoulders Display, Haettenschweiler, Arial Narrow, sans-serif"
-    fontSize: "clamp(3.2rem, 5vw, 4rem)"
-    fontWeight: 900
-    lineHeight: 0.95
-  price-board-offer-body:
-    fontFamily: "Karla, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "0.95rem"
-    fontWeight: 400
-    lineHeight: 1.5
-  menu-heading:
-    fontFamily: "BigShoulders"
-    fontSize: "36px"
-    fontWeight: 800
-    lineHeight: 1.08
-  menu-item-heading:
-    fontFamily: "BigShoulders"
-    fontSize: "32px"
-    fontWeight: 800
-    lineHeight: 1.08
-  menu-body:
-    fontFamily: "Karla"
-    fontSize: "16px"
-    lineHeight: 1.4
-  menu-product-name:
-    fontFamily: "Karla"
-    fontSize: "16px"
+  label:
+    fontFamily: "Bricolage Grotesque, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "0.74rem"
     fontWeight: 700
     lineHeight: 1.2
-  menu-price-control:
-    fontFamily: "Karla"
+    letterSpacing: "0.14em"
+  price:
+    fontFamily: "Bricolage Grotesque, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "1.35rem"
+    fontWeight: 780
+    lineHeight: 1
+    fontFeature: "tnum, lnum"
+  hand:
+    fontFamily: "Caveat, Segoe Print, Bradley Hand, cursive"
+    fontSize: "clamp(1.45rem, 2.4vw, 1.75rem)"
+    fontWeight: 600
+    lineHeight: 1.1
+  app-heading:
+    fontFamily: "Bricolage"
+    fontSize: "34px"
+    fontWeight: 800
+    lineHeight: 1.02
+  app-body:
+    fontFamily: "Bricolage"
     fontSize: "16px"
-    fontWeight: 700
+    fontWeight: 400
     lineHeight: 1.4
-  menu-label:
-    fontFamily: "Karla"
-    fontSize: "14px"
-    lineHeight: 1.4
+  app-hand:
+    fontFamily: "Caveat"
+    fontSize: "22px"
+    fontWeight: 600
+    lineHeight: 1.1
 rounded:
-  none: "0px"
+  hairline: "2px"
+  slip: "4px"
+  stamp: "6px"
+  sheet: "8px"
 spacing:
-  gutter: "clamp(18px, 4.6vw, 60px)"
-  section: "clamp(38px, 5vw, 64px)"
-  stack: "1.15rem"
-  menu-gap: "16px"
-  menu-gutter-compact: "16px"
-  menu-gutter-wide: "28px"
-  menu-card-inset: "12px"
-  menu-sheet-inset: "20px"
+  gutter: "clamp(16px, 4.4vw, 56px)"
+  inset: "clamp(20px, 3.6vw, 48px)"
+  row: "11px"
+  section: "clamp(28px, 4vw, 56px)"
+  app-gap: "16px"
+  app-gutter-compact: "16px"
+  app-gutter-wide: "28px"
 components:
-  plate-primary:
-    backgroundColor: "{colors.vermilion-plate}"
-    textColor: "{colors.cream}"
-    rounded: "{rounded.none}"
-    padding: "1.1em 1.7em"
-  plate-ghost:
+  stamp-primary:
+    backgroundColor: "{colors.plate-pink}"
+    textColor: "{colors.on-plate}"
+    rounded: "{rounded.stamp}"
+    padding: "0.85em 1.45em"
+    height: "48px"
+  stamp-primary-hover:
+    backgroundColor: "{colors.pink-press}"
+    textColor: "{colors.on-plate}"
+  button-line:
     backgroundColor: "transparent"
-    textColor: "{colors.tan}"
-    rounded: "{rounded.none}"
-    padding: "1.1em 1.7em"
-  plate-cream:
-    backgroundColor: "{colors.cream}"
+    textColor: "{colors.pink-ink}"
+    rounded: "{rounded.stamp}"
+    padding: "0.8em 1.2em"
+    height: "48px"
+  button-line-hover:
+    backgroundColor: "{colors.pink-ink}"
+    textColor: "{colors.on-plate}"
+  slip:
+    backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.none}"
-    padding: "1.25em 2.3em"
-  tag:
-    backgroundColor: "{colors.vermilion-plate}"
-    textColor: "{colors.cream}"
-    rounded: "{rounded.none}"
-    padding: "0.34em 0.55em"
-  offer:
-    backgroundColor: "{colors.vermilion-plate}"
-    textColor: "{colors.cream}"
-    rounded: "{rounded.none}"
-    padding: "22px 0"
-  price-board-panel:
-    backgroundColor: "{colors.cream}"
+    padding: "{spacing.inset}"
+  section-band:
+    backgroundColor: "{colors.plate-pink}"
+    textColor: "{colors.on-plate}"
+    typography: "{typography.label}"
+    padding: "0.5em 0.75em"
+  price-row:
     textColor: "{colors.ink}"
-    rounded: "{rounded.none}"
-    padding: "clamp(22px, 3vw, 36px) 0"
-  price-board-row:
-    textColor: "{colors.enamel}"
-    typography: "{typography.price-board-name}"
-    padding: "13px 0"
-  price-board-offer-strip:
-    backgroundColor: "{colors.vermilion-plate}"
-    textColor: "{colors.cream}"
-    rounded: "{rounded.none}"
-    padding: "8px clamp(20px, 3vw, 36px)"
-  menu-primary:
-    backgroundColor: "{colors.vermilion-plate}"
-    textColor: "{colors.cream}"
-    typography: "{typography.menu-price-control}"
-    rounded: "{rounded.none}"
-  menu-primary-disabled:
-    backgroundColor: "{colors.line}"
-    textColor: "{colors.tan-dim}"
-    typography: "{typography.menu-price-control}"
-    rounded: "{rounded.none}"
-  menu-product-card:
-    backgroundColor: "{colors.panel}"
-    textColor: "{colors.cream}"
-    rounded: "{rounded.none}"
-    padding: "{spacing.menu-card-inset}"
-  menu-option:
-    backgroundColor: "{colors.board}"
-    textColor: "{colors.cream}"
-    rounded: "{rounded.none}"
-    padding: "12px 4px"
-  menu-option-selected:
-    backgroundColor: "{colors.panel}"
-    textColor: "{colors.cream}"
-    rounded: "{rounded.none}"
-    padding: "12px 4px"
+    typography: "{typography.price}"
+    padding: "11px 0"
+  delivery-note:
+    backgroundColor: "{colors.blush-paper}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.slip}"
+    padding: "16px 24px"
+  offer-strip:
+    backgroundColor: "{colors.butter}"
+    textColor: "{colors.ink}"
+    padding: "24px 0"
+  promo-tape:
+    backgroundColor: "{colors.butter}"
+    textColor: "{colors.ink}"
+    padding: "5px 10px"
+  category-chip:
+    backgroundColor: "{colors.card-white}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.stamp}"
+  category-chip-selected:
+    backgroundColor: "{colors.plate-pink}"
+    textColor: "{colors.on-plate}"
+    rounded: "{rounded.stamp}"
+  product-card:
+    backgroundColor: "{colors.card-white}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.stamp}"
+    padding: "6px"
+  option-row:
+    backgroundColor: "{colors.card-white}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.stamp}"
+    padding: "4px 12px"
+  option-row-selected:
+    backgroundColor: "{colors.blush-paper}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.stamp}"
 ---
 
-# Design System: Luna Bites & Delights — Storefront
+# Design System: Luna Bites & Delights — Pink Order Pad
 
 ## Overview
 
-The storefront is painted like the front of a jeepney: dark enamel ground, chrome rules along every edge, and
-fares lettered the way they are lettered on the real thing. It is one page at `/` that hands you to a Flutter
-kiosk at `/kiosk/`; the ordering flow is never re-drawn here.
+**Creative North Star: "The Pink Order Pad"**
 
-Three commitments hold the world together. **Enamel, not glass.** Every surface is a painted panel or a plate
-with a physical lip, lit from above, standing on a ground that darkens toward the page end. **One vermilion
-means one thing.** Bright `#d8452a` is reserved for what is live and reacting (the fare needle, the rail's
-current position); anything that carries type is painted on the deeper `#a3301a` so cream clears 4.5:1.
-**Type as signage.** Big Shoulders does the shouting — prices, headings, plates — and Karla does the talking,
-lettered wide like a sticker run along a windscreen.
+Every Luna surface is a sheet torn from the kiosk's duplicate order booklet. The owner's pink watercolor is the
+carbon copy underneath; white slips with perforated top edges sit on it; logo pink prints the form, its rules and
+its column heads; the cashier's handwriting fills in what you are ordering. Prices always sit in one ruled column on
+the right, the way they do on a real pad, so the eye runs down a single edge to compare them.
 
-The build is static HTML, one stylesheet, and one small script. No framework, no icon font, two self-hosted
-variable fonts, photos the business already published. Nothing on the page is a fact the business did not
-give us. Opening hours are 9am to 8pm; there is no phone number and no rating yet.
+The world has three inks plus paper: logo pink, butter yellow and plum-black ink, on white and blush. Pink prints;
+butter highlights, tapes and stamps; ink reads. Nothing glows and nothing is glass. Depth is paper lying on paper,
+and every photograph is a snapshot taped to the slip.
 
-### Approved storefront price-board exception
+The storefront (`site/`) and the Flutter ordering app (`/kiosk/`) share the logo, palette, fonts and component
+language. The storefront is the long, scrolling pad; the app is the same pad at work: the menu is the price
+board, the cart is the order slip being written, and checkout prints the summary.
 
-Within the existing dark enamel storefront, the price board uses one continuous cream printed-menu
-panel and a continuous vermilion-plate offer strip. This local exception supersedes earlier dark-list,
-dotted-leader and Karla-price descriptions for this section only; it does not change the Flutter menu.
-Finish review verdict: **ship**, with no material findings in the scoped redesign. Rendered evidence:
-`docs/evidence/price-board-desktop.png`, `docs/evidence/price-board-mobile.png` and
-`docs/evidence/price-board-offers-mobile.png`. This documentation pass checks the supplied captures
-against the HTML/CSS; it does not repeat browser verification or run tests. No new rasters ship in
-`site/`; existing assets are unchanged.
-
-### Favorites poster menu update
-
-The owner-supplied favorites poster adds the standalone ₱50 Shawarma Rice Bowl, both overload
-sizes (Buddy, 1–2 pax at ₱99; Barkada, 3–5 pax at ₱150), and the complete six-item burger
-favorites list to the storefront price board. Existing drinks and meal offers remain. The cream
-panel now contains 28 price rows; a 28px top margin separates a second category within a column.
-The kiosk uses its existing size chooser for overload. Fourteen items pictured on the favorites
-poster use direct food-photo crops from that owner-supplied image. Ham & Cheese, Burger with Egg
-and Shawarma All Meat use their earlier distinct photos to avoid repeating the poster’s shared
-images. Labels, prices and decorative hearts are excluded from the crops. This is a menu-content extension in the established world.
-
-### Dessert, combo and fries/drink photo update
-
-The owner uploads in `docs/reference/menu-update/` supply the latest dessert, combo and
-D1–D4 names, prices and photographs. `docs/owner-menu-crops.json` and
-`tool/crop_owner_menu.dart` reproduce sixteen food-photo crops without generated replacements.
-The existing Extras section holds the four ₱65 ice creams and ₱20 Luna Leche Flan;
-French Fries leads with the four drink bundles, with a factual inclusion subtitle.
-Combo meals group both shawarma bundles with the burger combos. The storefront keeps
-its existing cream panel: shawarma and combos share the first column, fries use the second,
-and burgers plus desserts/drinks use the third. All columns stack through the existing
-responsive rules. No palette, type, navigation or checkout interaction redesign is introduced.
-Rendered proof at 320, 390, 768 and 1440px is indexed in `docs/evidence/owner-menu-update.md`.
-
-### Approved Flutter menu extension
-
-The existing storefront specification remains authoritative for `/`. The scoped additions below
-record the approved menu and item chooser at `/kiosk/#/menu`, implemented with local `MenuTheme`.
-They preserve the established world and do not extend to cart, checkout, staff screens or staff dialogs.
-This documents the implemented category navigation, product grid and details sheet. The surface brief's
-FORM and Quality bar establish refinement provenance; no seed run or new concept tournament is claimed.
-Existing rendered evidence and completed review are indexed in `docs/evidence/menu-continuity.md`
-and `docs/evidence/menu-*.png`; this documentation pass does not repeat their visual verification.
+**Key Characteristics:**
+- The owner's circular Luna logo is the masthead of the first slip and the mark in every header.
+- White slips with a perforated top edge (16px notch rhythm) on the pink wash.
+- Pink section bands, pink tick boxes, and a ruled right-hand price column with tabular numerals.
+- Caveat handwriting only for what is "written in": sample lines, captions, quantities, the close.
+- Butter yellow as highlighter, tape, offer strip and rubber stamp.
 
 ## Colors
 
-### Primary
+Three inks and paper, taken from the logo and the owner's two supplied pinks.
 
-- **Vermilion Plate** (`#a3301a`): the painted surface for every plate, tag and offer price that carries
-  cream type — 6.55:1. This is the default red you paint with.
-- **Vermilion** (`#d8452a`): live-state only — the fare needle, the swash under the wordmark, the rules and
-  inline links that mark the current position. Never behind body type.
-- **Vermilion Deep** (`#8a2a18`): the lip under a plate (its offset shadow) and the closing note chip.
+### Primary
+- **Logo Pink** (`logo-pink`): the logo's own pink. Rules, double rules under slip heads, tick boxes, the
+  sticky bar's bottom line and large display type such as the "Order slip" form title. Never behind small text.
+- **Plate Pink** (`plate-pink`): every pink surface that carries type: stamp buttons, section bands, selected
+  chips and tabs. White on it clears 4.9:1.
+- **Pink Press / Pink Ink** (`pink-press`, `pink-ink`): hover and pressed plates; small pink type, form labels,
+  icons and outline buttons on paper (6.5:1).
+
+### Secondary
+- **Butter** (`butter`): the highlighter behind promotional lines, washi tape on snapshots, the ₱99 offer strip,
+  the B1T1 stamp, the coordinates tag and the closing band. Text on butter is always ink (12:1).
 
 ### Neutral
-
-- **Enamel** (`#241a12`): the page. A single vertical ground from `#2b1e14` through enamel to `#20160d`; no
-  radial washes.
-- **Enamel Deep** (`#170f07`): document background and the bottom of the page.
-- **Panel** (`#2c2016`): raised panels — the fare instrument and the "3 KM" chip. The storefront
-  meal offers use the continuous vermilion-plate strip instead.
-- **Board** (`#1b130d`): the price-board section surround and the address board, one step darker than the
-  page. The price-board menu panel itself is cream.
-- **Line** (`#4a3728`): painted rules and borders; `--line-soft` (`rgba(203,191,168,.22)`) for hairlines over
-  photos. Price-board rows use solid line separators at 18% alpha rather than dotted price leaders.
-- **Tan** (`#e0c9a6`) and **Tan Dim** (`#b39c7c`): secondary type and labels, 10.6:1 and 6.5:1 on enamel.
-- **Cream** (`#f7eedd`): primary type, 14.8:1 on enamel.
-- **Ink** (`#0f0906`): type on cream plates and the inherited base text of the cream price-board panel;
-  explicit row names and prices use enamel.
-
-Cream is the only light ink on a painted plate (`#a3301a`, 6.55:1); the brighter `#fff6e9` is retired.
+- **Blush** (`blush`): the owner's flat pink, the ground under the pink wash and the app scaffold.
+- **Pink Wash** (`wash-base`): base color under the owner's watercolor texture (`site/img/pink-wash.webp`,
+  `images/pink_wash.jpg`).
+- **Paper** (`paper`) and **Card White** (`card-white`): slips, sheets, snapshot borders and product cards.
+- **Blush Paper / Blush Light** (`blush-paper`, `blush-light`): printed notice boxes, selected option rows and
+  quantity steppers.
+- **Pink Rule** (`pink-rule`): hairline rules between rows and around cards.
+- **Ink** (`ink`): all reading text (17:1 on paper). **Ink Soft** (`ink-soft`) for secondary text (8.6:1);
+  **Ink Muted** (`ink-muted`) for small helper text in the app.
+- **Status** (`success`, `warning`, `error`, `info`): staff and checkout states only. GCash keeps its own brand
+  blue on the payment tile.
 
 ### Named Rules
+**The Plate Rule.** If pink carries type, it is Plate Pink with white type. Logo Pink is for rules, marks and
+type of 24px and up.
 
-**The One Vermilion Rule.** Bright vermilion is a state, not a surface. If a rectangle carries type, it is
-`#a3301a`, `#8a2a18`, or cream — never `#d8452a`.
-
-**The Enamel Ground Rule.** The page is one vertical gradient from `#2b1e14` to `#20160d`. Depth comes from
-panels and plates, never from coloured glows or radial halos.
-
-### Price-board color assignments
-
-The local menu panel uses cream with enamel names and prices; its inherited base text is ink.
-Vermilion-plate sets category headings, their solid underlines and promotional prices on cream.
-A tan top edge joins the panel to its dark surround. The two meal offers share one vermilion-plate
-strip with cream text and a cream separator at 35% alpha. Column separators use line at 25% alpha;
-row separators use line at 18%. These flat local surfaces introduce no new palette primitives.
-
-### Flutter menu color assignments
-
-Reuse the existing primitives: `MenuTheme.enamel` is enamel, `board` is board, `panel` is panel,
-`line` is line, `cream` is cream, `tan` is tan, `muted` is tan-dim, and `accent` is vermilion-plate.
-The menu ground is solid enamel; board carries the sidebar and chooser, panel carries product cards
-and the chooser footer. Primary actions and selected categories use vermilion-plate with cream type.
-Selected options use panel with a tan border; unselected options use board with a line border.
-Material's local dark color scheme uses tan for primary/secondary and board for their on-colors;
-surface/onSurface are board/cream and outline is muted. Focus uses tan at 22% alpha, hover at 8%.
-Disabled filled buttons use line/muted. Snackbars use cream with board text. No app-wide theme changes.
+**The Ink-on-Butter Rule.** Butter never carries white or pink small type; it carries ink.
 
 ## Typography
 
-Two self-hosted variable faces, `font-display: swap`, preloaded:
+**Print font:** Bricolage Grotesque (self-hosted WOFF2 on the storefront; static `Bricolage` TTFs 400–800 in the app)
+**Hand font:** Caveat (600/700)
 
-- **Big Shoulders Display** (100–900): signage. Headings, wordmark, prices, plate labels, tags. Uppercase,
-  tight leading (0.84–1.02), tracking at or below `0.01em`, never below the 6rem ceiling.
-- **Karla** (200–800): the spoken layer. Body copy, labels, nav, footer. Body at 16–17px / 1.55; labels at
-  0.74–0.95rem, weight 700, tracking `0.16em`–`0.3em`, uppercase.
+**Character:** Bricolage is the printed form, sturdy, slightly quirky, at home in a price column. Caveat is the
+cashier's ballpoint: it only ever appears where something has been written onto the form.
 
 ### Hierarchy
-
-- **Wordmark** — Big Shoulders 900, `clamp(3.7rem, 10.2vw, 6rem)`, leading 0.78, three stacked lines with the
-  middle line in tan.
-- **Section head** — Big Shoulders 900, `clamp(1.7rem, 3.2vw, 2.3rem)`, uppercase, leading 1.02.
-- **Price-board item** — Karla 600, 1rem (16px), leading 1.35; **price** — Big Shoulders 800,
-  2rem (32px), leading 1, tabular numerals, enamel, right-aligned. Promotional prices use vermilion-plate.
-- **Price-board title** — Big Shoulders 900, `clamp(3.6rem, 7vw, 6rem)`, leading 0.9, uppercase;
-  subtitle in Karla 400, 1rem / 1.5. Category headings use Big Shoulders 800,
-  `clamp(1.8rem, 2.7vw, 2.5rem)` / 1, uppercase, vermilion-plate.
-- **Price-board offer** — name in Big Shoulders 800, `clamp(1.65rem, 2.4vw, 2rem)` / 1;
-  price in Big Shoulders 900, `clamp(3.2rem, 5vw, 4rem)` / 0.95, tabular numerals;
-  description in Karla 400, 0.95rem / 1.5.
-- **Body** — Karla 400, 16–17px, 1.55, max ~58 characters.
-- **Label / kicker** — Karla 700, 0.74–0.95rem, uppercase, tracking 0.16em–0.3em, tan or tan-dim.
+- **Display** (800, `clamp(2.5rem, 6.2vw, 4.75rem)`, 0.96): the tagline on the first slip.
+- **Headline** (800, `clamp(2.4rem, 6vw, 4.4rem)`, 0.95): slip titles such as Menu & prices, Find us, and the
+  gallery title on the wash. App category headings use 34px.
+- **Form title** (800, `clamp(1.9rem, 4.2vw, 3.1rem)`, uppercase, Logo Pink): "Order slip" beside the logo.
+- **Title** (800, `clamp(1.15rem, 1.8vw, 1.35rem)`): notices and offer names.
+- **Body** (400, 16–17px, 1.55): prose, capped near 46–62ch.
+- **Label** (700, 0.72–0.74rem, 0.14em tracking, uppercase, Pink Ink): form field labels and column heads.
+- **Price** (780–800, 1.35rem storefront / 18–20px app, tabular lining numerals): every amount, right-aligned.
+- **Hand** (Caveat 600, ~1.45–1.8rem; 22px in the app): sample order lines, field values, captions, quantities,
+  the closing "Gigutom na ka?".
 
 ### Named Rules
+**The Print-and-Pen Rule.** Bricolage prints the form; Caveat writes on it. Caveat never sets a price column,
+a button, navigation or a paragraph.
 
-**The Signage-and-Speech Rule.** Big Shoulders never sets a paragraph, Karla never sets a price. A line is
-either painted signage or spoken copy, and the face says which.
-
-**The Wide-Label Rule.** Functional labels (nav, plates, tags, footer) are uppercase Karla at 0.16em tracking
-or wider, minimum 0.72rem (11.5px) — the compact bar plate included.
-
-### Flutter menu families and hierarchy
-
-The bundled TTF families are registered in `pubspec.yaml` as `BigShoulders`
-(`assets/fonts/BigShoulders.ttf`) and `Karla` (`assets/fonts/Karla.ttf`), with their OFL licenses.
-`BigShoulders` is the intentional Flutter family alias for the Big Shoulders heading face; the
-storefront retains its CSS family `Big Shoulders Display` and fallback stack. Treat these family names
-as platform-specific declarations of the approved pairing, not a third font or a CSS stack to rename.
-
-Menu token sizes are Flutter logical pixels. `MenuTheme.heading(size)` uses BigShoulders 800 / 1.08:
-wordmark 23 (28 on desktop), category 36, subgroup 28, sidebar and item-details heading 32.
-`MenuTheme.body` uses Karla / 1.4, default size 16. Product card names use the menu-product-name
-role, limited to three lines with ellipsis; prices and filled-button labels use menu-price-control.
-Category choices use Karla 14/700, sidebar labels 15/700, option names/prices and descriptions 15,
-helper copy 14, and promotional labels 12/700 on cards and 13 in details.
-
-The preceding storefront signage and wide-label rules remain scoped to the storefront. In the menu,
-BigShoulders sets wordmark/category/item headings; Karla sets product-card names, prices, options,
-quantity and controls. Native task labels do not inherit storefront-wide uppercase tracking.
+**The One Price Column Rule.** Amounts align right in one column, in tabular figures, with the ₱ sign once.
 
 ## Layout
 
-- **Page width**: one content column, `max-width: 1120px`, inside gutters `clamp(18px, 4.6vw, 60px)`. Every
-  section holds the same left edge (160px at 1440, 18px at 390). The price-board panel's local internal
-  column insets are the scoped exception; its outer edges retain the shared content alignment.
-- **Section rules**: flat 1px cream at 28% alpha (`--hairline`); the top strip is a flat 2px tan line, not a
-  gradient imitation of chrome. The price-board panel has its own column and row insets documented below.
-- **Hero**: two columns `minmax(0,1fr) minmax(430px,1.04fr)`: wordmark, copy and ordering actions left;
-  a large mounted shawarma photograph and its `₱60 each` tag right. The delivery disclosure spans both
-  columns beneath them. At 940px and below, the DOM and visual order are introduction, photograph,
-  ordering actions, then delivery estimate. The phone wordmark runs on one line where space permits;
-  the photo is at least 200px tall. Food, its price and the order action appear in the first phone viewport.
-- **Section links**: targets have `scroll-margin-top: 6rem`, leaving the heading below the sticky bar.
-  Below 900px the location line and Facebook link yield to persistent Prices, Photos and Find us links,
-  each with a 44px minimum hit height, beside the Order plate.
-- **Price board**: a large painted header and full-menu link above one cream panel with a 6px tan top
-  edge. Above 940px, three equal columns use `minmax(0,1fr)` with solid vertical separators;
-  panel padding is `clamp(22px, 3vw, 36px) 0`, column inset `clamp(20px, 2.2vw, 30px)`.
-  At 940px and below, categories stack continuously with horizontal separators and 24px inset;
-  at 700px and below the horizontal inset is 20px and the full-menu link fills the header width.
-  Two ₱99 meal offers share a continuous red strip directly below the panel. All 17 item rows and both
-  offers retain their names, amounts and qualifications, including Solo halo-halo and Medium caramel
-  macchiato. The footer repeats the separate rider-confirmed delivery fee and links into the app.
-- **Window wall**: 12-column grid of rotated photo mounts, spans a4/b2/c3/d3; 2×2 at 6 columns on tablet;
-  full / pair-pair / full on phones.
-- **Find**: heading and intro in a two-column head, then one address board carrying the landmark callout.
-- **Close**: full-bleed vermilion band, centered kicker, cream plate, painted note chip, then the footer.
-- **Breakpoints**: 940px (hero stacks, price-board categories stack, offers reflow, wall pairs), 700px,
-  460px (compact bar plate).
-- **Phone-first budget**: no horizontal overflow at 320px (`overflow-x: clip` on `html` as a backstop).
-
-### Flutter menu and chooser layout
-
-At viewport widths of 1000 logical pixels and above, show the 216-wide category sidebar; below that,
-show the horizontally scrolling category bar. Its height follows text scale (44 × scale + 24), with
-16/10 horizontal/vertical inset and 8 between choices. Category heading and subtitle scroll with products.
-The grid uses floor(available width / 260), clamped to two through four columns; 16 gaps, 16 gutters
-below 600 available width and 28 otherwise. Card height is card width × 0.8 + 144 × text scale.
-Names reserve scaled three-line space; images occupy the remaining height. The header uses 16 or
-28 horizontal inset and 12 vertical inset. The populated order action spans its available width up
-to 700 inside a board rail; it opens the existing cart.
-
-The chooser is at most 960 wide and normally 90% of viewport height. Fixed-price items without variants
-at viewport widths of 700 or above cap height at 460. Its body scrolls with 20 inset while quantity and
-add action persist below. At 600 available body width, a 240-wide image and details share a row with
-28 gap; otherwise they stack with 20 gap. Image heights are 260/170 for row/stack layouts.
-Below 400 available footer width, quantity and action stack with 8 gap; otherwise they share a row.
-The footer inset is 20/12/20/16 (left/top/right/bottom), plus safe-area protection.
+- **Storefront:** one content column, `max-width: 1120px` inside the gutter. Sections are slips (`.sheet > .slip`)
+  separated by the section gap; the gallery sits directly on the wash between slips.
+- **First slip:** a slip head (logo `clamp(120px, 21vw, 236px)` beside the form title and three handwritten fields),
+  a 3px double pink rule, then a two-column body: tagline, lede, sample lines and actions left; a taped snapshot
+  right. The delivery notice sits below a dashed tear line at the bottom of the slip.
+- **Menu & prices:** three columns divided by pink hairlines above 940px; one continuous column below. A butter
+  offer strip runs the full slip width.
+- **Breakpoints:** 940px (columns stack; on phones the actions come before the photo so the order action lands in
+  the first viewport), 700px, 460px (compact bar; logo leaves the bar).
+- **App:** sidebar of 216 at 1000+ logical px, horizontal category chips below; grid columns `floor(width/260)`
+  clamped 2–4; 16 gap, gutters 16/28. The cart is one slip, max width 760, with ITEM / AMOUNT heads and ruled rows.
+- **No horizontal overflow at 320px** (`overflow-x: clip` on `html`).
 
 ## Elevation & Depth
 
-Depth is painted, never blurred into a glow.
+Paper on paper. Slips cast one soft plum shadow; snapshots add a short edge line and a longer cast; buttons carry a
+1px lip in Pink Press. There are no glows, no glass and no blur-only depth.
 
-- **Plate**: `box-shadow: 0 .06em 0 var(--verm-deep), 0 .55em 1em -.55em rgba(0,0,0,.9)` at rest — a hairline
-  of the darker red under the edge plus a soft cast. Hover lifts `translateY(-2px)` and lengthens the cast;
-  active presses to `translateY(2px)` with a short one.
-- **Panel**: `inset 0 2px 0 rgba(255,255,255,.045), 0 34px 60px -46px #000` — a lit top edge and a long soft
-  cast.
-- **Photo mount**: the image carries a 6px cream paper border and `0 22px 34px -22px #000`; the figure is
-  rotated 1–2 degrees off-axis.
-- **Sticky bar**: acquires `0 14px 26px -22px #000` once scrolled past 6px. Photo tags carry only a cast:
-  `0 6px 14px -8px rgba(0,0,0,.9)`.
-- **Focus**: `outline: 2px solid var(--tan); outline-offset: 3px` (5px on the rail).
+### Shadow Vocabulary
+- **Slip cast** (`filter: drop-shadow(0 1px 0 rgba(142,11,65,.22)) drop-shadow(0 16px 18px rgba(110,4,50,.3))` on
+  `.sheet`): the masked, perforated slip's shadow follows its torn outline.
+- **Snapshot** (`box-shadow: 0 1px 0 rgba(142,11,65,.14), 0 22px 30px -22px rgba(80,0,36,.75)`).
+- **Stamp** (`inset 0 0 0 3px plate, inset 0 0 0 4.5px rgba(255,255,255,.6), 0 1px 0 pink-press,
+  0 12px 20px -12px rgba(142,11,65,.75)`): the inner ring is the rubber stamp's edge.
+- **App cards** (pink-ink at 12–20% alpha, blur 18–34, negative spread): `KioskTheme.shadowMd/Lg/Xl`.
 
 ### Named Rules
-
-**The Painted Cast Rule.** Depth is a short dark line under the edge plus one soft black cast. No hard
-zero-blur offset slabs, no coloured glow, no zero-offset halo, no backdrop blur.
-
-### Flutter menu depth
-
-The menu extension uses flat tonal layering and line borders with native Material interaction feedback.
-The local bottom sheet has transparent surface tint. Storefront plate casts, photo rotation and hover
-translation are not prescribed for menu cards or controls; the existing item-image Hero connection remains.
-
-## Motion
-
-Motion is one rehearsed sequence for the price board, plus a quieter one for the window photographs. Both play once,
-as each part arrives, and nothing follows scroll position, so prices and names are never left half-hidden while
-someone reads. The board goes in this order: a vermilion swash draws under the heading, the column titles print, and
-then each line prints in bands across the columns. A vermilion print head crosses every line, and its price lands as
-the head passes. The two ₱99 offers paint in across the vermilion strip last, with their prices stamped on. The window
-photographs pin on in turn, and each painted tag drops on after its photograph. The hero swash on load, the hover
-states and the sticky bar's shadow are the only other motion.
-
-Every effect animates only `transform` (with its `translate`, `rotate` and `scale` properties), `opacity`, `clip-path`
-or the colour of the print head, and nothing loops. The hidden states exist only after `app.js` has run, and the whole
-layer sits inside `prefers-reduced-motion: no-preference`. Without script, or with reduced motion, the page stays static
-in its final state, with every line, offer and photograph in place. In print, nothing stays hidden. None of these
-effects confirms an action, so the reduced-motion path removes the movement rather than softening it.
+**The Paper-on-Paper Rule.** Depth is an offset soft cast tinted plum. Never a zero-offset halo or a colored glow.
 
 ## Shapes
 
-Square corners everywhere (`0px`) — this is a painted board, not a card UI. Rules are flat: a 2px tan strip
-at the top and 1px cream at 28% under section edges. The price board is a local printed-menu exception:
-solid row and category rules replace dotted leaders; the spacer between name and price is unpainted.
-`clip-path` cuts the one swash under the wordmark. Rotation carries the print quality:
-tags at ~2.2°, photo mounts between 1° and 2° off true.
-
-The Flutter menu carries the same square form through framed product images, category choices,
-buttons and bordered options. Product images have 3 logical pixels of inset; the chooser image has a
-3-pixel cream border. Native radios and checkboxes retain their standard control geometry.
+Small, consistent corners: 2px tick boxes, 4px slips and notices, 6px stamps, chips and cards, 8px app sheets.
+Slips have a perforated top edge made with a radial-gradient mask (4px notches on a 16px rhythm). Snapshots and
+tape rotate 1.6–2.2° off true; the B1T1 stamp rotates −7°. Rules are 1px pink hairlines, 2px pink for column
+heads and bars, and 3px double under slip heads.
 
 ## Components
 
-### Plates (buttons and links)
+### Buttons
+- **Stamp (primary):** Plate Pink, white Bricolage 750, 6px corners, 48px minimum height, with an inner white
+  ring that reads as a rubber stamp. Hover lifts 1px to Pink Press; active presses 1px.
+- **Line (secondary):** transparent with a 2px Pink Ink ring and Pink Ink text; hover fills Pink Ink with white.
+- **App:** `FilledButton` uses Plate Pink, white, 6px corners, 48×52 minimum; disabled uses Blush Paper with Ink Soft.
 
-- **Shape:** square, painted, uppercase Karla 700 at 0.16em tracking.
-- **Primary:** vermilion plate `#a3301a` with cream type; lip in `--verm-deep`; padding `1.1em 1.7em`.
-- **Cream:** `--plate--invert` — cream ground, `--verm-deep` type, cast in black at 35%; used for the one
-  order action on the closing band.
-- **Ghost:** transparent with `inset 0 0 0 2px rgba(224,201,166,.5)`, tan type; hover fills the border to
-  `--tan`.
-- **Compact:** `--plate--sm` at 0.72rem / 0.1em for the 320px bar; `--plate--xl` at 1.25em / 2.3em for the
-  closing call to action.
-- **States:** hover lifts 2px and darkens to `#b8381e`; active presses 2px down; focus uses the tan ring.
+### Chips
+- **Category chips:** white with a 1.5px Pink Ink border and ink text; selected chips are Plate Pink with white text
+  and checkmark. Sidebar tiles follow the same selected treatment.
 
-### Delivery notice
+### Cards / Containers
+- **Slip:** Paper, perforated top, `--inset` padding, slip cast.
+- **Product card:** white, 6px corners, pink rule border, photo inset 6px, name in Bricolage 600, a pink hairline,
+  then the price and a 34px Plate Pink add stamp.
+- **Snapshot:** white 8px border with a deeper caption strip, butter tape across the top, handwritten caption with price.
 
-A static board below the ordering actions says **Delivery fee applies** and explains that
-the rider confirms the amount, charged separately from food. Use the existing board ground,
-tan border, Big Shoulders heading and Karla body. No calculator, numeric fare or per-kilometre
-rate is shown. Checkout and receipts label delivery-order totals **Food total** and repeat
-the notice; online payments cover food only.
+### Inputs / Fields
+- **App fields:** white fill, 1.5px pink rule border, 6px corners; focus moves to a 2px Plate Pink border; icons in Pink Ink.
+- **Form fields (storefront):** label in Label style on the left, handwritten value resting on a pink rule.
 
-### Offer lines
+### Navigation
+- **Storefront bar:** sticky Paper bar with a 2px Logo Pink bottom line; the small logo joins it once scrolled
+  (and on keyboard focus); Prices, Photos, Find us links at 44px hit height; compact Order stamp.
+- **App header:** Paper with the logo and the Bricolage wordmark, cart badge hidden at zero, utilities menu.
 
-The two ₱99 offers share one full-width vermilion-plate strip within the content column, with cream text,
-8px vertical strip inset and `clamp(20px, 3vw, 36px)` horizontal inset. Each offer has 22px vertical padding;
-a solid cream rule at 35% separates them. Above 940px the name, description and large price share a row
-with 24px gaps. At 940px and below, explicit grid areas keep name and price together above the description,
-with 12px row and 20px column gaps. Names and prices use the local Big Shoulders offer roles; descriptions
-use Karla 0.95rem / 1.5. No dotted leader or separate price badge; no new animation.
+### Price board (signature)
+Pink section bands in uppercase Label style; rows of tick box, name and right-aligned tabular price separated by
+pink hairlines; promotional names on a butter highlighter with the price in Pink Ink; a butter offer strip for the
+two ₱99 meals; a rotated butter B1T1 stamp on the burger band.
 
-### Photo mounts
+### Order slip (signature, app cart)
+One Paper slip: "Order slip" in Logo Pink with a handwritten item count, double rule, ITEM / AMOUNT column heads,
+then ruled rows with a framed photo, name, variant, an outlined stepper with handwritten quantity, and the amount
+right-aligned. Swipe a row left to remove it.
 
-Paper-white border, rotated, with a vermilion-plate tag pinned bottom-right (`HALO-HALO ₱49`). Tags are
-painted signage, not chips.
-
-### Price rows
-
-On the cream menu panel, names use Karla 16px/600 and prices use Big Shoulders 32px/800 tabular
-numerals. Both are enamel; promotional prices use vermilion-plate. Rows align on the baseline with
-10px gaps, 13px vertical padding and solid line separators at 18% alpha; the final row drops its bottom
-rule and bottom padding. The flexible spacer has no dotted leader and prices do not shrink. Names may
-wrap while the amount remains aligned right. The ₱ glyph appears once per price.
-
-### Address board
-
-Board ground, 3px cream top rule, address in Big Shoulders at 1.3 leading, and the landmark callout — "Unahan
-lang gamay sa 7/11" with `7/11` in the lighter red `#e2603f` — set on the same baseline. A fourth line gives
-the opening hours, 9am to 8pm, beside the `Oras · opening hours` label. Actions sit below.
-
-### Location map
-
-The exact spot is 9°01′13.9″N 125°31′03.5″E. The map sits in a mounted frame like the window photographs: a 6px
-cream border, the same long soft cast, and a painted tag in the corner that carries the coordinates. Two tabs switch
-between the map and street view. The active tab is a vermilion plate and the other is a tan ghost. Both views are
-keyless Google Maps embeds, lazy-loaded and 300px tall on phones and 440px on desktop. Without script the tabs are
-hidden and both views stay on the page, one above the other. "Open in Maps" links the coordinates rather than a name
-search, because a name search finds a different listing.
-
-### Flutter menu primitives and item chooser
-
-- **Navigation:** square Material ChoiceChips below desktop width; labelled ListTiles with outlined
-  category icons on desktop. Selected categories use vermilion-plate/cream. These functional native
-  icons are scoped to the menu and do not change the storefront's icon restriction.
-- **Product card:** square panel with a line border, real cover-fit food image, Karla product name and
-  tan price. Variant items qualify the price with “From”. A square vermilion add affordance belongs to
-  the clickable card; promotional labels use the same painted accent. Image failure shows a panel
-  fallback with a tan restaurant outline.
-- **Primary action:** square filled button, minimum 48 × 52, Karla 16/700. Icon buttons have minimum
-  48 × 48 targets. Native focus/hover feedback uses the local theme; disabled actions use line/muted.
-- **Option row:** square border, 10 bottom gap, 12/4 horizontal/vertical content inset. A single choice
-  uses a native radio group; multiple choices use checkboxes. Selection changes the border to tan and
-  ground to panel, with tan radio state or vermilion/cream checkbox state.
-- **Chooser:** BigShoulders item heading above wrapping Karla description and required options.
-  Add remains disabled until the existing selection condition is met; helper text explains the state.
-  The persistent footer shows quantity and total. Closing details leaves the cart untouched; documented
-  styling does not alter pricing, selection limits, fixed bundles or existing add-to-cart behavior.
+### Motion
+The cashier writes the first slip: field values and sample lines reveal left to right with `clip-path`
+(0.7s, `cubic-bezier(.16,1,.3,1)`, 140ms stagger) and each amount lands after its line. The B1T1 stamp and ₱99 prices
+land once as the menu arrives; snapshots pin on once as the gallery arrives. Everything is visible without script,
+and `prefers-reduced-motion: reduce` removes the motion entirely.
 
 ## Do's and Don'ts
 
 ### Do:
-
-- **Do** use cream for the local price-board menu panel, enamel for its names/prices and vermilion-plate
-  for category headings, promotional prices and the continuous cream-lettered offer strip.
-- **Do** use `--verm-plate` for type-bearing red surfaces and check cream on it (6.55:1).
-- **Do** set functional labels at 11.5px or larger, uppercase Karla, 0.16em tracking or wider.
-- **Do** give raised surfaces a short dark edge plus one soft black cast, and lift 2px on hover.
-- **Do** keep the delivery notice visible without requiring interaction.
-- **Do** rotate photo mounts 1–2° and pin a painted tag on them.
-- **Do** end with one full-bleed vermilion band and one cream plate.
+- **Do** put every type-bearing pink surface on Plate Pink with white text.
+- **Do** keep prices in one right-aligned tabular column.
+- **Do** use Caveat only for what is written onto a slip: values, sample lines, captions, quantities.
+- **Do** keep the delivery-fee notice visible without interaction on the storefront, checkout and receipt.
+- **Do** use the owner's logo file (`images/luna_logo.png`, `site/img/luna-logo-*.webp`) unaltered apart from its transparent surround.
 
 ### Don't:
-
-- **Don't** put cream type on `#d8452a`; that brightness is a live state, not a background.
-- **Don't** add coloured glows, zero-offset halos, or radial background washes.
-- **Don't** use colored left-border tabs on cards, equal-card rows for offers, glyph icons, or a second
-  accent hue.
-- **Don't** round corners, use backdrop-filter, fake chrome with gradients, or draw depth with blur alone.
-- **Don't** show a phone number or ratings until the owner supplies them; leave no placeholder for them.
-- **Don't** invent business facts. Phone numbers, ratings and testimonials do not exist yet; the hours are 9am to 8pm.
-- **Don't** duplicate the ordering flow here; every order action links to `/kiosk/`.
-- **Don't** add motion to the hero, address board or closing band, or any looping motion. The two moments in
-  Motion are the only arrival effects on the page.
-- **Don't** hide a price or a name behind a motion state while someone is reading. Motion may reveal the board
-  once; it may not withhold it.
+- **Don't** put white or pink small type on butter, or small type on Logo Pink.
+- **Don't** add glows, glass, gradient text or zero-offset halos.
+- **Don't** put a kicker or eyebrow label above a heading.
+- **Don't** invent slip numbers, phone numbers, ratings or testimonials to fill the form.
+- **Don't** use emoji as icons; use the Material outline set in the app and drawn SVG on the web.

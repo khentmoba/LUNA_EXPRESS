@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../models/cart.dart';
 import '../services/cart_notifier.dart';
 import '../services/session.dart';
@@ -16,10 +15,10 @@ class KioskCartPage extends StatelessWidget {
 
     return InactivityWatcher(
       child: Scaffold(
-        backgroundColor: KioskTheme.lunaTan,
+        backgroundColor: KioskTheme.lunaBlush,
         appBar: AppBar(
           title: Text(
-            'MY ORDER',
+            'Your order',
             style: KioskTheme.headerSmall.copyWith(
               letterSpacing: isMobile ? 1 : 2,
             ),
@@ -30,7 +29,7 @@ class KioskCartPage extends StatelessWidget {
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios_new_rounded,
-              color: KioskTheme.lunaBrown,
+              color: KioskTheme.lunaPink,
               size: isMobile ? 18 : 24,
             ),
             onPressed: () => Navigator.pop(context),
@@ -46,13 +45,13 @@ class KioskCartPage extends StatelessWidget {
                     kioskSession.reset();
                     Navigator.of(
                       context,
-                    ).pushNamedAndRemoveUntil('/kiosk', (route) => false);
+                    ).pushNamedAndRemoveUntil('/', (route) => false);
                   },
                   child: Text(
-                    'CANCEL ORDER',
-                    style: GoogleFonts.outfit(
+                    'Cancel order',
+                    style: KioskTheme.font(
                       color: KioskTheme.error,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w800,
                       fontSize: isMobile ? 11 : 13,
                       letterSpacing: 1,
                     ),
@@ -76,11 +75,11 @@ class KioskCartPage extends StatelessWidget {
                       Icon(
                         Icons.shopping_cart_outlined,
                         size: isMobile ? 60 : 100,
-                        color: KioskTheme.lunaBrown.withOpacity(0.3),
+                        color: KioskTheme.lunaPink.withOpacity(0.3),
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'YOUR CART IS EMPTY',
+                        'Your order slip is empty',
                         textAlign: TextAlign.center,
                         style: KioskTheme.headerMedium.copyWith(
                           fontSize: isMobile ? 18 : 24,
@@ -98,10 +97,8 @@ class KioskCartPage extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          'BROWSE MENU',
-                          style: GoogleFonts.outfit(
-                            fontWeight: FontWeight.w900,
-                          ),
+                          'Browse the menu',
+                          style: KioskTheme.font(fontWeight: FontWeight.w800),
                         ),
                       ),
                     ],
@@ -113,54 +110,20 @@ class KioskCartPage extends StatelessWidget {
             return Column(
               children: [
                 Expanded(
-                  child: isMobile
-                      ? ListView.separated(
-                          padding: const EdgeInsets.all(16),
-                          itemCount: cartNotifier.items.length,
-                          separatorBuilder: (context, index) =>
-                              const SizedBox(height: 12),
-                          itemBuilder: (context, index) {
-                            final item = cartNotifier.items[index];
-                            return Dismissible(
-                              key: Key(item.id),
-                              direction: DismissDirection.endToStart,
-                              background: Container(
-                                alignment: Alignment.centerRight,
-                                padding: const EdgeInsets.only(right: 20),
-                                decoration: BoxDecoration(
-                                  color: KioskTheme.error,
-                                  borderRadius: BorderRadius.circular(
-                                    KioskTheme.radiusMd,
-                                  ),
-                                ),
-                                child: const Icon(
-                                  Icons.delete_forever_rounded,
-                                  color: Colors.white,
-                                  size: 28,
-                                ),
-                              ),
-                              onDismissed: (_) {
-                                cartNotifier.remove(item.id);
-                              },
-                              child: _buildMobileCartItem(context, item),
-                            );
-                          },
-                        )
-                      : GridView.builder(
-                          padding: const EdgeInsets.all(32),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 2.2,
-                                crossAxisSpacing: 24,
-                                mainAxisSpacing: 24,
-                              ),
-                          itemCount: cartNotifier.items.length,
-                          itemBuilder: (context, index) {
-                            final item = cartNotifier.items[index];
-                            return _buildVisualCartItem(context, item);
-                          },
-                        ),
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.fromLTRB(
+                      isMobile ? 14 : 32,
+                      isMobile ? 16 : 32,
+                      isMobile ? 14 : 32,
+                      24,
+                    ),
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 760),
+                        child: _buildSlip(context, isMobile),
+                      ),
+                    ),
+                  ),
                 ),
                 Container(
                   padding: EdgeInsets.fromLTRB(
@@ -173,8 +136,8 @@ class KioskCartPage extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(KioskTheme.radiusXl),
+                    border: const Border(
+                      top: BorderSide(color: KioskTheme.lunaLogoPink, width: 2),
                     ),
                     boxShadow: KioskTheme.shadowLg,
                   ),
@@ -205,7 +168,7 @@ class KioskCartPage extends StatelessWidget {
                           children: [
                             _buildMobileAction(
                               context,
-                              'CHECKOUT NOW',
+                              'Checkout',
                               onPressed: () => Navigator.pushNamed(
                                 context,
                                 '/checkout_process',
@@ -215,7 +178,7 @@ class KioskCartPage extends StatelessWidget {
                             const SizedBox(height: 10),
                             _buildMobileAction(
                               context,
-                              '+ ADD MORE',
+                              'Add more food',
                               onPressed: () => Navigator.pop(context),
                               isPrimary: false,
                             ),
@@ -232,10 +195,8 @@ class KioskCartPage extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 24,
                                     ),
-                                    side: BorderSide(
-                                      color: KioskTheme.lunaBrown.withOpacity(
-                                        0.2,
-                                      ),
+                                    side: const BorderSide(
+                                      color: KioskTheme.pinkInk,
                                       width: 2,
                                     ),
                                     shape: RoundedRectangleBorder(
@@ -245,9 +206,9 @@ class KioskCartPage extends StatelessWidget {
                                     ),
                                   ),
                                   child: Text(
-                                    '+ ADD MORE ITEMS',
+                                    'Add more food',
                                     style: KioskTheme.titleLarge.copyWith(
-                                      color: KioskTheme.lunaBrown,
+                                      color: KioskTheme.pinkInk,
                                     ),
                                   ),
                                 ),
@@ -267,10 +228,10 @@ class KioskCartPage extends StatelessWidget {
                                     ),
                                   ),
                                   child: Text(
-                                    'CHECKOUT NOW',
-                                    style: GoogleFonts.outfit(
+                                    'Checkout',
+                                    style: KioskTheme.font(
                                       fontSize: 18,
-                                      fontWeight: FontWeight.w900,
+                                      fontWeight: FontWeight.w800,
                                     ),
                                   ),
                                 ),
@@ -301,111 +262,178 @@ class KioskCartPage extends StatelessWidget {
         child: ElevatedButton(
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
-            backgroundColor: isPrimary ? KioskTheme.lunaBrown : Colors.white,
+            backgroundColor: isPrimary ? KioskTheme.lunaPink : Colors.white,
             foregroundColor: isPrimary
                 ? KioskTheme.textOnPrimary
-                : KioskTheme.lunaBrown,
+                : KioskTheme.pinkInk,
             padding: const EdgeInsets.symmetric(vertical: 18),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
               side: isPrimary
                   ? BorderSide.none
-                  : BorderSide(color: KioskTheme.lunaBrown.withOpacity(0.2)),
+                  : const BorderSide(color: KioskTheme.pinkInk, width: 2),
             ),
             elevation: 0,
           ),
           child: Text(
             label,
-            style: GoogleFonts.outfit(
-              fontSize: 16,
-              fontWeight: FontWeight.w900,
-            ),
+            style: KioskTheme.font(fontSize: 16, fontWeight: FontWeight.w800),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildMobileCartItem(BuildContext context, CartItem item) {
+  /// The order slip: printed column heads, then one ruled line per item.
+  Widget _buildSlip(BuildContext context, bool isMobile) {
+    final items = cartNotifier.items;
     return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: KioskTheme.cardWhite,
+      padding: EdgeInsets.fromLTRB(
+        isMobile ? 16 : 28,
+        isMobile ? 18 : 26,
+        isMobile ? 16 : 28,
+        isMobile ? 8 : 14,
+      ),
+      decoration: BoxDecoration(
+        color: KioskTheme.lunaPaper,
+        borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
+        boxShadow: KioskTheme.shadowMd,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(
+                child: Text(
+                  'Order slip',
+                  style: KioskTheme.headerLarge.copyWith(
+                    color: KioskTheme.lunaLogoPink,
+                    fontSize: isMobile ? 28 : 34,
+                  ),
+                ),
+              ),
+              Text(
+                '${cartNotifier.totalCount} '
+                '${cartNotifier.totalCount == 1 ? 'item' : 'items'}',
+                style: KioskTheme.hand(fontSize: isMobile ? 22 : 26),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Container(
+            height: 4,
+            decoration: const BoxDecoration(
+              border: Border(
+                top: BorderSide(color: KioskTheme.lunaLogoPink),
+                bottom: BorderSide(color: KioskTheme.lunaLogoPink),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 14, 0, 6),
+            child: Row(
+              children: [
+                Expanded(child: Text('ITEM', style: KioskTheme.labelMedium)),
+                Text('AMOUNT', style: KioskTheme.labelMedium),
+              ],
+            ),
+          ),
+          const Divider(
+            height: 2,
+            thickness: 2,
+            color: KioskTheme.lunaLogoPink,
+          ),
+          for (final item in items)
+            Dismissible(
+              key: Key(item.id),
+              direction: DismissDirection.endToStart,
+              background: Container(
+                alignment: Alignment.centerRight,
+                padding: const EdgeInsets.only(right: 16),
+                color: KioskTheme.error,
+                child: const Icon(
+                  Icons.delete_outline_rounded,
+                  color: Colors.white,
+                  size: 26,
+                  semanticLabel: 'Remove',
+                ),
+              ),
+              onDismissed: (_) => cartNotifier.remove(item.id),
+              child: _buildSlipRow(item, isMobile),
+            ),
+          if (isMobile)
+            Padding(
+              padding: const EdgeInsets.only(top: 10, bottom: 6),
+              child: Text(
+                'Swipe a line left to remove it.',
+                style: KioskTheme.bodySmall,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSlipRow(CartItem item, bool isMobile) {
+    final imageSize = isMobile ? 52.0 : 72.0;
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      decoration: const BoxDecoration(
+        color: KioskTheme.lunaPaper,
+        border: Border(bottom: BorderSide(color: KioskTheme.rule)),
+      ),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
+          Container(
+            padding: const EdgeInsets.all(3),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: KioskTheme.shadowSm,
+            ),
             child: Image.asset(
               item.imageUrl.isNotEmpty
                   ? item.imageUrl
                   : 'images/placeholder.png',
-              width: 60,
-              height: 60,
+              width: imageSize,
+              height: imageSize,
               fit: BoxFit.cover,
+              excludeFromSemantics: true,
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: isMobile ? 12 : 18),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   item.name,
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: KioskTheme.titleMedium.copyWith(fontSize: 15),
+                  style: KioskTheme.titleMedium.copyWith(
+                    fontSize: isMobile ? 15 : 17,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 if (item.variant.isNotEmpty)
                   Text(
                     item.variant,
-                    maxLines: 1,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: KioskTheme.bodySmall,
+                    style: KioskTheme.bodySmall.copyWith(fontSize: 13),
                   ),
-                const SizedBox(height: 4),
-                Text(
-                  '\u20B1${item.price * item.quantity}',
-                  style: KioskTheme.titleMedium.copyWith(fontSize: 16),
-                ),
+                const SizedBox(height: 6),
+                _buildStepper(item),
               ],
             ),
           ),
-          const SizedBox(width: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-            decoration: BoxDecoration(
-              color: KioskTheme.lunaTan.withOpacity(0.4),
-              borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                JuicyFeedback(
-                  onPressed: () => cartNotifier.decrement(item.id),
-                  child: const Padding(
-                    padding: EdgeInsets.all(6.0),
-                    child: Icon(
-                      Icons.remove_rounded,
-                      size: 18,
-                      color: KioskTheme.lunaBrown,
-                    ),
-                  ),
-                ),
-                Text(
-                  '${item.quantity}',
-                  style: KioskTheme.titleMedium.copyWith(fontSize: 15),
-                ),
-                JuicyFeedback(
-                  onPressed: () => cartNotifier.increment(item.id),
-                  child: const Padding(
-                    padding: EdgeInsets.all(6.0),
-                    child: Icon(
-                      Icons.add_rounded,
-                      size: 18,
-                      color: KioskTheme.lunaBrown,
-                    ),
-                  ),
-                ),
-              ],
+          const SizedBox(width: 10),
+          Text(
+            '\u20B1${item.price * item.quantity}',
+            style: KioskTheme.headerSmall.copyWith(
+              fontSize: isMobile ? 19 : 22,
+              fontFeatures: const [FontFeature.tabularFigures()],
             ),
           ),
         ],
@@ -413,91 +441,43 @@ class KioskCartPage extends StatelessWidget {
     );
   }
 
-  Widget _buildVisualCartItem(BuildContext context, CartItem item) {
+  Widget _buildStepper(CartItem item) {
+    Widget step(IconData icon, String label, VoidCallback onPressed) =>
+        SizedBox(
+          width: 40,
+          height: 36,
+          child: IconButton(
+            tooltip: label,
+            padding: EdgeInsets.zero,
+            onPressed: onPressed,
+            icon: Icon(icon, size: 18, color: KioskTheme.pinkInk),
+          ),
+        );
     return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: KioskTheme.cardWhite.copyWith(
-        borderRadius: BorderRadius.circular(KioskTheme.radiusXl),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
+        border: Border.all(color: KioskTheme.rule, width: 1.5),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
-            child: Image.asset(
-              item.imageUrl.isNotEmpty
-                  ? item.imageUrl
-                  : 'images/placeholder.png',
-              width: 100,
-              height: 100,
-              fit: BoxFit.cover,
+          step(
+            Icons.remove_rounded,
+            'One less ${item.name}',
+            () => cartNotifier.decrement(item.id),
+          ),
+          SizedBox(
+            width: 26,
+            child: Text(
+              '${item.quantity}',
+              textAlign: TextAlign.center,
+              style: KioskTheme.hand(fontSize: 22),
             ),
           ),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  item.name,
-                  style: KioskTheme.titleLarge.copyWith(fontSize: 18),
-                ),
-                if (item.variant.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4.0),
-                    child: Text(
-                      item.variant,
-                      style: KioskTheme.bodySmall.copyWith(fontSize: 13),
-                    ),
-                  ),
-                const SizedBox(height: 12),
-                Text(
-                  '\u20B1${item.price * item.quantity}',
-                  style: KioskTheme.titleLarge.copyWith(fontSize: 20),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              color: KioskTheme.lunaTan.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(KioskTheme.radiusXl),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                JuicyFeedback(
-                  onPressed: () => cartNotifier.increment(item.id),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Icon(
-                      Icons.add_rounded,
-                      size: 28,
-                      color: KioskTheme.lunaBrown,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: Text(
-                    '${item.quantity}',
-                    style: KioskTheme.titleLarge.copyWith(fontSize: 20),
-                  ),
-                ),
-                JuicyFeedback(
-                  onPressed: () => cartNotifier.decrement(item.id),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Icon(
-                      Icons.remove_rounded,
-                      size: 28,
-                      color: KioskTheme.lunaBrown,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          step(
+            Icons.add_rounded,
+            'One more ${item.name}',
+            () => cartNotifier.increment(item.id),
           ),
         ],
       ),

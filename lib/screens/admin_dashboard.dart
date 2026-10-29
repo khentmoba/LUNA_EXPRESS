@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../services/session.dart';
 import '../services/cart_notifier.dart';
 import '../services/order_service.dart';
@@ -22,7 +21,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
   void _logout() {
     session.logout();
     cartNotifier.clear();
-    Navigator.pushNamedAndRemoveUntil(context, '/kiosk', (route) => false);
+    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
   }
 
   void _goToWalkIn() {
@@ -38,7 +37,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
     final recentOrders = orderHistory.reversed.take(10).toList();
 
     return Scaffold(
-      backgroundColor: KioskTheme.lunaCream,
+      backgroundColor: KioskTheme.lunaBlushPaper,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -73,7 +72,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
     );
   }
 
-  // ── Header ──────────────────────────────────────────────────
   Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.all(24),
@@ -98,8 +96,13 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     width: 1.5,
                   ),
                 ),
-                child: const Center(
-                  child: Text('🌙', style: TextStyle(fontSize: 24)),
+                padding: const EdgeInsets.all(3),
+                child: Center(
+                  child: Image.asset(
+                    'images/luna_logo.png',
+                    height: 36,
+                    excludeFromSemantics: true,
+                  ),
                 ),
               ),
               const SizedBox(width: 14),
@@ -109,16 +112,16 @@ class _AdminDashboardState extends State<AdminDashboard> {
                   children: [
                     Text(
                       'Luna Bites & Delights',
-                      style: GoogleFonts.outfit(
+                      style: KioskTheme.font(
                         color: KioskTheme.textOnPrimary,
                         fontSize: 18,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       'Welcome, ${session.username}!',
-                      style: GoogleFonts.outfit(
+                      style: KioskTheme.font(
                         color: KioskTheme.textOnPrimary.withOpacity(0.85),
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
@@ -150,7 +153,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       const SizedBox(width: 6),
                       Text(
                         'Logout',
-                        style: GoogleFonts.outfit(
+                        style: KioskTheme.font(
                           color: Colors.white,
                           fontWeight: FontWeight.w800,
                           fontSize: 12,
@@ -171,9 +174,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
             ),
             child: Text(
               'ADMIN DASHBOARD',
-              style: GoogleFonts.outfit(
+              style: KioskTheme.font(
                 color: KioskTheme.textOnPrimary,
-                fontWeight: FontWeight.w900,
+                fontWeight: FontWeight.w800,
                 fontSize: 11,
                 letterSpacing: 2,
               ),
@@ -184,7 +187,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
     );
   }
 
-  // ── Section Title ──────────────────────────────────────────
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
@@ -195,7 +197,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
     );
   }
 
-  // ── Stats Grid ─────────────────────────────────────────────
   Widget _buildStatsGrid() {
     return LayoutBuilder(
       builder: (_, constraints) => Wrap(
@@ -203,31 +204,31 @@ class _AdminDashboardState extends State<AdminDashboard> {
         runSpacing: 14,
         children: [
           _statCard(
-            '💰 Today\'s Sales',
+            'Today\'s Sales',
             '₱${todayRevenue}',
             Icons.trending_up_rounded,
             KioskTheme.success,
             (constraints.maxWidth - 14) / 2,
           ),
           _statCard(
-            '📋 Orders',
+            'Orders',
             '${todayOrderCount}',
             Icons.receipt_long_rounded,
             KioskTheme.info,
             (constraints.maxWidth - 14) / 2,
           ),
           _statCard(
-            '📊 Avg Order',
+            'Avg order',
             '₱${avgOrderValue.toStringAsFixed(0)}',
             Icons.analytics_rounded,
             Colors.purple,
             (constraints.maxWidth - 14) / 2,
           ),
           _statCard(
-            '🛒 Items Sold',
+            'Items sold',
             '$todayItemsSold',
             Icons.shopping_bag_rounded,
-            const Color(0xFFFF8C00),
+            KioskTheme.warning,
             (constraints.maxWidth - 14) / 2,
           ),
         ],
@@ -273,7 +274,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
     );
   }
 
-  // ── Live KDS Button ───────────────────────────────────────
   Widget _buildLiveKdsButton() {
     return JuicyFeedback(
       onPressed: () {
@@ -286,35 +286,21 @@ class _AdminDashboardState extends State<AdminDashboard> {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFF241A12), Color(0xFF1B130D)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          color: KioskTheme.lunaPink,
           borderRadius: BorderRadius.circular(KioskTheme.radiusLg),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
-              blurRadius: 16,
-              offset: const Offset(0, 6),
-            ),
-          ],
-          border: Border.all(
-            color: const Color(0xFFDEC995).withValues(alpha: 0.3),
-            width: 1.5,
-          ),
+          boxShadow: KioskTheme.shadowPrimary,
         ),
         child: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: const Color(0xFFDEC995).withValues(alpha: 0.2),
+                color: Colors.white.withValues(alpha: 0.18),
                 borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
               ),
               child: const Icon(
                 Icons.outdoor_grill_rounded,
-                color: Color(0xFFDEC995),
+                color: KioskTheme.lunaButter,
                 size: 24,
               ),
             ),
@@ -325,17 +311,17 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 children: [
                   Text(
                     'LIVE ORDERS KANBAN (KDS)',
-                    style: GoogleFonts.outfit(
-                      color: const Color(0xFFF7EEDD),
-                      fontWeight: FontWeight.w900,
+                    style: KioskTheme.font(
+                      color: KioskTheme.textOnPrimary,
+                      fontWeight: FontWeight.w800,
                       fontSize: 15,
                       letterSpacing: 1,
                     ),
                   ),
                   Text(
                     'Kitchen display, audio alerts & dispatch queue',
-                    style: GoogleFonts.outfit(
-                      color: const Color(0xFFDEC995).withValues(alpha: 0.8),
+                    style: KioskTheme.font(
+                      color: KioskTheme.textOnPrimary,
                       fontWeight: FontWeight.w500,
                       fontSize: 12,
                     ),
@@ -345,7 +331,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
             ),
             const Icon(
               Icons.arrow_forward_rounded,
-              color: Color(0xFFDEC995),
+              color: KioskTheme.textOnPrimary,
               size: 22,
             ),
           ],
@@ -354,7 +340,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
     );
   }
 
-  // ── Walk-in Button ─────────────────────────────────────────
   Widget _buildWalkInButton() {
     return JuicyFeedback(
       onPressed: _goToWalkIn,
@@ -362,19 +347,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFF22C55E), Color(0xFF16A34A)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          color: KioskTheme.success,
           borderRadius: BorderRadius.circular(KioskTheme.radiusLg),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFF22C55E).withOpacity(0.35),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
-            ),
-          ],
+          boxShadow: KioskTheme.shadowMd,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -394,9 +369,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
             const SizedBox(width: 16),
             Text(
               'New Walk-in Order',
-              style: GoogleFonts.outfit(
+              style: KioskTheme.font(
                 color: Colors.white,
-                fontWeight: FontWeight.w900,
+                fontWeight: FontWeight.w800,
                 fontSize: 18,
                 letterSpacing: 0.5,
               ),
@@ -413,7 +388,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
     );
   }
 
-  // ── Quick Actions ──────────────────────────────────────────
   Widget _buildQuickActions(BuildContext context, bool isMobile) {
     final actions = [
       _ActionItem(
@@ -440,9 +414,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
               SnackBar(
                 content: Text(
                   'No orders yet today.',
-                  style: GoogleFonts.outfit(fontWeight: FontWeight.w700),
+                  style: KioskTheme.font(fontWeight: FontWeight.w700),
                 ),
-                backgroundColor: KioskTheme.lunaBrown,
+                backgroundColor: KioskTheme.lunaPink,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
                 ),
@@ -464,7 +438,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
         icon: Icons.tv_rounded,
         title: 'KDS Display',
         subtitle: 'Kitchen display system',
-        color: const Color(0xFFFF8C00),
+        color: KioskTheme.warning,
         onTap: () {
           Navigator.push(
             context,
@@ -504,7 +478,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 24),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
-            colors: [KioskTheme.lunaBrown, KioskTheme.lunaDarkBrown],
+            colors: [KioskTheme.lunaPink, KioskTheme.lunaInk],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -532,16 +506,16 @@ class _AdminDashboardState extends State<AdminDashboard> {
               children: [
                 Text(
                   'LIFETIME SALES REPORT',
-                  style: GoogleFonts.outfit(
+                  style: KioskTheme.font(
                     color: Colors.white,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w800,
                     fontSize: 15,
                     letterSpacing: 1,
                   ),
                 ),
                 Text(
                   'Full history \u00B7 Best sellers \u00B7 Date filters',
-                  style: GoogleFonts.outfit(
+                  style: KioskTheme.font(
                     color: Colors.white.withOpacity(0.75),
                     fontWeight: FontWeight.w600,
                     fontSize: 11,
@@ -595,7 +569,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
     );
   }
 
-  // ── Empty State ────────────────────────────────────────────
   Widget _buildEmptyState() {
     return Container(
       width: double.infinity,
@@ -603,12 +576,16 @@ class _AdminDashboardState extends State<AdminDashboard> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
-        border: Border.all(color: KioskTheme.lunaBrown.withOpacity(0.06)),
+        border: Border.all(color: KioskTheme.lunaPink.withOpacity(0.06)),
         boxShadow: KioskTheme.shadowSm,
       ),
       child: Column(
         children: [
-          Text('🛵', style: TextStyle(fontSize: 48)),
+          const Icon(
+            Icons.receipt_long_outlined,
+            size: 48,
+            color: KioskTheme.pinkInk,
+          ),
           const SizedBox(height: 16),
           Text(
             'No orders yet today',
@@ -624,16 +601,19 @@ class _AdminDashboardState extends State<AdminDashboard> {
     );
   }
 
-  // ── Order Tile ─────────────────────────────────────────────
   Widget _buildOrderTile(Map<String, dynamic> order) {
     final type = order['isWalkIn'] == true
         ? 'Walk-In'
         : (order['type'] as String);
     final isWalkIn = order['isWalkIn'] == true;
-    final typeIcon = isWalkIn ? '🧾' : (type == 'Pickup' ? '🏪' : '🛵');
+    final typeIcon = isWalkIn
+        ? Icons.receipt_long_outlined
+        : (type == 'Pickup'
+              ? Icons.storefront_outlined
+              : Icons.delivery_dining_outlined);
     final typeColor = isWalkIn
         ? KioskTheme.success
-        : (type == 'Pickup' ? const Color(0xFFFF8C00) : KioskTheme.info);
+        : (type == 'Pickup' ? KioskTheme.warning : KioskTheme.info);
 
     return WhiteCard(
       margin: const EdgeInsets.only(bottom: 12),
@@ -647,9 +627,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
               color: typeColor.withOpacity(0.1),
               borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
             ),
-            child: Center(
-              child: Text(typeIcon, style: const TextStyle(fontSize: 24)),
-            ),
+            child: Center(child: Icon(typeIcon, size: 24, color: typeColor)),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -676,7 +654,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       ),
                       child: Text(
                         type,
-                        style: GoogleFonts.outfit(
+                        style: KioskTheme.font(
                           fontSize: 9,
                           fontWeight: FontWeight.w800,
                           color: typeColor,
@@ -697,7 +675,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
             '₱${order['total']}',
             style: KioskTheme.headerSmall.copyWith(
               fontSize: 20,
-              color: KioskTheme.lunaBrown,
+              color: KioskTheme.lunaPink,
             ),
           ),
         ],
@@ -705,7 +683,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
     );
   }
 
-  // ── Orders Bottom Sheet ────────────────────────────────────
   void _showOrdersSheet(
     BuildContext context,
     List<Map<String, dynamic>> orders,
@@ -738,7 +715,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
               child: Row(
                 children: [
                   Text(
-                    '📋  All Orders',
+                    'All orders',
                     style: KioskTheme.headerSmall.copyWith(fontSize: 18),
                   ),
                   const Spacer(),
@@ -748,7 +725,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       vertical: 5,
                     ),
                     decoration: BoxDecoration(
-                      color: KioskTheme.lunaBrown.withOpacity(0.08),
+                      color: KioskTheme.lunaPink.withOpacity(0.08),
                       borderRadius: BorderRadius.circular(
                         KioskTheme.radiusFull,
                       ),
@@ -756,7 +733,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     child: Text(
                       '${orders.length} total',
                       style: KioskTheme.labelSmall.copyWith(
-                        color: KioskTheme.lunaBrown,
+                        color: KioskTheme.lunaPink,
                         fontSize: 11,
                       ),
                     ),
@@ -779,7 +756,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
   }
 }
 
-// ── Action Item Model ────────────────────────────────────────
 class _ActionItem {
   final IconData icon;
   final String title;

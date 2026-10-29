@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../services/functions.dart';
 import '../utils/format.dart';
 import '../widgets/kiosk/kiosk_theme.dart';
@@ -178,7 +177,7 @@ class _LifetimeAnalyticsPageState extends State<LifetimeAnalyticsPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border(
-          bottom: BorderSide(color: KioskTheme.lunaBrown.withOpacity(0.06)),
+          bottom: BorderSide(color: KioskTheme.lunaPink.withOpacity(0.06)),
         ),
       ),
       child: SingleChildScrollView(
@@ -196,17 +195,17 @@ class _LifetimeAnalyticsPageState extends State<LifetimeAnalyticsPage> {
                     vertical: 8,
                   ),
                   decoration: BoxDecoration(
-                    color: selected ? KioskTheme.lunaBrown : Colors.transparent,
+                    color: selected ? KioskTheme.lunaPink : Colors.transparent,
                     borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
                     border: Border.all(
                       color: selected
-                          ? KioskTheme.lunaBrown
+                          ? KioskTheme.lunaPink
                           : KioskTheme.textMuted.withOpacity(0.3),
                     ),
                   ),
                   child: Text(
                     preset.label,
-                    style: GoogleFonts.outfit(
+                    style: KioskTheme.font(
                       fontSize: 12,
                       fontWeight: FontWeight.w800,
                       color: selected ? Colors.white : KioskTheme.textMuted,
@@ -238,7 +237,7 @@ class _LifetimeAnalyticsPageState extends State<LifetimeAnalyticsPage> {
           return Theme(
             data: Theme.of(ctx).copyWith(
               colorScheme: Theme.of(ctx).colorScheme.copyWith(
-                primary: KioskTheme.lunaBrown,
+                primary: KioskTheme.lunaPink,
                 onPrimary: Colors.white,
               ),
             ),
@@ -287,13 +286,13 @@ class _LifetimeAnalyticsPageState extends State<LifetimeAnalyticsPage> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
           decoration: BoxDecoration(
-            color: KioskTheme.lunaBrown.withOpacity(0.08),
+            color: KioskTheme.lunaPink.withOpacity(0.08),
             borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
           ),
           child: Text(
             '$orderCount orders',
             style: KioskTheme.labelSmall.copyWith(
-              color: KioskTheme.lunaBrown,
+              color: KioskTheme.lunaPink,
               fontSize: 11,
             ),
           ),
@@ -331,7 +330,7 @@ class _LifetimeAnalyticsPageState extends State<LifetimeAnalyticsPage> {
         title: 'ITEMS SOLD',
         value: _fmt(summary['totalItemsSold'] as int? ?? 0),
         icon: Icons.shopping_bag_rounded,
-        color: const Color(0xFFFF8C00),
+        color: KioskTheme.warning,
       ),
     ];
 
@@ -438,7 +437,7 @@ class _LifetimeAnalyticsPageState extends State<LifetimeAnalyticsPage> {
                     children: [
                       Text(
                         '₱${_shortFmt(rev)}',
-                        style: GoogleFonts.outfit(
+                        style: KioskTheme.font(
                           fontSize: 9,
                           fontWeight: FontWeight.w700,
                           color: KioskTheme.textMuted,
@@ -447,7 +446,7 @@ class _LifetimeAnalyticsPageState extends State<LifetimeAnalyticsPage> {
                       const SizedBox(height: 2),
                       Text(
                         '$oCount orders',
-                        style: GoogleFonts.outfit(
+                        style: KioskTheme.font(
                           fontSize: 7,
                           fontWeight: FontWeight.w600,
                           color: KioskTheme.textMuted.withOpacity(0.6),
@@ -459,10 +458,7 @@ class _LifetimeAnalyticsPageState extends State<LifetimeAnalyticsPage> {
                         height: barHeight,
                         decoration: const BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [
-                              KioskTheme.lunaBrown,
-                              KioskTheme.lunaDarkBrown,
-                            ],
+                            colors: [KioskTheme.lunaPink, KioskTheme.lunaInk],
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                           ),
@@ -474,7 +470,7 @@ class _LifetimeAnalyticsPageState extends State<LifetimeAnalyticsPage> {
                       const SizedBox(height: 6),
                       Text(
                         label,
-                        style: GoogleFonts.outfit(
+                        style: KioskTheme.font(
                           fontSize: 9,
                           fontWeight: FontWeight.w700,
                           color: KioskTheme.textSecondary,
@@ -595,14 +591,14 @@ class _LifetimeAnalyticsPageState extends State<LifetimeAnalyticsPage> {
           KioskTheme.divider(),
           const SizedBox(height: 20),
           _buildMiniStat(
-            '🖥️  Kiosk',
+            'Kiosk',
             '₱${_fmt(rev('kiosk'))}',
             '${count('kiosk')} orders',
             KioskTheme.info,
           ),
           const SizedBox(height: 16),
           _buildMiniStat(
-            '👤  Staff',
+            'Staff',
             '₱${_fmt(rev('staff'))}',
             '${count('staff')} orders',
             Colors.orange,
@@ -639,17 +635,17 @@ class _LifetimeAnalyticsPageState extends State<LifetimeAnalyticsPage> {
           KioskTheme.divider(),
           const SizedBox(height: 20),
           _buildMiniStat(
-            '💵  Cash',
+            'Cash',
             '₱${_fmt(rev('cash'))}',
             '${count('cash')} orders',
             KioskTheme.success,
           ),
           const SizedBox(height: 16),
           _buildMiniStat(
-            '📱  GCash',
+            'GCash',
             '₱${_fmt(rev('gcash'))}',
             '${count('gcash')} orders',
-            const Color(0xFF007AFF),
+            KioskTheme.info,
           ),
           const SizedBox(height: 16),
           if (totalRev > 0) ...[
@@ -737,11 +733,11 @@ class _LifetimeAnalyticsPageState extends State<LifetimeAnalyticsPage> {
                       decoration: BoxDecoration(
                         color: idx < 3
                             ? [
-                                KioskTheme.lunaBrown,
-                                const Color(0xFF6B5744),
-                                const Color(0xFF9E8B7A),
+                                KioskTheme.lunaPink,
+                                KioskTheme.textSecondary,
+                                KioskTheme.textMuted,
                               ][idx]
-                            : KioskTheme.lunaBrown.withOpacity(0.05),
+                            : KioskTheme.lunaPink.withOpacity(0.05),
                         borderRadius: BorderRadius.circular(
                           KioskTheme.radiusSm,
                         ),
@@ -749,9 +745,9 @@ class _LifetimeAnalyticsPageState extends State<LifetimeAnalyticsPage> {
                       child: Center(
                         child: Text(
                           '#${idx + 1}',
-                          style: GoogleFonts.outfit(
+                          style: KioskTheme.font(
                             fontSize: 10,
-                            fontWeight: FontWeight.w900,
+                            fontWeight: FontWeight.w800,
                             color: idx < 3
                                 ? Colors.white
                                 : KioskTheme.textMuted,
@@ -784,17 +780,17 @@ class _LifetimeAnalyticsPageState extends State<LifetimeAnalyticsPage> {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: KioskTheme.lunaBrown.withOpacity(0.08),
+                        color: KioskTheme.lunaPink.withOpacity(0.08),
                         borderRadius: BorderRadius.circular(
                           KioskTheme.radiusSm,
                         ),
                       ),
                       child: Text(
                         '$qty sold',
-                        style: GoogleFonts.outfit(
+                        style: KioskTheme.font(
                           fontSize: 11,
                           fontWeight: FontWeight.w800,
-                          color: KioskTheme.lunaBrown,
+                          color: KioskTheme.lunaPink,
                         ),
                       ),
                     ),

@@ -96,17 +96,21 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
           SnackBar(
             content: Row(
               children: [
-                const Icon(Icons.verified_user_rounded, color: MenuTheme.cream),
+                const Icon(
+                  Icons.verified_user_rounded,
+                  color: MenuTheme.onPlate,
+                ),
                 const SizedBox(width: 12),
                 Text(
                   'Welcome, $actualUser! (${actualRole.toUpperCase()})',
                   style: MenuTheme.body(
                     size: 14,
+                    color: MenuTheme.onPlate,
                   ).copyWith(fontWeight: FontWeight.w700),
                 ),
               ],
             ),
-            backgroundColor: MenuTheme.accent,
+            backgroundColor: MenuTheme.plate,
             shape: const RoundedRectangleBorder(),
           ),
         );
@@ -231,17 +235,21 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
           SnackBar(
             content: Row(
               children: [
-                const Icon(Icons.verified_user_rounded, color: MenuTheme.cream),
+                const Icon(
+                  Icons.verified_user_rounded,
+                  color: MenuTheme.onPlate,
+                ),
                 const SizedBox(width: 12),
                 Text(
                   'Welcome, $actualUser!',
                   style: MenuTheme.body(
                     size: 14,
+                    color: MenuTheme.onPlate,
                   ).copyWith(fontWeight: FontWeight.w700),
                 ),
               ],
             ),
-            backgroundColor: MenuTheme.accent,
+            backgroundColor: MenuTheme.plate,
             shape: const RoundedRectangleBorder(),
           ),
         );
@@ -284,8 +292,8 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
           constraints: const BoxConstraints(maxWidth: 420),
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
           decoration: BoxDecoration(
-            color: MenuTheme.panel,
-            border: Border.all(color: MenuTheme.line, width: 1.5),
+            color: MenuTheme.card,
+            border: Border.all(color: MenuTheme.rule, width: 1.5),
             boxShadow: const [
               BoxShadow(
                 color: Colors.black54,
@@ -299,23 +307,26 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // Painted Top Brass Strip
-              Container(height: 3, color: MenuTheme.tan),
+              Container(height: 3, color: MenuTheme.pinkInk),
 
               Padding(
                 padding: const EdgeInsets.fromLTRB(28, 24, 28, 20),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Logo Crescent in Painted Square Plate
                     Container(
                       width: 58,
                       height: 58,
                       decoration: BoxDecoration(
-                        color: MenuTheme.board,
-                        border: Border.all(color: MenuTheme.line),
+                        color: MenuTheme.paper,
+                        border: Border.all(color: MenuTheme.rule),
                       ),
-                      child: const Center(
-                        child: Text('🌙', style: TextStyle(fontSize: 28)),
+                      child: Center(
+                        child: Image.asset(
+                          'images/luna_logo.png',
+                          height: 50,
+                          excludeFromSemantics: true,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -329,7 +340,7 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                     const SizedBox(height: 4),
                     Text(
                       'Kitchen Display System & Dispatch Board',
-                      style: MenuTheme.body(size: 13, color: MenuTheme.muted),
+                      style: MenuTheme.body(size: 13, color: MenuTheme.inkSoft),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 20),
@@ -337,8 +348,8 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                     // Mode Switcher Tabs (Square Painted Plates)
                     Container(
                       decoration: BoxDecoration(
-                        color: MenuTheme.board,
-                        border: Border.all(color: MenuTheme.line),
+                        color: MenuTheme.paper,
+                        border: Border.all(color: MenuTheme.rule),
                       ),
                       child: Row(
                         children: [
@@ -358,11 +369,11 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: _mode == StaffLoginMode.pin
-                                      ? MenuTheme.panel
+                                      ? MenuTheme.card
                                       : Colors.transparent,
                                   border: _mode == StaffLoginMode.pin
                                       ? Border.all(
-                                          color: MenuTheme.tan,
+                                          color: MenuTheme.pinkInk,
                                           width: 1.5,
                                         )
                                       : null,
@@ -374,8 +385,8 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                                       Icons.pin_rounded,
                                       size: 16,
                                       color: _mode == StaffLoginMode.pin
-                                          ? MenuTheme.cream
-                                          : MenuTheme.muted,
+                                          ? MenuTheme.ink
+                                          : MenuTheme.inkSoft,
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
@@ -384,8 +395,8 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                                           MenuTheme.body(
                                             size: 12,
                                             color: _mode == StaffLoginMode.pin
-                                                ? MenuTheme.cream
-                                                : MenuTheme.muted,
+                                                ? MenuTheme.ink
+                                                : MenuTheme.inkSoft,
                                           ).copyWith(
                                             fontWeight: FontWeight.w800,
                                             letterSpacing: 1.5,
@@ -412,11 +423,11 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: _mode == StaffLoginMode.password
-                                      ? MenuTheme.panel
+                                      ? MenuTheme.card
                                       : Colors.transparent,
                                   border: _mode == StaffLoginMode.password
                                       ? Border.all(
-                                          color: MenuTheme.tan,
+                                          color: MenuTheme.pinkInk,
                                           width: 1.5,
                                         )
                                       : null,
@@ -428,8 +439,8 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                                       Icons.badge_rounded,
                                       size: 16,
                                       color: _mode == StaffLoginMode.password
-                                          ? MenuTheme.cream
-                                          : MenuTheme.muted,
+                                          ? MenuTheme.ink
+                                          : MenuTheme.inkSoft,
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
@@ -439,8 +450,8 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                                             size: 12,
                                             color:
                                                 _mode == StaffLoginMode.password
-                                                ? MenuTheme.cream
-                                                : MenuTheme.muted,
+                                                ? MenuTheme.ink
+                                                : MenuTheme.inkSoft,
                                           ).copyWith(
                                             fontWeight: FontWeight.w800,
                                             letterSpacing: 1.5,
@@ -464,16 +475,14 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                           vertical: 10,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(
-                            0xFF8A2A18,
-                          ).withValues(alpha: 0.35),
-                          border: Border.all(color: const Color(0xFFD8452A)),
+                          color: const Color(0xFFFCE4E4),
+                          border: Border.all(color: const Color(0xFFB3261E)),
                         ),
                         child: Row(
                           children: [
                             const Icon(
                               Icons.error_outline_rounded,
-                              color: Color(0xFFD8452A),
+                              color: Color(0xFFB3261E),
                               size: 18,
                             ),
                             const SizedBox(width: 10),
@@ -482,7 +491,7 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                                 _error!,
                                 style: MenuTheme.body(
                                   size: 12,
-                                  color: MenuTheme.cream,
+                                  color: MenuTheme.ink,
                                 ).copyWith(fontWeight: FontWeight.w600),
                               ),
                             ),
@@ -496,8 +505,11 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                     if (_mode == StaffLoginMode.pin) ...[
                       Text(
                         'ENTER 4-DIGIT PIN',
-                        style: MenuTheme.body(size: 12, color: MenuTheme.tan)
-                            .copyWith(
+                        style:
+                            MenuTheme.body(
+                              size: 12,
+                              color: MenuTheme.pinkInk,
+                            ).copyWith(
                               fontWeight: FontWeight.w800,
                               letterSpacing: 2,
                             ),
@@ -514,11 +526,11 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                             width: 20,
                             height: 20,
                             decoration: BoxDecoration(
-                              color: filled
-                                  ? MenuTheme.accent
-                                  : MenuTheme.board,
+                              color: filled ? MenuTheme.plate : MenuTheme.paper,
                               border: Border.all(
-                                color: filled ? MenuTheme.tan : MenuTheme.line,
+                                color: filled
+                                    ? MenuTheme.pinkInk
+                                    : MenuTheme.rule,
                                 width: 1.5,
                               ),
                             ),
@@ -527,7 +539,7 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                                     child: Icon(
                                       Icons.square,
                                       size: 8,
-                                      color: MenuTheme.cream,
+                                      color: MenuTheme.onPlate,
                                     ),
                                   )
                                 : null,
@@ -548,7 +560,7 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                             style:
                                 MenuTheme.body(
                                   size: 11,
-                                  color: MenuTheme.tan,
+                                  color: MenuTheme.pinkInk,
                                 ).copyWith(
                                   fontWeight: FontWeight.w800,
                                   letterSpacing: 1.5,
@@ -561,24 +573,24 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                             style: MenuTheme.body(size: 14),
                             decoration: InputDecoration(
                               filled: true,
-                              fillColor: MenuTheme.board,
+                              fillColor: MenuTheme.paper,
                               hintText: 'e.g. staff1',
                               hintStyle: MenuTheme.body(
                                 size: 14,
-                                color: MenuTheme.muted,
+                                color: MenuTheme.inkSoft,
                               ),
                               prefixIcon: const Icon(
                                 Icons.person_outline_rounded,
-                                color: MenuTheme.tan,
+                                color: MenuTheme.pinkInk,
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.zero,
-                                borderSide: BorderSide(color: MenuTheme.line),
+                                borderSide: BorderSide(color: MenuTheme.rule),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.zero,
                                 borderSide: BorderSide(
-                                  color: MenuTheme.tan,
+                                  color: MenuTheme.pinkInk,
                                   width: 1.5,
                                 ),
                               ),
@@ -595,7 +607,7 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                             style:
                                 MenuTheme.body(
                                   size: 11,
-                                  color: MenuTheme.tan,
+                                  color: MenuTheme.pinkInk,
                                 ).copyWith(
                                   fontWeight: FontWeight.w800,
                                   letterSpacing: 1.5,
@@ -609,15 +621,15 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                             style: MenuTheme.body(size: 14),
                             decoration: InputDecoration(
                               filled: true,
-                              fillColor: MenuTheme.board,
+                              fillColor: MenuTheme.paper,
                               hintText: '••••••••',
                               hintStyle: MenuTheme.body(
                                 size: 14,
-                                color: MenuTheme.muted,
+                                color: MenuTheme.inkSoft,
                               ),
                               prefixIcon: const Icon(
                                 Icons.lock_outline_rounded,
-                                color: MenuTheme.tan,
+                                color: MenuTheme.pinkInk,
                               ),
                               suffixIcon: GestureDetector(
                                 onTap: () =>
@@ -626,18 +638,18 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                                   _obscure
                                       ? Icons.visibility_off_rounded
                                       : Icons.visibility_rounded,
-                                  color: MenuTheme.tan,
+                                  color: MenuTheme.pinkInk,
                                   size: 20,
                                 ),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.zero,
-                                borderSide: BorderSide(color: MenuTheme.line),
+                                borderSide: BorderSide(color: MenuTheme.rule),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.zero,
                                 borderSide: BorderSide(
-                                  color: MenuTheme.tan,
+                                  color: MenuTheme.pinkInk,
                                   width: 1.5,
                                 ),
                               ),
@@ -658,8 +670,8 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                                   vertical: 14,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: MenuTheme.board,
-                                  border: Border.all(color: MenuTheme.line),
+                                  color: MenuTheme.paper,
+                                  border: Border.all(color: MenuTheme.rule),
                                 ),
                                 child: Center(
                                   child: Text(
@@ -667,7 +679,7 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                                     style:
                                         MenuTheme.body(
                                           size: 13,
-                                          color: MenuTheme.muted,
+                                          color: MenuTheme.inkSoft,
                                         ).copyWith(
                                           fontWeight: FontWeight.w800,
                                           letterSpacing: 1.5,
@@ -686,7 +698,7 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                                   vertical: 14,
                                 ),
                                 decoration: const BoxDecoration(
-                                  color: MenuTheme.accent,
+                                  color: MenuTheme.plate,
                                 ),
                                 child: Center(
                                   child: _loading
@@ -694,7 +706,7 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                                           width: 18,
                                           height: 18,
                                           child: CircularProgressIndicator(
-                                            color: MenuTheme.cream,
+                                            color: MenuTheme.onPlate,
                                             strokeWidth: 2,
                                           ),
                                         )
@@ -703,7 +715,7 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                                           style:
                                               MenuTheme.body(
                                                 size: 13,
-                                                color: MenuTheme.cream,
+                                                color: MenuTheme.onPlate,
                                               ).copyWith(
                                                 fontWeight: FontWeight.w800,
                                                 letterSpacing: 1.5,
@@ -729,7 +741,7 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                           style:
                               MenuTheme.body(
                                 size: 11,
-                                color: MenuTheme.muted,
+                                color: MenuTheme.inkSoft,
                               ).copyWith(
                                 fontWeight: FontWeight.w700,
                                 letterSpacing: 1.5,
@@ -803,13 +815,13 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
         width: 72,
         height: 58,
         decoration: BoxDecoration(
-          color: MenuTheme.board,
-          border: Border.all(color: MenuTheme.line),
+          color: MenuTheme.paper,
+          border: Border.all(color: MenuTheme.rule),
         ),
         child: Center(
           child: Text(
             digit,
-            style: MenuTheme.heading(26).copyWith(color: MenuTheme.cream),
+            style: MenuTheme.heading(26).copyWith(color: MenuTheme.ink),
           ),
         ),
       ),
@@ -829,10 +841,10 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
         width: 72,
         height: 58,
         decoration: BoxDecoration(
-          color: MenuTheme.board,
-          border: Border.all(color: MenuTheme.line),
+          color: MenuTheme.paper,
+          border: Border.all(color: MenuTheme.rule),
         ),
-        child: Center(child: Icon(icon, size: 20, color: MenuTheme.tan)),
+        child: Center(child: Icon(icon, size: 20, color: MenuTheme.pinkInk)),
       ),
     );
   }
@@ -846,8 +858,10 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
         width: 72,
         height: 58,
         decoration: BoxDecoration(
-          color: canSubmit ? MenuTheme.accent : MenuTheme.board,
-          border: Border.all(color: canSubmit ? MenuTheme.tan : MenuTheme.line),
+          color: canSubmit ? MenuTheme.plate : MenuTheme.paper,
+          border: Border.all(
+            color: canSubmit ? MenuTheme.pinkInk : MenuTheme.rule,
+          ),
         ),
         child: Center(
           child: _loading
@@ -855,14 +869,14 @@ class _StaffLoginDialogState extends State<StaffLoginDialog> {
                   width: 20,
                   height: 20,
                   child: CircularProgressIndicator(
-                    color: MenuTheme.cream,
+                    color: MenuTheme.onPlate,
                     strokeWidth: 2,
                   ),
                 )
               : Icon(
                   Icons.arrow_forward_rounded,
                   size: 22,
-                  color: canSubmit ? MenuTheme.cream : MenuTheme.muted,
+                  color: canSubmit ? MenuTheme.onPlate : MenuTheme.inkSoft,
                 ),
         ),
       ),

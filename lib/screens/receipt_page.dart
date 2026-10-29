@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../models/cart.dart';
 import '../widgets/kiosk/kiosk_theme.dart';
 
@@ -33,7 +32,7 @@ class ReceiptPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KioskTheme.lunaTan,
+      backgroundColor: KioskTheme.lunaBlush,
       appBar: AppBar(
         title: Text(
           'RECEIPT',
@@ -41,7 +40,7 @@ class ReceiptPage extends StatelessWidget {
         ),
         centerTitle: true,
         backgroundColor: Colors.transparent,
-        foregroundColor: KioskTheme.lunaBrown,
+        foregroundColor: KioskTheme.lunaPink,
         elevation: 0,
         automaticallyImplyLeading: false,
       ),
@@ -52,7 +51,7 @@ class ReceiptPage extends StatelessWidget {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 24),
-              decoration: KioskTheme.cardBrown,
+              decoration: KioskTheme.cardPink,
               child: Column(
                 children: [
                   Container(
@@ -77,10 +76,10 @@ class ReceiptPage extends StatelessWidget {
                         : _isPickup
                         ? 'PICKUP CONFIRMED!'
                         : 'ORDER PLACED!',
-                    style: GoogleFonts.outfit(
+                    style: KioskTheme.font(
                       color: Colors.white,
                       fontSize: 26,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w800,
                       letterSpacing: 1.5,
                     ),
                   ),
@@ -91,8 +90,8 @@ class ReceiptPage extends StatelessWidget {
                         : _isPickup
                         ? 'Your order will be ready for pickup soon.'
                         : 'We are preparing your delivery now!',
-                    style: GoogleFonts.outfit(
-                      color: Colors.white.withOpacity(0.7),
+                    style: KioskTheme.font(
+                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
@@ -115,7 +114,7 @@ class ReceiptPage extends StatelessWidget {
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(vertical: 32),
                     decoration: BoxDecoration(
-                      color: KioskTheme.lunaTan.withOpacity(0.3),
+                      color: KioskTheme.lunaButter.withOpacity(0.3),
                       borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(KioskTheme.radiusXl),
                       ),
@@ -138,12 +137,12 @@ class ReceiptPage extends StatelessWidget {
                             horizontal: 24,
                             vertical: 10,
                           ),
-                          decoration: KioskTheme.badgeBrown,
+                          decoration: KioskTheme.badgePink,
                           child: Text(
                             'ORDER # $orderNumber',
-                            style: GoogleFonts.outfit(
+                            style: KioskTheme.font(
                               color: Colors.white,
-                              fontWeight: FontWeight.w900,
+                              fontWeight: FontWeight.w800,
                               fontSize: 20,
                               letterSpacing: 2,
                             ),
@@ -254,12 +253,12 @@ class ReceiptPage extends StatelessWidget {
                           width: double.infinity,
                           padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
-                            color: KioskTheme.lunaTan.withOpacity(0.1),
+                            color: KioskTheme.lunaButter.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(
                               KioskTheme.radiusMd,
                             ),
                             border: Border.all(
-                              color: KioskTheme.lunaTan.withOpacity(0.5),
+                              color: KioskTheme.lunaButter.withOpacity(0.5),
                             ),
                           ),
                           child: Center(
@@ -289,16 +288,16 @@ class ReceiptPage extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 24),
                 decoration: BoxDecoration(
-                  color: KioskTheme.lunaBrown,
+                  color: KioskTheme.lunaPink,
                   borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
                   boxShadow: KioskTheme.shadowPrimary,
                 ),
                 child: Center(
                   child: Text(
                     isWalkIn ? 'NEW WALK-IN ORDER' : 'ORDER AGAIN',
-                    style: GoogleFonts.outfit(
+                    style: KioskTheme.font(
                       color: Colors.white,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w800,
                       fontSize: 18,
                       letterSpacing: 2,
                     ),

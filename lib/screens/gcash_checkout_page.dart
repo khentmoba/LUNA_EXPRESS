@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../services/functions.dart';
 import '../widgets/kiosk/kiosk_theme.dart';
 
@@ -107,15 +106,15 @@ class _GCashCheckoutPageState extends State<GCashCheckoutPage> {
       appBar: AppBar(
         title: Text(
           'GCASH PAYMENT',
-          style: GoogleFonts.outfit(
+          style: KioskTheme.font(
             color: KioskTheme.textOnPrimary,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w800,
             fontSize: 16,
             letterSpacing: 2,
           ),
         ),
         centerTitle: true,
-        backgroundColor: KioskTheme.lunaBrown,
+        backgroundColor: KioskTheme.lunaPink,
         foregroundColor: KioskTheme.textOnPrimary,
         elevation: 0,
         leading: IconButton(
@@ -154,7 +153,7 @@ class _GCashCheckoutPageState extends State<GCashCheckoutPage> {
                       icon: const Icon(Icons.arrow_back),
                       label: const Text('GO BACK'),
                       style: FilledButton.styleFrom(
-                        backgroundColor: KioskTheme.lunaBrown,
+                        backgroundColor: KioskTheme.lunaPink,
                       ),
                     ),
                   ],
@@ -171,9 +170,7 @@ class _GCashCheckoutPageState extends State<GCashCheckoutPage> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          CircularProgressIndicator(
-                            color: KioskTheme.lunaBrown,
-                          ),
+                          CircularProgressIndicator(color: KioskTheme.lunaPink),
                           SizedBox(height: 16),
                           Text(
                             'Connecting to GCash...',

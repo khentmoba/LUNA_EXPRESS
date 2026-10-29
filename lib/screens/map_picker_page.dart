@@ -119,8 +119,6 @@ class _MapPickerPageState extends State<MapPickerPage>
     });
   }
 
-  // ─── Search ────────────────────────────────────────────────────
-
   void _onSearchChanged(String query) {
     _searchDebounce?.cancel();
     if (query.trim().length < 2) {
@@ -174,8 +172,6 @@ class _MapPickerPageState extends State<MapPickerPage>
       _searching = false;
     });
   }
-
-  // ─── Native Map HTML ───────────────────────────────────────────
 
   String _buildMapHtml(double lat, double lng) =>
       '''
@@ -279,8 +275,6 @@ fetchAddressAt($lat, $lng);
 </html>
 ''';
 
-  // ─── Confirm ───────────────────────────────────────────────────
-
   Future<void> _confirmLocation() async {
     if (kIsWeb) {
       setState(() => _loading = true);
@@ -299,8 +293,6 @@ fetchAddressAt($lat, $lng);
     }
   }
 
-  // ─── Build ─────────────────────────────────────────────────────
-
   @override
   void dispose() {
     _pulseCtrl.dispose();
@@ -315,7 +307,7 @@ fetchAddressAt($lat, $lng);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KioskTheme.lunaCream,
+      backgroundColor: KioskTheme.lunaBlushPaper,
       appBar: AppBar(
         title: Text(
           'PIN YOUR LOCATION',
@@ -325,7 +317,7 @@ fetchAddressAt($lat, $lng);
             fontSize: 18,
           ),
         ),
-        backgroundColor: KioskTheme.lunaBrown,
+        backgroundColor: KioskTheme.lunaPink,
         foregroundColor: KioskTheme.textOnPrimary,
         elevation: 0,
         actions: [
@@ -358,7 +350,7 @@ fetchAddressAt($lat, $lng);
         color: KioskTheme.lunaWhite,
         boxShadow: [
           BoxShadow(
-            color: KioskTheme.lunaBrown.withOpacity(0.05),
+            color: KioskTheme.lunaPink.withOpacity(0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -380,7 +372,7 @@ fetchAddressAt($lat, $lng);
           ),
           prefixIcon: const Icon(
             Icons.search,
-            color: KioskTheme.lunaBrown,
+            color: KioskTheme.lunaPink,
             size: 20,
           ),
           suffixIcon: _searching
@@ -391,7 +383,7 @@ fetchAddressAt($lat, $lng);
                     height: 18,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      color: KioskTheme.lunaBrown,
+                      color: KioskTheme.lunaPink,
                     ),
                   ),
                 )
@@ -403,7 +395,7 @@ fetchAddressAt($lat, $lng);
                 )
               : null,
           filled: true,
-          fillColor: KioskTheme.lunaCream,
+          fillColor: KioskTheme.lunaBlushPaper,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 16,
             vertical: 14,
@@ -415,7 +407,7 @@ fetchAddressAt($lat, $lng);
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
             borderSide: BorderSide(
-              color: KioskTheme.lunaBrown.withOpacity(0.3),
+              color: KioskTheme.lunaPink.withOpacity(0.3),
               width: 1,
             ),
           ),
@@ -450,7 +442,7 @@ fetchAddressAt($lat, $lng);
             dense: true,
             leading: const Icon(
               Icons.location_on,
-              color: KioskTheme.lunaBrown,
+              color: KioskTheme.lunaPink,
               size: 20,
             ),
             title: Text(
@@ -475,7 +467,7 @@ fetchAddressAt($lat, $lng);
     return Stack(
       children: [
         ColoredBox(
-          color: const Color(0xFFE9E3D9),
+          color: KioskTheme.lunaBlushLight,
           child: FlutterMap(
             mapController: _mapController,
             options: MapOptions(
@@ -547,7 +539,7 @@ fetchAddressAt($lat, $lng);
             const Icon(
               Icons.map_outlined,
               size: 18,
-              color: KioskTheme.lunaBrown,
+              color: KioskTheme.lunaPink,
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -589,7 +581,7 @@ fetchAddressAt($lat, $lng);
                   width: 36,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: KioskTheme.lunaBrown,
+                    color: KioskTheme.lunaPink,
                     borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(36),
                       topRight: Radius.circular(36),
@@ -626,7 +618,7 @@ fetchAddressAt($lat, $lng);
                   width: 14,
                   height: 7,
                   decoration: BoxDecoration(
-                    color: KioskTheme.lunaBrown.withOpacity(0.15),
+                    color: KioskTheme.lunaPink.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(7),
                   ),
                 ),
@@ -655,11 +647,11 @@ fetchAddressAt($lat, $lng);
             height: 44,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: KioskTheme.lunaBrown.withOpacity(0.1)),
+              border: Border.all(color: KioskTheme.lunaPink.withOpacity(0.1)),
             ),
             child: const Icon(
               Icons.my_location,
-              color: KioskTheme.lunaBrown,
+              color: KioskTheme.lunaPink,
               size: 22,
             ),
           ),
@@ -689,7 +681,7 @@ fetchAddressAt($lat, $lng);
               children: [
                 const Icon(
                   Icons.location_on,
-                  color: KioskTheme.lunaBrown,
+                  color: KioskTheme.lunaPink,
                   size: 18,
                 ),
                 const SizedBox(width: 6),
@@ -729,7 +721,7 @@ fetchAddressAt($lat, $lng);
     return Container(
       color: KioskTheme.lunaWhite.withOpacity(0.85),
       child: const Center(
-        child: CircularProgressIndicator(color: KioskTheme.lunaBrown),
+        child: CircularProgressIndicator(color: KioskTheme.lunaPink),
       ),
     );
   }

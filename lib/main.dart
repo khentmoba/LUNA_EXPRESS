@@ -78,27 +78,64 @@ class LunaExpressApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: KioskTheme.lunaBrown,
+          seedColor: KioskTheme.lunaPink,
           brightness: Brightness.light,
-          primary: KioskTheme.lunaBrown,
+          primary: KioskTheme.lunaPink,
           onPrimary: KioskTheme.textOnPrimary,
-          surface: KioskTheme.lunaWarmWhite,
+          secondary: KioskTheme.pinkInk,
+          tertiary: KioskTheme.lunaButter,
+          surface: KioskTheme.lunaPaper,
+          onSurface: KioskTheme.textPrimary,
+          outline: KioskTheme.pinkInk,
+          outlineVariant: KioskTheme.rule,
+          error: KioskTheme.error,
         ),
-        scaffoldBackgroundColor: KioskTheme.lunaCream,
-        fontFamily: 'Outfit',
-        appBarTheme: const AppBarTheme(
+        scaffoldBackgroundColor: KioskTheme.lunaBlushPaper,
+        fontFamily: KioskTheme.printFamily,
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: KioskTheme.lunaPink,
+          selectionColor: KioskTheme.lunaButter.withValues(alpha: .6),
+          selectionHandleColor: KioskTheme.lunaPink,
+        ),
+        appBarTheme: AppBarTheme(
           centerTitle: true,
           elevation: 0,
           scrolledUnderElevation: 2,
+          backgroundColor: KioskTheme.lunaPaper,
+          foregroundColor: KioskTheme.textPrimary,
+          surfaceTintColor: Colors.transparent,
+          titleTextStyle: KioskTheme.headerSmall,
+          shape: const Border(
+            bottom: BorderSide(color: KioskTheme.lunaLogoPink, width: 2),
+          ),
         ),
         cardTheme: CardThemeData(
           elevation: 0,
+          color: KioskTheme.lunaWhite,
+          surfaceTintColor: Colors.transparent,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(KioskTheme.radiusLg),
+            side: const BorderSide(color: KioskTheme.rule),
+          ),
+        ),
+        dividerTheme: const DividerThemeData(color: KioskTheme.rule),
+        filledButtonTheme: FilledButtonThemeData(
+          style: FilledButton.styleFrom(
+            backgroundColor: KioskTheme.lunaPink,
+            foregroundColor: KioskTheme.textOnPrimary,
+            minimumSize: const Size(48, 48),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
+            ),
           ),
         ),
         snackBarTheme: SnackBarThemeData(
           behavior: SnackBarBehavior.floating,
+          backgroundColor: KioskTheme.lunaInk,
+          contentTextStyle: KioskTheme.font(
+            color: KioskTheme.lunaPaper,
+            fontSize: 14,
+          ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
           ),
