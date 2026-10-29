@@ -52,6 +52,12 @@ npx firebase-tools emulators:exec --only firestore "node docs/evidence/order-not
 
 Local emulator runs used Java 21 from Android Studio. Git Bash required `MSYS_NO_PATHCONV=1` for the web build so `/kiosk/` was not converted to a Windows path.
 
+## CI follow-up
+
+The first Linux CI run exposed a timezone-dependent fixture serializer in the new regression test. `Timestamp.toDate()` returns local time, so the Windows fixture contained `12:00` while Linux produced `04:00` for the same instant. This affected test serialization only.
+
+The serializer now calls `toUtc()` before `toIso8601String()`, and an explicit assertion requires `2026-10-29T04:00:00.000Z`. That assertion failed locally before the correction. After regenerating the fixture, all 36 Flutter tests, analysis, and all eight rules tests passed. [Captured before/after output](order-placement-timezone.txt).
+
 ## Review and limits
 
 The diff was reviewed against `origin/main`. The core safety fact was executed: server notification status updates work when that field is absent at creation. No payment calculations, notification formatting, client access rules, or visible UI changed. The only production code change removes the rejected creation field; an optional Firestore dependency supports capture of the real write in tests.

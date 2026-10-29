@@ -66,8 +66,10 @@ void main() {
       final payload = firestore.orders.order.payload!;
       final json = jsonEncode(
         payload,
-        toEncodable: (value) => (value as Timestamp).toDate().toIso8601String(),
+        toEncodable: (value) =>
+            (value as Timestamp).toDate().toUtc().toIso8601String(),
       );
+      expect(jsonDecode(json)['timestamp'], '2026-10-29T04:00:00.000Z');
       final evidencePath = Platform.environment['ORDER_PAYLOAD_OUTPUT'];
       if (evidencePath != null) File(evidencePath).writeAsStringSync('$json\n');
 
