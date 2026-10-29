@@ -52,8 +52,8 @@ A neighbourhood kiosk with the prices printed where you can see them: real per-i
 - Name: Luna Bites & Delights. The owner also uses "Luna Express" for the ordering system.
 - Tagline in the owner's own words: "Good food, sweet drinks, moonlit vibes."
 - Intro copy from the Facebook page: "Tambayan ng good food, sweet drinks, at moonlit vibes 🌕✨ Feel the comfort, taste the delight — only at Luna Bites & Delights 💛 Located @ Purok 5, Magallanes, Agusan Del Norte."
-- Existing palette comes from `KioskTheme`: brown `#4A3728`, dark brown `#2D2014`, tan `#DEC995`, cream `#F9F1E7`, warm white `#FFFAF5`.
-- Logo: `images/luna_logo.png`, a gold crescent on a tan ground.
+- Owner-supplied palette: logo pink `#EC1C72`, blush `#FEB7C9`, pink watercolor wash (`site/img/pink-wash.webp`, `images/pink_wash.jpg`), butter yellow `#FCD04E`, paper `#FFFAFB`, plum ink `#2A0F1E`.
+- Logo: `images/luna_logo.png` (and `site/img/luna-logo-*.webp`), the owner's circular pink badge with a yellow cooler cup, striped straw, script "Luna" and "Bites & Delights".
 
 ## Evidence on Hand
 

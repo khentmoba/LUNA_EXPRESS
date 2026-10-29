@@ -1,6 +1,5 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../services/functions.dart';
 import '../services/session.dart';
 import '../services/cart_notifier.dart';
@@ -128,9 +127,9 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
                 SnackBar(
                   content: Text(
                     'STAFF LOGGED OUT',
-                    style: GoogleFonts.outfit(fontWeight: FontWeight.w900),
+                    style: KioskTheme.font(fontWeight: FontWeight.w800),
                   ),
-                  backgroundColor: KioskTheme.lunaBrown,
+                  backgroundColor: KioskTheme.lunaPink,
                 ),
               );
             },
@@ -242,7 +241,7 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
             SnackBar(
               content: Text(
                 'SALES REPORT SENT TO TELEGRAM!',
-                style: GoogleFonts.outfit(fontWeight: FontWeight.w900),
+                style: KioskTheme.font(fontWeight: FontWeight.w800),
               ),
               backgroundColor: KioskTheme.success,
             ),
@@ -253,7 +252,7 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
             SnackBar(
               content: Text(
                 'ERROR: $msg',
-                style: GoogleFonts.outfit(fontWeight: FontWeight.w900),
+                style: KioskTheme.font(fontWeight: FontWeight.w800),
               ),
               backgroundColor: KioskTheme.warning,
             ),
@@ -273,7 +272,7 @@ class _StaffMenuDialogState extends State<StaffMenuDialog> {
           SnackBar(
             content: Text(
               'CRASH: $errorMessage',
-              style: GoogleFonts.outfit(fontWeight: FontWeight.w900),
+              style: KioskTheme.font(fontWeight: FontWeight.w800),
             ),
             backgroundColor: KioskTheme.error,
           ),

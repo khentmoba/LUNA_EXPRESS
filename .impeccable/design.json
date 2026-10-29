@@ -1,378 +1,508 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-23T15:31:51.225Z",
-  "title": "Design System: Luna Bites & Delights — Storefront",
+  "generatedAt": "2026-10-29T22:40:00Z",
+  "title": "Design System: Luna Bites & Delights — Pink Order Pad",
   "extensions": {
     "colorMeta": {
-      "enamel": {
-        "role": "neutral",
-        "displayName": "Enamel",
-        "canonical": "#241a12",
-        "tonalRamp": [
-          "#170f07",
-          "#1b130d",
-          "#20160d",
-          "#241a12",
-          "#2b1e14",
-          "#2c2016"
-        ]
-      },
-      "panel": {
-        "role": "neutral",
-        "displayName": "Panel",
-        "canonical": "#2c2016",
-        "tonalRamp": [
-          "#1b130d",
-          "#241a12",
-          "#2c2016",
-          "#3a2a1c"
-        ]
-      },
-      "cream": {
-        "role": "neutral",
-        "displayName": "Cream",
-        "canonical": "#f7eedd",
-        "tonalRamp": [
-          "#b39c7c",
-          "#d9c9ab",
-          "#e0c9a6",
-          "#efe3c9",
-          "#f7eedd",
-          "#fffaf0"
-        ]
-      },
-      "vermilion": {
+      "logo-pink": {
         "role": "primary",
-        "displayName": "Live Vermilion",
-        "canonical": "#d8452a",
+        "displayName": "Logo Pink",
+        "canonical": "#ec1c72",
         "tonalRamp": [
-          "#8a2a18",
-          "#a3301a",
-          "#b8381e",
-          "#d8452a",
-          "#e2603f",
-          "#ffb9a4"
+          "#42061e",
+          "#710934",
+          "#a90e4e",
+          "#e21368",
+          "#ef438a",
+          "#f480b0",
+          "#f9b8d3",
+          "#fde7f0"
         ]
       },
-      "vermilion-plate": {
+      "plate-pink": {
         "role": "primary",
-        "displayName": "Painted Plate",
-        "canonical": "#a3301a",
+        "displayName": "Plate Pink",
+        "canonical": "#d91566",
         "tonalRamp": [
-          "#6d1f11",
-          "#8a2a18",
-          "#a3301a",
-          "#b8381e"
+          "#41061f",
+          "#700b34",
+          "#a7104f",
+          "#df1669",
+          "#ed458a",
+          "#f381b0",
+          "#f8b9d3",
+          "#fde8f0"
+        ]
+      },
+      "pink-press": {
+        "role": "primary",
+        "displayName": "Pink Press",
+        "canonical": "#b30e52",
+        "tonalRamp": [
+          "#42051e",
+          "#720934",
+          "#aa0d4e",
+          "#e31268",
+          "#f0428a",
+          "#f57fb0",
+          "#f9b8d3",
+          "#fde7f0"
+        ]
+      },
+      "pink-ink": {
+        "role": "primary",
+        "displayName": "Pink Ink",
+        "canonical": "#b30e52",
+        "tonalRamp": [
+          "#42051e",
+          "#720934",
+          "#aa0d4e",
+          "#e31268",
+          "#f0428a",
+          "#f57fb0",
+          "#f9b8d3",
+          "#fde7f0"
+        ]
+      },
+      "butter": {
+        "role": "secondary",
+        "displayName": "Butter",
+        "canonical": "#fcd04e",
+        "tonalRamp": [
+          "#453403",
+          "#765905",
+          "#b08607",
+          "#ebb20a",
+          "#f7c73b",
+          "#f9d97b",
+          "#fceab6",
+          "#fef8e7"
+        ]
+      },
+      "blush": {
+        "role": "neutral",
+        "displayName": "Blush",
+        "canonical": "#feb7c9",
+        "tonalRamp": [
+          "#450314",
+          "#760521",
+          "#b00732",
+          "#eb0a43",
+          "#f73b6b",
+          "#f97b9b",
+          "#fcb6c7",
+          "#fee7ec"
+        ]
+      },
+      "wash-base": {
+        "role": "neutral",
+        "displayName": "Pink Wash",
+        "canonical": "#f97cb3",
+        "tonalRamp": [
+          "#440320",
+          "#750536",
+          "#b00852",
+          "#ea0b6d",
+          "#f63c8e",
+          "#f97bb3",
+          "#fcb6d5",
+          "#fee7f1"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#fffafb",
+        "tonalRamp": [
+          "#450310",
+          "#76051b",
+          "#b00729",
+          "#eb0a37",
+          "#f73b61",
+          "#f97b94",
+          "#fcb6c4",
+          "#fee7eb"
+        ]
+      },
+      "card-white": {
+        "role": "neutral",
+        "displayName": "Card White",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#242424",
+          "#3d3d3d",
+          "#5c5c5c",
+          "#7a7a7a",
+          "#999999",
+          "#bababa",
+          "#d9d9d9",
+          "#f2f2f2"
+        ]
+      },
+      "blush-paper": {
+        "role": "neutral",
+        "displayName": "Blush Paper",
+        "canonical": "#fff0f4",
+        "tonalRamp": [
+          "#450314",
+          "#760523",
+          "#b00734",
+          "#eb0a46",
+          "#f73b6d",
+          "#f97b9d",
+          "#fcb6c8",
+          "#fee7ed"
+        ]
+      },
+      "blush-light": {
+        "role": "neutral",
+        "displayName": "Blush Light",
+        "canonical": "#ffe3ec",
+        "tonalRamp": [
+          "#450318",
+          "#760529",
+          "#b0073e",
+          "#eb0a52",
+          "#f73b77",
+          "#f97ba4",
+          "#fcb6cc",
+          "#fee7ee"
+        ]
+      },
+      "pink-rule": {
+        "role": "neutral",
+        "displayName": "Pink Rule",
+        "canonical": "#f4afc8",
+        "tonalRamp": [
+          "#3f091c",
+          "#6c0f30",
+          "#a11649",
+          "#d71e61",
+          "#e64c84",
+          "#ee86ac",
+          "#f6bcd1",
+          "#fce9f0"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#2a0f1e",
+        "tonalRamp": [
+          "#351326",
+          "#5a2040",
+          "#873061",
+          "#b44081",
+          "#c9699e",
+          "#db9abe",
+          "#ebc7db",
+          "#f8ecf3"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Ink Soft",
+        "canonical": "#6b3a52",
+        "tonalRamp": [
+          "#2e1923",
+          "#4f2b3d",
+          "#77415b",
+          "#9f567a",
+          "#b77b98",
+          "#cfa6ba",
+          "#e4cdd9",
+          "#f6eef2"
+        ]
+      },
+      "ink-muted": {
+        "role": "neutral",
+        "displayName": "Ink Muted",
+        "canonical": "#7d4d64",
+        "tonalRamp": [
+          "#2c1b23",
+          "#4c2f3d",
+          "#72465b",
+          "#975d79",
+          "#b18198",
+          "#cbaab9",
+          "#e2d0d8",
+          "#f5eff2"
+        ]
+      },
+      "on-plate": {
+        "role": "neutral",
+        "displayName": "On Plate",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#242424",
+          "#3d3d3d",
+          "#5c5c5c",
+          "#7a7a7a",
+          "#999999",
+          "#bababa",
+          "#d9d9d9",
+          "#f2f2f2"
+        ]
+      },
+      "success": {
+        "role": "tertiary",
+        "displayName": "Success",
+        "canonical": "#1e7a3c",
+        "tonalRamp": [
+          "#0e391c",
+          "#186230",
+          "#249348",
+          "#30c461",
+          "#5bd784",
+          "#90e4ac",
+          "#c2f0d1",
+          "#ebfaf0"
+        ]
+      },
+      "warning": {
+        "role": "tertiary",
+        "displayName": "Warning",
+        "canonical": "#b45309",
+        "tonalRamp": [
+          "#441f03",
+          "#753606",
+          "#af5109",
+          "#e96c0c",
+          "#f58d3d",
+          "#f8b27c",
+          "#fbd4b6",
+          "#fef1e7"
+        ]
+      },
+      "error": {
+        "role": "tertiary",
+        "displayName": "Error",
+        "canonical": "#b3261e",
+        "tonalRamp": [
+          "#3d0d0a",
+          "#691612",
+          "#9d211a",
+          "#d22d23",
+          "#e25850",
+          "#eb8e89",
+          "#f4c0bd",
+          "#fbeae9"
+        ]
+      },
+      "info": {
+        "role": "tertiary",
+        "displayName": "Info",
+        "canonical": "#1f5fad",
+        "tonalRamp": [
+          "#0b213d",
+          "#133968",
+          "#1c559c",
+          "#2572d0",
+          "#5292e0",
+          "#8ab5ea",
+          "#bed6f3",
+          "#e9f1fb"
         ]
       }
     },
     "typographyMeta": {
       "display": {
-        "displayName": "Signage",
-        "purpose": "Wordmark, section heads, prices, plate labels, tags."
+        "displayName": "Display",
+        "purpose": "The tagline on the first slip."
       },
-      "label": {
-        "displayName": "Sticker label",
-        "purpose": "Uppercase Karla with wide tracking for nav, plates, meta rows."
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Slip titles and the gallery heading."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Notice headings and offer names."
       },
       "body": {
-        "displayName": "Spoken",
-        "purpose": "Paragraphs and dish descriptions, 16–17px / 1.55."
+        "displayName": "Body",
+        "purpose": "Prose copy, capped near 46–62ch."
       },
-      "price-board-title": {
-        "displayName": "Price-board title",
-        "purpose": "Large uppercase heading above the cream menu panel."
+      "label": {
+        "displayName": "Label",
+        "purpose": "Uppercase form labels and column heads."
       },
-      "price-board-category": {
-        "displayName": "Price-board category",
-        "purpose": "Vermilion-plate Big Shoulders category heading and solid underline on cream."
+      "price": {
+        "displayName": "Price",
+        "purpose": "Right-aligned tabular amounts."
       },
-      "price-board-name": {
-        "displayName": "Price-board item name",
-        "purpose": "Karla 16px/600 names on the local cream panel; names may wrap."
+      "hand": {
+        "displayName": "Hand",
+        "purpose": "Marks written onto a slip: values, sample lines, captions, quantities."
       },
-      "price-board-price": {
-        "displayName": "Price-board item price",
-        "purpose": "Big Shoulders 32px/800 right-aligned tabular figures; enamel, or vermilion-plate for promotions."
+      "app-heading": {
+        "displayName": "App Heading",
+        "purpose": "Flutter category and slip titles."
       },
-      "price-board-offer-name": {
-        "displayName": "Price-board meal name",
-        "purpose": "Uppercase Big Shoulders offer name on the continuous red strip."
+      "app-body": {
+        "displayName": "App Body",
+        "purpose": "Flutter printed copy and controls."
       },
-      "price-board-offer-price": {
-        "displayName": "Price-board meal price",
-        "purpose": "Large tabular Big Shoulders ₱99 figures on the red strip."
-      },
-      "price-board-offer-body": {
-        "displayName": "Price-board meal description",
-        "purpose": "Karla description beneath the name and price at 940px and below."
-      },
-      "menu-heading": {
-        "displayName": "Flutter category heading",
-        "purpose": "Local MenuTheme BigShoulders alias: bundled heading face, distinct from storefront CSS family Big Shoulders Display. Wordmark/category/subgroup headings use size-specific variants."
-      },
-      "menu-item-heading": {
-        "displayName": "Flutter item heading",
-        "purpose": "BigShoulders item-details heading; bundled TTF alias in pubspec.yaml."
-      },
-      "menu-body": {
-        "displayName": "Flutter task copy",
-        "purpose": "Bundled Karla for menu descriptions and task text."
-      },
-      "menu-product-name": {
-        "displayName": "Flutter product name",
-        "purpose": "Karla product-card names, up to three lines with ellipsis."
-      },
-      "menu-price-control": {
-        "displayName": "Flutter prices and controls",
-        "purpose": "Karla prices, quantity and filled-button labels in the local menu and chooser only."
-      },
-      "menu-label": {
-        "displayName": "Flutter helper and category text",
-        "purpose": "Karla helper text and category choices; no storefront uppercase tracking requirement."
+      "app-hand": {
+        "displayName": "App Hand",
+        "purpose": "Flutter quantities and handwritten prompts."
       }
     },
     "shadows": [
       {
-        "name": "plate-lip",
-        "value": "0 .06em 0 #8a2a18, 0 .55em 1em -.55em rgba(0,0,0,.9)",
-        "purpose": "Plate at rest: a hairline of darker red plus a soft cast."
+        "name": "slip-cast",
+        "value": "drop-shadow(0 1px 0 rgba(142,11,65,.22)) drop-shadow(0 16px 18px rgba(110,4,50,.3))",
+        "purpose": "Perforated paper slip over the pink wash."
       },
       {
-        "name": "plate-lip-hover",
-        "value": "0 .06em 0 #8a2a18, 0 .95em 1.5em -.6em rgba(0,0,0,.95)",
-        "purpose": "Plate lifted 2px on hover."
+        "name": "snapshot",
+        "value": "0 1px 0 rgba(142,11,65,.14), 0 22px 30px -22px rgba(80,0,36,.75)",
+        "purpose": "Taped photograph on paper or wash."
       },
       {
-        "name": "plate-lip-press",
-        "value": "0 .04em 0 #8a2a18, 0 .25em .6em -.3em rgba(0,0,0,.8)",
-        "purpose": "Plate pressed 2px down on activate."
-      },
-      {
-        "name": "panel",
-        "value": "inset 0 2px 0 rgba(255,255,255,.045), 0 34px 60px -46px #000",
-        "purpose": "Raised panel: lit top edge, long cast."
-      },
-      {
-        "name": "mount",
-        "value": "0 22px 34px -22px #000, 0 2px 0 rgba(255,255,255,.05)",
-        "purpose": "Photo print resting on the wall."
-      },
-      {
-        "name": "bar-stuck",
-        "value": "0 14px 26px -22px #000",
-        "purpose": "Sticky chrome rail once scrolled."
-      },
-      {
-        "name": "needle",
-        "value": "0 3px 8px rgba(0,0,0,.55)",
-        "purpose": "Fare needle on the track — neutral, never chromatic."
-      },
-      {
-        "name": "tag",
-        "value": "0 6px 14px -8px rgba(0,0,0,.9)",
-        "purpose": "Painted price tag pinned to a print."
+        "name": "stamp",
+        "value": "inset 0 0 0 3px #d91566, inset 0 0 0 4.5px rgba(255,255,255,.6), 0 1px 0 #b30e52, 0 12px 20px -12px rgba(142,11,65,.75)",
+        "purpose": "Primary rubber-stamp button."
       }
     ],
     "motion": [
       {
-        "name": "lift",
-        "value": "transform .18s cubic-bezier(.2, .7, .3, 1)",
-        "purpose": "Plate hover lift."
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Handwriting reveal, stamp settle and photo pin."
       },
       {
-        "name": "needle-spring",
-        "value": "left .5s cubic-bezier(.3, 1.24, .42, 1)",
-        "purpose": "Fare needle settling on a fare."
-      },
-      {
-        "name": "needle-drag",
-        "value": "left .1s linear",
-        "purpose": "Needle following the pointer while dragging."
-      },
-      {
-        "name": "swash",
-        "value": "swash .5s cubic-bezier(.2, .8, .25, 1) both .1s",
-        "purpose": "The one authored entrance: the vermilion swash under the wordmark."
-      },
-      {
-        "name": "reduced-motion",
-        "value": "prefers-reduced-motion: animation-duration 1e-06s, transition-duration 1e-06s",
-        "purpose": "Kill switch; needle starts at its resting fare."
-      },
-      {
-        "name": "needle-settle",
-        "value": "left .5s cubic-bezier(.3, 1.24, .42, 1)",
-        "purpose": "Fare needle settling after a pointer release."
+        "name": "ease-press",
+        "value": "cubic-bezier(0.2, 0.8, 0.2, 1)",
+        "purpose": "Stamp hover and press."
       }
     ],
     "breakpoints": [
-      {
-        "name": "price-board-stack",
-        "value": "940px"
-      },
-      {
-        "name": "wall",
-        "value": "940px"
-      },
-      {
-        "name": "mid",
-        "value": "700px"
-      },
       {
         "name": "compact",
         "value": "460px"
       },
       {
-        "name": "menu-sidebar",
+        "name": "phone",
+        "value": "700px"
+      },
+      {
+        "name": "stack",
+        "value": "940px"
+      },
+      {
+        "name": "app-sidebar",
         "value": "1000px"
-      },
-      {
-        "name": "menu-grid-gutter",
-        "value": "600px available grid width"
-      },
-      {
-        "name": "menu-chooser-columns",
-        "value": "600px available body width"
-      },
-      {
-        "name": "menu-chooser-footer",
-        "value": "400px available footer width"
-      },
-      {
-        "name": "menu-fixed-item-height-cap",
-        "value": "700px viewport width"
       }
     ]
   },
   "components": [
     {
-      "name": "Sale plate",
+      "name": "Stamp Button",
       "kind": "button",
-      "refersTo": "plate-primary",
-      "description": "The painted button: every order action, map action and page message.",
-      "html": "<a class=\"plate\" href=\"/kiosk/#/menu\">Order for delivery</a>",
-      "css": ".plate { display:inline-flex; align-items:center; gap:.55em; background:#a3301a; color:#f7eedd; font-weight:700; font-size:clamp(.82rem,1.1vw,.95rem); letter-spacing:.16em; text-transform:uppercase; text-decoration:none; padding:1.2em 1.7em; box-shadow:0 .06em 0 #8a2a18, 0 .55em 1em -.55em rgba(0,0,0,.9); transition:transform .18s cubic-bezier(.2,.7,.3,1), box-shadow .18s ease; } .plate:hover { background:#b8381e; transform:translateY(-2px); box-shadow:0 .06em 0 #8a2a18, 0 .95em 1.5em -.6em rgba(0,0,0,.95); } .plate:active { transform:translateY(2px); box-shadow:0 .04em 0 #8a2a18, 0 .25em .6em -.3em rgba(0,0,0,.8); } .plate--invert { background:#f7eedd; color:#8a2a18; box-shadow:0 .05em 0 rgba(15,9,6,.35), 0 .55em 1.1em -.55em rgba(0,0,0,.5); }"
+      "refersTo": "stamp-primary",
+      "description": "Primary order action styled as a pink rubber stamp.",
+      "html": "<a class=\"ds-stamp\" href=\"#\">Start my order</a>",
+      "css": ".ds-stamp { display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:.85em 1.45em; border-radius:6px; background:#d91566; color:#fff; font-weight:750; text-decoration:none; box-shadow:inset 0 0 0 3px #d91566, inset 0 0 0 4.5px rgba(255,255,255,.6), 0 1px 0 #b30e52, 0 12px 20px -12px rgba(142,11,65,.75); transition:background-color .18s ease-out, transform .18s cubic-bezier(.2,.8,.2,1); } .ds-stamp:hover { background:#b30e52; transform:translateY(-1px); } .ds-stamp:active { transform:translateY(1px); } .ds-stamp:focus-visible { outline:3px solid #2a0f1e; outline-offset:3px; }"
     },
     {
-      "name": "Fare rail",
-      "kind": "input",
-      "description": "Signature delivery estimate: a trial distance in km gives an example fare, driven by pointer or keyboard. Checkout uses the pin and nearer kitchen for the exact fare.",
-      "html": "<div class=\"rail-wrap\"><div class=\"rail\" id=\"rail\" role=\"slider\" tabindex=\"0\" aria-valuemin=\"1\" aria-valuemax=\"12\" aria-valuenow=\"3\" aria-valuetext=\"3 kilometres, 117 pesos\" aria-describedby=\"rail-note\"><div class=\"rail__track\"></div><div class=\"rail__needle\" style=\"--v:3\"><b class=\"rail__tag\">3 KM</b></div></div><div class=\"rail__ticks\" aria-hidden=\"true\"></div></div>",
-      "css": ".rail { position:relative; height:52px; cursor:ew-resize; touch-action:none; } .rail:focus-visible { outline:2px solid #e0c9a6; outline-offset:5px; } .rail__needle { position:absolute; top:0; left:calc((var(--v) - 1) / 11 * 100%); transform:translateX(-50%); background:#d8452a; box-shadow:0 3px 8px rgba(0,0,0,.55); transition:left .5s cubic-bezier(.3,1.24,.42,1); } .rail.is-dragging .rail__needle { transition:left .1s linear; } .rail__tag { background:#2c2016; color:#f7eedd; padding:.28em .42em; } .rail__ticks i:first-child, .rail__ticks i:nth-child(3n) { height:20px; opacity:.9; } .rail__fares { display:none; position:absolute; top:64px; left:0; right:0; } .rail__fares em { position:absolute; left:calc((var(--i) - 1) / 11 * 100%); transform:translateX(-50%); font-size:.7rem; font-variant-numeric:tabular-nums; color:#b39c7c; } .rail__fares em.is-active { color:#f7eedd; font-weight:700; } @media (min-width:940px) { .rail__fares { display:block; } }"
-    },
-    {
-      "name": "Offer line",
-      "kind": "custom",
-      "description": "Two ₱99 meals share one continuous vermilion-plate strip. Above 940px each name, description and price share a row; at 940px and below the name and price sit above the description.",
-      "html": "<div class=\"ds-offer-strip\"><p class=\"ds-offer\"><span class=\"ds-offer-name\">Sulit meals</span><span class=\"ds-offer-description\">A filling meal, a fried egg and a cold drink. Hungarian sausage · tocino · shawarma rice · jumbo hotdog · Korean Spam Musubi · pork sisig.</span><span class=\"ds-offer-price\">₱99</span></p><p class=\"ds-offer\"><span class=\"ds-offer-name\">Chicken poppers</span><span class=\"ds-offer-description\">Crispy poppers with rice, egg and a drink. Korean barbeque · yangnyeom · lemon glaze · teriyaki · creamy cheese · mango habanero.</span><span class=\"ds-offer-price\">₱99</span></p></div>",
-      "css": ".ds-offer-strip { background:var(--verm-plate,#a3301a); color:var(--cream,#f7eedd); padding:8px clamp(20px,3vw,36px); border-radius:0; } .ds-offer { display:grid; grid-template-columns:minmax(160px,.65fr) minmax(0,2fr) auto; grid-template-areas:\"name description price\"; align-items:center; gap:24px; margin:0; padding:22px 0; } .ds-offer + .ds-offer { border-top:1px solid rgba(247,238,221,.35); } .ds-offer-name { grid-area:name; font-family:var(--display,\"Big Shoulders Display\",\"Arial Narrow\",sans-serif); font-weight:800; font-size:clamp(1.65rem,2.4vw,2rem); line-height:1; text-transform:uppercase; } .ds-offer-description { grid-area:description; font-family:var(--text,Karla,sans-serif); font-size:.95rem; line-height:1.5; } .ds-offer-price { grid-area:price; justify-self:end; font-family:var(--display,\"Big Shoulders Display\",\"Arial Narrow\",sans-serif); font-weight:900; font-size:clamp(3.2rem,5vw,4rem); line-height:.95; font-variant-numeric:tabular-nums; } @media (max-width:940px) { .ds-offer { grid-template-columns:minmax(0,1fr) auto; grid-template-areas:\"name price\" \"description description\"; gap:12px 20px; } }"
-    },
-    {
-      "name": "Photo mount",
-      "kind": "custom",
-      "description": "A print taped to the wall: paper border, slight rotation, painted price tag.",
-      "html": "<figure class=\"mount mount--a\"><img src=\"/img/shawarma-wrap.webp\" alt=\"…\" width=\"760\" height=\"760\"><figcaption class=\"tag\">Shawarma wrap ₱60</figcaption></figure>",
-      "css": ".mount { position:relative; transform:rotate(-1.2deg); } .mount img { display:block; width:100%; height:auto; border:6px solid #f7eedd; box-shadow:0 22px 34px -22px #000, 0 2px 0 rgba(255,255,255,.05); object-fit:cover; } .tag { position:absolute; right:-10px; bottom:12px; transform:rotate(2.2deg); background:#a3301a; color:#f7eedd; font-family:var(--display); font-weight:700; font-size:1.02rem; padding:.34em .55em; }"
-    },
-    {
-      "name": "Price-board panel",
-      "kind": "custom",
-      "refersTo": "price-board-panel",
-      "description": "Local cream printed-menu panel inside the dark storefront: three columns above 940px, continuous stacked categories at 940px and below. Flat solid rules, square edges and no added motion.",
-      "html": "<div class=\"ds-board-panel\"><section class=\"ds-board-col\"><h3 class=\"ds-board-category\">Shawarma</h3></section><section class=\"ds-board-col\"><h3 class=\"ds-board-category\">Fries · combos</h3></section><section class=\"ds-board-col\"><h3 class=\"ds-board-category\">Sweet · cold</h3></section></div>",
-      "css": ".ds-board-panel { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); background:var(--cream,#f7eedd); color:var(--ink,#0f0906); padding:clamp(22px,3vw,36px) 0; border-top:6px solid var(--tan,#e0c9a6); border-radius:0; } .ds-board-col { min-width:0; padding-inline:clamp(20px,2.2vw,30px); } .ds-board-col + .ds-board-col { border-left:1px solid rgba(74,55,40,.25); } .ds-board-category { margin:0 0 4px; padding-bottom:18px; border-bottom:2px solid var(--verm-plate,#a3301a); font-family:var(--display,\"Big Shoulders Display\",\"Arial Narrow\",sans-serif); font-size:clamp(1.8rem,2.7vw,2.5rem); font-weight:800; line-height:1; text-transform:uppercase; color:var(--verm-plate,#a3301a); } @media (max-width:940px) { .ds-board-panel { grid-template-columns:minmax(0,1fr); padding-block:0; } .ds-board-col { padding:24px; } .ds-board-col + .ds-board-col { border-left:0; border-top:1px solid rgba(74,55,40,.25); } } @media (max-width:700px) { .ds-board-col { padding:24px 20px; } }"
-    },
-    {
-      "name": "Price row",
-      "kind": "custom",
-      "description": "Cream-panel menu row: Karla name, unpainted flexible spacer and large Big Shoulders tabular price. Promotional prices use vermilion-plate.",
-      "html": "<div class=\"ds-price-row\"><span class=\"ds-price-row-name\">Shawarma Wrap</span><span class=\"ds-price-row-space\" aria-hidden=\"true\"></span><span class=\"ds-price-row-price\">₱60</span></div>",
-      "css": ".ds-price-row { display:flex; align-items:baseline; gap:10px; padding:13px 0; background:var(--cream,#f7eedd); color:var(--enamel,#241a12); border-bottom:1px solid rgba(74,55,40,.18); } .ds-price-row-name { font-family:var(--text,Karla,sans-serif); font-size:1rem; font-weight:600; line-height:1.35; } .ds-price-row-space { flex:1 0 8px; } .ds-price-row-price { flex-shrink:0; font-family:var(--display,\"Big Shoulders Display\",\"Arial Narrow\",sans-serif); font-size:2rem; font-weight:800; line-height:1; font-variant-numeric:tabular-nums; } .ds-price-row--promo .ds-price-row-price { color:var(--verm-plate,#a3301a); } .ds-price-row:last-child { border-bottom:0; padding-bottom:0; }"
-    },
-    {
-      "name": "Flutter menu primary action",
+      "name": "Line Button",
       "kind": "button",
-      "refersTo": "menu-primary",
-      "description": "HTML illustration of the local Flutter filled action; native Material feedback and semantics remain authoritative in source.",
-      "html": "<button class=\"ds-menu-action\">Add to order · ₱99</button>",
-      "css": ".ds-menu-action { background:#a3301a; color:#f7eedd; border:0; border-radius:0; min-width:48px; min-height:52px; font-family:Karla,sans-serif; font-size:16px; font-weight:700; line-height:1.4; } .ds-menu-action:hover { box-shadow:inset 0 0 0 100px rgba(224,201,166,.08); } .ds-menu-action:focus-visible { outline:2px solid #e0c9a6; outline-offset:2px; } .ds-menu-action:active { box-shadow:inset 0 0 0 100px rgba(224,201,166,.22); } .ds-menu-action:disabled { background:#4a3728; color:#b39c7c; box-shadow:none; }"
+      "refersTo": "button-line",
+      "description": "Secondary action with a printed 2px pink ring.",
+      "html": "<a class=\"ds-btn-line\" href=\"#\">See all prices</a>",
+      "css": ".ds-btn-line { display:inline-flex; align-items:center; min-height:48px; padding:.8em 1.2em; border-radius:6px; color:#b30e52; font-weight:700; text-decoration:none; box-shadow:inset 0 0 0 2px #b30e52; transition:background-color .18s ease-out, color .18s ease-out; } .ds-btn-line:hover { background:#b30e52; color:#fff; } .ds-btn-line:focus-visible { outline:3px solid #2a0f1e; outline-offset:3px; }"
     },
     {
-      "name": "Flutter menu category choice",
+      "name": "Category Chip",
       "kind": "chip",
-      "description": "Square category choice below the desktop sidebar threshold. HTML illustration of the Flutter ChoiceChip.",
-      "html": "<button class=\"ds-menu-category\" aria-pressed=\"true\">Shawarma Favorites</button>",
-      "css": ".ds-menu-category { background:#1b130d; color:#f7eedd; border:1px solid #4a3728; border-radius:0; padding:8px 10px; font-family:Karla,sans-serif; font-size:14px; font-weight:700; line-height:1.4; } .ds-menu-category[aria-pressed=\"true\"] { background:#a3301a; } .ds-menu-category:hover { box-shadow:inset 0 0 0 100px rgba(224,201,166,.08); } .ds-menu-category:focus-visible { outline:2px solid #e0c9a6; outline-offset:2px; }"
+      "refersTo": "category-chip",
+      "description": "App category filter chip in unselected and selected states.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip is-on\">Sulit Meals</button><button class=\"ds-chip\">Chicken Poppers</button></div>",
+      "css": ".ds-chips { display:flex; gap:8px; } .ds-chip { min-height:40px; padding:8px 14px; border-radius:6px; border:1.5px solid #b30e52; background:#fff; color:#2a0f1e; font-weight:700; cursor:pointer; } .ds-chip.is-on { background:#d91566; border-color:#d91566; color:#fff; } .ds-chip:focus-visible { outline:3px solid #2a0f1e; outline-offset:2px; }"
     },
     {
-      "name": "Flutter chooser option",
+      "name": "Price Row",
+      "kind": "custom",
+      "refersTo": "price-row",
+      "description": "Order-form menu line with tick box, item name and right-aligned tabular price.",
+      "html": "<div class=\"ds-row\"><span class=\"ds-box\"></span><span class=\"ds-name\">Shawarma Wrap</span><span class=\"ds-amt\">₱60</span></div>",
+      "css": ".ds-row { display:grid; grid-template-columns:14px 1fr auto; align-items:baseline; gap:12px; padding:11px 0; border-bottom:1px solid rgba(236,28,114,.32); color:#2a0f1e; } .ds-box { width:14px; height:14px; border:1.5px solid #ec1c72; border-radius:2px; } .ds-name { font-weight:550; } .ds-amt { font-size:1.35rem; font-weight:780; font-variant-numeric:tabular-nums; }"
+    },
+    {
+      "name": "Section Band",
+      "kind": "custom",
+      "refersTo": "section-band",
+      "description": "Printed pink category band with an optional butter stamp.",
+      "html": "<div class=\"ds-band\"><span>BURGER FAVORITES</span><span class=\"ds-mark\">B1T1</span></div>",
+      "css": ".ds-band { display:flex; align-items:center; justify-content:space-between; padding:.5em .75em; background:#d91566; color:#fff; font-size:1.02rem; font-weight:750; letter-spacing:.06em; } .ds-mark { padding:.16em .5em; border-radius:4px; background:#fcd04e; color:#2a0f1e; font-size:.9rem; font-weight:800; transform:rotate(-7deg); box-shadow:inset 0 0 0 2px #fcd04e, inset 0 0 0 3.5px rgba(42,15,30,.55); }"
+    },
+    {
+      "name": "Sticky Navigation Bar",
+      "kind": "nav",
+      "refersTo": "stamp-primary",
+      "description": "Paper bar with a 2px pink bottom rule, section links and compact Order stamp.",
+      "html": "<header class=\"ds-bar\"><nav class=\"ds-nav\"><a href=\"#\">Prices</a><a href=\"#\">Photos</a><a href=\"#\">Find us</a></nav><a class=\"ds-stamp-sm\" href=\"#\">Order</a></header>",
+      "css": ".ds-bar { display:flex; align-items:center; gap:18px; padding:8px 20px; background:#fffafb; border-bottom:2px solid #ec1c72; } .ds-nav { display:flex; gap:18px; margin-left:auto; font-weight:650; } .ds-nav a { min-height:44px; display:inline-flex; align-items:center; color:#2a0f1e; text-decoration:none; } .ds-nav a:hover { color:#b30e52; text-decoration:underline; } .ds-stamp-sm { min-height:44px; display:inline-flex; align-items:center; padding:.6em 1.05em; border-radius:6px; background:#d91566; color:#fff; font-weight:750; text-decoration:none; box-shadow:inset 0 0 0 3px #d91566, inset 0 0 0 4.5px rgba(255,255,255,.6); }"
+    },
+    {
+      "name": "Text Input",
       "kind": "input",
-      "refersTo": "menu-option",
-      "description": "Native single-choice option; the selected row uses panel and tan border. Multiple choices use native checkboxes in Flutter.",
-      "html": "<label class=\"ds-menu-option\"><input type=\"radio\" name=\"ds-menu-option\" checked><span>Overload</span><span class=\"ds-menu-option-price\">₱65</span></label>",
-      "css": ".ds-menu-option { display:flex; align-items:center; gap:8px; padding:4px 12px; margin-bottom:10px; background:#1b130d; color:#f7eedd; border:1px solid #4a3728; border-radius:0; font-family:Karla,sans-serif; font-size:15px; line-height:1.4; } .ds-menu-option:has(input:checked) { background:#2c2016; border-color:#e0c9a6; } .ds-menu-option input { accent-color:#e0c9a6; min-height:48px; } .ds-menu-option-price { margin-left:auto; color:#e0c9a6; } .ds-menu-option:hover { box-shadow:inset 0 0 0 100px rgba(224,201,166,.08); } .ds-menu-option:focus-within { outline:2px solid #e0c9a6; outline-offset:2px; }"
+      "refersTo": "option-row",
+      "description": "App checkout input with pink-rule border and Plate Pink focus.",
+      "html": "<input class=\"ds-input\" placeholder=\"e.g. Juan Dela Cruz\">",
+      "css": ".ds-input { width:100%; min-height:48px; padding:12px 16px; border-radius:6px; border:1.5px solid #f4afc8; background:#fff; color:#2a0f1e; font-size:15px; } .ds-input:focus { outline:none; border:2px solid #d91566; }"
     }
   ],
   "narrative": {
-    "northStar": "Harap ng Jeepney",
-    "overview": "The storefront is painted like the front of a jeepney. Dark enamel ground, flat painted rules, fares lettered where a passenger reads them. It is one page at / that hands you to a Flutter kiosk at /kiosk/ — the ordering flow is never re-drawn here. Bright vermilion is a state, not a surface; type-bearing surfaces are the deeper painted red so cream clears 6.5:1. Big Shoulders does the shouting, Karla does the talking. Depth is a short dark edge plus one soft cast: no hard offset slabs, no chrome gradients, no glow.\n\nThe existing storefront specification remains authoritative for `/`. The scoped additions below\nrecord the approved menu and item chooser at `/kiosk/#/menu`, implemented with local `MenuTheme`.\nThey preserve the established world and do not extend to cart, checkout, staff screens or staff dialogs.\nThis documents the implemented category navigation, product grid and details sheet. The surface brief's\nFORM and Quality bar establish refinement provenance; no seed run or new concept tournament is claimed.\nExisting rendered evidence and completed review are indexed in `docs/evidence/menu-continuity.md`\nand `docs/evidence/menu-*.png`; this documentation pass does not repeat their visual verification.\n\nWithin the existing dark enamel storefront, the price board uses one continuous cream printed-menu panel and a continuous vermilion-plate offer strip. This local exception supersedes earlier dark-list, dotted-leader and Karla-price descriptions for this section only; it does not change the Flutter menu. Finish review verdict: ship, with no material findings in the scoped redesign. Evidence: docs/evidence/price-board-desktop.png, docs/evidence/price-board-mobile.png and docs/evidence/price-board-offers-mobile.png. This documentation pass checks supplied captures against HTML/CSS without repeating browser verification or running tests. No new rasters ship in site/; existing assets are unchanged.",
+    "northStar": "The Pink Order Pad",
+    "overview": "Every Luna surface is a sheet torn from the kiosk's duplicate order booklet. The owner's pink watercolor is the carbon copy underneath; white slips with perforated top edges sit on it; logo pink prints the form, its rules and its column heads; the cashier's handwriting fills in what you are ordering. Prices always sit in one ruled column on the right, the way they do on a real pad, so the eye runs down a single edge to compare them.\n\nThe world has three inks plus paper: logo pink, butter yellow and plum-black ink, on white and blush. Pink prints; butter highlights, tapes and stamps; ink reads. Nothing glows and nothing is glass. Depth is paper lying on paper, and every photograph is a snapshot taped to the slip.\n\nThe storefront (site/) and the Flutter ordering app (/kiosk/) share the logo, palette, fonts and component language. The storefront is the long, scrolling pad; the app is the same pad at work: the menu is the price board, the cart is the order slip being written, and checkout prints the summary.",
     "keyCharacteristics": [
-      "Enamel ground with chrome rules; no glass, no blur, no glow",
-      "One bright vermilion for live state only; painted plates carry the type",
-      "Square corners, hard offset lips, painted depth",
-      "The fare rail is a working instrument (pointer + keyboard + ARIA), not a graphic",
-      "Real photos from the business, rotated like prints on a wall",
-      "Nothing invented: no hours, no phone number, no ratings"
+      "The owner's circular Luna logo is the masthead of the first slip and the mark in every header.",
+      "White slips with a perforated top edge (16px notch rhythm) on the pink wash.",
+      "Pink section bands, pink tick boxes, and a ruled right-hand price column with tabular numerals.",
+      "Caveat handwriting only for what is \"written in\": sample lines, captions, quantities, the close.",
+      "Butter yellow as highlighter, tape, offer strip and rubber stamp."
     ],
     "rules": [
       {
-        "name": "The One Vermilion Rule",
-        "body": "Bright vermilion #d8452a is a live state. Any rectangle carrying type is #a3301a, #8a2a18 or cream.",
+        "name": "The Plate Rule",
+        "body": "If pink carries type, it is Plate Pink with white type. Logo Pink is for rules, marks and type of 24px and up.",
         "section": "colors"
       },
       {
-        "name": "The Enamel Ground Rule",
-        "body": "One vertical gradient from #2b1e14 to #20160d. Depth comes from panels and plates, never from coloured glows or radial halos.",
+        "name": "The Ink-on-Butter Rule",
+        "body": "Butter never carries white or pink small type; it carries ink.",
         "section": "colors"
       },
       {
-        "name": "The Signage-and-Speech Rule",
-        "body": "Big Shoulders never sets a paragraph; Karla never sets a price.",
+        "name": "The Print-and-Pen Rule",
+        "body": "Bricolage prints the form; Caveat writes on it. Caveat never sets a price column, a button, navigation or a paragraph.",
         "section": "typography"
       },
       {
-        "name": "The Wide-Label Rule",
-        "body": "Functional labels are uppercase Karla at 0.16em tracking or wider, minimum 0.72rem.",
+        "name": "The One Price Column Rule",
+        "body": "Amounts align right in one column, in tabular figures, with the ₱ sign once.",
         "section": "typography"
       },
       {
-        "name": "The Painted Cast Rule",
-        "body": "Depth is a short dark line under the edge plus one soft black cast. No hard zero-blur slabs, no coloured glow, no gradient chrome.",
+        "name": "The Paper-on-Paper Rule",
+        "body": "Depth is an offset soft cast tinted plum. Never a zero-offset halo or a colored glow.",
         "section": "elevation"
-      },
-      {
-        "name": "The One Column Rule",
-        "body": "Every section holds the same 1120px content column and the same left edge. The local cream price-board panel has internal column and row insets; its outer edge and offer strip stay aligned to that column.",
-        "section": "layout"
       }
     ],
     "dos": [
-      "Do use cream for the local price-board menu panel, enamel for its names/prices and vermilion-plate for category headings, promotional prices and the continuous cream-lettered offer strip.",
-      "Do set functional labels at 11.5px or larger, uppercase Karla, wide tracking.",
-      "Do give raised surfaces a short dark edge plus one soft black cast, lifting 2px on hover.",
-      "Do keep the fare rail's ticks, labels and fare table outside the slider element, with tall ticks only on labelled stops.",
-      "Do rotate photo mounts 1–2° and pin a painted tag on them.",
-      "Do end with one full-bleed vermilion band and one cream plate.",
-      "Do keep the hours hole visible as a marked ‘to follow’ slot."
+      "Do put every type-bearing pink surface on Plate Pink with white text.",
+      "Do keep prices in one right-aligned tabular column.",
+      "Do use Caveat only for what is written onto a slip: values, sample lines, captions, quantities.",
+      "Do keep the delivery-fee notice visible without interaction on the storefront, checkout and receipt.",
+      "Do use the owner's logo file (images/luna_logo.png, site/img/luna-logo-*.webp) unaltered apart from its transparent surround."
     ],
     "donts": [
-      "Don't put cream type on #d8452a.",
-      "Don't add coloured glows, zero-offset halos, radial background washes, or hard zero-blur offset slabs.",
-      "Don't use coloured left-border tabs, equal-card rows for offers, glyph icons, or a second accent hue.",
-      "Don't round corners, use backdrop-filter, or fake chrome with gradients.",
-      "Don't invent business facts — hours, phone numbers, ratings, testimonials.",
-      "Don't duplicate the ordering flow; every order action links to /kiosk/."
+      "Don't put white or pink small type on butter, or small type on Logo Pink.",
+      "Don't add glows, glass, gradient text or zero-offset halos.",
+      "Don't put a kicker or eyebrow label above a heading.",
+      "Don't invent slip numbers, phone numbers, ratings or testimonials to fill the form.",
+      "Don't use emoji as icons; use the Material outline set in the app and drawn SVG on the web."
     ]
   }
 }

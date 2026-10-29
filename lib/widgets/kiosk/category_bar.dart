@@ -15,8 +15,8 @@ class KioskCategoryBar extends StatelessWidget {
         return Container(
           height: 44 * scale + 24,
           decoration: const BoxDecoration(
-            color: MenuTheme.enamel,
-            border: Border(bottom: BorderSide(color: MenuTheme.line)),
+            color: MenuTheme.paper,
+            border: Border(bottom: BorderSide(color: MenuTheme.pink, width: 2)),
           ),
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
@@ -25,22 +25,29 @@ class KioskCategoryBar extends StatelessWidget {
             separatorBuilder: (_, _) => const SizedBox(width: 8),
             itemBuilder: (context, index) {
               final section = kMenuSections[index];
+              final selected = session.currentCategoryId == section.id;
               return ChoiceChip(
                 label: Text(section.title),
-                selected: session.currentCategoryId == section.id,
+                selected: selected,
                 onSelected: (_) => session.setCategory(section.id),
-                selectedColor: MenuTheme.accent,
-                backgroundColor: MenuTheme.board,
-                checkmarkColor: MenuTheme.cream,
+                selectedColor: MenuTheme.plate,
+                backgroundColor: MenuTheme.card,
+                checkmarkColor: MenuTheme.onPlate,
                 labelStyle: MenuTheme.body(
                   size: 14,
+                  color: selected ? MenuTheme.onPlate : MenuTheme.ink,
                 ).copyWith(fontWeight: FontWeight.w700),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 10,
                   vertical: 8,
                 ),
-                shape: const RoundedRectangleBorder(),
-                side: const BorderSide(color: MenuTheme.line),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: MenuTheme.radius,
+                ),
+                side: BorderSide(
+                  color: selected ? MenuTheme.plate : MenuTheme.pinkInk,
+                  width: 1.5,
+                ),
               );
             },
           ),

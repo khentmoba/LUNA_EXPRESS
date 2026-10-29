@@ -7,7 +7,7 @@ related_targets: []
 
 ## Scope
 
-The storefront at the site root (`/`), a hand-written static page. The ordering app stays at `/kiosk/` and is linked into, never duplicated. One route, one artifact, one first viewport.
+The storefront at the site root (`/`), a hand-written static page. The ordering app stays at `/kiosk/` and is linked into, never duplicated. One route, one artifact, one first viewport. This is a replacement visual world: the jeepney enamel world is retired.
 
 ## Audience, job, action
 
@@ -15,49 +15,29 @@ Hungry people inside delivery range of Purok 5, on phones, arriving from a Faceb
 
 ## Proof and content
 
-Real prices from `lib/data/menu_data.dart`, real photographs in `images/`, the rider-confirmed delivery-fee policy, the real address, the exact coordinates, the 7/11 landmark, the real Facebook page. Opening hours are 9am to 8pm. No phone number, no ratings, no testimonials — those holes stay open until the owner fills them.
+Real prices from `lib/data/menu_data.dart`, real photographs, the rider-confirmed delivery-fee policy, the real address, exact coordinates, the 7/11 landmark, the real Facebook page, hours 9am to 8pm, the owner's new circular Luna logo. No phone number, no ratings, no testimonials.
 
 ## Constraints
 
 - Mobile-first over slow data: no framework, no icon library, self-hosted fonts only.
-- `/kiosk/` keeps its current behaviour exactly; the storefront only links into it.
-- Delivery-fee notice visible without interaction; `prefers-reduced-motion` respected and focus rings themed.
+- `/kiosk/` keeps its behaviour; the storefront only links into it.
+- Delivery-fee notice visible without interaction; `prefers-reduced-motion` respected; focus rings themed.
 - Never invent a fact to fill a hole.
-
-## Chosen direction
-
-Harap ng Jeepney — the storefront painted like the front of a jeepney: destination, fares, and the price board on one enamel panel. The former fare calculator is replaced by a static delivery-fee notice, per the owner’s policy.
 
 ## Direction contract
 
-THESIS: The storefront is a painted jeepney panel, not a product page — one enamel ground carrying a destination board, a clear delivery notice, and the printed price board. It refuses the category arrangement outright: no headline over subcopy, no photo-and-button split hero, no row of equal cards.
+THESIS: The storefront is a kiosk duplicate order pad — the pink carbonless booklet the cashier writes your order on. It refuses the food-site default of photo hero, headline-and-button and equal menu cards.
 
-OWN-WORLD: Deep coffee enamel `#241A12` as ground, panels a shade darker `#1B130D` with tan hairlines `#E0C9A6`, cream lettering `#F7EEDD` carrying a hand-painted bevel, and one vermilion `#D8452A` held back for whatever is live. Condensed painted caps (Big Shoulders Display) against Karla for prose; prices in tabular figures. Dividers are chrome gradients, never plain borders. Every photograph is mounted with a painted outline and a hand-painted tag naming the dish and its price.
+OWN-WORLD: Pink watercolor carbon copy as the ground (owner-supplied texture), white top sheets with perforated tear edges, logo pink #EC1C72 printed rules and form labels, butter yellow #FCD04E as the highlighter and the "paid" plate, plum-black ink. Three inks plus paper (raise from risograph). Bricolage Grotesque prints the form; Caveat is the cashier's handwriting, used only for marks written onto the form. Prices always sit in one ruled right column (raise from split-flap). Rubber-stamp marks for B1T1 and offers.
 
-STORY: Understands in one look — food from Purok 5, delivered, food prices printed, delivery quoted by the rider. Taps the vermilion plate to order.
+STORY: One look says this is Luna's own order slip — food, real prices, delivery, rider confirms the fee. Tap the pink stamp to start an order.
 
-FIRST VIEWPORT: The painted wordmark and delivery sentence lead into a large mounted shawarma photo tagged ₱60 each and the vermilion Order plate with the payment line. Desktop pairs the introduction and actions with the food photo; phones use introduction, food, then actions in DOM order, with a compact wordmark. A static delivery-fee notice sits beneath the ordering actions. It says that the rider confirms the amount separately from food. Persistent Prices, Photos and Find us shortcuts sit beside Order in the phone header. The price board follows the compact delivery notice.
+FIRST VIEWPORT: The logo sits as the pad's printed header next to slip number, date line and "Order slip"; a top sheet carries the tagline, a mounted shawarma photo clipped to the sheet with its handwritten ₱60 line, and the primary Order button; the delivery-fee notice is printed at the bottom of the slip above the tear line. Phones: header, sheet, order, notice in DOM order.
 
-FORM: Harap ng Jeepney, fifth of seven on my resonance-ordered list; seed:06d2122ba9ef1f29
-
-FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
-
-## Price board redesign
-
-The price board is a scoped Persuade section redesign within the established storefront world. The user's request is a stronger price board; the surrounding storefront and ordering app keep their existing composition and behavior.
-
-THESIS: A printed kiosk menu with confident price hierarchy replaces the low-contrast, uniformly small list.
-
-OWN-WORLD: Existing cream, coffee enamel and vermilion plate; square edges, Big Shoulders signage and Karla speech. One continuous cream menu panel meets a full-width vermilion meal strip.
-
-STORY: Scan categories, compare food prices, see the two ₱99 meals, then open the ordering app. All 17 item rows and both meal offers retain their names, amounts and qualifications.
-
-FIRST VIEWPORT: Within this section, a large Price board heading and full-menu link lead into three cream columns at desktop widths. At 940px and below, the categories form one continuous vertical menu. Item names use readable Karla; larger condensed figures align right. The meal strip keeps each offer name and ₱99 together above its description on compact screens. No new animation or assets.
-
-FORM: A local printed-menu composition inherited from the established world; no new direction roll applies.
+FORM: Pink order pad, sixth on my resonance list; seed:176d4a399b859e5a
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
 ## Unresolved
 
-Opening hours are 9am to 8pm. A contact number is still coming from the owner; until then the page says nothing about it. The rider confirms delivery charges; the site does not publish a numeric rate.
+A contact number is still coming from the owner; until then the page says nothing about it. The rider confirms delivery charges; the site publishes no numeric rate.

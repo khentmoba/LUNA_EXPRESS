@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../services/cart_notifier.dart';
 import '../services/session.dart';
 import '../widgets/kiosk/kiosk_theme.dart';
@@ -74,10 +73,10 @@ class _InactivityWatcherState extends State<InactivityWatcher> {
               title: Center(
                 child: Text(
                   'ARE YOU STILL THERE?',
-                  style: GoogleFonts.outfit(
-                    fontWeight: FontWeight.w900,
+                  style: KioskTheme.font(
+                    fontWeight: FontWeight.w800,
                     fontSize: 20,
-                    color: KioskTheme.lunaBrown,
+                    color: KioskTheme.lunaPink,
                     letterSpacing: 1.5,
                   ),
                 ),
@@ -88,7 +87,7 @@ class _InactivityWatcherState extends State<InactivityWatcher> {
                   const SizedBox(height: 16),
                   Text(
                     'This kiosk will automatically reset to the main screen in:',
-                    style: GoogleFonts.outfit(
+                    style: KioskTheme.font(
                       fontSize: 14,
                       color: Colors.grey[600],
                       fontWeight: FontWeight.w500,
@@ -100,16 +99,16 @@ class _InactivityWatcherState extends State<InactivityWatcher> {
                     width: 90,
                     height: 90,
                     decoration: BoxDecoration(
-                      color: KioskTheme.lunaBrown.withOpacity(0.05),
+                      color: KioskTheme.lunaPink.withOpacity(0.05),
                       shape: BoxShape.circle,
                     ),
                     child: Center(
                       child: Text(
                         '$_secondsRemaining',
-                        style: GoogleFonts.outfit(
+                        style: KioskTheme.font(
                           fontSize: 36,
-                          fontWeight: FontWeight.w900,
-                          color: KioskTheme.lunaBrown,
+                          fontWeight: FontWeight.w800,
+                          color: KioskTheme.lunaPink,
                         ),
                       ),
                     ),
@@ -134,14 +133,16 @@ class _InactivityWatcherState extends State<InactivityWatcher> {
                         vertical: 16,
                       ),
                       decoration: BoxDecoration(
-                        color: KioskTheme.lunaBrown,
-                        borderRadius: BorderRadius.circular(50),
+                        color: KioskTheme.lunaPink,
+                        borderRadius: BorderRadius.circular(
+                          KioskTheme.radiusMd,
+                        ),
                       ),
                       child: Text(
                         'YES, I AM HERE',
-                        style: GoogleFonts.outfit(
-                          color: KioskTheme.lunaTan,
-                          fontWeight: FontWeight.w900,
+                        style: KioskTheme.font(
+                          color: KioskTheme.textOnPrimary,
+                          fontWeight: FontWeight.w800,
                           fontSize: 14,
                           letterSpacing: 1,
                         ),
@@ -160,7 +161,7 @@ class _InactivityWatcherState extends State<InactivityWatcher> {
   void _performReset() {
     cartNotifier.clear();
     kioskSession.reset();
-    Navigator.of(context).pushNamedAndRemoveUntil('/kiosk', (route) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
   }
 
   @override

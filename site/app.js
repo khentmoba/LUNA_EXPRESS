@@ -1,59 +1,51 @@
-/* Sticky navigation state. */
+/* Sticky bar state: the small logo joins the bar once the slip's own logo scrolls away. */
 (function () {
   'use strict';
   var bar = document.querySelector('.bar');
+  if (!bar) return;
 
-  if (bar) {
-    var stuck = false;
-    var onScroll = function () {
-      var next = window.scrollY > 6;
-      if (next !== stuck) {
-        stuck = next;
-        bar.classList.toggle('is-stuck', stuck);
-      }
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-  }
+  var stuck = false;
+  var onScroll = function () {
+    var next = window.scrollY > 6;
+    if (next !== stuck) {
+      stuck = next;
+      bar.classList.toggle('is-stuck', stuck);
+    }
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
 })();
 
-/* Motion that plays once as each part arrives (see Scroll motion in styles.css). The hidden states
-   only apply once this runs, so without script or with reduced motion the page stays static. */
+/* The cashier writes the first slip, then the stamps land as the menu and photos arrive.
+   Hidden states exist only once this runs, so without script or with reduced motion
+   every line, price and photograph stays on the page. */
 (function () {
   'use strict';
-  if (!('IntersectionObserver' in window)) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  var sheet = document.querySelector('.board__cols');
-  var wall = document.querySelector('.window__wall');
-  if (!sheet || !wall) return;
+  var written = document.querySelectorAll('.slip--hero .field, .slip--hero .lines tbody tr');
+  for (var i = 0; i < written.length; i++) written[i].style.setProperty('--w', i);
 
-  // Lines print in bands across the columns, so each row takes its line number within its column.
-  // When the columns stack (phone), the count runs on, so the board still prints top to bottom.
-  var numberLines = function () {
-    var cols = [].slice.call(sheet.children);
-    var stacked = cols.length > 1 && cols[1].getBoundingClientRect().top > cols[0].getBoundingClientRect().top + 1;
-    var line = 0;
-    cols.forEach(function (col) {
-      var rows = col.querySelectorAll('.row');
-      for (var i = 0; i < rows.length; i++) rows[i].style.setProperty('--i', line + i);
-      if (stacked) line += rows.length;
-    });
-  };
+  document.documentElement.classList.add('js-motion');
+  if (!('IntersectionObserver' in window)) {
+    [].forEach.call(document.querySelectorAll('.slip--menu, .window'), function (el) { el.classList.add('is-in'); });
+    return;
+  }
 
-  var arrive = function (watch, target, className, prepare) {
+  var arrive = function (selector, watchSelector) {
+    var target = document.querySelector(selector);
+    var watch = document.querySelector(watchSelector) || target;
+    if (!target) return;
     var observer = new IntersectionObserver(function (entries) {
       if (!entries[0].isIntersecting) return;
-      if (prepare) prepare();
-      target.classList.add(className);
+      target.classList.add('is-in');
       observer.disconnect();
-    }, { threshold: 0.1 });
+    }, { threshold: 0.15 });
     observer.observe(watch);
   };
 
-  document.documentElement.classList.add('js-print');
-  arrive(sheet, document.querySelector('.board'), 'is-printing', numberLines);
-  arrive(wall, document.querySelector('.window'), 'is-pinning');
+  arrive('.slip--menu', '.menu__cols');
+  arrive('.window', '.window__wall');
 })();
 
 /* Find us: the map or the street view, one at a time. Without script both stay on the page. */

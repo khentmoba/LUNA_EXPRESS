@@ -25,7 +25,7 @@ class KioskMenuPage extends StatelessWidget {
           final wide = MediaQuery.sizeOf(context).width >= 1000;
           return InactivityWatcher(
             child: Scaffold(
-              backgroundColor: MenuTheme.enamel,
+              backgroundColor: MenuTheme.ground,
               body: SafeArea(
                 child: Row(
                   children: [
@@ -33,7 +33,20 @@ class KioskMenuPage extends StatelessWidget {
                     Expanded(
                       child: Column(
                         children: [
-                          _buildHeader(context, wide),
+                          DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: MenuTheme.paper,
+                              border: wide
+                                  ? const Border(
+                                      bottom: BorderSide(
+                                        color: MenuTheme.pink,
+                                        width: 2,
+                                      ),
+                                    )
+                                  : null,
+                            ),
+                            child: _buildHeader(context, wide),
+                          ),
                           if (!wide) const KioskCategoryBar(),
                           Expanded(child: _buildProductGrid(context)),
                         ],
@@ -57,15 +70,14 @@ class KioskMenuPage extends StatelessWidget {
         children: [
           Image.asset(
             'images/luna_logo.png',
-            width: 32,
-            height: 32,
+            height: wide ? 56 : 48,
             excludeFromSemantics: true,
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'LUNA BITES & DELIGHTS',
-              style: MenuTheme.heading(wide ? 28 : 23),
+              'Luna Bites & Delights',
+              style: MenuTheme.heading(wide ? 26 : 20),
               maxLines: 2,
             ),
           ),
@@ -82,16 +94,16 @@ class KioskMenuPage extends StatelessWidget {
                       horizontal: 8,
                       vertical: 5,
                     ),
-                    decoration: BoxDecoration(
-                      color: MenuTheme.accent,
-                      borderRadius: BorderRadius.circular(2),
+                    decoration: const BoxDecoration(
+                      color: MenuTheme.plate,
+                      borderRadius: MenuTheme.radius,
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const Icon(
                           Icons.outdoor_grill_rounded,
-                          color: MenuTheme.cream,
+                          color: MenuTheme.onPlate,
                           size: 14,
                         ),
                         const SizedBox(width: 4),
@@ -99,7 +111,7 @@ class KioskMenuPage extends StatelessWidget {
                           'ORDERS',
                           style: MenuTheme.body(
                             size: 11,
-                            color: MenuTheme.cream,
+                            color: MenuTheme.onPlate,
                           ).copyWith(fontWeight: FontWeight.w800),
                         ),
                       ],
@@ -115,9 +127,10 @@ class KioskMenuPage extends StatelessWidget {
               tooltip: 'View order, ${cartNotifier.totalCount} items',
               onPressed: () => Navigator.pushNamed(context, '/cart'),
               icon: Badge(
+                isLabelVisible: cartNotifier.totalCount > 0,
                 label: Text('${cartNotifier.totalCount}'),
-                backgroundColor: MenuTheme.accent,
-                textColor: MenuTheme.cream,
+                backgroundColor: MenuTheme.plate,
+                textColor: MenuTheme.onPlate,
                 child: const Icon(Icons.shopping_bag_outlined),
               ),
             ),
@@ -130,25 +143,30 @@ class KioskMenuPage extends StatelessWidget {
 
   Widget _buildSectionHeader(MenuSection section, double gutter) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(gutter, 20, gutter, 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Semantics(
-            header: true,
-            child: Text(
-              section.title.toUpperCase(),
-              style: MenuTheme.heading(36),
+      padding: EdgeInsets.fromLTRB(gutter, 22, gutter, 8),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(18, 16, 18, 14),
+        decoration: const BoxDecoration(
+          color: MenuTheme.paper,
+          borderRadius: MenuTheme.radius,
+          border: Border(bottom: BorderSide(color: MenuTheme.pink, width: 3)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Semantics(
+              header: true,
+              child: Text(section.title, style: MenuTheme.heading(34)),
             ),
-          ),
-          if (section.subtitle.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            Text(
-              section.subtitle,
-              style: MenuTheme.body(size: 14, color: MenuTheme.tan),
-            ),
+            if (section.subtitle.isNotEmpty) ...[
+              const SizedBox(height: 6),
+              Text(
+                section.subtitle,
+                style: MenuTheme.body(size: 14, color: MenuTheme.inkSoft),
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
@@ -280,7 +298,20 @@ class KioskMenuPage extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(gutter, 24, gutter, 4),
               child: Semantics(
                 header: true,
-                child: Text(item.name, style: MenuTheme.heading(28)),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  color: MenuTheme.plate,
+                  child: Text(
+                    item.name.toUpperCase(),
+                    style: MenuTheme.label(
+                      size: 15,
+                      color: MenuTheme.onPlate,
+                    ).copyWith(letterSpacing: 1.2),
+                  ),
+                ),
               ),
             ),
           ),
@@ -302,8 +333,8 @@ class KioskMenuPage extends StatelessWidget {
           top: false,
           child: Container(
             decoration: const BoxDecoration(
-              color: MenuTheme.board,
-              border: Border(top: BorderSide(color: MenuTheme.line)),
+              color: MenuTheme.paper,
+              border: Border(top: BorderSide(color: MenuTheme.pink, width: 2)),
             ),
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
             child: Center(

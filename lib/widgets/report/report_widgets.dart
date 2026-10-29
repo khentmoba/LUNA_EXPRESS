@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../kiosk/kiosk_theme.dart';
 
 /// Shared scaffold for the brown-header report pages (sales dashboard,
@@ -27,7 +26,7 @@ class ReportScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KioskTheme.lunaCream,
+      backgroundColor: KioskTheme.lunaBlushPaper,
       appBar: AppBar(
         title: Text(
           title,
@@ -37,7 +36,7 @@ class ReportScaffold extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        backgroundColor: KioskTheme.lunaBrown,
+        backgroundColor: KioskTheme.lunaPink,
         foregroundColor: KioskTheme.textOnPrimary,
         elevation: 0,
         actions: [
@@ -51,7 +50,7 @@ class ReportScaffold extends StatelessWidget {
       ),
       body: loading
           ? const Center(
-              child: CircularProgressIndicator(color: KioskTheme.lunaBrown),
+              child: CircularProgressIndicator(color: KioskTheme.lunaPink),
             )
           : error != null
           ? ReportError(message: error!, onRetry: onRetry)
@@ -84,10 +83,7 @@ class ReportError extends StatelessWidget {
           ElevatedButton(
             onPressed: onRetry,
             style: KioskTheme.primaryButton,
-            child: Text(
-              'Retry',
-              style: GoogleFonts.outfit(color: Colors.white),
-            ),
+            child: Text('Retry', style: KioskTheme.font(color: Colors.white)),
           ),
         ],
       ),
@@ -126,7 +122,7 @@ class WhiteCard extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(radius),
         border: Border.all(
-          color: KioskTheme.lunaBrown.withOpacity(borderOpacity),
+          color: KioskTheme.lunaPink.withOpacity(borderOpacity),
         ),
         boxShadow: shadows ?? KioskTheme.shadowSm,
       ),

@@ -1,10 +1,13 @@
-# Menu fonts
+# App fonts
 
-The Flutter menu and item chooser bundle these variable TrueType fonts so their typography does not depend on a runtime font download.
+The Flutter app bundles these fonts so its typography does not depend on a runtime font download.
+They are static instances, subset to Latin plus the peso sign, cut from the upstream variable fonts with
+`fontTools.varLib.instancer` and `fontTools.subset`.
 
-| Local file | Upstream source | License |
+| Local files | Upstream source | License |
 |---|---|---|
-| `BigShoulders.ttf` | https://github.com/google/fonts/blob/main/ofl/bigshoulders/BigShoulders%5Bopsz%2Cwght%5D.ttf | `OFL-BigShoulders.txt` |
-| `Karla.ttf` | https://github.com/google/fonts/blob/main/ofl/karla/Karla%5Bwght%5D.ttf | `OFL-Karla.txt` |
+| `Bricolage-400.ttf` … `Bricolage-800.ttf` (opsz 20, wdth 100) | https://github.com/google/fonts/blob/main/ofl/bricolagegrotesque/BricolageGrotesque%5Bopsz%2Cwdth%2Cwght%5D.ttf | `OFL-Bricolage.txt` |
+| `Caveat-600.ttf`, `Caveat-700.ttf` | https://github.com/google/fonts/blob/main/ofl/caveat/Caveat%5Bwght%5D.ttf | `OFL-Caveat.txt` |
 
-Downloaded from Google Fonts on 2026-10-23. The accompanying SIL Open Font License files are included in the app assets. Flutter family names are `BigShoulders` and `Karla`; only the scoped menu theme uses them.
+Downloaded from Google Fonts on 2026-10-29. Flutter family names are `Bricolage` (printed type) and `Caveat`
+(handwritten marks only). The storefront serves WOFF2 subsets of the same fonts from `site/fonts/`.

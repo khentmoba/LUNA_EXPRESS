@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../widgets/kiosk/kiosk_theme.dart';
 import '../widgets/kiosk/juicy_feedback.dart';
 import '../services/session.dart';
@@ -99,17 +98,14 @@ class _KioskSplashScreenState extends State<KioskSplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KioskTheme.lunaTan,
+      backgroundColor: KioskTheme.lunaBlush,
       body: Stack(
         children: [
           Positioned.fill(
-            child: Opacity(
-              opacity: 0.03,
-              child: Image.asset(
-                'images/luna_logo.png',
-                repeat: ImageRepeat.repeat,
-                scale: 5,
-              ),
+            child: Image.asset(
+              'images/pink_wash.jpg',
+              fit: BoxFit.cover,
+              excludeFromSemantics: true,
             ),
           ),
           FadeTransition(
@@ -129,28 +125,17 @@ class _KioskSplashScreenState extends State<KioskSplashScreen>
                     opacity: _scaleAnimation,
                     child: GestureDetector(
                       onLongPress: _enterStaffMode,
-                      child: Container(
-                        width: 250,
-                        height: 250,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: KioskTheme.lunaBrown.withValues(
-                                alpha: 0.08,
-                              ),
-                              blurRadius: 40,
-                              spreadRadius: 5,
-                            ),
-                          ],
-                        ),
+                      child: SizedBox(
+                        width: 260,
+                        height: 312,
                         child: Image.asset(
                           'images/luna_logo.png',
+                          semanticLabel: 'Luna Bites & Delights',
                           errorBuilder: (context, error, stackTrace) =>
                               const Icon(
                                 Icons.nightlight_round,
                                 size: 100,
-                                color: KioskTheme.lunaBrown,
+                                color: KioskTheme.lunaPink,
                               ),
                         ),
                       ),
@@ -160,30 +145,22 @@ class _KioskSplashScreenState extends State<KioskSplashScreen>
                 const SizedBox(height: 24),
                 FadeTransition(
                   opacity: _scaleAnimation,
-                  child: Text(
-                    'LUNA EXPRESS',
-                    style: GoogleFonts.outfit(
-                      fontSize: 48,
-                      fontWeight: FontWeight.w900,
-                      color: KioskTheme.textPrimary,
-                      letterSpacing: 4,
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 24),
+                    padding: const EdgeInsets.fromLTRB(22, 14, 22, 16),
+                    decoration: BoxDecoration(
+                      color: KioskTheme.lunaPaper,
+                      borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
+                      boxShadow: KioskTheme.shadowMd,
+                    ),
+                    child: Text(
+                      'Good food, sweet drinks, moonlit vibes.',
+                      textAlign: TextAlign.center,
+                      style: KioskTheme.hand(fontSize: 28),
                     ),
                   ),
                 ),
-                const SizedBox(height: 8),
-                FadeTransition(
-                  opacity: _scaleAnimation,
-                  child: Text(
-                    'FAST DELIVERY \u2022 FRESH DAILY',
-                    style: GoogleFonts.outfit(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: KioskTheme.textSecondary,
-                      letterSpacing: 4,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 32),
                 _buildLoadingDots(),
                 const Spacer(),
                 Padding(
@@ -257,9 +234,9 @@ class _KioskSplashScreenState extends State<KioskSplashScreen>
               height: 10,
               margin: const EdgeInsets.symmetric(horizontal: 4),
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: KioskTheme.textPrimary.withOpacity(
-                  opacity.clamp(0.2, 1.0),
+                borderRadius: BorderRadius.circular(2),
+                color: KioskTheme.lunaPink.withValues(
+                  alpha: opacity.clamp(0.2, 1.0),
                 ),
               ),
             );
@@ -275,19 +252,28 @@ class _KioskSplashScreenState extends State<KioskSplashScreen>
       child: JuicyFeedback(
         onPressed: _onStart,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 24),
+          padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
-            color: KioskTheme.lunaBrown,
-            borderRadius: BorderRadius.circular(KioskTheme.radiusFull),
+            color: KioskTheme.lunaPink,
+            borderRadius: BorderRadius.circular(KioskTheme.radiusMd),
             boxShadow: KioskTheme.shadowPrimary,
           ),
-          child: Text(
-            'TOUCH TO START',
-            style: GoogleFonts.outfit(
-              color: KioskTheme.textOnPrimary,
-              fontSize: 22,
-              fontWeight: FontWeight.w900,
-              letterSpacing: 2.0,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 18),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(KioskTheme.radiusSm),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: .6),
+                width: 1.5,
+              ),
+            ),
+            child: Text(
+              'Start my order',
+              style: KioskTheme.font(
+                color: KioskTheme.textOnPrimary,
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+              ),
             ),
           ),
         ),
