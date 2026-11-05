@@ -1,0 +1,9 @@
+Package                       Current   Wanted   Latest  Location                                   Depended by
+@firebase/rules-unit-testing    5.0.2    5.0.2    6.0.0  node_modules/@firebase/rules-unit-testing  functions
+@types/node-telegram-bot-api  0.64.14  0.64.15  0.64.15  node_modules/@types/node-telegram-bot-api  functions
+eslint                         8.57.1   8.57.1  10.14.0  node_modules/eslint                        functions
+firebase                      12.19.0  12.19.0   13.2.0  node_modules/firebase                      functions
+firebase-admin                13.10.0  13.10.0   14.5.0  node_modules/firebase-admin                functions
+firebase-functions              6.6.0    6.6.0    7.4.0  node_modules/firebase-functions            functions
+node-telegram-bot-api          0.66.0   0.66.0    2.3.0  node_modules/node-telegram-bot-api         functions
+typescript                      5.9.3    5.9.3    7.0.2  node_modules/typescript                    functions

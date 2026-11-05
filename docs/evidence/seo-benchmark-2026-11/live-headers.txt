@@ -1,0 +1,21 @@
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Length: 19562
+Cache-Control: max-age=3600
+Content-Type: text/html; charset=utf-8
+Cross-Origin-Opener-Policy: same-origin-allow-popups
+Etag: "b0aa901b352cd77ca7137871f730db7031a911794c118cb1309b63dba322c1fe"
+Last-Modified: Thu, 05 Nov 2026 17:40:21 GMT
+Permissions-Policy: camera=(), microphone=(), geolocation=(self)
+Referrer-Policy: strict-origin-when-cross-origin
+Strict-Transport-Security: max-age=31556926; includeSubDomains; preload
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Accept-Ranges: bytes
+Date: Thu, 05 Nov 2026 17:42:41 GMT
+X-Served-By: cache-mnl2150037-MNL
+X-Cache: HIT
+X-Cache-Hits: 1
+X-Timer: S1793900561.237660,VS0,VE1
+Vary: x-fh-requested-host, accept-encoding
+alt-svc: h3=":443";ma=86400,h3-29=":443";ma=86400,h3-27=":443";ma=86400

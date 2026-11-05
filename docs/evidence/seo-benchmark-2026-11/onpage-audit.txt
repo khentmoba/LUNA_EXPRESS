@@ -1,0 +1,32 @@
+On-page audit — https://lunabitesanddelights.web.app/ (captured 2026-11-05)
+
+Title: "Luna Bites & Delights — Food Kiosk & Delivery in Magallanes, near Cabadbaran"
+  length: 76 characters (SERP truncation around 60)
+Meta description: "Good food, sweet drinks, moonlit vibes. Order online from Luna Bites & Delights for delivery in Magallanes, Agusan del Norte, near Cabadbaran. Shawarma ₱60, B1T1 burgers, fries from ₱50, halo-halo ₱49."
+  length: 201 characters (SERP truncation around 155-160)
+H1: "Good food, sweet drinks, moonlit vibes." (1 H1; no category or location)
+H2s: Delivery fee applies | Menu & prices | Gikan sa kusina | Find us | Gigutom na ka?
+H3s: Shawarma favorites | Combo meals | French fries | Burger favorites | Sweet · cold
+Visible words: 484
+Keyword counts: Magallanes 5, Cabadbaran 4, shawarma 14, burger 13, fries 20, halo-halo 2, delivery 10, Agusan 3, Poblacion 3, 7/11 1
+Images: 8 total, 8 with alt attributes, 2 empty alt (decorative header/footer logo), WebP, width/height set
+Internal links: 17; external links: 5 (Facebook, Messenger, Google Maps)
+Meta robots: none (indexable)
+Hreflang: none (single language)
+Open Graph: og:type="restaurant" (not a valid Open Graph type; should be website or restaurant.restaurant)
+Twitter card: summary_large_image, title, description, image present; twitter:site missing
+Structured data: FastFoodRestaurant JSON-LD, 19 top-level keys, schema.org validator 0 errors / 0 warnings
+  Missing: telephone, menu (Menu markup), potentialAction (OrderAction), aggregateRating/review
+Canonical: https://lunabitesanddelights.web.app/ (self-referencing)
+Kiosk page: title + meta description only; no canonical, no Open Graph, no JSON-LD, no H1; Flutter canvas content is not indexable
+Sitemap: https://lunabitesanddelights.web.app/sitemap.xml
+  - includes https://lunabitesanddelights.web.app/kiosk/#/menu (fragment URLs are invalid in sitemaps)
+  - lastmod 2026-03-30 (stale; page changed since)
+Robots: allow all, sitemap declared
+Analytics: none found (no GA4/GTM/Plausible/Umami)
+Search Console verification: no verification meta tag found
+Caching: all static assets return Cache-Control: no-cache, no-store, must-revalidate
+  (HTML, CSS, JS, WebP, fonts, OG image)
+Compression: Brotli/gzip active (19,562-byte HTML -> 4,590 bytes transfer)
+Protocol: HTTP/2 with HTTP/3 alt-svc
+Security headers: HSTS, X-Content-Type-Options, X-Frame-Options DENY, Referrer-Policy, Permissions-Policy
