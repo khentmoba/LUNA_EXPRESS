@@ -1,0 +1,25 @@
+Firebase Hosting emulator — 2026-11-05
+Command: CI=1 npx --no-install firebase emulators:start --only hosting --project lunaexpress
+
+/ 200 text/html; charset=utf-8
+/menu 301 text/html; charset=utf-8 http://localhost:5000/menu/
+/menu/ 200 text/html; charset=utf-8
+/kiosk/ 200 text/html; charset=utf-8
+/sitemap.xml 200 application/xml
+/robots.txt 200 text/plain; charset=utf-8
+/styles.css 200 text/css; charset=utf-8
+
+--- /menu/ headers ---
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=utf-8
+Content-Length: 23955
+ETag: ce3081ec41fced79b6dd51c7353ac596
+
+--- kiosk head ---
+<base href="/kiosk/">
+<link rel="canonical" href="https://lunabitesanddelights.web.app/kiosk/">
+<meta name="robots" content="noindex, follow">
+
+--- sitemap ---
+<loc>https://lunabitesanddelights.web.app/
+<loc>https://lunabitesanddelights.web.app/menu/

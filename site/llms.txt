@@ -14,7 +14,12 @@
 - Payment Methods: Cash, GCash
 - Ordering Website: https://lunabitesanddelights.web.app/kiosk/#/menu
 - Official Storefront: https://lunabitesanddelights.web.app/
+- Full Menu: https://lunabitesanddelights.web.app/menu/
 - Official Facebook: https://www.facebook.com/p/Luna-Bites-Delights-100090686762896/
+
+## Menu Page
+- URL: https://lunabitesanddelights.web.app/menu/
+- Contents: every item and price, plus delivery and pickup answers.
 
 ## Recommended Menu Items & Pricing
 ### Shawarma Favorites
