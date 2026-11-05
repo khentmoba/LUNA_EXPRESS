@@ -1,7 +1,7 @@
 name: PR Checks
-# Regression gate: every PR must pass analyze + tests + builds before merge.
+# Regression gate: every PR must pass analyze + tests + builds + proof before merge.
 # Protect `main` (Settings → Branches → Require status checks) with:
-#   flutter / functions / rules
+#   flutter / functions / rules / proof
 on:
   pull_request:
 
@@ -24,8 +24,11 @@ jobs:
 
       - run: flutter pub get
 
-      - name: Analyze (errors fail)
-        run: flutter analyze --no-fatal-infos --no-fatal-warnings
+      - name: Analyze (errors fail; new info/warning issues fail)
+        run: |
+          set -o pipefail
+          flutter analyze --no-fatal-infos --no-fatal-warnings | tee analyze.txt
+          node tool/check_analyzer_baseline.mjs analyze.txt
 
       - name: Format check (changed files only)
         run: |
@@ -93,3 +96,20 @@ jobs:
 
       - name: Firestore rules tests (emulator)
         run: npm run test:rules
+
+  proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Require proof for product changes (AGENTS.md)
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          CHANGED_FILES="$(git diff --name-only "$BASE_SHA...$HEAD_SHA")"
+          export CHANGED_FILES
+          node tool/check_pr_proof.mjs

@@ -19,7 +19,7 @@ This image displays captured test output, not a screenshot of customer checkout.
 - [Final regression suite](order-placement-rules.txt): all eight tests pass against repository rules. This includes a separate replay against the captured production order-create block. It accepts the fixed payload and rejects the old payload with `telegramSent: false`.
 - [Notification probe](order-notification-proof.txt): the actual callable handler adds `telegramSent: true` after simulated successful delivery. On simulated delivery failure it adds `telegramSent: false` and preserves the order ID and amount.
 
-The captured production order-create block is in `functions/test/fixtures/deployed-order-create.rules`. The synthetic payload in `functions/test/fixtures/order-create.json` is captured from the actual `OrderService.saveOrder` write. The Flutter regression test checks that the fixture matches the write, including all payment and order fields.
+The production order-create block was snapshotted in `functions/test/fixtures/deployed-order-create.rules` (snapshot removed; `npm --prefix functions run check:rules-drift` now compares the live ruleset with `firestore.rules`). The synthetic payload in `functions/test/fixtures/order-create.json` is captured from the actual `OrderService.saveOrder` write. The Flutter regression test checks that the fixture matches the write, including all payment and order fields.
 
 ## Commands and results
 
