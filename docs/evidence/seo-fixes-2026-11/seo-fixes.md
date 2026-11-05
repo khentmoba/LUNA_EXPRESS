@@ -39,6 +39,8 @@ The menu page reuses the storefront's exact 40 rows. A row-by-row check confirme
 
 The local server does not compress responses; the live storefront measured 99 before these changes. Scores are for regression checking, not a production field measurement.
 
+Preview on Firebase Hosting (PR #26): storefront performance **98**, menu **99**; accessibility 100 and best practices 100 on both. The preview SEO score is 69 because Firebase preview channels send `X-Robots-Tag: noindex`; the local build measures 100. Raw runs: `lighthouse-preview-storefront.json`, `lighthouse-preview-menu.json`.
+
 ### Structured data
 
 - Storefront `FastFoodRestaurant`: **0 errors, 0 warnings** (`schema-storefront.json`).
