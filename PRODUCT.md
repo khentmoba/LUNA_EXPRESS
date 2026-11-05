@@ -49,7 +49,7 @@ A neighbourhood kiosk with the prices printed where you can see them: real per-i
 
 ## Brand Commitments
 
-- Name: Luna Bites & Delights. The owner also uses "Luna Express" for the ordering system.
+- Name: Luna Bites & Delights. Canonical domain: `https://lunabitesanddelights.web.app`. The legacy `lunaexpress.web.app` domain permanently redirects (301) to it, and "Luna Express" survives only as a search alias in structured data.
 - Tagline in the owner's own words: "Good food, sweet drinks, moonlit vibes."
 - Intro copy from the Facebook page: "Tambayan ng good food, sweet drinks, at moonlit vibes 🌕✨ Feel the comfort, taste the delight — only at Luna Bites & Delights 💛 Located @ Purok 5, Magallanes, Agusan Del Norte."
 - Owner-supplied palette: logo pink `#EC1C72`, blush `#FEB7C9`, pink watercolor wash (`site/img/pink-wash.webp`, `images/pink_wash.jpg`), butter yellow `#FCD04E`, paper `#FFFAFB`, plum ink `#2A0F1E`.

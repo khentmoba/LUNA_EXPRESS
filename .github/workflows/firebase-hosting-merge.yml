@@ -42,6 +42,17 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_LUNAEXPRESS }}
           channelId: live
           projectId: lunaexpress
+          target: app-site
+
+      # The legacy `lunaexpress` site now only serves 301 redirects to the
+      # canonical `lunabitesanddelights` site, so it is deployed separately.
+      - name: Deploy legacy redirect site
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_LUNAEXPRESS }}
+        run: |
+          echo "$FIREBASE_SERVICE_ACCOUNT" > "$HOME"/service-account.json
+          export GOOGLE_APPLICATION_CREDENTIALS="$HOME/service-account.json"
+          npx firebase-tools deploy --only hosting:lunaexpress --project lunaexpress --non-interactive
 
       # Secrets (TELEGRAM_*, PAYMONGO_*) are read from Secret Manager at runtime
       # (see functions/src/index.ts). Set values once via:

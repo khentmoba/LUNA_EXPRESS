@@ -111,10 +111,10 @@ export const createCheckoutSession = onCall(
             attributes: {
               line_items: lineItems,
               payment_method_types: ['gcash', 'paymaya'],
-              success_url: 'https://lunaexpress.web.app/payment/success',
-              cancel_url: 'https://lunaexpress.web.app/payment/cancel',
+              success_url: 'https://lunabitesanddelights.web.app/payment/success',
+              cancel_url: 'https://lunabitesanddelights.web.app/payment/cancel',
               reference_number: orderId,
-              description: `Luna Express Order #${orderId}`,
+              description: `Luna Bites & Delights Order #${orderId}`,
               metadata: {
                 order_id: orderId,
                 order_doc_id: orderDocId,

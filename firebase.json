@@ -1,11 +1,13 @@
 {
-  "hosting": {
-    "public": "build/web",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+  "hosting": [
+    {
+      "target": "app-site",
+      "public": "build/web",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
     "headers": [
       {
         "source": "**",
@@ -116,6 +118,23 @@
       }
     ]
   },
+    {
+      "site": "lunaexpress",
+      "public": "legacy-redirect",
+      "redirects": [
+        {
+          "source": "/kiosk{,/**}",
+          "destination": "https://lunabitesanddelights.web.app/kiosk/",
+          "type": 301
+        },
+        {
+          "source": "/**",
+          "destination": "https://lunabitesanddelights.web.app/",
+          "type": 301
+        }
+      ]
+    }
+  ],
   "firestore": {
     "database": "(default)",
     "rules": "firestore.rules"

@@ -1,7 +1,7 @@
 {
   "name": "Luna Bites & Delights",
-  "short_name": "Luna Express",
-  "description": "Order from Luna Bites & Delights — shawarma, burgers, fries, halo-halo and coolers.",
+  "short_name": "Luna Bites",
+  "description": "Order from Luna Bites & Delights — shawarma, burgers, fries, halo-halo and coolers in Magallanes, Agusan del Norte.",
   "start_url": "/kiosk/",
   "display": "standalone",
   "background_color": "#FEB7C9",

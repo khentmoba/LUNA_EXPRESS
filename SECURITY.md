@@ -26,8 +26,8 @@ How each item is enforced, and the manual steps that can't live in code.
 ## Manual steps (Firebase Console — do once)
 
 1. **Secrets**: `firebase functions:secrets:set TELEGRAM_TOKEN|TELEGRAM_CHAT_ID|PAYMONGO_SECRET_KEY|GOOGLE_MAPS_API_KEY`, then deploy functions.
-2. **Restrict the web API key** (#3): Google Cloud Console → APIs & Services → Credentials → Browser key → HTTP referrers: `lunaexpress.web.app/*`, `lunaexpress.firebaseapp.com/*`.
-3. **MapTiler key** (#1): GitHub secret `MAPTILER_KEY`, injected by both hosting workflows. The build prints a tile-free picker when it is missing, so a missing secret fails soft rather than loudly - check the deploy or the map screen after changing it. Restrict the key to HTTP referrers `lunaexpress.web.app/*` + `lunaexpress.firebaseapp.com/*` in the MapTiler dashboard; a browser key cannot be hidden, only fenced.
+2. **Restrict the web API key** (#3): Google Cloud Console → APIs & Services → Credentials → Browser key → HTTP referrers: `lunabitesanddelights.web.app/*`, `lunaexpress.web.app/*`, `lunabitesanddelights.firebaseapp.com/*`, `lunaexpress.firebaseapp.com/*`.
+3. **MapTiler key** (#1): GitHub secret `MAPTILER_KEY`, injected by both hosting workflows. The build prints a tile-free picker when it is missing, so a missing secret fails soft rather than loudly - check the deploy or the map screen after changing it. Restrict the key to HTTP referrers `lunabitesanddelights.web.app/*` + `lunaexpress.web.app/*` + `lunabitesanddelights.firebaseapp.com/*` + `lunaexpress.firebaseapp.com/*` in the MapTiler dashboard; a browser key cannot be hidden, only fenced.
 4. **App Check** (#12): DONE 2026-09-28 — Enterprise SCORE key created (domains: web.app, firebaseapp.com, localhost) and registered via API. Enforcement intentionally OFF (correct sequencing: ship App-Check-ready clients first, enforce later). When ready: Console → App Check → APIs → enforce Firestore + Functions.
 5. **Rotate**: seeded staff passwords (see function logs), plus any PayMongo/Telegram secret that ever appeared in chat or shell history.
 
