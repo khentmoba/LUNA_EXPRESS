@@ -1,0 +1,54 @@
+SERP / indexation evidence — captured 2026-11-05
+
+1) TinyFish search: "Luna Bites & Delights Magallanes Agusan del Norte"
+   1. Facebook group post — Luna Bites & Delights open at 3pm to 10pm today
+   2. Facebook video — Luna Bites & Delights Full During Magallanes Fiesta Brownout
+   3. Facebook post — Happy fiesta, Magallanes
+   4. lunaexpress.firebaseapp.com — "Luna Bites & Delights — delivery around Magallanes"  <-- LEGACY HOST, not canonical
+   5. Facebook post — first fiesta experience
+   6. Waze — driving directions to Magallanes, Luna (unrelated)
+   7+ Facebook posts
+   Canonical host https://lunabitesanddelights.web.app/ does not appear in the top results.
+
+2) TinyFish search: site:lunabitesanddelights.web.app
+   results: []  total_results: 0
+
+3) DuckDuckGo HTML: site:lunabitesanddelights.web.app
+   "No results"
+
+4) Brave Search: site:lunabitesanddelights.web.app
+   "No results"
+
+5) Brave Search: "Luna Bites & Delights Magallanes"
+   Top results are unrelated entities:
+   - lunasdelights.com
+   - instagram.com/lunabitestt
+   - facebook.com/lunabitestt
+   - facebook.com/Lunasdelight
+   - La Luna Restaurant (Punta Arenas, Chile)
+   - Yelp / Tripadvisor La Luna (Chile)
+   The Magallanes, Agusan del Norte business does not appear.
+
+6) Brave Search: "food kiosk Magallanes Agusan del Norte"
+   Top results are Wikipedia articles about Magallanes, Agusan del Norte.
+   No local food business appears.
+
+7) Brave Search: "Cabadbaran food delivery shawarma"
+   - foodpanda Cabadbaran
+   - JM Shawarma (foodpanda)
+   - gdelivers Cabadbaran
+   - RestaurantGuru Cabadbaran
+   - Lebo Shawarma (RestaurantGuru)
+   - Facebook pages
+   Luna Bites & Delights does not appear.
+
+8) Google autocomplete (hl=en, gl=ph):
+   "luna bites" -> luna bites market | luna bites night market | luna bites dubai | luna bites market henderson | luna bites chocolate | luna bites eden park | luna bites sleep gummies
+   "luna bites magallanes" -> (none)
+   "luna bites and delights" -> (none)
+   "cabadbaran food delivery" -> cabadbaran food delivery | cabadbaran city food delivery
+   "cabadbaran restaurant" -> cabadbaran restaurant | restaurant cabadbaran city | cabadbaran food restaurant | hayahay restaurant cabadbaran city | cfk restaurant cabadbaran city
+   "cabadbaran burger" -> minute burger cabadbaran | angels burger cabadbaran | minute burger cabadbaran photos | minute burger cabadbaran city
+   "cabadbaran shawarma" -> cabadbaran shawarma | is shawarma from india | difference between shish and shawarma | what are the benefits of shawarma
+   "shawarma magallanes" -> (none)
+   "food magallanes agusan" -> (none)

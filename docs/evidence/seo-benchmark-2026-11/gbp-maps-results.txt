@@ -1,0 +1,28 @@
+Google Maps / Google Business Profile evidence — captured 2026-11-05
+
+Query A (the storefront's own "Open in Maps" URL):
+https://www.google.com/maps/search/?api=1&query=Luna+Bites+and+Delights+Purok+5+Magallanes+Agusan+del+Norte
+
+Results shown:
+  1. Juanderful Delights Food Corner — 3.9 — Restaurant — District Champaca Barangay 5, Nasipit, 8602 Agusan del Norte — 0917 450 6997 — facebook.com
+  2. Purok 5 Magallanes Agusan Del Norte — No reviews — Housing society — Purok 5
+  3. Snack Bites — No reviews — Restaurant — X8QR+5G8, Rizal St
+  "You've reached the end of the list."
+
+Query B: "Luna Bites and Delights"
+Results shown:
+  - Corner Bites — 4.8 — Snack bar
+  - Fat Chef Restaurant — 4.8 — Restaurant
+  - Luna Store — No reviews — Restaurant
+  - Luna eatery and tindahan — No reviews — Filipino restaurant (Tagoloan, Misamis Oriental)
+  No Luna Bites & Delights listing.
+
+Query C: "Luna Bites"
+Result shown:
+  - Luna eatery and tindahan — Filipino restaurant — Zone 6, Tagoloan, 9001 Misamis Oriental
+  No Luna Bites & Delights listing.
+
+Query D: exact coordinates 9.0205278,125.5176389
+  Google Maps shows "9°01'13.9"N 125°31'03.5"E" — a coordinate pin, not a business listing.
+
+Conclusion: no Google Business Profile for Luna Bites & Delights could be found as of 2026-11-05.

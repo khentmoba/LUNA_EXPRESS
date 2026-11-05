@@ -1,0 +1,38 @@
+## STOREFRONT MOBILE
+URL: https://lunabitesanddelights.web.app/
+Lighthouse 12.8.2 | formFactor: mobile
+Scores: performance=99, accessibility=100, best-practices=100, seo=100
+  first-contentful-paint: 0.9 s
+  largest-contentful-paint: 2.0 s
+  total-blocking-time: 30 ms
+  cumulative-layout-shift: 0.004
+  speed-index: 1.7 s
+  interactive: 2.3 s
+  server-response-time: Root document took 230 ms
+  total-byte-weight: Total size was 309 KiB
+
+## STOREFRONT DESKTOP
+URL: https://lunabitesanddelights.web.app/
+Lighthouse 12.8.2 | formFactor: desktop
+Scores: performance=100, accessibility=100, best-practices=100, seo=100
+  first-contentful-paint: 0.6 s
+  largest-contentful-paint: 0.7 s
+  total-blocking-time: 0 ms
+  cumulative-layout-shift: 0.006
+  speed-index: 0.7 s
+  interactive: 0.8 s
+  server-response-time: Root document took 20 ms
+  total-byte-weight: Total size was 900 KiB
+
+## KIOSK MOBILE
+URL: https://lunabitesanddelights.web.app/kiosk/?v=1793901175018
+Lighthouse 12.8.2 | formFactor: mobile
+Scores: performance=62, accessibility=100, best-practices=82, seo=100
+  first-contentful-paint: 0.9 s
+  largest-contentful-paint: 2.2 s
+  total-blocking-time: 2,980 ms
+  cumulative-layout-shift: 0
+  speed-index: 8.2 s
+  interactive: 16.7 s
+  server-response-time: Root document took 280 ms
+  total-byte-weight: Total size was 2,639 KiB

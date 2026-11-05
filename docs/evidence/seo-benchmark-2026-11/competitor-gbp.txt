@@ -1,0 +1,37 @@
+Competitor Google Maps presence — captured 2026-11-05
+
+GZ Cafe (Magallanes, Agusan del Norte)
+  - GBP: present
+  - Rating: 5.0
+  - Category: Coffee shop
+  - Address: Besides Pasaylo Vulcanizing Shop, P3 Marcos, Magallanes, 8604 Agusan del Norte
+  - Hours: Open 24 hours
+  - Phone: 0994 102 7944
+  - Website: none ("Add website" prompt shown)
+  - Facebook: https://www.facebook.com/p/GZ-Cafe-61561474487084/
+
+JM Shawarma (Cabadbaran)
+  - GBP: present ("Jm Shawarma" 2.0 Restaurant; "JM shawarma" 4.8 Indian restaurant)
+  - Order online: yes (foodpanda: https://www.foodpanda.ph/restaurant/x50m/jm-shawarma-a-atega-street)
+  - Facebook: Jm's Shawarma
+
+Lebo Shawarma (Cabadbaran)
+  - GBP: present, 4.5, Asian restaurant
+  - Status: Permanently closed
+  - Address: 4GFP+26H, A. Curato Street, City of Cabadbaran
+
+Go Bite Cafe by Zackies (Cabadbaran)
+  - GBP: present ("Go Bite Cafe by Zackies Sta.ana" 5.0 Coffee shop, open 24 hours; "Go Bite Cafe by Zackies" no reviews)
+
+More Bites Pizza (Cabadbaran)
+  - GBP: present, 4.6, Pizza restaurant
+  - Facebook: https://www.facebook.com/morebitescbr/
+
+Jollibee Cabadbaran (chain benchmark)
+  - GBP: present, 4.1, Fast food restaurant
+  - Address: National Highway, City of Cabadbaran
+  - Phone: (085) 818 0048
+  - Website: jollibee.onelink.me
+
+Luna Bites & Delights
+  - GBP: not found (see gbp-maps-results.txt)
