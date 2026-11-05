@@ -17,7 +17,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
           cache-dependency-path: functions/package-lock.json
 
@@ -48,26 +48,13 @@ jobs:
       #   firebase functions:secrets:set TELEGRAM_TOKEN (etc.)
       # No .env file needed — never commit secret values.
 
-      - name: Delete conflicting functions
-        env:
-          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_LUNAEXPRESS }}
-        run: |
-          echo "$FIREBASE_SERVICE_ACCOUNT" > "$HOME"/service-account.json
-          export GOOGLE_APPLICATION_CREDENTIALS="$HOME/service-account.json"
-          # Delete-then-recreate clears trigger-type conflicts. Delete only functions
-          # that are deployed; any other failure stops the job instead of being hidden.
-          deployed=$(npx firebase-tools functions:list --project lunaexpress --non-interactive)
-          for fn in createCheckoutSession paymongoWebhook; do
-            if grep -q "$fn" <<< "$deployed"; then
-              npx firebase-tools functions:delete "$fn" --project lunaexpress --non-interactive --force
-            else
-              echo "Skipping $fn: not deployed"
-            fi
-          done
-
+      # No delete-before-deploy step: a deploy that fails after a delete leaves the
+      # functions missing (incident 2026-11-05, see docs/evidence/functions-runtime-node22.md).
+      # `--force` removes only functions that are no longer in source.
       - name: Deploy Cloud Functions
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_LUNAEXPRESS }}
         run: |
+          echo "$FIREBASE_SERVICE_ACCOUNT" > "$HOME"/service-account.json
           export GOOGLE_APPLICATION_CREDENTIALS="$HOME/service-account.json"
           npx firebase-tools deploy --only functions --project lunaexpress --non-interactive --force
