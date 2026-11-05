@@ -63,22 +63,10 @@ describe('orders: kiosk can only create (validated)', () => {
     payload.timestamp = Timestamp.fromDate(new Date(payload.timestamp));
     await assertSucceeds(addDoc(collection(anon(), 'orders'), payload));
   });
-  test('checkout payload also satisfies the deployed order-create rules', async () => {
-    const deployed = await initializeTestEnvironment({
-      projectId: 'lunaexpress-checkout-compat',
-      firestore: {
-        rules: readFileSync(resolve(__dirname, 'fixtures/deployed-order-create.rules'), 'utf8'),
-      },
-    });
-    try {
-      const payload = JSON.parse(readFileSync(resolve(__dirname, 'fixtures/order-create.json'), 'utf8'));
-      payload.timestamp = Timestamp.fromDate(new Date(payload.timestamp));
-      const orders = collection(deployed.unauthenticatedContext().firestore(), 'orders');
-      await assertSucceeds(addDoc(orders, payload));
-      await assertFails(addDoc(orders, { ...payload, telegramSent: false }));
-    } finally {
-      await deployed.cleanup();
-    }
+  test('create rejects telegramSent (the field that broke checkout)', async () => {
+    const payload = JSON.parse(readFileSync(resolve(__dirname, 'fixtures/order-create.json'), 'utf8'));
+    payload.timestamp = Timestamp.fromDate(new Date(payload.timestamp));
+    await assertFails(addDoc(collection(anon(), 'orders'), { ...payload, telegramSent: false }));
   });
   test('create rejects missing/junk/oversized fields', async () => {
     const { customerName: _d, ...noName } = order();

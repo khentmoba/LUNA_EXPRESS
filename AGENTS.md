@@ -25,22 +25,22 @@
 - **For UI / Visual changes:** Capture real rendered screenshots at supported viewports (e.g. mobile 320px/390px, tablet 768px, desktop 1440px) and save them to `docs/evidence/`.
 - **For Backend / API / Integration features:** Produce tangible evidence of end-to-end functionality (e.g. test payloads, actual API output artifacts, verified live responses, or simulated message captures) and document the validation in `docs/evidence/<feature-name>.md`.
 - **Embed visual proof in PR descriptions:** Every PR must embed visual proof and screenshots directly into the Evidence section using inline images (`![alt](url)` or `raw=true` URLs), not just text links, so reviewers see the proof immediately without clicking away.
+- **Enforced by CI:** the `proof` job in `.github/workflows/pr-checks.yml` fails a PR that changes `lib/` (UI), `web/`, or `site/` without an inline image and a `docs/evidence/` reference, or changes `functions/src/`, `lib/services/`, or the rules files without a `docs/evidence/` reference.
 
 ## Branching & Deployment Rules
 
 1. **Never push directly to `main`.**
    - Direct pushes to `main` trigger the automated production deploy workflow (`.github/workflows/firebase-hosting-merge.yml`).
    - Do NOT run manual production deployments (`firebase deploy`) without explicit user instruction.
+   - Branch protection on `main` requires the `flutter`, `functions`, `rules`, and `proof` checks.
 
 2. **Always create a Pull Request (PR).**
-   - Always use the `$pr-first` skill when making PRs.
+   - Always use the `$file-pr` skill when making PRs.
    - Create a feature or fix branch (e.g., `fix/descriptive-name` or `feature/descriptive-name`).
    - Push to that branch and open a PR against `main` using `gh pr create`.
-   - Let the user review and merge the PR when ready.
+   - Let the user review and merge the PR when ready, unless the user says "full send". Then `$full-send` grants the merge once the gate passes.
 
 3. **Verify locally before opening a PR:**
-   - Flutter analysis: `flutter analyze --no-fatal-infos --no-fatal-warnings`
-   - Flutter tests: `flutter test`
-   - Functions build & audit: `cd functions && npm run build && npm audit --audit-level=high`
-   - Rules emulator tests (if touching rules): `cd functions && npm run test:rules`
+   - Run every job in `.github/workflows/pr-checks.yml` locally, and save the output to `docs/evidence/`.
+   - Firestore rules: `firestore.rules` must match production. `cd functions && npm run check:rules-drift` checks it (read-only). Do not deploy rules without explicit user instruction.
    - Capture concrete proof artifacts in `docs/evidence/` and embed visual proof (`![alt](url)`) directly in the PR body.
