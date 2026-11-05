@@ -1,6 +1,10 @@
-# LUNA_EXPRESS
+# LUNA Bites & Delights
 
-LUNA_EXPRESS is a premium food business application that enables customers to order, pay, and choose between delivery or pickup.
+Luna Bites & Delights is a food business application that enables customers to order, pay, and choose between delivery or pickup.
+
+- **Storefront:** https://lunabitesanddelights.web.app
+- **Ordering app:** https://lunabitesanddelights.web.app/kiosk/#/menu
+- **Legacy domain:** `lunaexpress.web.app` permanently redirects (301) to the canonical domain above.
 
 ## Project Vision
 

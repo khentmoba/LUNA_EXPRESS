@@ -54,6 +54,8 @@ class _GCashCheckoutPageState extends State<GCashCheckoutPage> {
             // #15: only allow payment-provider + app hosts in the WebView.
             final host = Uri.tryParse(request.url)?.host ?? '';
             const allowed = [
+              'lunabitesanddelights.web.app',
+              'lunabitesanddelights.firebaseapp.com',
               'lunaexpress.web.app',
               'lunaexpress.firebaseapp.com',
               'paymongo.com',

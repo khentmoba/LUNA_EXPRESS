@@ -1,4 +1,4 @@
-# Agent Guidelines — Luna Express
+# Agent Guidelines — Luna Bites & Delights
 
 ## Business Reference
 

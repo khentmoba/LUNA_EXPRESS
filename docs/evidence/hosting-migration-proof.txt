@@ -1,0 +1,28 @@
+# Hosting migration proof — 2026-11-05T17:32:30Z
+
+## Legacy domain redirects (301) to canonical domain
+/                      HTTP/1.1 301 Moved Permanently Location: https://lunabitesanddelights.web.app/ 
+/kiosk/                HTTP/1.1 301 Moved Permanently Location: https://lunabitesanddelights.web.app/kiosk/ 
+/kiosk                 HTTP/1.1 301 Moved Permanently Location: https://lunabitesanddelights.web.app/kiosk/ 
+/images/og-cover.jpg   HTTP/1.1 301 Moved Permanently Location: https://lunabitesanddelights.web.app/ 
+/llms.txt              HTTP/1.1 301 Moved Permanently Location: https://lunabitesanddelights.web.app/ 
+/sitemap.xml           HTTP/1.1 301 Moved Permanently Location: https://lunabitesanddelights.web.app/ 
+
+## Redirect chain resolves to a 200 on the canonical domain
+/          final=https://lunabitesanddelights.web.app/ status=200
+/kiosk/    final=https://lunabitesanddelights.web.app/kiosk/ status=200
+
+## Canonical domain serves the migrated build
+title:     <title>Luna Bites &amp; Delights — Food Kiosk &amp; Delivery in Magallanes, near Cabadbaran</title>
+canonical: rel="canonical" href="https://lunabitesanddelights.web.app/"
+og:url:    property="og:url" content="https://lunabitesanddelights.web.app/"
+
+## Asset and route availability on the canonical domain
+/                            200
+/robots.txt                  200
+/sitemap.xml                 200
+/llms.txt                    200
+/kiosk/                      200
+/kiosk/manifest.json         200
+/images/og-cover.jpg         200
+/img/luna-logo-640.webp      200
