@@ -14,7 +14,7 @@
     "check:rules-drift": "node scripts/check-firestore-rules-drift.js"
   },
   "engines": {
-    "node": "20"
+    "node": "22"
   },
   "main": "lib/index.js",
   "dependencies": {
