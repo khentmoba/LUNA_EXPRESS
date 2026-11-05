@@ -33,6 +33,10 @@ Production was read only. The script read the live Firestore ruleset from the Fi
 
 Other checks: `npm run build` in `functions/` passes. The three workflow files parse as YAML. `functions:list` returns `createCheckoutSession` as deployed and not `noSuchFunctionXYZ`, so the delete step would delete the first and skip the second.
 
+## CI findings
+
+- First CI run: the `flutter` job failed because the analyzer summary line was missing from the captured output. The check exited 2 with "Could not read the analyzer summary line". The analyzer output is now captured with `2>&1`. The CI count is 87, the same as the local count.
+
 ## Not verified here
 
 - The drift workflow in GitHub. Its service account needs Firebase Rules read permission. The first run will show whether it has it.

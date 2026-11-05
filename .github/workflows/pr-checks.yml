@@ -27,7 +27,7 @@ jobs:
       - name: Analyze (errors fail; new info/warning issues fail)
         run: |
           set -o pipefail
-          flutter analyze --no-fatal-infos --no-fatal-warnings | tee analyze.txt
+          flutter analyze --no-fatal-infos --no-fatal-warnings 2>&1 | tee analyze.txt
           node tool/check_analyzer_baseline.mjs analyze.txt
 
       - name: Format check (changed files only)
