@@ -1,0 +1,13 @@
+== flutter build apk ==
+Try `flutter pub outdated` for more information.
+Flutter failed to read file at "C:\Users\Admin\.t3\worktrees\luna_express\t3-98647ada\android\app\build.gradle". The file or directory could not be found.
+PathNotFoundException: Cannot open file, path = 'C:\Users\Admin\.t3\worktrees\luna_express\t3-98647ada\android\app\build.gradle' (OS Error: The system cannot find the path specified, errno = 3)
+This can sometimes happen if the file was deleted or moved while the tool was running. Try running "flutter clean" and try again.
+exit=1
+
+== flutter build windows ==
+Got dependencies!
+47 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+No Windows desktop project configured. See https://flutter.dev/to/add-desktop-support to learn about adding Windows support to a project.
+exit=1
