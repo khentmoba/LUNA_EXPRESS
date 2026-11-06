@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:flutter/foundation.dart';
 import 'firebase_options.dart';
 import 'widgets/kiosk/kiosk_theme.dart';
 import 'services/session.dart';
@@ -23,21 +22,14 @@ import 'screens/admin_dashboard.dart';
 /// Until the key is set, activation is skipped (requests still work).
 Future<void> _activateAppCheck() async {
   const siteKey = String.fromEnvironment('RECAPTCHA_SITE_KEY');
+  if (siteKey.isEmpty) {
+    debugPrint('AppCheck skipped: no RECAPTCHA_SITE_KEY defined');
+    return;
+  }
   try {
-    if (kDebugMode) {
-      await FirebaseAppCheck.instance.activate(
-        androidProvider: AndroidProvider.debug,
-        appleProvider: AppleProvider.debug,
-      );
-    } else if (siteKey.isNotEmpty) {
-      await FirebaseAppCheck.instance.activate(
-        androidProvider: AndroidProvider.playIntegrity,
-        appleProvider: AppleProvider.appAttest,
-        webProvider: ReCaptchaEnterpriseProvider(siteKey),
-      );
-    } else {
-      debugPrint('AppCheck skipped: no RECAPTCHA_SITE_KEY defined');
-    }
+    await FirebaseAppCheck.instance.activate(
+      providerWeb: ReCaptchaEnterpriseProvider(siteKey),
+    );
   } catch (e) {
     debugPrint('AppCheck activation failed: $e');
   }
