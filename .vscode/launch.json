@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "luna_express",
+            "name": "Luna Bites & Delights",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "luna_express (profile mode)",
+            "name": "Luna Bites & Delights (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "luna_express (release mode)",
+            "name": "Luna Bites & Delights (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

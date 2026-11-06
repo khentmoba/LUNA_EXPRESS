@@ -122,7 +122,7 @@ class ReceiptPage extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          'LUNA EXPRESS',
+                          'LUNA BITES & DELIGHTS',
                           style: KioskTheme.headerMedium.copyWith(
                             letterSpacing: 4,
                           ),

@@ -1,4 +1,4 @@
-package com.example.luna_express
+package com.lunabitesanddelights.app
 
 import io.flutter.embedding.android.FlutterActivity
 

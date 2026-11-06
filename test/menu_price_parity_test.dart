@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:luna_express/services/telegram_service.dart';
+import 'package:luna_bites_and_delights/services/telegram_service.dart';
 
 /// The kiosk menu and the server-side price list are separate files that must
 /// agree: `createCheckoutSession` rejects any item it cannot price, which is

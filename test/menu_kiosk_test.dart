@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-import 'package:luna_express/screens/menu_page.dart';
-import 'package:luna_express/services/session.dart';
+import 'package:luna_bites_and_delights/screens/menu_page.dart';
+import 'package:luna_bites_and_delights/services/session.dart';
 
 void main() {
   testWidgets(

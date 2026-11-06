@@ -1,4 +1,4 @@
-﻿# luna_express Development Guidelines
+﻿# Luna Bites & Delights Development Guidelines
 
 Auto-generated from all feature plans. Last updated: 2026-07-07
 

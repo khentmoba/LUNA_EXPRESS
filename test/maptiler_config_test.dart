@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:luna_express/services/geocoding.dart';
+import 'package:luna_bites_and_delights/services/geocoding.dart';
 
 // The map key is a build input, not source. `flutter test` normally runs with no
 // key compiled in; pass `--dart-define=MAPTILER_KEY=...` to exercise the other

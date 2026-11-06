@@ -18,12 +18,12 @@ Sync Impact Report:
   - Set up Firestore rules for the new ordering schema.
 -->
 
-# LUNA_EXPRESS Constitution
+# Luna Bites & Delights Constitution
 
 ## Core Principles
 
 ### I. User-Centric Ordering
-The ordering experience is the heart of LUNA_EXPRESS. Every interface decision must prioritize speed, clarity of menu items, and ease of cart management. Interfaces MUST be mobile-optimized by default.
+The ordering experience is the heart of Luna Bites & Delights. Every interface decision must prioritize speed, clarity of menu items, and ease of cart management. Interfaces MUST be mobile-optimized by default.
 
 ### II. Payment-First Fulfillment
 No order workflow shall proceed to the fulfillment stage (Kitchen/Preparation) without a verified payment status. This ensures business continuity and reduces abandonment risk.
