@@ -1,0 +1,132 @@
+[1/1] Android SDK
+  ├─ [1/6] android-arm-profile/windows-x64                         684ms
+  ├─ [2/6] android-arm-release/windows-x64                         158ms
+  ├─ [3/6] android-arm64-profile/windows-x64                       152ms
+  ├─ [4/6] android-arm64-release/windows-x64                       140ms
+  ├─ [5/6] android-x64-profile/windows-x64                         132ms
+  └─ [6/6] android-x64-release/windows-x64                         133ms
+Resolving dependencies...
+Downloading packages...
+  _flutterfire_internals 1.3.77 (1.3.79 available)
+  archive 4.0.9 (4.6.0 available)
+  async 2.13.0 (2.13.1 available)
+  clock 1.1.2 (1.1.3 available)
+  cloud_firestore 6.10.0 (7.1.0 available)
+  cloud_firestore_platform_interface 8.0.7 (8.1.0 available)
+  cloud_firestore_web 5.7.3 (5.8.0 available)
+  cloud_functions 6.5.0 (7.0.1 available)
+  cloud_functions_platform_interface 6.0.7 (6.1.1 available)
+  cloud_functions_web 5.1.13 (5.1.15 available)
+  crypto 3.0.7 (3.0.8 available)
+  cupertino_icons 1.0.8 (2.0.0 available)
+  firebase_app_check 0.4.8 (0.5.1 available)
+  firebase_app_check_platform_interface 0.4.2+1 (0.5.1+3 available)
+  firebase_app_check_web 0.2.6+1 (0.3.1+3 available)
+  firebase_auth 6.7.0 (7.0.1 available)
+  firebase_auth_platform_interface 9.1.0 (9.1.2 available)
+  firebase_auth_web 6.3.0 (6.3.2 available)
+  firebase_core 4.15.0 (5.1.0 available)
+  firebase_core_web 3.12.0 (4.1.0 available)
+  flutter_map 6.2.1 (8.3.2 available)
+  geolocator 13.0.4 (14.1.2 available)
+  geolocator_android 4.6.2 (5.2.1 available)
+  geolocator_apple 2.3.13 (2.4.3 available)
+  geolocator_platform_interface 4.2.6 (4.4.1 available)
+  geolocator_web 4.1.3 (4.1.4 available)
+  image 4.8.0 (4.12.0 available)
+  intl 0.20.2 (0.20.3 available)
+  latlong2 0.9.1 (0.10.1 available)
+  logger 2.7.0 (2.8.0 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  mgrs_dart 2.0.0 (3.0.0 available)
+  petitparser 7.0.2 (7.1.0 available)
+  posix 6.5.0 (6.5.4 available)
+  proj4dart 2.1.0 (3.0.0 available)
+  stack_trace 1.12.1 (1.12.2 available)
+  test_api 0.7.12 (0.7.15 available)
+  unicode 0.3.1 (1.1.9 available)
+  uuid 4.5.3 (4.6.0 available)
+  vector_math 2.4.3 (2.4.4 available)
+  vm_service 15.0.2 (15.4.0 available)
+  web 1.1.1 (1.1.2 available)
+  webview_flutter 4.13.1 (4.14.1 available)
+  webview_flutter_android 4.10.13 (4.14.1 available)
+  webview_flutter_platform_interface 2.14.0 (2.15.1 available)
+  webview_flutter_wkwebview 3.24.1 (3.27.2 available)
+  xml 6.6.1 (7.1.0 available)
+Got dependencies!
+47 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+Running Gradle task 'assembleDebug'...                          
+Warning: Flutter support for your project's Gradle version (8.14.0) will soon be dropped. Please upgrade your Gradle version to a version of at least 9.1.0 soon.
+Alternatively, use the flag "--android-skip-build-dependency-validation" to bypass this check.
+
+Potential fix: Your project's gradle version is typically defined in the gradle wrapper file. By default, this can be found at C:\Users\Admin\.t3\worktrees\luna_express\t3-98647ada\android/gradle/wrapper/gradle-wrapper.properties. 
+For more information, see https://docs.gradle.org/current/userguide/gradle_wrapper.html.
+
+Warning: Flutter support for your project's Android Gradle Plugin version (Android Gradle Plugin version 8.11.1) will soon be dropped. Please upgrade your Android Gradle Plugin version to a version of at least Android Gradle Plugin version 9.0.1 soon.
+Alternatively, use the flag "--android-skip-build-dependency-validation" to bypass this check.
+
+Potential fix: Your project's AGP version is typically defined in the plugins block of the `settings.gradle` file (C:\Users\Admin\.t3\worktrees\luna_express\t3-98647ada\android/settings.gradle), by a plugin with the id of com.android.application. 
+If you don't see a plugins block, your project was likely created with an older template version. In this case it is most likely defined in the top-level build.gradle file (C:\Users\Admin\.t3\worktrees\luna_express\t3-98647ada\android/build.gradle) by the following line in the dependencies block of the buildscript: "classpath 'com.android.tools.build:gradle:<version>'".
+
+Warning: Flutter support for your project's Kotlin version (2.2.20) will soon be dropped. Please upgrade your Kotlin version to a version of at least 2.3.20 soon.
+Alternatively, use the flag "--android-skip-build-dependency-validation" to bypass this check.
+
+Potential fix: Your project's KGP version is typically defined in the plugins block of the `settings.gradle` file (C:\Users\Admin\.t3\worktrees\luna_express\t3-98647ada\android/settings.gradle), by a plugin with the id of org.jetbrains.kotlin.android. 
+If you don't see a plugins block, your project was likely created with an older template version, in which case it is most likely defined in the top-level build.gradle file (C:\Users\Admin\.t3\worktrees\luna_express\t3-98647ada\android/build.gradle) by the ext.kotlin_version property.
+
+lib/services/location.dart:2:8: Error: Dart library 'dart:js' is not available on this platform.
+import 'dart:js' as js;
+       ^
+Context: The unavailable library 'dart:js' is imported through these packages:
+
+    package:luna_bites_and_delights => dart:js
+
+Detailed import paths for (some of) the these imports:
+
+    package:luna_bites_and_delights/main.dart => package:luna_bites_and_delights/screens/checkout_page.dart => package:luna_bites_and_delights/screens/map_picker_page.dart => package:luna_bites_and_delights/services/location.dart => dart:js
+
+lib/services/location.dart:45:10: Error: Undefined name 'context'.
+  if (js.context['navigator']['geolocation'] == null) return null;
+         ^^^^^^^
+lib/services/location.dart:47:6: Error: Undefined name 'context'.
+  js.context['_posOk'] = (pos) {
+     ^^^^^^^
+lib/services/location.dart:51:6: Error: Undefined name 'context'.
+  js.context['_posErr'] = (_) => completer.complete(null);
+     ^^^^^^^
+lib/services/location.dart:52:6: Error: Undefined name 'context'.
+  js.context.callMethod('eval', [
+     ^^^^^^^
+Unhandled exception:
+FileSystemException(uri=org-dartlang-untranslatable-uri:dart%3Ajs; message=StandardFileSystem only supports file:* and data:* URIs)
+#0      StandardFileSystem.entityForUri (package:front_end/src/api_prototype/standard_file_system.dart:42)
+#1      asFileUri (package:vm/kernel_front_end.dart:1059)
+#2      writeDepfile (package:vm/kernel_front_end.dart:1220)
+<asynchronous suspension>
+#3      FrontendCompiler.compile (package:frontend_server/frontend_server.dart:932)
+<asynchronous suspension>
+#4      starter (package:frontend_server/starter.dart:108)
+<asynchronous suspension>
+#5      main (file:///C:/b/s/w/ir/x/w/sdk/pkg/frontend_server/bin/frontend_server_starter.dart:13)
+<asynchronous suspension>
+
+Target kernel_snapshot_program failed: Exception
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileFlutterBuildDebug'.
+> Process 'command 'C:\dev\flutter\bin\flutter.bat'' finished with non-zero exit value 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 2m 45s
+Running Gradle task 'assembleDebug'...                            165.6s
+Gradle task assembleDebug failed with exit code 1

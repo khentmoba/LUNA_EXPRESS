@@ -121,15 +121,14 @@ class ReceiptPage extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        Text(
-                          'LUNA BITES & DELIGHTS',
-                          style: KioskTheme.headerMedium.copyWith(
-                            letterSpacing: 4,
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'LUNA BITES & DELIGHTS',
+                            style: KioskTheme.headerMedium.copyWith(
+                              letterSpacing: 4,
+                            ),
                           ),
-                        ),
-                        Text(
-                          'Luna Bites & Delights',
-                          style: KioskTheme.bodyMedium,
                         ),
                         const SizedBox(height: 20),
                         Container(

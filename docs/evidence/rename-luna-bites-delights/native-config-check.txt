@@ -1,0 +1,13 @@
+PASS  macOS PRODUCT_NAME: 'Luna Bites & Delights'
+PASS  macOS scheme app BuildableName: {'Luna Bites & Delights.app'}
+PASS  macOS bundle id: com.lunabitesanddelights.app
+PASS  iOS CFBundleName: Luna Bites &amp; Delights
+PASS  iOS bundle ids: {'com.lunabitesanddelights.app.RunnerTests', 'com.lunabitesanddelights.app'}
+PASS  Android namespace == applicationId: com.lunabitesanddelights.app / com.lunabitesanddelights.app
+PASS  MainActivity package matches namespace: com.lunabitesanddelights.app
+PASS  Linux BINARY_NAME: lunabitesanddelights
+PASS  Windows BINARY_NAME: lunabitesanddelights
+PASS  pubspec package name: luna_bites_and_delights
+PASS  no stale package imports: 0 stale
+
+RESULT: ALL PASS
