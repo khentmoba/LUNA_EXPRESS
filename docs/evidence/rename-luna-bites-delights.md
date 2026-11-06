@@ -64,6 +64,7 @@ Every job in `.github/workflows/pr-checks.yml`, run on this branch:
 | flutter | `flutter build web --release` | built `build/web` | `flutter-build-web.txt` |
 | functions | `npm ci` / `npm run build` / `npm audit --audit-level=high` | all exit 0; 15 moderate, no high/critical | `functions-job.txt` |
 | rules | `npm run test:rules` (Firestore emulator, JDK 21) | 8 passed, 0 failed | `rules-job.txt` |
+| proof | `node tool/check_pr_proof.mjs` (42 changed files) | `Proof OK (UI: true, backend: false)` | `proof-job.txt` |
 
 ### Native identifier consistency
 
