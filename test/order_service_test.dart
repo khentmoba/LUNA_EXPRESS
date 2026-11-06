@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:luna_express/models/order.dart';
-import 'package:luna_express/services/order_service.dart';
+import 'package:luna_bites_and_delights/models/order.dart';
+import 'package:luna_bites_and_delights/services/order_service.dart';
 
 class _Firestore extends Fake implements FirebaseFirestore {
   final orders = _Orders();

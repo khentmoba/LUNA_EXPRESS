@@ -347,7 +347,7 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
         : '';
 
     final note = [
-      '🛵 *LUNA EXPRESS DELIVERY — #$orderNum*',
+      '🛵 *LUNA BITES & DELIGHTS — #$orderNum*',
       '👤 Customer: $name',
       if (phone.isNotEmpty) '📞 Phone: $phone',
       if (addr.isNotEmpty) '📍 Address: $addr',

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-import 'package:luna_express/services/session.dart';
-import 'package:luna_express/services/cart_notifier.dart';
-import 'package:luna_express/services/audio_alert_service.dart';
-import 'package:luna_express/screens/staff_login_dialog.dart';
-import 'package:luna_express/screens/kds_page.dart';
+import 'package:luna_bites_and_delights/services/session.dart';
+import 'package:luna_bites_and_delights/services/cart_notifier.dart';
+import 'package:luna_bites_and_delights/services/audio_alert_service.dart';
+import 'package:luna_bites_and_delights/screens/staff_login_dialog.dart';
+import 'package:luna_bites_and_delights/screens/kds_page.dart';
 
 void main() {
   group('Staff Session & Audio Alert Tests', () {

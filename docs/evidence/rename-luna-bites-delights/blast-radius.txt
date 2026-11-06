@@ -1,0 +1,10 @@
+== Firebase / hosting identifiers must be untouched vs origin/main ==
+  (empty above = untouched)
+
+== live identifiers still present ==
+    "default": "lunaexpress"
+'lunaexpress'
+"site": "lunaexpress"
+
+== remote resolves to the new repo ==
+https://github.com/khentmoba/LunaBitesAndDelights.git

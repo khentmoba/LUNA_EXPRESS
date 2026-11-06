@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-import 'package:luna_express/data/menu_data.dart';
-import 'package:luna_express/models/cart.dart';
-import 'package:luna_express/models/menu.dart';
-import 'package:luna_express/screens/cart_page.dart';
-import 'package:luna_express/screens/menu_page.dart';
-import 'package:luna_express/services/cart_notifier.dart';
-import 'package:luna_express/services/session.dart';
-import 'package:luna_express/widgets/kiosk/customization_modal.dart';
+import 'package:luna_bites_and_delights/data/menu_data.dart';
+import 'package:luna_bites_and_delights/models/cart.dart';
+import 'package:luna_bites_and_delights/models/menu.dart';
+import 'package:luna_bites_and_delights/screens/cart_page.dart';
+import 'package:luna_bites_and_delights/screens/menu_page.dart';
+import 'package:luna_bites_and_delights/services/cart_notifier.dart';
+import 'package:luna_bites_and_delights/services/session.dart';
+import 'package:luna_bites_and_delights/widgets/kiosk/customization_modal.dart';
 
 MenuItem menuItem(String id) => kMenuSections
     .expand((section) => section.items)
