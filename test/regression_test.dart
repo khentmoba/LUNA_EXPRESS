@@ -143,20 +143,33 @@ void main() {
 
   group('menu sections and new meals', () {
     test(
-      'menu keeps Korean Spam Musubi and offers both shawarma rice options',
+      'menu keeps Korean Spam Musubi and S3 shawarma rice while standalone rice bowl is retired',
       () {
         final items = kMenuSections.expand((section) => section.items);
         expect(
           items.firstWhere((item) => item.id == 'sm5').name,
           'S5 – Korean Spam Musubi',
         );
-        final bowl = items.firstWhere((item) => item.id == 's3');
-        expect(bowl.name, 'Shawarma Rice Bowl');
-        expect(bowl.price, 50);
-        expect(File(bowl.imageUrl).existsSync(), isTrue);
         expect(items.any((item) => item.name == 'S3 – Shawarma Rice'), isTrue);
+        expect(
+          items.any(
+            (item) => item.id == 's3' || item.name == 'Shawarma Rice Bowl',
+          ),
+          isFalse,
+        );
       },
     );
+
+    test('drinks section has no large promo indicator on any drink', () {
+      final drinks = kMenuSections.firstWhere((s) => s.id == 'drinks');
+      for (final item in drinks.items) {
+        expect(
+          item.promoLabel,
+          isNot('LARGE'),
+          reason: '${item.name} should not have LARGE promoLabel',
+        );
+      }
+    });
 
     test('contains sulit_meals and chicken_poppers sections', () {
       final sectionIds = kMenuSections.map((s) => s.id).toList();
