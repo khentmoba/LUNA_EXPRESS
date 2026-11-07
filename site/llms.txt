@@ -25,7 +25,6 @@
 ### Shawarma Favorites
 - Shawarma Wrap: ₱60
 - Shawarma Wrap (Buy 1 Take 1): ₱99
-- Shawarma Rice Bowl: ₱50
 - Shawarma All Meat: ₱80
 - Shawarma Nachos: ₱75
 - Shawarma Quesadilla: ₱99

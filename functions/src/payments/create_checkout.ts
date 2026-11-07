@@ -10,7 +10,7 @@ const PAYMONGO_API = 'https://api.paymongo.com/v2/checkout_sessions';
 // MUST match lib/data/menu_data.dart. Name → allowed prices (variants/collisions).
 // #8: never trust client-supplied prices; they only pick name+variant+qty.
 const MENU_PRICES: Record<string, number[]> = {
-  'Shawarma Wrap': [99, 60], 'Shawarma All Meat': [80], 'Shawarma Rice Bowl': [50],
+  'Shawarma Wrap': [99, 60], 'Shawarma All Meat': [80],
   'Shawarma Burger': [95], 'Shawarma Fries': [75], 'Shawarma Nachos': [75],
   'Shawarma Quesadilla': [99], 'Nachos & Fries Overload': [99, 150],
   'Shawarma Wrap + Fries + Drinks': [128], 'Shawarma Burger + Shawarma Wrap + Drinks': [149],
@@ -25,6 +25,7 @@ const MENU_PRICES: Record<string, number[]> = {
   'Ube Halo Ice Cream': [65], 'Mango Graham Ice Cream': [65],
   'Choco Oreo Ice Cream': [65], 'Vanilla Cheese Ice Cream': [65], 'Luna Leche Flan': [20],
   // Previous names/prices below remain valid for carts from cached clients.
+  'Shawarma Rice Bowl': [50],
   'Buy 1 Take 1 French Fries': [50], 'Large Fries': [75], 'Bucket Fries': [99], 'Terra Fries': [150],
   'Combo 1 – Burger + Fries': [60], 'Combo 2 – Hotdog + Fries': [60],
   'Super Combo 1 – Hotdog + Fries + Drink': [99], 'Super Combo 2 – Burger + Fries + Drink': [99],

@@ -165,14 +165,6 @@ final List<MenuSection> kMenuSections = [
         imageUrl: 'images/shawarma_all_meat.jpg',
       ),
       MenuItem(
-        id: 's3',
-        name: 'Shawarma Rice Bowl',
-        emoji: '🍚',
-        description: 'Shawarma meat over rice with vegetables and sauce.',
-        price: 50,
-        imageUrl: 'images/poster_shawarma_rice.jpg',
-      ),
-      MenuItem(
         id: 's4',
         name: 'Shawarma Burger',
         emoji: '🍔',
@@ -486,73 +478,64 @@ final List<MenuSection> kMenuSections = [
         id: 'c_taro',
         name: 'Purple Taro',
         emoji: '🥤',
-        description: 'Creamy Purple Taro cooler. Refreshing and large!',
+        description: 'Creamy Purple Taro cooler. Refreshing and cold!',
         price: 39,
-        promoLabel: 'LARGE',
         imageUrl: 'images/purple_taro.png',
       ),
       MenuItem(
         id: 'c_cnc',
         name: 'Cookies N Cream',
         emoji: '🥤',
-        description: 'Classic Cookies N Cream delight. Refreshing and large!',
+        description: 'Classic Cookies N Cream delight. Refreshing and cold!',
         price: 39,
-        promoLabel: 'LARGE',
         imageUrl: 'images/cookies_n_cream_cooler.png',
       ),
       MenuItem(
         id: 'c_dark',
         name: 'Dark Chocolate',
         emoji: '🥤',
-        description: 'Rich Dark Chocolate treat. Refreshing and large!',
+        description: 'Rich Dark Chocolate treat. Refreshing and cold!',
         price: 39,
-        promoLabel: 'LARGE',
         imageUrl: 'images/dark_chocolate_cooler.png',
       ),
       MenuItem(
         id: 'c_forest',
         name: 'Black Forest',
         emoji: '🥤',
-        description: 'Indulgent Black Forest flavor. Refreshing and large!',
+        description: 'Indulgent Black Forest flavor. Refreshing and cold!',
         price: 39,
-        promoLabel: 'LARGE',
         imageUrl: 'images/black_forest_cooler.png',
       ),
       MenuItem(
         id: 'c_flan',
         name: 'Leche Flan',
         emoji: '🥤',
-        description: 'Sweet Leche Flan dessert drink. Refreshing and large!',
+        description: 'Sweet Leche Flan dessert drink. Refreshing and cold!',
         price: 39,
-        promoLabel: 'LARGE',
         imageUrl: 'images/leche_flan_cooler.png',
       ),
       MenuItem(
         id: 'c_straw',
         name: 'Strawberry',
         emoji: '🥤',
-        description: 'Sweet Strawberry refreshment. Refreshing and large!',
+        description: 'Sweet Strawberry refreshment. Refreshing and cold!',
         price: 39,
-        promoLabel: 'LARGE',
         imageUrl: 'images/strawberry_cooler.png',
       ),
       MenuItem(
         id: 'c_rocky',
         name: 'Rocky Road',
         emoji: '🥤',
-        description:
-            'Chocolaty Rocky Road with a crunch. Refreshing and large!',
+        description: 'Chocolaty Rocky Road with a crunch. Refreshing and cold!',
         price: 39,
-        promoLabel: 'LARGE',
         imageUrl: 'images/rocky_road_cooler.png',
       ),
       MenuItem(
         id: 'c_kisses',
         name: 'Choco Kisses',
         emoji: '🥤',
-        description: 'Sweet Choco Kisses delight. Refreshing and large!',
+        description: 'Sweet Choco Kisses delight. Refreshing and cold!',
         price: 39,
-        promoLabel: 'LARGE',
         imageUrl: 'images/choco_kisses_cooler.png',
       ),
 
@@ -561,7 +544,7 @@ final List<MenuSection> kMenuSections = [
         name: '3 for ₱100 Coolers',
         emoji: '🥤',
         description:
-            'Mix and match any 3 large coolers for only ₱100! Choose your favorites.',
+            'Mix and match any 3 coolers for only ₱100! Choose your favorites.',
         price: 100,
         imageUrl: 'images/coolers_3_for_100.png',
         allowMultiSelect: true,
@@ -592,7 +575,6 @@ final List<MenuSection> kMenuSections = [
         emoji: '🍋',
         description: 'Freshly squeezed classic lemonade.',
         price: 49,
-        promoLabel: 'LARGE',
         imageUrl: 'images/lemon_classic.png',
       ),
       MenuItem(
@@ -601,7 +583,6 @@ final List<MenuSection> kMenuSections = [
         emoji: '🍋🥛',
         description: 'Refreshing lemonade with a creamy Yakult twist.',
         price: 49,
-        promoLabel: 'LARGE',
         imageUrl: 'images/lemon_yakult.png',
       ),
       MenuItem(
@@ -610,7 +591,6 @@ final List<MenuSection> kMenuSections = [
         emoji: '🍋🍓',
         description: 'Sweet strawberry and zesty lemon blend.',
         price: 49,
-        promoLabel: 'LARGE',
         imageUrl: 'images/lemon_strawberry.png',
       ),
       MenuItem(
@@ -619,7 +599,6 @@ final List<MenuSection> kMenuSections = [
         emoji: '🍋🥒',
         description: 'Cool cucumber and refreshing lemon.',
         price: 49,
-        promoLabel: 'LARGE',
         imageUrl: 'images/lemon_cucumber.png',
       ),
       MenuItem(
@@ -628,7 +607,6 @@ final List<MenuSection> kMenuSections = [
         emoji: '🍋🍦',
         description: 'Creamy yogurt paired with zesty lemon.',
         price: 49,
-        promoLabel: 'LARGE',
         imageUrl: 'images/lemon_yogurt.png',
       ),
 
@@ -646,7 +624,6 @@ final List<MenuSection> kMenuSections = [
         description: 'Refreshing Green Apple drink. Buy 1 Take 1!',
         price: 49,
         isBuy1Take1: true,
-        promoLabel: 'LARGE',
         imageUrl: 'images/green_apple.jpg',
       ),
       MenuItem(
@@ -656,7 +633,6 @@ final List<MenuSection> kMenuSections = [
         description: 'Sweet Strawberry refreshment. Buy 1 Take 1!',
         price: 49,
         isBuy1Take1: true,
-        promoLabel: 'LARGE',
         imageUrl: 'images/strawberry_juice.png',
       ),
       MenuItem(
@@ -666,7 +642,6 @@ final List<MenuSection> kMenuSections = [
         description: 'Zesty Sweet Orange drink. Buy 1 Take 1!',
         price: 49,
         isBuy1Take1: true,
-        promoLabel: 'LARGE',
         imageUrl: 'images/sweet_orange.png',
       ),
       MenuItem(
@@ -676,7 +651,6 @@ final List<MenuSection> kMenuSections = [
         description: 'Delicious Mixed Berries blend. Buy 1 Take 1!',
         price: 49,
         isBuy1Take1: true,
-        promoLabel: 'LARGE',
         imageUrl: 'images/mixed_berries.png',
       ),
       MenuItem(
@@ -686,7 +660,6 @@ final List<MenuSection> kMenuSections = [
         description: 'Classic Four Seasons fruit blend. Buy 1 Take 1!',
         price: 49,
         isBuy1Take1: true,
-        promoLabel: 'LARGE',
         imageUrl: 'images/four_seasons.jpg',
       ),
 
@@ -703,7 +676,6 @@ final List<MenuSection> kMenuSections = [
         emoji: '🍦',
         description: 'Creamy Cookies & Cream Oreo delight.',
         price: 65,
-        promoLabel: 'LARGE',
         imageUrl: 'images/oreo_cookies_cream.png',
       ),
       MenuItem(
@@ -712,7 +684,6 @@ final List<MenuSection> kMenuSections = [
         emoji: '🍫',
         description: 'Rich chocolate blended with Oreo goodness.',
         price: 65,
-        promoLabel: 'LARGE',
         imageUrl: 'images/oreo_chocolate.png',
       ),
       MenuItem(
@@ -721,7 +692,6 @@ final List<MenuSection> kMenuSections = [
         emoji: '🍓',
         description: 'Sweet strawberry and Oreo cookie blend.',
         price: 65,
-        promoLabel: 'LARGE',
         imageUrl: 'images/oreo_strawberry.png',
       ),
       MenuItem(
@@ -730,7 +700,6 @@ final List<MenuSection> kMenuSections = [
         emoji: '🥤',
         description: 'Chocolatey Milo with an ice cream float and Oreo crunch.',
         price: 65,
-        promoLabel: 'LARGE',
         imageUrl: 'images/oreo_milo_float.png',
       ),
 
@@ -748,7 +717,6 @@ final List<MenuSection> kMenuSections = [
         description:
             'Malted chocolate drink topped with a mountain of Milo powder.',
         price: 59,
-        promoLabel: 'LARGE',
         imageUrl: 'images/milo_dinosaur.jpg',
       ),
       MenuItem(
@@ -757,7 +725,6 @@ final List<MenuSection> kMenuSections = [
         emoji: '🍦',
         description: 'Classic Milo with a creamy vanilla ice cream float.',
         price: 59,
-        promoLabel: 'LARGE',
         imageUrl: 'images/milo_float.png',
       ),
       MenuItem(
@@ -766,7 +733,6 @@ final List<MenuSection> kMenuSections = [
         emoji: '🥣',
         description: 'Milo chocolate drink topped with crunchy Milo cereal.',
         price: 59,
-        promoLabel: 'LARGE',
         imageUrl: 'images/milo_crunch.jpg',
       ),
       MenuItem(
@@ -775,7 +741,6 @@ final List<MenuSection> kMenuSections = [
         emoji: '🍪',
         description: 'The perfect blend of Milo and crushed Oreo cookies.',
         price: 59,
-        promoLabel: 'LARGE',
         imageUrl: 'images/milo_oreo.png',
       ),
 
@@ -793,7 +758,6 @@ final List<MenuSection> kMenuSections = [
         description:
             'Refreshing Coca-Cola topped with creamy vanilla soft serve ice cream.',
         imageUrl: 'images/coke_float.png',
-        promoLabel: 'LARGE',
         variants: [
           MenuVariant(label: 'Medium', price: 39),
           MenuVariant(label: 'Large', price: 49),
@@ -806,7 +770,6 @@ final List<MenuSection> kMenuSections = [
         description:
             'Classic Chuckie with a creamy vanilla soft serve ice cream float.',
         price: 59,
-        promoLabel: 'LARGE',
         imageUrl: 'images/chuckie_float.png',
       ),
       MenuItem(
@@ -815,7 +778,6 @@ final List<MenuSection> kMenuSections = [
         emoji: '🍦',
         description: 'Classic Milo with a creamy vanilla ice cream float.',
         price: 59,
-        promoLabel: 'LARGE',
         imageUrl: 'images/milo_float_premium.png',
       ),
       MenuItem(
@@ -825,7 +787,6 @@ final List<MenuSection> kMenuSections = [
         description:
             'Creamy cookies and cream blend topped with a vanilla soft serve float.',
         price: 65,
-        promoLabel: 'LARGE',
         imageUrl: 'images/cookies_cream_float.png',
       ),
 

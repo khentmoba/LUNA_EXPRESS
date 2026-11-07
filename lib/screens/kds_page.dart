@@ -124,16 +124,16 @@ class _KdsPageState extends State<KdsPage> with SingleTickerProviderStateMixin {
       'total': 198,
       'items': [
         {
-          'name': 'Shawarma Rice Bowl',
-          'quantity': 2,
-          'variant': 'Spicy',
-          'price': 50,
+          'name': 'Shawarma Wrap',
+          'quantity': 1,
+          'variant': 'Buy 1 Take 1',
+          'price': 99,
         },
         {
-          'name': 'Fries & Nachos Overload',
+          'name': 'Nachos & Fries Overload',
           'quantity': 1,
-          'variant': 'Buddy (1-2 pax)',
-          'price': 98,
+          'variant': 'Buddy (1–2 pax)',
+          'price': 99,
         },
       ],
     },
